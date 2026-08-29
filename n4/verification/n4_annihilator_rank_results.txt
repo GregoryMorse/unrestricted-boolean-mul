@@ -1,0 +1,27 @@
+G3 wedge G3 = 0: PASS
+weight 1: nonzero h => dim Ann_T(h) <= 3: PASS
+weight 2: dim Ann_T(h)=3 iff M in P0 union P1: PASS
+weight 3: dim Ann_T(h)=2 iff M in P0 union P1 union Pinf, else 1: PASS
+
+ONE-SIDED KERNEL GROUPS, weight 1
+  x = 0000,0001  dim= 7  kernel= E6 ; E5 ; E4 ; E3 ; E2 ; E1 ; E0
+  x = 0010,0011  dim= 3  kernel= E2+E3+E4+E5+E6 ; E1 ; E0
+  x = 0100,0101  dim= 3  kernel= E6 ; E1 ; E0
+  x = 0110,0111,1010,1011,1100,1101,1110,1111  dim= 2  kernel= E1 ; E0
+  x = 1000,1001  dim= 3  kernel= E2 ; E1 ; E0
+
+ONE-SIDED KERNEL GROUPS, weight 2
+  x = 0000  dim= 7  kernel= E6 ; E5 ; E4 ; E3 ; E2 ; E1 ; E0
+  x = 0001  dim= 3  kernel= E2+E4+E6 ; E1+E3+E5 ; E0
+  x = 0010  dim= 3  kernel= E2+E3+E4+E5+E6 ; E1 ; E0
+  x = 0011  dim= 2  kernel= E1+E2+E3+E4+E5+E6 ; E0
+  x = 0100  dim= 2  kernel= E6 ; E1+E2+E3+E4+E5
+  x = 0101,0110,0111,1000,1001,1010,1011,1100,1101,1110,1111  dim= 1  kernel= E1+E2+E3+E4+E5+E6
+
+ONE-SIDED KERNEL GROUPS, weight 3
+  x = 0000  dim= 7  kernel= E6 ; E5 ; E4 ; E3 ; E2 ; E1 ; E0
+  x = 0001  dim= 2  kernel= E1+E2+E3+E4+E5 ; E0
+  x = 0010  dim= 2  kernel= E0+E6 ; E1+E2+E3+E4+E5
+  x = 0011,0101,0110,0111,1000,1001,1010,1011,1100,1101,1110,1111  dim= 1  kernel= E1+E2+E3+E4+E5
+  x = 0100  dim= 2  kernel= E6 ; E1+E2+E3+E4+E5
+

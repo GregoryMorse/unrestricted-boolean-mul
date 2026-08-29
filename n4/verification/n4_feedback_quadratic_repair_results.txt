@@ -1,0 +1,8 @@
+quadratic case counts (before linear equations):
+  lambda1=0 lambdainf=0: 760
+  lambda1=0 lambdainf=1: 24
+  lambda1=1 lambdainf=0: 24
+full quadratic+three-slice linear solutions: 0
+solutions compatible with AnnDim=2: 0
+PASS: every full solution forces span(m,n)=span(u,v)
+PASS: the anchored AnnDim=2 branch has no solution

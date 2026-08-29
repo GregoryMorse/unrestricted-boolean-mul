@@ -1,0 +1,68 @@
+Complete n=4 seed-at-gate-4 immediate-child audit
+===================================================
+
+Exact disjoint ranges cover [0,57906).
+Total high-degree canonical seed representatives with >=1 useful child: 14
+Maximum useful children of any such seed: 1
+
+All 14 HIGH_CHILD records:
+HIGH_CHILD rep=732 count=1 high=c8:3
+HIGH_CHILD rep=733 count=1 high=c8:3
+HIGH_CHILD rep=735 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=736 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=737 count=1 high=8c:3
+HIGH_CHILD rep=738 count=1 high=8c:3
+HIGH_CHILD rep=739 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=740 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=741 count=1 high=8c:3
+HIGH_CHILD rep=743 count=1 high=c8:3
+HIGH_CHILD rep=30131 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,31:3,32:3,34:3,38:3,43:3,46:3,49:3,4c:3,61:3,62:3,64:3,68:3,83:3,86:3,89:3,8c:3,91:3,92:3,94:3,98:3,c1:3,c2:3,c4:3,c8:3
+HIGH_CHILD rep=30180 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,43:3,46:3,49:3,4c:3,83:3,86:3,89:3,8c:3
+HIGH_CHILD rep=30209 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,31:3,32:3,34:3,38:3,43:3,46:3,49:3,4c:3,61:3,62:3,64:3,68:3,83:3,86:3,89:3,8c:3,91:3,92:3,94:3,98:3,c1:3,c2:3,c4:3,c8:3
+HIGH_CHILD rep=30251 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,43:3,46:3,49:3,4c:3,83:3,86:3,89:3,8c:3
+
+Raw chunk transcripts:
+### RANGE 0
+IMMEDIATE seedpos=4 orbit_reps=57906 range=[0,10000) withchild=10 maxch=1 seconds=10.082
+stabilizer=12
+seedpos=4 raw_seeds=681941 orbit_reps=57906
+HIGH_CHILD rep=732 count=1 high=c8:3
+HIGH_CHILD rep=733 count=1 high=c8:3
+HIGH_CHILD rep=735 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=736 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=737 count=1 high=8c:3
+HIGH_CHILD rep=738 count=1 high=8c:3
+HIGH_CHILD rep=739 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=740 count=1 high=8c:3,c8:3
+HIGH_CHILD rep=741 count=1 high=8c:3
+HIGH_CHILD rep=743 count=1 high=c8:3
+
+### RANGE 10000
+IMMEDIATE seedpos=4 orbit_reps=57906 range=[10000,20000) withchild=0 maxch=0 seconds=10.319
+stabilizer=12
+seedpos=4 raw_seeds=681941 orbit_reps=57906
+
+### RANGE 20000
+IMMEDIATE seedpos=4 orbit_reps=57906 range=[20000,30000) withchild=0 maxch=0 seconds=10.195
+stabilizer=12
+seedpos=4 raw_seeds=681941 orbit_reps=57906
+
+### RANGE 30000
+IMMEDIATE seedpos=4 orbit_reps=57906 range=[30000,40000) withchild=4 maxch=1 seconds=10.379
+stabilizer=12
+seedpos=4 raw_seeds=681941 orbit_reps=57906
+HIGH_CHILD rep=30131 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,31:3,32:3,34:3,38:3,43:3,46:3,49:3,4c:3,61:3,62:3,64:3,68:3,83:3,86:3,89:3,8c:3,91:3,92:3,94:3,98:3,c1:3,c2:3,c4:3,c8:3
+HIGH_CHILD rep=30180 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,43:3,46:3,49:3,4c:3,83:3,86:3,89:3,8c:3
+HIGH_CHILD rep=30209 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,31:3,32:3,34:3,38:3,43:3,46:3,49:3,4c:3,61:3,62:3,64:3,68:3,83:3,86:3,89:3,8c:3,91:3,92:3,94:3,98:3,c1:3,c2:3,c4:3,c8:3
+HIGH_CHILD rep=30251 count=1 high=13:3,16:3,19:3,1c:3,23:3,26:3,29:3,2c:3,43:3,46:3,49:3,4c:3,83:3,86:3,89:3,8c:3
+
+### RANGE 40000
+IMMEDIATE seedpos=4 orbit_reps=57906 range=[40000,50000) withchild=0 maxch=0 seconds=6.776
+stabilizer=12
+seedpos=4 raw_seeds=681941 orbit_reps=57906
+
+### RANGE 50000
+IMMEDIATE seedpos=4 orbit_reps=57906 range=[50000,57906) withchild=0 maxch=0 seconds=5.693
+stabilizer=12
+seedpos=4 raw_seeds=681941 orbit_reps=57906
+

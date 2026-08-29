@@ -1,0 +1,30 @@
+FIRST-JET THREE-COLUMN TABLE
+columns = [E0,E6,r1]
+alpha=0 beta=0:
+  x^u^y^v [1, 0, 1]
+  a2^a3^y^v [0, 0, 1]
+  a2^a3^y^b3 [0, 1, 1]
+alpha=0 beta=1:
+  x^u^y^v [1, 0, 0]
+  a2^a3^y^v [0, 0, 1]
+  a2^a3^y^b3 [0, 1, 1]
+alpha=1 beta=0:
+  x^u^y^v [1, 0, 1]
+  a2^a3^y^v [0, 0, 1]
+  a2^a3^y^b3 [0, 1, 1]
+alpha=1 beta=1:
+  x^u^y^v [1, 0, 0]
+  a2^a3^y^v [0, 0, 1]
+  a2^a3^y^b3 [0, 1, 1]
+injective on R for all alpha,beta: PASS
+
+CORRECTED JS OUTSIDE-OUTSIDE EQUATIONS
+coeff(a2^b3)=coeff(a3^b2)=dr
+coeff(a2^b2)=C+dr
+coeff(a3^b3)=d6+dr
+therefore absence of outside-outside terms gives dr=C=d6=0
+remaining mixed vectors: Ay+Bv, By, Ax+Bu, Bx
+
+nonexceptional U checked: 49
+mixed-vector implication A=B=0: PASS
+P0 is excluded exactly because x,y in U would force U=P0: PASS

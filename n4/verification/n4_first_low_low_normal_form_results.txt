@@ -1,0 +1,5 @@
+low-low normal-form collision highs: 9
+all collision highs have Ann_T dimension 3: PASS
+collision highs are exactly 9 first-derivative tangent highs: PASS
+all useful target differences are the corresponding first Hasse jet mod R: PASS
+ALL FIRST-LOW-LOW REGRESSION CHECKS PASS

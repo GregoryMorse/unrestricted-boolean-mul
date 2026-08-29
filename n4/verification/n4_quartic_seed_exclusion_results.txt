@@ -1,0 +1,6 @@
+rank<=2 target classification outside R: 6 tangents + 3 degree-2-place forms: PASS
+tangent/degree-2 support separation from P0,P1: PASS
+low-low separation T intersect (R+U^L)=R for 16 allowed U: PASS
+g-using quartic orbit A: no three-slice solution: PASS
+g-using quartic orbit B: no three-slice solution: PASS
+ALL QUARTIC-SEED EXCLUSION REGRESSION CHECKS PASS

@@ -1,0 +1,9 @@
+Ann_T(M E0)=<E0,E1,E2> for M=a1,b1,a1+b1: PASS
+W=E2=D^(2)_0 C: PASS
+Q^C=0 in S => dependent or Q,C in <E0,E1>: PASS
+jet separation for 49 subspaces U<=K0, dim U<=2, U!=P0: PASS
+P0 is the unique exceptional 2-plane: PASS
+T intersect Lambda^2 K0 = <E0,E1>: PASS
+F2^(-) injective on S for all F2=E2+alpha E1+beta E0: PASS
+rank H(F2)=3 and L -> Lambda^3, w |-> F2^w, is injective: PASS
+ALL SATURATION LINEAR/EXTERIOR CHECKS PASS
