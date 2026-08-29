@@ -39,6 +39,7 @@ repository.
 
 ## Immutable snapshot
 
-Intended release tag: `n4-arxiv-v1`  
-Full commit hash: `PENDING`  
-Live verification date: `PENDING`
+Pinned release tag: [`n4-arxiv-v1`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v1).
+
+The tag resolves to the exact public commit. The associated paper records the
+full commit hash and clean-checkout verification date.
