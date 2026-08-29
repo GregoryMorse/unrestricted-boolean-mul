@@ -102,15 +102,16 @@ reproduction does not modify the snapshot.
 Public pin
 ----------
 
-Intended repository:
+Public repository:
 https://github.com/GregoryMorse/unrestricted-boolean-mul
 
 Repository subdirectory: n4/verification/
 
-Intended release tag: n4-arxiv-v1
+Pinned release tag: n4-arxiv-v1
+Release URL:
+https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v1
 
 The verification software is released under the MIT License; this directory
 includes a copy in LICENSE, and the repository root carries the same license.
-The public repository, tag, and full commit hash are pending.  This artifact
-must not be represented as publicly pinned until all three exist and the URL
-resolves without authentication.
+The release tag fixes the exact public artifact.  The associated paper records
+the resolved full commit hash and final clean-checkout verification date.
