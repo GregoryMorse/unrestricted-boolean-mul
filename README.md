@@ -8,8 +8,9 @@ The repository is organized by input length so that later results can be added
 without renaming or replacing the existing artifact:
 
 - [`n4/`](n4/) -- four-term multiplication, with exact value 9.
-- Future results will use parallel directories such as `n5/`, `n6/`, or
-  `general/`.
+- [`n5/`](n5/) -- five-term multiplication, with hand proof of exact value 13
+  and Lean formalization in progress.
+- Future results will use parallel directories such as `n6/` or `general/`.
 
 The accompanying `n4` paper makes the current unrestricted small-instance
 frontier explicit:
@@ -21,14 +22,16 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
+| 5 | 13 | algebraic hand proof; Lean statement and target layer checked, full formalization in progress |
 
-The manuscript contains the mathematical exposition and literature citations.
-The Lean development in this repository checks all five rows (`n = 0` through
-`n = 4`).
+The manuscripts contain the mathematical exposition and literature citations.
+The Lean development checks the five rows `n = 0` through `n = 4`; for `n = 5`
+it currently checks only the statement interface and target-dimension layer.
 
 ## Lean 4 formalization
 
-The root Lean project formalizes the exact results through `n = 4`:
+The root Lean project formalizes the exact results through `n = 4` and the
+first independent layer of the `n = 5` proof:
 
 - canonical Boolean ANFs over `ZMod 2`, with squarefree monomials multiplied by
   union;
@@ -38,7 +41,10 @@ The root Lean project formalizes the exact results through `n = 4`:
 - explicit upper circuits with 6 AND gates for `Mul 3` and 9 AND gates for
   `Mul 4`;
 - the assumption-free exact theorems `MC(Mul 3) = 6` and
-  `MC(Mul 4) = 9`.
+  `MC(Mul 4) = 9`;
+- a separated canonical proposition for `MC(Mul 5) = 13`; and
+- a proof that the nine outputs of `Mul 5` are independent, yielding the
+  unconditional nine-AND dimension lower bound.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -49,6 +55,8 @@ unrestricted-circuit semantics through nine explicit coefficient lemmas. The
 development does not use `bv_decide`, `native_decide`, `sorry`, `admit`, or a
 project axiom. In particular, the audit of both `mc_mul_three` and
 `N4.mc_mul_four` reports only `propext`, `Classical.choice`, and `Quot.sound`.
+The repository does not yet claim an axiom audit or completed proof of
+`MC(Mul 5) = 13`.
 
 The main entry points are:
 
@@ -60,10 +68,13 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N3.lean`](UnrestrictedBooleanMul/N3.lean)
 - [`UnrestrictedBooleanMul/N3TruthTable.lean`](UnrestrictedBooleanMul/N3TruthTable.lean)
 - [`UnrestrictedBooleanMul/N4/Main.lean`](UnrestrictedBooleanMul/N4/Main.lean)
+- [`UnrestrictedBooleanMul/N5/Target.lean`](UnrestrictedBooleanMul/N5/Target.lean)
+- [`UnrestrictedBooleanMul/N5/Statement.lean`](UnrestrictedBooleanMul/N5/Statement.lean)
+- [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
 
-The `N3` and `N4` names describe the input sizes proved by those modules; they
-are not labels for internal research phases.
+The `N3`, `N4`, and `N5` names describe input sizes; they are not labels for
+internal research phases.
 
 Manuscript source and rendered papers are intentionally not mirrored here.
 Papers are distributed through arXiv or their eventual publication venues;

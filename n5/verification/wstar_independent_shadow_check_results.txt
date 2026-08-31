@@ -1,0 +1,19 @@
+planes=15
+W+quotient-rank=11
+no affine target functional at plane=0 ell=16 m=32
+plane 0 checked, fibers=1027180
+plane 1 checked, fibers=2053343
+plane 2 checked, fibers=3089583
+plane 3 checked, fibers=4115727
+plane 4 checked, fibers=5151951
+plane 5 checked, fibers=6178095
+plane 6 checked, fibers=7214319
+plane 7 checked, fibers=8238447
+plane 8 checked, fibers=9242415
+plane 9 checked, fibers=10266543
+plane 10 checked, fibers=11270511
+plane 11 checked, fibers=12274479
+plane 12 checked, fibers=13278447
+plane 13 checked, fibers=14282415
+plane 14 checked, fibers=15286383
+CONSTANT checked=15728640 fibers=15286383 duplicate_same_plane=100193 duplicate_radical=0 duplicate_other_plane=342064 affine_possible=0
