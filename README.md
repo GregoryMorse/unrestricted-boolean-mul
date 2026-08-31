@@ -27,7 +27,7 @@ The Lean development in this repository now checks the first four rows.
 
 ## Lean 4 formalization
 
-The root Lean project completes the first two formalization phases:
+The root Lean project formalizes the exact results through `n = 4`:
 
 - canonical Boolean ANFs over `ZMod 2`, with squarefree monomials multiplied by
   union;
@@ -36,7 +36,8 @@ The root Lean project completes the first two formalization phases:
 - exact results `MC(Mul 0) = 0`, `MC(Mul 1) = 1`, and `MC(Mul 2) = 3`;
 - explicit upper circuits with 6 AND gates for `Mul 3` and 9 AND gates for
   `Mul 4`;
-- the assumption-free exact theorem `MC(Mul 3) = 6`.
+- the assumption-free exact theorems `MC(Mul 3) = 6` and
+  `MC(Mul 4) = 9`.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -54,8 +55,14 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/Circuit.lean`](UnrestrictedBooleanMul/Circuit.lean)
 - [`UnrestrictedBooleanMul/Mul.lean`](UnrestrictedBooleanMul/Mul.lean)
 - [`UnrestrictedBooleanMul/SmallCases.lean`](UnrestrictedBooleanMul/SmallCases.lean)
-- [`UnrestrictedBooleanMul/Phase2Certificate.lean`](UnrestrictedBooleanMul/Phase2Certificate.lean)
-- [`UnrestrictedBooleanMul/Phase2.lean`](UnrestrictedBooleanMul/Phase2.lean)
+- [`UnrestrictedBooleanMul/N3Certificate.lean`](UnrestrictedBooleanMul/N3Certificate.lean)
+- [`UnrestrictedBooleanMul/N3.lean`](UnrestrictedBooleanMul/N3.lean)
+- [`UnrestrictedBooleanMul/N3TruthTable.lean`](UnrestrictedBooleanMul/N3TruthTable.lean)
+- [`UnrestrictedBooleanMul/N4/Main.lean`](UnrestrictedBooleanMul/N4/Main.lean)
+- [`AxiomAudit.lean`](AxiomAudit.lean)
+
+The `N3` and `N4` names describe the input sizes proved by those modules; they
+are not labels for internal research phases.
 
 Manuscript source and rendered papers are intentionally not mirrored here.
 Papers are distributed through arXiv or their eventual publication venues;
@@ -78,11 +85,22 @@ reproducibility pin.
 
 The Lean project is pinned by [`lean-toolchain`](lean-toolchain) to Lean
 `v4.32.1`, and [`lake-manifest.json`](lake-manifest.json) pins the corresponding
-mathlib revision. With `C:\Users\Gregory\.elan\bin` on `PATH`, replay it with:
+mathlib revision. Install [Elan](https://github.com/leanprover/elan), ensure its
+binary directory is on `PATH`, and replay the project on any supported platform
+with:
 
-```powershell
+```bash
+lake update
+lake exe cache --cache-from=legacy get
 lake build
+lake env leanchecker UnrestrictedBooleanMul
 ```
+
+The checker module is named explicitly because the Lake package uses a
+snake-case package name while the Lean library uses `UnrestrictedBooleanMul`.
+Continuous integration repeats the build and axiom audit on every push and
+pull request, runs `leanchecker` on the explicit library module, and performs a
+fresh source replay on its weekly schedule.
 
 The existing `n4` computational checks additionally require Python 3 and a
 C++17 compiler, as documented under [`n4/`](n4/).

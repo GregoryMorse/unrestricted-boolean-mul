@@ -1,9 +1,10 @@
-import UnrestrictedBooleanMul.Phase3.N4
+import UnrestrictedBooleanMul.N3TruthTable
+import UnrestrictedBooleanMul.N4.Main
 
 /-!
 # Unrestricted Boolean multiplicative complexity
 
-This is the root module for the unrestricted Boolean multiplication
-formalization.  The Phase 3 import closes the manuscript's algebraic
-dependency ledger and proves `MC(Mul 4) = 9`.
+This root module exports the exact results through `n = 4`.  The `N3` and
+`N4` module names describe theorem scope rather than an internal research
+workflow.
 -/

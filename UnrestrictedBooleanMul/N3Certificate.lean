@@ -1,0 +1,124 @@
+import UnrestrictedBooleanMul.SmallCases
+import Mathlib.Algebra.Field.ZMod
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Ring
+
+namespace UnrestrictedBooleanMul.N3Certificate
+
+abbrev F2 := ZMod 2
+
+theorem mul_self_f2 (x : F2) : x * x = x := by
+  fin_cases x <;> decide
+
+theorem pow_two_f2 (x : F2) : x ^ 2 = x := by
+  rw [pow_two, mul_self_f2]
+
+theorem two_eq_zero_f2 : (2 : F2) = 0 := by decide
+theorem three_eq_one_f2 : (3 : F2) = 1 := by decide
+theorem four_eq_zero_f2 : (4 : F2) = 0 := by decide
+theorem six_eq_zero_f2 : (6 : F2) = 0 := by decide
+theorem eight_eq_zero_f2 : (8 : F2) = 0 := by decide
+
+def ab (a b : Fin 10 -> F2) (i j : Fin 10) : F2 := a i * b j
+
+def c3 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 1 9 + ab a b 2 9 + ab a b 9 1 + ab a b 9 2
+
+def c20 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 5 9 + ab a b 6 9 + ab a b 9 5 + ab a b 9 6
+
+def c25 (a b : Fin 10 -> F2) : F2 := ab a b 1 2 + ab a b 2 1
+def c30 (a b : Fin 10 -> F2) : F2 := ab a b 5 6 + ab a b 6 5
+
+def c31 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 1 5 + ab a b 1 9 + ab a b 2 4 + ab a b 2 9 +
+  ab a b 4 2 + ab a b 4 9 + ab a b 5 1 + ab a b 5 9 +
+  ab a b 9 1 + ab a b 9 2 + ab a b 9 4 + ab a b 9 5
+
+def c32 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 1 6 + ab a b 1 9 + ab a b 2 5 + ab a b 2 9 +
+  ab a b 5 2 + ab a b 5 9 + ab a b 6 1 + ab a b 6 9 +
+  ab a b 9 1 + ab a b 9 2 + ab a b 9 5 + ab a b 9 6
+
+def c34 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 2 6 + ab a b 2 9 + ab a b 3 5 + ab a b 3 9 +
+  ab a b 5 3 + ab a b 5 9 + ab a b 6 2 + ab a b 6 9 +
+  ab a b 9 2 + ab a b 9 3 + ab a b 9 5 + ab a b 9 6
+
+def g0 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 1 5 + ab a b 1 6 + ab a b 5 1 + ab a b 5 9 +
+  ab a b 6 1 + ab a b 6 9 + ab a b 9 5 + ab a b 9 6
+
+def g1 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 1 6 + ab a b 1 9 + ab a b 2 6 + ab a b 2 9 +
+  ab a b 6 1 + ab a b 6 2 + ab a b 9 1 + ab a b 9 2
+
+def q00 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 2 1 + ab a b 1 2 + ab a b 4 2 + ab a b 5 2 +
+  ab a b 2 4 + ab a b 9 4 + ab a b 2 5 + ab a b 9 5 +
+  ab a b 4 9 + ab a b 5 9
+
+def q01 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 5 1 + ab a b 5 2 + ab a b 1 5 + ab a b 2 5
+
+def q02 (a b : Fin 10 -> F2) : F2 :=
+  1 + a 2 + a 9 + ab a b 9 1 + b 2 + ab a b 2 2 + b 9 +
+  ab a b 1 9 + ab a b 9 9
+
+def q03 (a b : Fin 10 -> F2) : F2 :=
+  a 1 + a 9 + b 1 + ab a b 1 1 + ab a b 9 1 + b 9 +
+  ab a b 1 9 + ab a b 9 9
+
+def q10 (a b : Fin 10 -> F2) : F2 :=
+  1 + a 5 + a 6 + ab a b 6 1 + ab a b 9 1 + ab a b 6 2 +
+  ab a b 9 2 + b 5 + ab a b 5 5 + b 6 + ab a b 1 6 +
+  ab a b 2 6 + ab a b 6 6 + ab a b 1 9 + ab a b 2 9
+
+def q11 (a b : Fin 10 -> F2) : F2 :=
+  ab a b 5 2 + ab a b 6 2 + ab a b 2 5 + ab a b 2 6
+
+def q12 (a b : Fin 10 -> F2) : F2 :=
+  a 6 + a 9 + ab a b 9 5 + b 6 + ab a b 6 6 + b 9 +
+  ab a b 5 9 + ab a b 9 9
+
+def q13 (a b : Fin 10 -> F2) : F2 :=
+  1 + a 5 + a 9 + b 5 + ab a b 5 5 + ab a b 9 5 + b 9 +
+  ab a b 5 9 + ab a b 9 9
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 100000 in
+theorem identity0 (a b : Fin 10 -> F2) :
+    g0 a b = q00 a b * c3 a b + q01 a b * c25 a b +
+      q02 a b * c31 a b + q03 a b * c32 a b := by
+  simp only [g0, q00, q01, q02, q03, c3, c25, c31, c32, ab]
+  ring_nf
+  simp only [pow_two_f2]
+  ring_nf
+  simp only [two_eq_zero_f2, three_eq_one_f2, four_eq_zero_f2, six_eq_zero_f2,
+    mul_zero, mul_one, add_zero]
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 100000 in
+theorem identity1 (a b : Fin 10 -> F2) :
+    g1 a b = q10 a b * c20 a b + q11 a b * c30 a b +
+      q12 a b * c32 a b + q13 a b * c34 a b := by
+  simp only [g1, q10, q11, q12, q13, c20, c30, c32, c34, ab]
+  ring_nf
+  simp only [pow_two_f2]
+  ring_nf
+  simp only [two_eq_zero_f2, three_eq_one_f2, four_eq_zero_f2, six_eq_zero_f2,
+    eight_eq_zero_f2, mul_zero, mul_one, add_zero]
+
+theorem cert0 (a b : Fin 10 -> F2)
+    (h3 : c3 a b = 0) (h25 : c25 a b = 0)
+    (h31 : c31 a b = 0) (h32 : c32 a b = 0) : g0 a b = 0 := by
+  rw [identity0, h3, h25, h31, h32]
+  ring
+
+theorem cert1 (a b : Fin 10 -> F2)
+    (h20 : c20 a b = 0) (h30 : c30 a b = 0)
+    (h32 : c32 a b = 0) (h34 : c34 a b = 0) : g1 a b = 0 := by
+  rw [identity1, h20, h30, h32, h34]
+  ring
+
+end UnrestrictedBooleanMul.N3Certificate
