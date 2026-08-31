@@ -9,6 +9,20 @@ envelope:
 - [`wstar_independent_shadow_check.cpp`](wstar_independent_shadow_check.cpp)
 - [`wstar_independent_shadow_check_results.txt`](wstar_independent_shadow_check_results.txt)
 
+It also contains
+[`five_upper_formula_check.py`](five_upper_formula_check.py), a dependency-free
+symbolic expansion of the thirteen displayed affine products.  It checks all
+nine output identities against the 25 bilinear monomials:
+
+```bash
+python3 five_upper_formula_check.py
+```
+
+The expected line is
+`PASS gates=13 outputs=9 bilinear_monomials=25`.  This duplicates the
+ring-normalization proof intended for `N5/Upper.lean`; it is a regression
+checksum, not a Lean theorem.
+
 It enumerates all 15 local independent planes and all `2^20` pairs of linear
 corrections per plane, for `15,728,640` presentations.  Fixing the cubic high
 part and the quadratic residue outside the envelope always fixes the target

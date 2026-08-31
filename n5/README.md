@@ -20,19 +20,23 @@ The repository currently contains:
 - a staged Lean proof that the nine output coordinates are linearly
   independent;
 - the resulting staged dimension bound that every circuit for `Mul 5` has at
-  least nine AND gates; and
+  least nine AND gates;
+- an explicit thirteen-product bilinear circuit, with all nine recombination
+  identities staged for ring normalization; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
 The current declarations awaiting their first clean kernel replay are in:
 
 - [`../UnrestrictedBooleanMul/N5/Target.lean`](../UnrestrictedBooleanMul/N5/Target.lean)
+- [`../UnrestrictedBooleanMul/N5/Upper.lean`](../UnrestrictedBooleanMul/N5/Upper.lean)
 - [`../UnrestrictedBooleanMul/N5/Statement.lean`](../UnrestrictedBooleanMul/N5/Statement.lean)
 
 No theorem named `mc_mul_five` is present yet, and the new declarations above
 must not be described as checked until the pinned toolchain has replayed them.
 In particular, this directory must not be described as a Lean certificate for
-the paper until the final lower and upper bounds have both been kernel checked.
+the paper until the final lower bound and staged upper circuit have both been
+kernel checked.
 
 ## Formalization handoff
 

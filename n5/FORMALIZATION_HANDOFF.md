@@ -47,11 +47,13 @@ stable while the new proof grows.
 - `N5/Statement.lean` — separated canonical proposition (implemented; first
   clean kernel replay pending).
 - `N5/Upper.lean` — explicit thirteen-product bilinear circuit and
-  `mul_five_upper : HasCircuit (Mul 5) 13`.
+  `mul_five_upper : HasCircuit (Mul 5) 13` (implemented; first clean kernel
+  replay pending).
 
-The upper circuit should be explicit ANF data, not a literature axiom.  Verify
-its nine recombination identities by ring normalization as in
-`SmallCases.lean`.
+The upper circuit is explicit ANF data rather than a literature axiom.  Its
+nine recombination identities are written as a ring-normalization proof, and
+`n5/verification/five_upper_formula_check.py` independently checks the same
+25 bilinear monomial coefficients.
 
 ### Phase 1: quadratic quotient and relation map
 

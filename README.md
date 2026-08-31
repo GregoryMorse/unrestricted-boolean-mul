@@ -22,12 +22,12 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
-| 5 | 13 | algebraic hand proof; Lean statement and target layer staged for kernel replay, full formalization in progress |
+| 5 | 13 | algebraic hand proof; Lean statement, target layer, and explicit 13-product upper circuit staged for kernel replay; full lower-bound formalization in progress |
 
 The manuscripts contain the mathematical exposition and literature citations.
 The Lean development checks the five rows `n = 0` through `n = 4`; for `n = 5`
-the statement interface and target-dimension layer are implemented, but their
-first clean kernel replay remains pending.
+the statement interface, target-dimension layer, and explicit upper circuit
+are implemented, but their first clean kernel replay remains pending.
 
 ## Lean 4 formalization
 
@@ -43,9 +43,11 @@ first independent layer of the `n = 5` proof:
   `Mul 4`;
 - the assumption-free exact theorems `MC(Mul 3) = 6` and
   `MC(Mul 4) = 9`;
-- a separated canonical proposition for `MC(Mul 5) = 13`; and
+- a separated canonical proposition for `MC(Mul 5) = 13`;
 - a proof that the nine outputs of `Mul 5` are independent, yielding the
-  unconditional nine-AND dimension lower bound.
+  unconditional nine-AND dimension lower bound; and
+- an explicit thirteen-product `Mul 5` circuit with nine recombination
+  identities proved by ring normalization.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -70,6 +72,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N3TruthTable.lean`](UnrestrictedBooleanMul/N3TruthTable.lean)
 - [`UnrestrictedBooleanMul/N4/Main.lean`](UnrestrictedBooleanMul/N4/Main.lean)
 - [`UnrestrictedBooleanMul/N5/Target.lean`](UnrestrictedBooleanMul/N5/Target.lean)
+- [`UnrestrictedBooleanMul/N5/Upper.lean`](UnrestrictedBooleanMul/N5/Upper.lean)
 - [`UnrestrictedBooleanMul/N5/Statement.lean`](UnrestrictedBooleanMul/N5/Statement.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

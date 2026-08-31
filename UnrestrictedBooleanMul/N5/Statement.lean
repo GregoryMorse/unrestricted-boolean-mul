@@ -1,13 +1,13 @@
-import UnrestrictedBooleanMul.N5.Target
+import UnrestrictedBooleanMul.N5.Upper
 
 /-!
 # Canonical statement for the five-term result
 
 The definition below deliberately separates the statement from the future
-proof.  It is not a theorem and does not claim that the `n = 5` formalization
-is complete.  The paper theorem will be represented by a proof of
-`MainStatement` once the closed-place and feedback modules in `n5/` have been
-implemented.
+lower-bound proof.  The explicit thirteen-gate upper circuit is already in
+`N5.Upper`, but the paper theorem will be represented by a proof of
+`MainStatement` only after the closed-place and feedback modules in `n5/` have
+been implemented.
 -/
 
 namespace UnrestrictedBooleanMul
