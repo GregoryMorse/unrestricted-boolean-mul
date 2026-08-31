@@ -1,0 +1,6 @@
+'UnrestrictedBooleanMul.mc_mul_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UnrestrictedBooleanMul.mc_mul_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UnrestrictedBooleanMul.mc_mul_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UnrestrictedBooleanMul.mc_mul_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UnrestrictedBooleanMul.N4.no_eight_gate_circuit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UnrestrictedBooleanMul.N4.mc_mul_four' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -8,3 +8,6 @@
 *.tex
 
 .lake
+
+# Local manuscript finalization and arXiv staging area.
+/paper/

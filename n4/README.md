@@ -15,6 +15,14 @@ nonzero defect-budget argument.
 
 ## Artifact contents
 
+- The root Lean project is the formal certificate for `MC(Mul 4) = 9`; its
+  headline declaration is `UnrestrictedBooleanMul.N4.mc_mul_four`.
+- [`../AxiomAudit.lean`](../AxiomAudit.lean) prints the trusted assumptions of
+  every headline exact theorem.
+- [`LEAN_SHA256SUMS.txt`](LEAN_SHA256SUMS.txt) fixes every Lean source,
+  toolchain lock, and trust/CI file used for the formal proof.
+- [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt) records the reviewed audit output for
+  the release commit.
 - [`verification/`](verification/) contains the Python and C++ regression
   checks and their recorded outputs.
 - [`verification/README.txt`](verification/README.txt) maps every program to
@@ -24,8 +32,9 @@ nonzero defect-budget argument.
 - [`SHA256SUMS.txt`](SHA256SUMS.txt) fixes the exact bytes of this result's
   verification snapshot.
 
-The checks support development and reproducibility; no program output is a
-logical premise of the theorem.
+The Lean proof is the formal certificate. The Python and C++ programs are
+independent regression checks for development and reproducibility; no program
+output is a trusted premise of the theorem.
 
 ## Paper
 
@@ -39,7 +48,10 @@ repository.
 
 ## Immutable snapshot
 
-Pinned release tag: [`n4-arxiv-v1`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v1).
+Current Lean-complete release: [`n4-arxiv-v2`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v2).
 
-The tag resolves to the exact public commit. The associated paper records the
-full commit hash and clean-checkout verification date.
+Historical pre-Lean computational snapshot:
+[`n4-arxiv-v1`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v1).
+That tag remains unchanged. The current tag resolves to the exact public
+commit recorded by the associated paper together with its clean-checkout
+verification date.

@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "Please cite the paper associated with the result directory you use."
-title: "Verification Artifacts for Unrestricted Boolean Multiplicative Complexity of Binary Polynomial Multiplication"
+title: "Formal Verification Artifacts for Unrestricted Boolean Multiplicative Complexity of Binary Polynomial Multiplication"
 type: software
 license: MIT
 authors:
@@ -9,6 +9,7 @@ authors:
     affiliation: "Eotvos Lorand University"
 repository-code: "https://github.com/GregoryMorse/unrestricted-boolean-mul"
 abstract: >-
-  Computational verification artifacts for exact unrestricted XOR--AND
-  multiplicative-complexity results for binary polynomial multiplication,
-  organized by input length and pinned to paper-specific release tags.
+  Formal Lean proofs and computational verification artifacts for exact
+  unrestricted XOR--AND multiplicative-complexity results for binary
+  polynomial multiplication. The current exact frontier is formalized through
+  n = 4, organized by input length, and pinned to paper-specific release tags.

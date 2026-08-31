@@ -1,8 +1,8 @@
 # Unrestricted Boolean Multiplicative Complexity of Binary Polynomial Multiplication
 
-This repository collects computational verification artifacts for exact
-unrestricted XOR--AND multiplicative-complexity results for binary polynomial
-multiplication.
+This repository contains formal Lean proofs and legacy computational
+verification artifacts for exact unrestricted XOR--AND
+multiplicative-complexity results for binary polynomial multiplication.
 
 The repository is organized by input length so that later results can be added
 without renaming or replacing the existing artifact:
@@ -20,10 +20,11 @@ frontier explicit:
 | 1 | 1 | elementary dimension bound and one product |
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
-| 4 | 9 | unrestricted lower bound; artifact in [`n4/`](n4/) |
+| 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
 
 The manuscript contains the mathematical exposition and literature citations.
-The Lean development in this repository now checks the first four rows.
+The Lean development in this repository checks all five rows (`n = 0` through
+`n = 4`).
 
 ## Lean 4 formalization
 
@@ -46,8 +47,8 @@ required equality of the three middle Hankel coefficients. Lean checks those
 identities by ordinary ring normalization and connects them to the ANF and
 unrestricted-circuit semantics through nine explicit coefficient lemmas. The
 development does not use `bv_decide`, `native_decide`, `sorry`, `admit`, or a
-project axiom. In particular, `#print axioms mc_mul_three` reports only
-`propext`, `Classical.choice`, and `Quot.sound`.
+project axiom. In particular, the audit of both `mc_mul_three` and
+`N4.mc_mul_four` reports only `propext`, `Classical.choice`, and `Quot.sound`.
 
 The main entry points are:
 
@@ -90,7 +91,6 @@ binary directory is on `PATH`, and replay the project on any supported platform
 with:
 
 ```bash
-lake update
 lake exe cache --cache-from=legacy get
 lake build
 lake env leanchecker UnrestrictedBooleanMul
