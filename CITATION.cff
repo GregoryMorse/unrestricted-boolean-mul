@@ -13,5 +13,6 @@ abstract: >-
   unrestricted XOR--AND multiplicative-complexity results for binary
   polynomial multiplication. Exact results are formalized through n = 4. The
   n = 5 exact value 13 has an algebraic manuscript proof; its separated Lean
-  statement, target layer, and formalization handoff are included while the
-  full kernel proof remains in progress.
+  statement, target layer, and formalization handoff are included. The new
+  n = 5 modules await their first clean kernel replay, and the full formal
+  proof remains in progress.

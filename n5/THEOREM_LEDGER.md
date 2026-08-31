@@ -2,16 +2,18 @@
 
 Status meanings:
 
-- **checked** — implemented and intended to be included in the clean build;
+- **checked** — implemented and included in a clean kernel build;
+- **replay pending** — implemented, but not yet accepted by a clean kernel
+  build under the pinned toolchain;
 - **interface fixed** — statement and dependencies are fixed, proof absent;
 - **planned** — module and proof route identified;
 - **regression only** — computational checksum, never a theorem premise.
 
 | Manuscript result | Planned Lean declaration/module | Dependencies | Status |
 |---|---|---|---|
-| Nine target coordinates are independent | `N5.mulFive_linearIndependent`, `N5/Target.lean` | generic ANF coefficient projection | checked |
-| Every circuit for `Mul 5` has at least nine ANDs | `N5.mul_five_dimension_lower`, `N5/Target.lean` | preceding row, generic circuit projection bound | checked |
-| Main statement `MC(Mul_5)=13` | `N5.MainStatement`, `N5/Statement.lean` | existing `MC`, `Mul` definitions | checked statement only |
+| Nine target coordinates are independent | `N5.mulFive_linearIndependent`, `N5/Target.lean` | generic ANF coefficient projection | replay pending |
+| Every circuit for `Mul 5` has at least nine ANDs | `N5.mul_five_dimension_lower`, `N5/Target.lean` | preceding row, generic circuit projection bound | replay pending |
+| Main statement `MC(Mul_5)=13` | `N5.MainStatement`, `N5/Statement.lean` | existing `MC`, `Mul` definitions | replay pending (statement only) |
 | Lemma 2.1, zero fiber | `N5.zeroFiber_eq_rational`, `N5/Fiber.lean` | quadratic quotient, Hankel rank one | planned |
 | Lemma 2.2, target--defect exact sequence | `N5.targetDefect_exact`, `N5/Fiber.lean` | finite submodule quotient | planned |
 | Theorem 3.2, exact relation-map formula | `N5.relationMap_finrank`, `N5/RelationMap.lean` | relation kernel and displacement map | interface fixed |
@@ -36,7 +38,7 @@ Status meanings:
 | Theorem 12.3, three-colour saturation | `N5.threeColour_saturation`, `N5/ThreeColour.lean` | `e+s<=3`, first-order envelope | interface fixed |
 | Theorem 13.1, no twelve-gate circuit | `N5.no_twelve_gate_circuit`, `N5/Main.lean` | capacity and suffix regimes | planned |
 | Theorem 13.1, exact value 13 | `N5.mc_mul_five`, `N5/Main.lean` | lower theorem and explicit upper circuit | planned |
-| 15,728,640-presentation `W_*` check | `n5/verification/` | standalone C++17 | regression only |
+| 15,728,640-presentation `W_*` check | `n5/verification/` | standalone C++20 | regression only |
 | 166,199,235 projection run and 43-fiber scan | not yet released | discovery programs and exact inputs | regression only; absent artifact must not be claimed |
 
 The paper's theorem numbering may move under later edits.  Lean docstrings

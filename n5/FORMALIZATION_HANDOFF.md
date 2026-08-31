@@ -20,7 +20,7 @@ ledger, not a shared case-analysis implementation.
 
 ## Existing reusable foundation
 
-Use the following checked modules directly:
+Use the following kernel-checked `n = 4` modules directly:
 
 - `ANF.lean`, `Circuit.lean`, and `Mul.lean` for semantics;
 - `N4/Degree.lean`, `N4/Homogeneous.lean`, and `N4/Exterior.lean` for
@@ -43,8 +43,9 @@ stable while the new proof grows.
 ### Phase 0: target and upper circuit
 
 - `N5/Target.lean` — private target projection, target independence, rank nine
-  (implemented).
-- `N5/Statement.lean` — separated canonical proposition (implemented).
+  (implemented; first clean kernel replay pending).
+- `N5/Statement.lean` — separated canonical proposition (implemented; first
+  clean kernel replay pending).
 - `N5/Upper.lean` — explicit thirteen-product bilinear circuit and
   `mul_five_upper : HasCircuit (Mul 5) 13`.
 

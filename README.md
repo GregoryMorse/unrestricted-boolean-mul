@@ -22,11 +22,12 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
-| 5 | 13 | algebraic hand proof; Lean statement and target layer checked, full formalization in progress |
+| 5 | 13 | algebraic hand proof; Lean statement and target layer staged for kernel replay, full formalization in progress |
 
 The manuscripts contain the mathematical exposition and literature citations.
 The Lean development checks the five rows `n = 0` through `n = 4`; for `n = 5`
-it currently checks only the statement interface and target-dimension layer.
+the statement interface and target-dimension layer are implemented, but their
+first clean kernel replay remains pending.
 
 ## Lean 4 formalization
 
