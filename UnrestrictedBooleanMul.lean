@@ -23,6 +23,8 @@ import UnrestrictedBooleanMul.N5.QuadraticFlattening
 import UnrestrictedBooleanMul.N5.PrefixState
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+import UnrestrictedBooleanMul.N5.MissingCoset
+import UnrestrictedBooleanMul.N5.TargetClean
 
 /-!
 # Unrestricted Boolean multiplicative complexity
