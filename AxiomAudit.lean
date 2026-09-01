@@ -89,3 +89,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.fanoLine_gift_has_two_wedge_secant
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_localSecantCorrection_mem
 #print axioms UnrestrictedBooleanMul.N5.fanoLine_rationalZero_gift_mem
+#print axioms UnrestrictedBooleanMul.N5.degreeQ2_normalizedLocalSecant_mem
