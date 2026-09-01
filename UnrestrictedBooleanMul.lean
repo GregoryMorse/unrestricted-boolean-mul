@@ -21,6 +21,7 @@ import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
 import UnrestrictedBooleanMul.N5.Capacity
 import UnrestrictedBooleanMul.N5.QuadraticFlattening
 import UnrestrictedBooleanMul.N5.PrefixState
+import UnrestrictedBooleanMul.N5.SuffixBudget
 
 /-!
 # Unrestricted Boolean multiplicative complexity

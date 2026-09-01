@@ -93,7 +93,10 @@ first independent layer of the `n = 5` proof:
   ANDs; and
 - a canonical last-quadratic-prefix state.  Quotient-image monotonicity and
   the algebraic first-high defect-birth lemma show that this state has defect
-  at most two in every relevant nonredundant circuit.
+  at most two in every relevant nonredundant circuit; and
+- a gate-count-free definition of every finite defect-legal unrestricted
+  suffix, with the corrected equal-defect-two monotonicity theorem for target
+  gain and the resulting monotonicity of the completion deficit.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -167,6 +170,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/Prefix.lean`](UnrestrictedBooleanMul/N5/Prefix.lean)
 - [`UnrestrictedBooleanMul/N5/QuadraticFlattening.lean`](UnrestrictedBooleanMul/N5/QuadraticFlattening.lean)
 - [`UnrestrictedBooleanMul/N5/PrefixState.lean`](UnrestrictedBooleanMul/N5/PrefixState.lean)
+- [`UnrestrictedBooleanMul/N5/SuffixBudget.lean`](UnrestrictedBooleanMul/N5/SuffixBudget.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

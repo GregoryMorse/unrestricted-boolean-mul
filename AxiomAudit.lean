@@ -122,3 +122,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.firstHighGate_defect_succ
 #print axioms UnrestrictedBooleanMul.N5.no_all_quadratic_circuit_le_twelve
 #print axioms UnrestrictedBooleanMul.N5.lastQuadraticPrefix_defect_le_two
+#print axioms UnrestrictedBooleanMul.N5.suffixPostGain_mono_corrected
+#print axioms UnrestrictedBooleanMul.N5.suffixDeficit_mono

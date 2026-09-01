@@ -32,7 +32,7 @@ Status meanings:
 | Lemma 9.1, circuit bookkeeping | `N5.circuit_bookkeeping`, `N5.allQuadraticPrefix_bookkeeping`, `N5.lastQuadraticPrefix_defect_le_two`, `N5/Prefix.lean`, `N5/QuadraticFlattening.lean`, `N5/PrefixState.lean` | generic circuit flags, dimension-polymorphic Reed--Muller flattening, and first-high defect birth | checked |
 | Proposition 10.2, two-defect envelopes | `N5.E2.envelopes_exhaustive`, `N5/E2/Envelopes.lean` | equality classification and symmetries | interface fixed |
 | Theorem 10.4, stable two-defect bound | `N5.E2.suffix_target_le`, `N5/E2/Main.lean` | four envelope modules | planned |
-| Lemma 10.6, suffix-deficit monotonicity | `N5.suffixDeficit_mono`, `N5/SuffixBudget.lean` | equal defect two, no length allowance | interface fixed |
+| Lemma 10.6, suffix-deficit monotonicity | `N5.suffixPostGain_mono_corrected`, `N5.suffixDeficit_mono`, `N5/SuffixBudget.lean` | equal defect two, no length allowance | checked |
 | Lemma 11.1, missing-coset rigidity | `N5.missingCoset_crossRank`, `N5/MissingCoset.lean` | explicit pivot minors | planned |
 | Lemma 11.2, envelope kernel and shadows | `N5.envelope_shadow`, `N5/FirstEnvelope.lean` | local radical structure | planned |
 | Lemma 11.4, target-clean second jet | `N5.targetClean`, `N5/TargetClean.lean` | symbolic 4-by-4 contradiction | planned |

@@ -131,9 +131,10 @@ next completion gate.
   quotient-defect monotonicity and first-high defect birth, and packages the
   alternatives `e in {0,1,2}` for every relevant nonredundant circuit
   (checked).
-- `N5/SuffixBudget.lean` — define `d_post` over every finite suffix constrained
-  only by total defect at most three.  There is deliberately no gate-count
-  parameter.
+- `N5/SuffixBudget.lean` — defines `d_post` over every finite suffix constrained
+  only by total defect at most three, proves equal-defect simulation, the
+  corrected target-gain inequality, and deficit monotonicity (checked).  There
+  is deliberately no gate-count parameter.
 
 The monotonicity theorem must assume equal defect in the envelope transfer:
 
