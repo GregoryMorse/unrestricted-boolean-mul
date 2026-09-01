@@ -722,6 +722,166 @@ theorem exactFirstOrderCombination_zeroWedge_eq_local
     exact hzero
   · exact hne
 
+/-- If two first-order factor planes have the same quartic wedge, their
+Pluecker vectors differ by no rational rotation, one rational rotation, or
+a chain of two distinct rational rotations.  The weight-three kernel vector
+is incompatible with the three Pluecker identities. -/
+theorem firstOrderPlaneCoeff_difference_classification
+    (x y z w : Fin 8 → F₂)
+    (hsame : targetCrossWedge (exactFirstOrderCombination x)
+        (exactFirstOrderCombination y) =
+      targetCrossWedge (exactFirstOrderCombination z)
+        (exactFirstOrderCombination w)) :
+    firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w = 0 ∨
+      (∃ i : Fin 3, firstOrderPlaneCoeff x y +
+        firstOrderPlaneCoeff z w = firstOrderLocalKernelDirections i) ∨
+      ∃ i j : Fin 3, i ≠ j ∧
+        firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+          firstOrderLocalKernelDirections i +
+            firstOrderLocalKernelDirections j := by
+  have hzero : firstOrderEnvelopePolarizedMap
+      (firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w) = 0 := by
+    rw [map_add, ← targetCrossWedge_exactFirstOrderCombination,
+      ← targetCrossWedge_exactFirstOrderCombination, hsame]
+    funext i k j l
+    exact CharTwo.add_self_eq_zero (R := F₂) _
+  have hmem : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w ∈
+      firstOrderLocalKernelSpace := by
+    rw [← firstOrderEnvelopePolarized_ker_eq_local,
+      LinearMap.mem_ker]
+    exact hzero
+  rcases firstOrderLocalKernelSpace_normalForm hmem with ⟨a, b, c, habc⟩
+  let e0 := Pi.basisFun F₂ (Fin 28) 2
+  let e1 := Pi.basisFun F₂ (Fin 28) 9
+  let e2 := Pi.basisFun F₂ (Fin 28) 15
+  have hbeta : firstOrderPlaneCoeff z w =
+      firstOrderPlaneCoeff x y + (a • e0 + b • e1 + c • e2) := by
+    funext k
+    have hk := congrFun habc k
+    change firstOrderPlaneCoeff x y k + firstOrderPlaneCoeff z w k =
+      (a • e0 + b • e1 + c • e2) k at hk
+    calc
+      firstOrderPlaneCoeff z w k =
+          firstOrderPlaneCoeff z w k + 0 := (add_zero _).symm
+      _ = firstOrderPlaneCoeff z w k +
+          (firstOrderPlaneCoeff x y k +
+            firstOrderPlaneCoeff x y k) := by
+        rw [CharTwo.add_self_eq_zero]
+      _ = firstOrderPlaneCoeff x y k +
+          (firstOrderPlaneCoeff x y k +
+            firstOrderPlaneCoeff z w k) := by ac_rfl
+      _ = firstOrderPlaneCoeff x y k +
+          (a • e0 + b • e1 + c • e2) k := by rw [hk]
+      _ = _ := by simp only [Pi.add_apply]
+  have hab0 := firstOrderPlaneCoeff_plucker_0134 x y
+  have hab1 := firstOrderPlaneCoeff_plucker_0134 z w
+  have hac0 := firstOrderPlaneCoeff_plucker_0235 x y
+  have hac1 := firstOrderPlaneCoeff_plucker_0235 z w
+  have hbc0 := firstOrderPlaneCoeff_plucker_1245 x y
+  have hbc1 := firstOrderPlaneCoeff_plucker_1245 z w
+  rw [hbeta] at hab1 hac1 hbc1
+  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hab1 hac1 hbc1
+  simp [e0, e1, e2] at hab1 hac1 hbc1
+  have habRel :
+      a * firstOrderPlaneCoeff x y 9 +
+        b * firstOrderPlaneCoeff x y 2 + a * b = 0 := by
+    ring_nf at hab0 hab1 ⊢
+    have h0 : firstOrderPlaneCoeff x y 2 *
+        firstOrderPlaneCoeff x y 9 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    have h1 : firstOrderPlaneCoeff x y 0 *
+        firstOrderPlaneCoeff x y 18 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    have h2 : firstOrderPlaneCoeff x y 3 *
+        firstOrderPlaneCoeff x y 8 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    linear_combination hab0 + hab1 - h0 - h1 - h2
+  have hacRel :
+      a * firstOrderPlaneCoeff x y 15 +
+        c * firstOrderPlaneCoeff x y 2 + a * c = 0 := by
+    ring_nf at hac0 hac1 ⊢
+    have h0 : firstOrderPlaneCoeff x y 2 *
+        firstOrderPlaneCoeff x y 15 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    have h1 : firstOrderPlaneCoeff x y 1 *
+        firstOrderPlaneCoeff x y 19 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    have h2 : firstOrderPlaneCoeff x y 4 *
+        firstOrderPlaneCoeff x y 13 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    linear_combination hac0 + hac1 - h0 - h1 - h2
+  have hbcRel :
+      b * firstOrderPlaneCoeff x y 15 +
+        c * firstOrderPlaneCoeff x y 9 + b * c = 0 := by
+    ring_nf at hbc0 hbc1 ⊢
+    have h0 : firstOrderPlaneCoeff x y 9 *
+        firstOrderPlaneCoeff x y 15 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    have h1 : firstOrderPlaneCoeff x y 7 *
+        firstOrderPlaneCoeff x y 22 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    have h2 : firstOrderPlaneCoeff x y 10 *
+        firstOrderPlaneCoeff x y 14 * 2 = 0 := by
+      rw [N3Certificate.two_eq_zero_f2, mul_zero]
+    linear_combination hbc0 + hbc1 - h0 - h1 - h2
+  rcases f2_eq_zero_or_one a with rfl | rfl <;>
+    rcases f2_eq_zero_or_one b with rfl | rfl <;>
+      rcases f2_eq_zero_or_one c with rfl | rfl
+  · left
+    simpa [e0, e1, e2] using habc
+  · right; left
+    refine ⟨2, ?_⟩
+    simpa [e0, e1, e2, firstOrderLocalKernelDirections] using habc
+  · right; left
+    refine ⟨1, ?_⟩
+    simpa [e0, e1, e2, firstOrderLocalKernelDirections] using habc
+  · right; right
+    refine ⟨1, 2, by decide, ?_⟩
+    simpa [e0, e1, e2, firstOrderLocalKernelDirections,
+      add_comm] using habc
+  · right; left
+    refine ⟨0, ?_⟩
+    simpa [e0, e1, e2, firstOrderLocalKernelDirections] using habc
+  · right; right
+    refine ⟨0, 2, by decide, ?_⟩
+    simpa [e0, e1, e2, firstOrderLocalKernelDirections,
+      add_comm] using habc
+  · right; right
+    refine ⟨0, 1, by decide, ?_⟩
+    simpa [e0, e1, e2, firstOrderLocalKernelDirections,
+      add_comm] using habc
+  · have hAB : firstOrderPlaneCoeff x y 2 +
+        firstOrderPlaneCoeff x y 9 = 1 := by
+      apply sub_eq_zero.mp
+      rw [CharTwo.sub_eq_add]
+      simpa [add_comm, add_left_comm, add_assoc] using habRel
+    have hAC : firstOrderPlaneCoeff x y 2 +
+        firstOrderPlaneCoeff x y 15 = 1 := by
+      apply sub_eq_zero.mp
+      rw [CharTwo.sub_eq_add]
+      simpa [add_comm, add_left_comm, add_assoc] using hacRel
+    have hBC : firstOrderPlaneCoeff x y 9 +
+        firstOrderPlaneCoeff x y 15 = 1 := by
+      apply sub_eq_zero.mp
+      rw [CharTwo.sub_eq_add]
+      simpa [add_comm, add_left_comm, add_assoc] using hbcRel
+    have hBC0 : firstOrderPlaneCoeff x y 9 +
+        firstOrderPlaneCoeff x y 15 = 0 := by
+      calc
+        firstOrderPlaneCoeff x y 9 + firstOrderPlaneCoeff x y 15 =
+            (firstOrderPlaneCoeff x y 2 + firstOrderPlaneCoeff x y 2) +
+              (firstOrderPlaneCoeff x y 9 +
+                firstOrderPlaneCoeff x y 15) := by
+                  simp only [CharTwo.add_self_eq_zero, zero_add]
+        _ = (firstOrderPlaneCoeff x y 2 +
+              firstOrderPlaneCoeff x y 9) +
+            (firstOrderPlaneCoeff x y 2 +
+              firstOrderPlaneCoeff x y 15) := by
+                ac_rfl
+        _ = 1 + 1 := by rw [hAB, hAC]
+        _ = 0 := CharTwo.add_self_eq_zero 1
+    exact (zero_ne_one (hBC0.symm.trans hBC)).elim
+
 end
 
 end N5
