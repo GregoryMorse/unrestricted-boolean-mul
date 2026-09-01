@@ -43,3 +43,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.populatedRelationKernel_finrank_le_four
 #print axioms UnrestrictedBooleanMul.N5.relationKernel_eq_fanoRelationSpan
 #print axioms UnrestrictedBooleanMul.N5.defectRelationMap_range_eq_span_smallRelationGifts
+#print axioms UnrestrictedBooleanMul.N5.fanoLine_effective_places_eq
+#print axioms UnrestrictedBooleanMul.N5.fanoQuadrilateral_mixed_complement_sum_not_populated
