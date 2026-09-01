@@ -112,6 +112,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/RelationIncidence.lean`](UnrestrictedBooleanMul/N5/RelationIncidence.lean)
 - [`UnrestrictedBooleanMul/N5/RelationGiftCoefficients.lean`](UnrestrictedBooleanMul/N5/RelationGiftCoefficients.lean)
 - [`UnrestrictedBooleanMul/N5/RelationGiftPivots.lean`](UnrestrictedBooleanMul/N5/RelationGiftPivots.lean)
+- [`UnrestrictedBooleanMul/N5/EffectivePointPlaces.lean`](UnrestrictedBooleanMul/N5/EffectivePointPlaces.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
