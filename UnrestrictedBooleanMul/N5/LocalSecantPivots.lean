@@ -371,6 +371,7 @@ private theorem secant_pow_four_f2 (x : F₂) : x ^ 4 = x := by
 
 private theorem secant_five_eq_one_f2 : (5 : F₂) = 1 := by decide
 private theorem secant_three_eq_one_f2 : (3 : F₂) = 1 := by decide
+private theorem secant_nine_eq_one_f2 : (9 : F₂) = 1 := by decide
 private theorem secant_ten_eq_zero_f2 : (10 : F₂) = 0 := by decide
 private theorem secant_twelve_eq_zero_f2 : (12 : F₂) = 0 := by decide
 private theorem secant_thirteen_eq_one_f2 : (13 : F₂) = 1 := by decide
@@ -380,9 +381,11 @@ private theorem secant_eighteen_eq_zero_f2 : (18 : F₂) = 0 := by decide
 private theorem secant_twenty_eq_zero_f2 : (20 : F₂) = 0 := by decide
 private theorem secant_twenty_two_eq_zero_f2 : (22 : F₂) = 0 := by decide
 private theorem secant_twenty_four_eq_zero_f2 : (24 : F₂) = 0 := by decide
+private theorem secant_twenty_six_eq_zero_f2 : (26 : F₂) = 0 := by decide
 private theorem secant_twenty_eight_eq_zero_f2 : (28 : F₂) = 0 := by decide
 private theorem secant_thirty_eq_zero_f2 : (30 : F₂) = 0 := by decide
 private theorem secant_thirty_two_eq_zero_f2 : (32 : F₂) = 0 := by decide
+private theorem secant_thirty_six_eq_zero_f2 : (36 : F₂) = 0 := by decide
 private theorem secant_forty_eq_zero_f2 : (40 : F₂) = 0 := by decide
 private theorem secant_forty_four_eq_zero_f2 : (44 : F₂) = 0 := by decide
 private theorem secant_fifty_two_eq_zero_f2 : (52 : F₂) = 0 := by decide
@@ -1085,6 +1088,265 @@ theorem degreeQ2_normalizedLocalSecant_mem
     simpa only [hE, mul_zero, add_zero] using hid
   · change c 1 + c 7 = 0
     have hid := degreeQ2_secant_constraint_two_identity q0 q1 q3 c hq
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+
+set_option maxRecDepth 10000 in
+/-- First degree-two secant pivot on the `q₁=1,q₂=0` chart. -/
+theorem degreeD_secant_constraint_zero_identity
+    (q0 q3 : F₂) (c : TargetCoeff) :
+    c 1 + c 2 + c 4 + c 5 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 3
+        (degreeEffectiveD q0 q3) c i j k l m n
+      c 4 * E 0 1 2 5 6 7 +
+      c 6 * E 0 1 2 5 6 7 +
+      c 2 * E 0 1 2 5 6 8 +
+      c 4 * E 0 1 2 5 6 8 +
+      c 1 * E 0 1 2 5 6 9 +
+      c 3 * E 0 1 2 5 6 9 +
+      c 4 * E 0 1 2 5 6 9 +
+      c 1 * E 0 1 2 5 7 8 +
+      c 3 * E 0 1 2 5 7 8 +
+      c 4 * E 0 1 2 5 7 8 +
+      E 0 1 2 5 7 9 +
+      c 2 * E 0 1 2 5 7 9 +
+      c 6 * E 0 1 2 5 7 9 +
+      E 0 1 2 5 8 9 +
+      c 0 * E 0 1 2 5 8 9 +
+      c 4 * E 0 1 2 5 8 9 +
+      c 5 * E 0 1 2 5 8 9 +
+      c 0 * E 0 1 2 6 7 9 +
+      c 4 * E 0 1 2 6 7 9 +
+      c 4 * E 0 1 2 6 8 9 +
+      E 0 1 4 5 6 7 +
+      c 0 * E 0 2 3 5 6 8 +
+      c 0 * E 1 2 3 5 6 7 +
+      E 1 2 3 5 7 8 +
+      c 5 * E 1 2 4 5 6 7 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    degreeEffectiveD, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2, secant_three_eq_one_f2,
+    secant_nine_eq_one_f2,
+    secant_five_eq_one_f2, secant_ten_eq_zero_f2,
+    secant_twelve_eq_zero_f2, secant_thirteen_eq_one_f2,
+    secant_fourteen_eq_zero_f2, secant_sixteen_eq_zero_f2,
+    secant_eighteen_eq_zero_f2, secant_twenty_eq_zero_f2,
+    secant_twenty_two_eq_zero_f2, secant_twenty_four_eq_zero_f2,
+    secant_twenty_eight_eq_zero_f2, secant_thirty_eq_zero_f2,
+    secant_thirty_two_eq_zero_f2, secant_thirty_six_eq_zero_f2,
+    secant_forty_eq_zero_f2,
+    secant_forty_four_eq_zero_f2, secant_fifty_two_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+/-- Second degree-two secant pivot on the `q₁=1,q₂=0` chart. -/
+theorem degreeD_secant_constraint_one_identity
+    (q0 q3 : F₂) (c : TargetCoeff) :
+    c 1 + c 3 + c 4 + c 6 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 3
+        (degreeEffectiveD q0 q3) c i j k l m n
+      q3 * E 0 1 2 3 5 7 +
+      q3 * E 0 1 2 3 6 8 +
+      q3 * E 0 1 2 4 7 8 +
+      E 0 1 2 5 6 7 +
+      c 2 * E 0 1 2 5 6 7 +
+      c 5 * E 0 1 2 5 6 7 +
+      c 3 * E 0 1 2 5 6 9 +
+      c 2 * E 0 1 2 5 7 8 +
+      c 7 * E 0 1 2 5 7 8 +
+      c 1 * E 0 1 2 5 7 9 +
+      c 6 * E 0 1 2 5 7 9 +
+      c 7 * E 0 1 2 5 7 9 +
+      c 1 * E 0 1 2 5 8 9 +
+      c 6 * E 0 1 2 5 8 9 +
+      c 7 * E 0 1 2 6 7 8 +
+      c 5 * E 0 1 2 6 7 9 +
+      E 0 1 2 6 8 9 +
+      c 5 * E 0 1 2 6 8 9 +
+      c 6 * E 0 1 2 6 8 9 +
+      c 7 * E 0 1 2 6 8 9 +
+      c 5 * E 0 1 2 7 8 9 +
+      c 3 * E 0 1 3 5 6 7 +
+      c 4 * E 0 1 3 5 6 7 +
+      E 0 1 3 5 6 9 +
+      c 1 * E 0 1 3 5 6 9 +
+      c 6 * E 0 1 3 5 6 9 +
+      E 0 1 3 5 7 9 +
+      c 1 * E 0 1 3 5 7 9 +
+      c 7 * E 0 1 3 5 7 9 +
+      E 0 1 3 5 8 9 +
+      c 0 * E 0 1 3 5 8 9 +
+      c 7 * E 0 1 3 5 8 9 +
+      c 5 * E 0 1 3 6 8 9 +
+      c 6 * E 0 1 3 6 8 9 +
+      c 3 * E 0 1 4 5 6 7 +
+      c 7 * E 0 1 4 5 6 7 +
+      E 0 2 3 5 6 8 +
+      c 7 * E 0 2 3 5 6 8 +
+      E 0 2 3 5 6 9 +
+      c 0 * E 0 2 3 5 6 9 +
+      c 6 * E 0 2 3 5 8 9 +
+      E 0 2 3 6 8 9 +
+      E 0 2 4 5 7 8 +
+      c 6 * E 1 2 3 5 7 8 +
+      c 7 * E 1 2 3 5 7 8 +
+      E 1 2 3 5 8 9 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    degreeEffectiveD, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2, secant_three_eq_one_f2,
+    secant_nine_eq_one_f2, secant_five_eq_one_f2,
+    secant_ten_eq_zero_f2, secant_twelve_eq_zero_f2,
+    secant_thirteen_eq_one_f2, secant_fourteen_eq_zero_f2,
+    secant_sixteen_eq_zero_f2, secant_eighteen_eq_zero_f2,
+    secant_twenty_eq_zero_f2, secant_twenty_two_eq_zero_f2,
+    secant_twenty_four_eq_zero_f2, secant_twenty_six_eq_zero_f2,
+    secant_twenty_eight_eq_zero_f2,
+    secant_thirty_eq_zero_f2, secant_thirty_two_eq_zero_f2,
+    secant_forty_eq_zero_f2, secant_forty_four_eq_zero_f2,
+    secant_fifty_two_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 800000 in
+/-- Third degree-two secant pivot on the `q₁=1,q₂=0` chart. -/
+theorem degreeD_secant_constraint_two_identity
+    (q0 q3 : F₂) (c : TargetCoeff) :
+    c 1 + c 7 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 3
+        (degreeEffectiveD q0 q3) c i j k l m n
+      q3 * E 0 1 2 3 5 7 +
+      q3 * E 0 1 2 3 6 9 +
+      E 0 1 2 5 6 7 +
+      c 2 * E 0 1 2 5 6 7 +
+      c 4 * E 0 1 2 5 6 7 +
+      c 6 * E 0 1 2 5 6 7 +
+      c 2 * E 0 1 2 5 6 8 +
+      c 6 * E 0 1 2 5 6 8 +
+      c 5 * E 0 1 2 5 6 9 +
+      c 1 * E 0 1 2 5 7 8 +
+      E 0 1 2 5 7 9 +
+      c 4 * E 0 1 2 5 7 9 +
+      c 7 * E 0 1 2 5 7 9 +
+      c 2 * E 0 1 2 5 8 9 +
+      c 6 * E 0 1 2 5 8 9 +
+      c 3 * E 0 1 2 6 7 8 +
+      c 7 * E 0 1 2 6 7 8 +
+      c 8 * E 0 1 2 6 7 8 +
+      c 1 * E 0 1 2 6 7 9 +
+      c 3 * E 0 1 2 6 7 9 +
+      c 5 * E 0 1 2 6 8 9 +
+      c 6 * E 0 1 2 6 8 9 +
+      q3 * E 0 1 3 4 5 9 +
+      c 4 * E 0 1 3 5 6 7 +
+      c 5 * E 0 1 3 5 6 7 +
+      c 0 * E 0 1 3 5 6 8 +
+      c 8 * E 0 1 3 5 6 8 +
+      c 0 * E 0 1 3 5 6 9 +
+      c 3 * E 0 1 3 5 7 8 +
+      E 0 1 3 5 8 9 +
+      c 7 * E 0 1 3 6 7 9 +
+      c 7 * E 0 1 3 6 8 9 +
+      c 8 * E 0 1 3 6 8 9 +
+      c 4 * E 0 1 3 7 8 9 +
+      c 7 * E 0 1 3 7 8 9 +
+      c 2 * E 0 1 4 5 6 8 +
+      c 0 * E 0 1 4 5 6 9 +
+      c 2 * E 0 1 4 5 6 9 +
+      c 6 * E 0 1 4 5 6 9 +
+      E 0 1 4 5 8 9 +
+      c 5 * E 0 1 4 5 8 9 +
+      c 8 * E 0 1 4 6 7 9 +
+      c 7 * E 0 1 4 7 8 9 +
+      c 8 * E 0 1 4 7 8 9 +
+      c 7 * E 0 2 3 5 6 8 +
+      c 7 * E 0 2 3 5 8 9 +
+      c 6 * E 0 2 3 6 8 9 +
+      c 7 * E 0 2 3 7 8 9 +
+      c 8 * E 0 2 3 7 8 9 +
+      c 5 * E 0 2 4 5 7 9 +
+      c 8 * E 0 2 4 5 7 9 +
+      c 7 * E 0 2 4 6 7 9 +
+      E 0 3 4 6 8 9 +
+      c 6 * E 1 2 3 5 7 8 +
+      c 4 * E 1 2 3 5 8 9 +
+      c 8 * E 1 2 4 5 7 9 +
+      E 1 3 4 5 8 9 +
+      q0 * E 1 4 5 7 8 9 +
+      c 8 * E 2 3 4 5 6 8 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    degreeEffectiveD, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2, secant_three_eq_one_f2,
+    secant_nine_eq_one_f2, secant_five_eq_one_f2,
+    secant_ten_eq_zero_f2, secant_twelve_eq_zero_f2,
+    secant_thirteen_eq_one_f2, secant_fourteen_eq_zero_f2,
+    secant_sixteen_eq_zero_f2, secant_eighteen_eq_zero_f2,
+    secant_twenty_eq_zero_f2, secant_twenty_two_eq_zero_f2,
+    secant_twenty_four_eq_zero_f2, secant_twenty_six_eq_zero_f2,
+    secant_twenty_eight_eq_zero_f2, secant_thirty_eq_zero_f2,
+    secant_thirty_two_eq_zero_f2, secant_thirty_six_eq_zero_f2,
+    secant_forty_eq_zero_f2,
+    secant_forty_four_eq_zero_f2, secant_fifty_two_eq_zero_f2]
+
+/-- On the `q₁=1,q₂=0` degree-two chart, every normalized two-wedge
+presentation satisfies the three defining norm-block constraints. -/
+theorem degreeD_normalizedLocalSecant_mem
+    (q0 q3 : F₂) (c : TargetCoeff)
+    (hsecant : ∃ u v x y : LinearForm,
+      closedPlaceLift 3 (degreeEffectiveD q0 q3) + targetTwo c =
+        squarefreeWedge u v + squarefreeWedge x y) :
+    c ∈ degreeTwoSecantCoeffSpace := by
+  have hE (i j k l m n : Fin 10) :
+      normalizedLocalSecantEquation 3
+        (degreeEffectiveD q0 q3) c i j k l m n = 0 :=
+    normalizedLocalSecantEquation_eq_zero 3
+      (degreeEffectiveD q0 q3) c i j k l m n hsecant
+  change degreeTwoSecantConstraint c = 0
+  ext t
+  fin_cases t
+  · change c 1 + c 2 + c 4 + c 5 = 0
+    have hid := degreeD_secant_constraint_zero_identity q0 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+  · change c 1 + c 3 + c 4 + c 6 = 0
+    have hid := degreeD_secant_constraint_one_identity q0 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+  · change c 1 + c 7 = 0
+    have hid := degreeD_secant_constraint_two_identity q0 q3 c
     dsimp only at hid
     simpa only [hE, mul_zero, add_zero] using hid
 
