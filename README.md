@@ -59,7 +59,10 @@ first independent layer of the `n = 5` proof:
 - the exact algebraic classification proving that those 43 points are all and
   only the effective quadratic fibers; and
 - algebraic Pluecker certificates excluding every pair of distinct effective
-  closed-place types, including all rational--degree-two pairs.
+  closed-place types, including all rational--degree-two pairs; and
+- a choice-independent defect-capacity span with the exact specialized ledger
+  `rho(Q) = 3 + d + rank(lambda)` and algebraic localization of every
+  effective fiber difference to its closed-place target plane.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -99,6 +102,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/MixedPlaceDegree.lean`](UnrestrictedBooleanMul/N5/MixedPlaceDegree.lean)
 - [`UnrestrictedBooleanMul/N5/MixedPlaceDegreeOne.lean`](UnrestrictedBooleanMul/N5/MixedPlaceDegreeOne.lean)
 - [`UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean`](UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean)
+- [`UnrestrictedBooleanMul/N5/Displacement.lean`](UnrestrictedBooleanMul/N5/Displacement.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

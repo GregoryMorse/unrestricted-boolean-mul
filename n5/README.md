@@ -26,7 +26,11 @@ The repository currently contains:
 - the 45-dimensional squarefree quadratic space, nine-dimensional target,
   and 36-dimensional quotient;
 - the zero-fiber theorem, target--defect exact sequence, and exact relation-map
-  formula; and
+  formula;
+- exact classification of the 43 effective fibers and the full strong
+  mixed-place exclusion; and
+- a choice-independent defect-capacity construction with the specialized
+  displacement/relation-gift formula; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
@@ -41,6 +45,10 @@ The checked declarations are in:
 - [`../UnrestrictedBooleanMul/N5/ClosedPlaces.lean`](../UnrestrictedBooleanMul/N5/ClosedPlaces.lean)
 - [`../UnrestrictedBooleanMul/N5/HankelSupport.lean`](../UnrestrictedBooleanMul/N5/HankelSupport.lean)
 - [`../UnrestrictedBooleanMul/N5/LocalKlein.lean`](../UnrestrictedBooleanMul/N5/LocalKlein.lean)
+- [`../UnrestrictedBooleanMul/N5/EffectiveFibers.lean`](../UnrestrictedBooleanMul/N5/EffectiveFibers.lean)
+- [`../UnrestrictedBooleanMul/N5/EffectiveClassification.lean`](../UnrestrictedBooleanMul/N5/EffectiveClassification.lean)
+- [`../UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean`](../UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean)
+- [`../UnrestrictedBooleanMul/N5/Displacement.lean`](../UnrestrictedBooleanMul/N5/Displacement.lean)
 
 No theorem named `mc_mul_five` is present yet, and the new declarations above
 do not yet constitute the final lower bound. This directory must not be

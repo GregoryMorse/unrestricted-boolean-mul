@@ -6,6 +6,8 @@ Status meanings:
 - **replay pending** — implemented, but not yet accepted by a clean kernel
   build under the pinned toolchain;
 - **interface fixed** — statement and dependencies are fixed, proof absent;
+- **in progress** — kernel-checked supporting declarations exist, but the
+  named manuscript theorem is not yet complete;
 - **planned** — module and proof route identified;
 - **regression only** — computational checksum, never a theorem premise.
 
@@ -22,8 +24,8 @@ Status meanings:
 | Lemma 4.2, secant support | `N5.secant_support`, `N5/HankelSupport.lean` | dimension-polymorphic contraction support | checked |
 | Lemma 5.2, local Klein counts | `N5.localKlein_counts`, `N5/LocalKlein.lean` | two symbolic local Klein equations | checked |
 | Theorem 5.3, 43 fibers | `N5.effectiveFibers_eq`, `N5.effectiveFibers_card`, `N5/EffectiveClassification.lean` | algebraic rank-two secants, localization, and local Klein counts | checked |
-| Theorem 6.1, mixed-place exclusion | `N5.strongMixedPlace`, `N5/MixedPlace.lean` | closed-place support | planned |
-| Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/Displacement.lean` | relation map and incidence | planned |
+| Theorem 6.1, mixed-place exclusion | `N5.strongMixedPlace`, `N5/MixedPlaceDegreeInfinity.lean` | closed-place support | checked |
+| Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/Displacement.lean` | relation map and incidence | in progress |
 | Theorem 7.1, `rho_2(5)=6` | `N5.rhoTwo_five`, `N5/Capacity.lean` | local differences, equality classification | planned |
 | Theorem 7.2, `rho_3(5)=7` | `N5.rhoThree_five`, `N5/Capacity.lean` | mixed-place and displacement | planned |
 | Proposition 8.1, capacity obstruction | `N5.capacity_obstruction`, `N5/Capacity.lean` | target--defect exact sequence | planned |

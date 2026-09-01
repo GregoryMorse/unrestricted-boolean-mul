@@ -1,7 +1,7 @@
 import UnrestrictedBooleanMul.N3TruthTable
 import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
-import UnrestrictedBooleanMul.N5.MixedPlaceDegreeInfinity
+import UnrestrictedBooleanMul.N5.Displacement
 
 /-!
 # Unrestricted Boolean multiplicative complexity
@@ -11,7 +11,8 @@ thirteen-gate upper circuit for `n = 5`, and the canonical statement plus
 quadratic quotient, relation map, rank-two Hankel support, and local
 Klein-quadric layers, including the exact classification and count of the 43
 effective quadratic fibers and the full strong mixed-place exclusion, for the
-in-progress `n = 5` lower-bound formalization.
+in-progress `n = 5` lower-bound formalization.  It also exports the canonical
+defect-capacity construction and its exact displacement/relation-gift ledger.
 The `N3`, `N4`, and `N5` module names describe theorem scope rather than an
 internal research workflow.
 -/
