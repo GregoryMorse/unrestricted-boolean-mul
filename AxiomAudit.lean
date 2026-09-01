@@ -60,3 +60,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_three_rational_places
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_no_represented_places
 #print axioms UnrestrictedBooleanMul.N5.three013_S_plucker_obstruction
+#print axioms UnrestrictedBooleanMul.N5.rational01_degreeTwo_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_eq_zero_of_rational01_degreeTwo_places
+#print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_seven_of_rational01_degreeTwo_places

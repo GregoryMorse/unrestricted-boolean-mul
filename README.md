@@ -65,7 +65,11 @@ first independent layer of the `n = 5` proof:
   effective fiber difference to its closed-place target plane; and
 - the exact represented-place profile of the displacement space, including
   the one-jet rational and two-direction degree-two local contributions and
-  the proof that ineffective fibers contribute only rational directions.
+  the proof that ineffective fibers contribute only rational directions; and
+- the sparse Fano relation reduction, the sharp zero-place and three-rational
+  capacity rows, and a fully algebraic Pluecker proof of the representative
+  `P_* + 2` rational row, where the triple-sum fiber is empty, the relation
+  gift vanishes, and the target capacity is exactly seven.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
