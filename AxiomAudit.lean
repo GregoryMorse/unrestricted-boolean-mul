@@ -24,3 +24,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.target_sum_two_decomposable_rankTwo
 #print axioms UnrestrictedBooleanMul.N5.effectiveFibers_eq
 #print axioms UnrestrictedBooleanMul.N5.effectiveFibers_card
+#print axioms UnrestrictedBooleanMul.N5.rational01_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.rational02_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.rational12_mixed_decomposableFiber_empty

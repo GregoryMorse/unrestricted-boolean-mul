@@ -57,7 +57,9 @@ first independent layer of the `n = 5` proof:
 - an exact Hermite certificate proving that the four effective local charts
   embed as 43 distinct global quotient points; and
 - the exact algebraic classification proving that those 43 points are all and
-  only the effective quadratic fibers.
+  only the effective quadratic fibers; and
+- algebraic Pluecker certificates excluding all three pairs of distinct
+  doubled-rational effective place types.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -93,6 +95,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/EffectiveFibers.lean`](UnrestrictedBooleanMul/N5/EffectiveFibers.lean)
 - [`UnrestrictedBooleanMul/N5/RankTwoSecants.lean`](UnrestrictedBooleanMul/N5/RankTwoSecants.lean)
 - [`UnrestrictedBooleanMul/N5/EffectiveClassification.lean`](UnrestrictedBooleanMul/N5/EffectiveClassification.lean)
+- [`UnrestrictedBooleanMul/N5/MixedPlace.lean`](UnrestrictedBooleanMul/N5/MixedPlace.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
