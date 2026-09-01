@@ -53,6 +53,27 @@ theorem lowProductQuadraticShadow_pair
   simp [lowProductQuadraticShadow, ambientTwoHadamard,
     squarefreeWedge_pair]
 
+/-- When only the two linear parts change, the common terms in the two
+Boolean quadratic shadows cancel.  This is the algebraic normal form used
+to separate the two decomposable exterior products from the local Boolean
+correction. -/
+theorem lowProductQuadraticShadow_linear_difference
+    (a b a' b' : F₂) (ell m x y : LinearForm) (q c : TwoForm) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' (ell + x) (m + y) q c =
+      (a + a') • c + (b + b') • q +
+        squarefreeWedge ell y + squarefreeWedge x m +
+          (squarefreeWedge x y + ambientBooleanContraction x c +
+            ambientBooleanContraction y q) := by
+  rw [lowProductQuadraticShadow, lowProductQuadraticShadow,
+    squarefreeWedge_add_left, squarefreeWedge_add_right,
+    ambientBooleanContraction_add_left]
+  rw [squarefreeWedge_add_right, ambientBooleanContraction_add_left]
+  funext s
+  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2]
+
 /-- Equality of two cubic parts is equivalently a zero cubic syzygy for the
 two changed linear parts. -/
 theorem factorPlaneCubic_difference_eq_zero
@@ -90,12 +111,16 @@ theorem rationalZero_cubic_syzygy
       rationalZeroJetTwo = 0) :
     x (aCoord 1) = 0 ∧
     x (aCoord 2) = 0 ∧
+    x (aCoord 3) = 0 ∧
+    x (aCoord 4) = 0 ∧
     x (bCoord 1) = 0 ∧
     x (bCoord 2) = 0 ∧
     x (bCoord 3) = 0 ∧
     x (bCoord 4) = 0 ∧
     y (aCoord 1) = x (aCoord 0) ∧
     y (aCoord 2) = 0 ∧
+    y (aCoord 3) = 0 ∧
+    y (aCoord 4) = 0 ∧
     y (bCoord 1) = x (bCoord 0) ∧
     y (bCoord 2) = 0 ∧
     y (bCoord 3) = 0 ∧
@@ -131,6 +156,10 @@ theorem rationalZero_cubic_syzygy
         aCoord_ne_bCoord, bCoord_ne_aCoord] using hy
   have hA2 := hExternal (aCoord 2) (by simp) (by simp)
     (aCoord_ne_bCoord 2 0) (aCoord_ne_bCoord 2 1)
+  have hA3 := hExternal (aCoord 3) (by simp) (by simp)
+    (aCoord_ne_bCoord 3 0) (aCoord_ne_bCoord 3 1)
+  have hA4 := hExternal (aCoord 4) (by simp) (by simp)
+    (aCoord_ne_bCoord 4 0) (aCoord_ne_bCoord 4 1)
   have hB2 := hExternal (bCoord 2)
     (bCoord_ne_aCoord 2 0) (bCoord_ne_aCoord 2 1) (by simp) (by simp)
   have hB3 := hExternal (bCoord 3)
@@ -167,8 +196,113 @@ theorem rationalZero_cubic_syzygy
       aLinear, bLinear, Pi.basisFun, add_comm] using h056
     rw [← CharTwo.sub_eq_add] at hxy
     exact (sub_eq_zero.mp hxy).symm
-  exact ⟨hx1, hA2.1, hx6, hB2.1, hB3.1, hB4.1,
-    hy1, hA2.2, hy6, hB2.2, hB3.2, hB4.2⟩
+  exact ⟨hx1, hA2.1, hA3.1, hA4.1,
+    hx6, hB2.1, hB3.1, hB4.1,
+    hy1, hA2.2, hA3.2, hA4.2,
+    hy6, hB2.2, hB3.2, hB4.2⟩
+
+/-- A local Boolean correction which is one decomposable form modulo an old
+quadratic envelope turns the whole shadow difference into two decomposable
+forms modulo that envelope. -/
+theorem lowProductShadow_decomposition_of_correction
+    (W : Submodule F₂ TwoForm)
+    (a b a' b' : F₂) (ell m x y : LinearForm) (q c : TwoForm)
+    (hq : q ∈ W) (hc : c ∈ W)
+    (r : TwoForm) (hr : r ∈ W) (z : LinearForm)
+    (hcorrection :
+      squarefreeWedge x y + ambientBooleanContraction x c +
+          ambientBooleanContraction y q = r + squarefreeWedge x z) :
+    ∃ r₀ ∈ W, ∃ u v s t : LinearForm,
+      lowProductQuadraticShadow a b ell m q c +
+          lowProductQuadraticShadow a' b' (ell + x) (m + y) q c =
+        r₀ + squarefreeWedge u v + squarefreeWedge s t := by
+  refine ⟨(a + a') • c + (b + b') • q + r,
+    W.add_mem (W.add_mem (W.smul_mem _ hc) (W.smul_mem _ hq)) hr,
+    ell, y, x, m + z, ?_⟩
+  rw [lowProductQuadraticShadow_linear_difference, hcorrection,
+    squarefreeWedge_add_right]
+  module
+
+/-- On the rational-zero value--jet plane, the Boolean lowering correction
+is a single exterior product modulo the first-order envelope. -/
+theorem rationalZero_booleanCorrection_decomposition
+    (x y : LinearForm)
+    (hcubic : factorPlaneCubic x y rationalZeroValueTwo
+      rationalZeroJetTwo = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ z : LinearForm,
+      squarefreeWedge x y +
+          ambientBooleanContraction x rationalZeroJetTwo +
+          ambientBooleanContraction y rationalZeroValueTwo =
+        r + squarefreeWedge x z := by
+  rcases rationalZero_cubic_syzygy x y hcubic with
+    ⟨hxA1, hxA2, hxA3, hxA4, hxB1, hxB2, hxB3, hxB4,
+      hyA1, hyA2, hyA3, hyA4, hyB1, hyB2, hyB3, hyB4⟩
+  let z : LinearForm := aLinear 1 + bLinear 1
+  let r : TwoForm :=
+    (x (aCoord 0) * y (bCoord 0) +
+        x (bCoord 0) * y (aCoord 0) +
+        y (aCoord 0) + y (bCoord 0)) • rationalZeroValueTwo +
+      (x (aCoord 0) * x (bCoord 0)) • rationalZeroJetTwo
+  have hvalue : rationalZeroValueTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalZeroValueTwo_eq_target]
+    exact ⟨rZeroCoeff,
+      Submodule.subset_span ⟨0, by simp [closedPlaceDirections]⟩, rfl⟩
+  have hjet : rationalZeroJetTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalZeroJetTwo_eq_target]
+    exact ⟨jZeroCoeff,
+      Submodule.subset_span ⟨3, by simp [closedPlaceDirections]⟩, rfl⟩
+  refine ⟨r, firstOrderEnvelopeTwoSpace.add_mem
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hvalue)
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hjet), z, ?_⟩
+  apply twoForm_ext_blocks
+  · intro i j hij
+    fin_cases i <;> fin_cases j <;>
+      simp_all [r, z, squarefreeWedge_pair,
+        ambientBooleanContraction_pair,
+        rationalZeroValueTwo, rationalZeroJetTwo, targetPairTwo,
+        aLinear, bLinear, Pi.basisFun] <;>
+      ring_nf <;> simp [N3Certificate.pow_two_f2]
+  · intro i j hij
+    fin_cases i <;> fin_cases j <;>
+      simp_all [r, z, squarefreeWedge_pair,
+        ambientBooleanContraction_pair,
+        rationalZeroValueTwo, rationalZeroJetTwo, targetPairTwo,
+        aLinear, bLinear, Pi.basisFun] <;>
+      ring_nf <;> simp [N3Certificate.pow_two_f2]
+  · intro i j
+    fin_cases i <;> fin_cases j <;>
+      simp_all [r, z, squarefreeWedge_pair,
+        ambientBooleanContraction_pair,
+        rationalZeroValueTwo, rationalZeroJetTwo, targetPairTwo,
+        aLinear, bLinear, Pi.basisFun] <;>
+      ring_nf
+
+/-- Structural form of the canonical independent shadow comparison: equal
+cubic parts leave only two decomposable quadratic forms modulo the envelope. -/
+theorem rationalZero_shadow_decomposition
+    (a b a' b' : F₂) (ell m x y : LinearForm)
+    (hcubic : factorPlaneCubic x y rationalZeroValueTwo
+      rationalZeroJetTwo = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ u v s t : LinearForm,
+      lowProductQuadraticShadow a b ell m rationalZeroValueTwo
+          rationalZeroJetTwo +
+        lowProductQuadraticShadow a' b' (ell + x) (m + y)
+          rationalZeroValueTwo rationalZeroJetTwo =
+        r + squarefreeWedge u v + squarefreeWedge s t := by
+  rcases rationalZero_booleanCorrection_decomposition x y hcubic with
+    ⟨r, hr, z, hcorrection⟩
+  have hvalue : rationalZeroValueTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalZeroValueTwo_eq_target]
+    exact ⟨rZeroCoeff,
+      Submodule.subset_span ⟨0, by simp [closedPlaceDirections]⟩, rfl⟩
+  have hjet : rationalZeroJetTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalZeroJetTwo_eq_target]
+    exact ⟨jZeroCoeff,
+      Submodule.subset_span ⟨3, by simp [closedPlaceDirections]⟩, rfl⟩
+  exact lowProductShadow_decomposition_of_correction
+    firstOrderEnvelopeTwoSpace a b a' b' ell m x y
+      rationalZeroValueTwo rationalZeroJetTwo hvalue hjet
+      r hr z hcorrection
 
 set_option linter.unusedSimpArgs false in
 /-- Canonical independent-plane target-shadow theorem at the rational zero
@@ -190,8 +324,8 @@ theorem rationalZero_shadow_target_mem_firstOrder
         rationalZeroValueTwo rationalZeroJetTwo
   have hD : D = targetTwo t := htarget
   rcases rationalZero_cubic_syzygy x y hcubic with
-    ⟨hxA1, hxA2, hxB1, hxB2, hxB3, hxB4,
-      hyA1, hyA2, hyB1, hyB2, hyB3, hyB4⟩
+    ⟨hxA1, hxA2, _hxA3, _hxA4, hxB1, hxB2, hxB3, hxB4,
+      hyA1, hyA2, _hyA3, _hyA4, hyB1, hyB2, hyB3, hyB4⟩
   have hAA02raw : D (quadraticPair (aCoord 0) (aCoord 2) (by decide)) = 0 := by
     calc
       D (quadraticPair (aCoord 0) (aCoord 2) (by decide)) =
@@ -445,14 +579,35 @@ theorem rationalZero_shadow_not_missingCoset
           rationalZeroJetTwo ≠
       targetTwo (firstOrderMissingCoeff + u) := by
   intro hmissing
-  have hsum : firstOrderMissingCoeff + u ∈
-      firstOrderEnvelopeCoeffSpace :=
-    rationalZero_shadow_targetCoeff_mem a b a' b' ell m ell' m'
-      (firstOrderMissingCoeff + u) hcubic hmissing
-  have htau : firstOrderMissingCoeff ∈ firstOrderEnvelopeCoeffSpace := by
-    have := firstOrderEnvelopeCoeffSpace.sub_mem hsum hu
-    simpa using this
-  exact firstOrderMissingCoeff_not_mem htau
+  let x : LinearForm := ell + ell'
+  let y : LinearForm := m + m'
+  have hx : ell + x = ell' := by
+    change ell + (ell + ell') = ell'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hy : m + y = m' := by
+    change m + (m + m') = m'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hcubicZero : factorPlaneCubic x y rationalZeroValueTwo
+      rationalZeroJetTwo = 0 :=
+    factorPlaneCubic_difference_eq_zero ell m ell' m'
+      rationalZeroValueTwo rationalZeroJetTwo hcubic
+  rcases rationalZero_shadow_decomposition
+      a b a' b' ell m x y hcubicZero with
+    ⟨r, hr, p, q, s, t, hdecomp⟩
+  apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    r hr p q s t u hu
+  have hdecomp' :
+      lowProductQuadraticShadow a b ell m rationalZeroValueTwo
+            rationalZeroJetTwo +
+          lowProductQuadraticShadow a' b' ell' m' rationalZeroValueTwo
+            rationalZeroJetTwo =
+        r + squarefreeWedge p q + squarefreeWedge s t := by
+    simpa only [hx, hy] using hdecomp
+  exact hdecomp'.symm.trans hmissing
 
 /-- Target-valued shadows on the canonical independent value--jet plane
 actually lie in the embedded first-order envelope. -/

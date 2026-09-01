@@ -167,6 +167,9 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rankOneShadow_same_direction_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.rankOneShadow_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.lowProductQuadraticShadow_linear_difference
+#print axioms UnrestrictedBooleanMul.N5.rationalZero_booleanCorrection_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_targetCoeff_mem
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.independentColours_birth
