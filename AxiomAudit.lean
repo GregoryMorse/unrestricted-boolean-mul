@@ -37,3 +37,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rational_fiberDifference_profile
 #print axioms UnrestrictedBooleanMul.N5.degreeTwo_fiberDifference_profile
 #print axioms UnrestrictedBooleanMul.N5.localDisplacementSpace_eq_representedPlaceProfile
+#print axioms UnrestrictedBooleanMul.N5.localDisplacementSpace_eq_activeDisplacementTwoSpace
+#print axioms UnrestrictedBooleanMul.N5.displacementRank_eq_representedPlaceWeight
+#print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_three_add_representedPlaceWeight_add_gifts

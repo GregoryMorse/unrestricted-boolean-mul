@@ -1,7 +1,7 @@
 import UnrestrictedBooleanMul.N3TruthTable
 import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
-import UnrestrictedBooleanMul.N5.DisplacementProfile
+import UnrestrictedBooleanMul.N5.DisplacementRank
 
 /-!
 # Unrestricted Boolean multiplicative complexity
@@ -14,6 +14,8 @@ effective quadratic fibers and the full strong mixed-place exclusion, for the
 in-progress `n = 5` lower-bound formalization.  It also exports the canonical
 defect-capacity construction, its exact displacement/relation-gift ledger,
 and the choice-independent represented-place profile of its displacement.
+The profile is evaluated numerically as the weighted count of represented
+closed places.
 The `N3`, `N4`, and `N5` module names describe theorem scope rather than an
 internal research workflow.
 -/
