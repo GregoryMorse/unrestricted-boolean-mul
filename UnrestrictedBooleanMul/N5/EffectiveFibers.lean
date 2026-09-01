@@ -34,6 +34,66 @@ def closedPlaceLocalBasis : Fin 4 → Fin 4 → LinearForm :=
     ![aLinear 4, aLinear 3, bLinear 4, bLinear 3],
     ![aStarZero, aStarOne, bStarZero, bStarOne]]
 
+/-- Each Hermite/residue coordinate family is a basis of its local
+four-space. -/
+theorem closedPlaceLocalBasis_linearIndependent (place : Fin 4) :
+    LinearIndependent F₂ (closedPlaceLocalBasis place) := by
+  rw [Fintype.linearIndependent_iff]
+  intro f h i
+  have h0 := congrFun h (0 : Fin 10)
+  have h1 := congrFun h (1 : Fin 10)
+  have h2 := congrFun h (2 : Fin 10)
+  have h3 := congrFun h (3 : Fin 10)
+  have h4 := congrFun h (4 : Fin 10)
+  have h5 := congrFun h (5 : Fin 10)
+  have h6 := congrFun h (6 : Fin 10)
+  have h7 := congrFun h (7 : Fin 10)
+  have h8 := congrFun h (8 : Fin 10)
+  have h9 := congrFun h (9 : Fin 10)
+  fin_cases place <;>
+    simp [closedPlaceLocalBasis, aOneEval, aOneJet, bOneEval, bOneJet,
+      aStarZero, aStarOne, bStarZero, bStarOne, aLinear, bLinear,
+      aCoord, bCoord, Pi.basisFun,
+      Fin.sum_univ_succ] at h0 h1 h2 h3 h4 h5 h6 h7 h8 h9
+  all_goals fin_cases i <;> simp_all
+
+/-- The four-dimensional local linear space at a closed place. -/
+def closedPlaceLinearSpace (place : Fin 4) : Submodule F₂ LinearForm :=
+  Submodule.span F₂ (Set.range (closedPlaceLocalBasis place))
+
+theorem closedPlaceLinearSpace_finrank (place : Fin 4) :
+    Module.finrank F₂ (closedPlaceLinearSpace place) = 4 :=
+  finrank_span_eq_card (closedPlaceLocalBasis_linearIndependent place)
+
+/-- The displayed local basis, bundled as a basis of its span. -/
+noncomputable def closedPlaceBasis (place : Fin 4) :
+    Module.Basis (Fin 4) F₂ (closedPlaceLinearSpace place) :=
+  Module.Basis.span (closedPlaceLocalBasis_linearIndependent place)
+
+/-- Coordinates of a vector in a displayed local four-space. -/
+def closedPlaceVectorCoordinates (place : Fin 4)
+    (u : closedPlaceLinearSpace place) : LocalKleinParam :=
+  (closedPlaceBasis place).equivFun u
+
+/-- Reconstruct a local vector from its four displayed coordinates. -/
+theorem closedPlaceVector_reconstruction (place : Fin 4)
+    (u : closedPlaceLinearSpace place) :
+    ∑ i : Fin 4, closedPlaceVectorCoordinates place u i •
+        closedPlaceLocalBasis place i = u.1 := by
+  calc
+    ∑ i : Fin 4, closedPlaceVectorCoordinates place u i •
+        closedPlaceLocalBasis place i =
+        ∑ i : Fin 4, closedPlaceVectorCoordinates place u i •
+          ((closedPlaceBasis place i : closedPlaceLinearSpace place) :
+            LinearForm) := by
+      apply Finset.sum_congr rfl
+      intro i _
+      congr 1
+      exact (Module.Basis.coe_span_apply
+        (closedPlaceLocalBasis_linearIndependent place) i).symm
+    _ = u.1 := by
+      exact congrArg Subtype.val ((closedPlaceBasis place).sum_equivFun u)
+
 /-- Coordinate pairs `(01,02,03,12,13,23)` in a local exterior square. -/
 def localKleinPair : Fin 6 → Fin 4 × Fin 4 :=
   ![(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
@@ -60,6 +120,275 @@ def localTwoFormLinear (place : Fin 4) : LocalKleinCoord →ₗ[F₂] TwoForm wh
     apply Finset.sum_congr rfl
     intro i _
     simp [mul_assoc]
+
+/-- Pluecker coordinates of the wedge of two local coordinate vectors. -/
+def localWedgeCoord (u v : LocalKleinParam) : LocalKleinCoord :=
+  fun s =>
+    u (localKleinPair s).1 * v (localKleinPair s).2 +
+      u (localKleinPair s).2 * v (localKleinPair s).1
+
+/-- Exterior expansion in an arbitrary displayed local basis. -/
+theorem localTwoForm_localWedgeCoord (place : Fin 4)
+    (u v : LocalKleinParam) :
+    localTwoForm place (localWedgeCoord u v) =
+      squarefreeWedge
+        (∑ i : Fin 4, u i • closedPlaceLocalBasis place i)
+        (∑ i : Fin 4, v i • closedPlaceLocalBasis place i) := by
+  have htwo : (2 : F₂) = 0 := by decide
+  ext s
+  rcases QuadraticIndex.exists_pair s with ⟨a, b, hab, rfl⟩
+  simp [localTwoForm, localWedgeCoord, localKleinPair,
+    squarefreeWedge_pair, Fin.sum_univ_succ]
+  ring_nf
+  simp [htwo]
+
+/-- A decomposable form whose factors lie in a local four-space has explicit
+local Pluecker coordinates. -/
+theorem exists_localWedgeCoord_of_factors_mem (place : Fin 4)
+    (u v : LinearForm) (hu : u ∈ closedPlaceLinearSpace place)
+    (hv : v ∈ closedPlaceLinearSpace place) :
+    ∃ p : LocalKleinCoord,
+      localTwoForm place p = squarefreeWedge u v := by
+  let u' : closedPlaceLinearSpace place := ⟨u, hu⟩
+  let v' : closedPlaceLinearSpace place := ⟨v, hv⟩
+  refine ⟨localWedgeCoord (closedPlaceVectorCoordinates place u')
+    (closedPlaceVectorCoordinates place v'), ?_⟩
+  rw [localTwoForm_localWedgeCoord,
+    closedPlaceVector_reconstruction place u',
+    closedPlaceVector_reconstruction place v']
+
+/-- The nine rank-two Hankel words outside the rational evaluation space. -/
+def outsideHankelWord : Fin 9 → TargetCoeff :=
+  ![rankTwoHankelWord 7, rankTwoHankelWord 8,
+    rankTwoHankelWord 9, rankTwoHankelWord 10,
+    rankTwoHankelWord 11, rankTwoHankelWord 12,
+    rankTwoHankelWord 13, rankTwoHankelWord 14,
+    rankTwoHankelWord 15]
+
+/-- Closed-place type of each non-rational rank-two word. -/
+def outsideHankelPlace : Fin 9 → Fin 4 :=
+  ![0, 0, 1, 1, 2, 2, 3, 3, 3]
+
+/-- Local Pluecker coordinate of each non-rational rank-two word. -/
+def outsideHankelLocalCoord : Fin 9 → LocalKleinCoord :=
+  ![![0, 0, 1, 1, 0, 0],
+    ![0, 1, 1, 1, 0, 0],
+    ![0, 1, 1, 1, 0, 0],
+    ![0, 0, 1, 1, 0, 0],
+    ![0, 1, 1, 1, 0, 0],
+    ![0, 0, 1, 1, 0, 0],
+    ![0, 1, 1, 1, 0, 0],
+    ![0, 0, 1, 1, 1, 0],
+    ![0, 1, 0, 0, 1, 0]]
+
+/-- Every ambient linear coordinate belongs to exactly one of the two input
+blocks. -/
+theorem inputIndex_eq_aCoord_or_bCoord (i : Fin 10) :
+    (∃ j : Fin 5, i = aCoord j) ∨ (∃ j : Fin 5, i = bCoord j) := by
+  fin_cases i
+  · exact Or.inl ⟨0, rfl⟩
+  · exact Or.inl ⟨1, rfl⟩
+  · exact Or.inl ⟨2, rfl⟩
+  · exact Or.inl ⟨3, rfl⟩
+  · exact Or.inl ⟨4, rfl⟩
+  · exact Or.inr ⟨0, rfl⟩
+  · exact Or.inr ⟨1, rfl⟩
+  · exact Or.inr ⟨2, rfl⟩
+  · exact Or.inr ⟨3, rfl⟩
+  · exact Or.inr ⟨4, rfl⟩
+
+theorem quadraticPair_swap {i j : Fin 10} (hij : i ≠ j) :
+    quadraticPair i j hij = quadraticPair j i (Ne.symm hij) := by
+  apply Subtype.ext
+  exact Finset.pair_comm i j
+
+/-- A squarefree two-form is determined by its two diagonal blocks and its
+Hankel cross block. -/
+theorem twoForm_ext_blocks (p q : TwoForm)
+    (hAA : ∀ i j : Fin 5, ∀ hij : i ≠ j,
+      p (quadraticPair (aCoord i) (aCoord j)
+        (fun h => hij (aCoord_injective h))) =
+      q (quadraticPair (aCoord i) (aCoord j)
+        (fun h => hij (aCoord_injective h))))
+    (hBB : ∀ i j : Fin 5, ∀ hij : i ≠ j,
+      p (quadraticPair (bCoord i) (bCoord j)
+        (fun h => hij (bCoord_injective h))) =
+      q (quadraticPair (bCoord i) (bCoord j)
+        (fun h => hij (bCoord_injective h))))
+    (hAB : ∀ i j : Fin 5,
+      p (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      q (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j))) :
+    p = q := by
+  funext s
+  rcases QuadraticIndex.exists_pair s with ⟨u, v, huv, rfl⟩
+  rcases inputIndex_eq_aCoord_or_bCoord u with ⟨i, rfl⟩ | ⟨i, rfl⟩ <;>
+    rcases inputIndex_eq_aCoord_or_bCoord v with ⟨j, rfl⟩ | ⟨j, rfl⟩
+  · have hij : i ≠ j := fun h => huv (congrArg aCoord h)
+    simpa only [] using hAA i j hij
+  · simpa only [] using hAB i j
+  · rw [quadraticPair_swap]
+    simpa only [] using hAB j i
+  · have hij : i ≠ j := fun h => huv (congrArg bCoord h)
+    simpa only [] using hBB i j hij
+
+/-- Vanishing of the `01` local coordinate removes the same-`A` block. -/
+theorem localTwoForm_sameA_of_coord_zero (place : Fin 4)
+    (p : LocalKleinCoord) (hp : p 0 = 0) (i j : Fin 5) (hij : i ≠ j) :
+    localTwoForm place p
+      (quadraticPair (aCoord i) (aCoord j)
+        (fun h => hij (aCoord_injective h))) = 0 := by
+  fin_cases place <;> fin_cases i <;> fin_cases j <;>
+    simp [localTwoForm, localKleinPair, closedPlaceLocalBasis,
+      aOneEval, aOneJet, bOneEval, bOneJet, aStarZero, aStarOne,
+      bStarZero, bStarOne, aLinear, bLinear, squarefreeWedge_pair,
+      Pi.basisFun, Fin.sum_univ_succ, hp] at hij ⊢
+
+/-- Vanishing of the `23` local coordinate removes the same-`B` block. -/
+theorem localTwoForm_sameB_of_coord_zero (place : Fin 4)
+    (p : LocalKleinCoord) (hp : p 5 = 0) (i j : Fin 5) (hij : i ≠ j) :
+    localTwoForm place p
+      (quadraticPair (bCoord i) (bCoord j)
+        (fun h => hij (bCoord_injective h))) = 0 := by
+  fin_cases place <;> fin_cases i <;> fin_cases j <;>
+    simp [localTwoForm, localKleinPair, closedPlaceLocalBasis,
+      aOneEval, aOneJet, bOneEval, bOneJet, aStarZero, aStarOne,
+      bStarZero, bStarOne, aLinear, bLinear, squarefreeWedge_pair,
+      Pi.basisFun, Fin.sum_univ_succ, hp] at hij ⊢
+
+private theorem targetTwo_outsideHankelWord_sameA (k : Fin 9)
+    (i j : Fin 5) (hij : i ≠ j) :
+    targetTwo (outsideHankelWord k)
+        (quadraticPair (aCoord i) (aCoord j)
+          (fun h => hij (aCoord_injective h))) =
+      localTwoForm (outsideHankelPlace k) (outsideHankelLocalCoord k)
+        (quadraticPair (aCoord i) (aCoord j)
+          (fun h => hij (aCoord_injective h))) := by
+  rw [targetTwo_sameA]
+  exact (localTwoForm_sameA_of_coord_zero _ _
+    (by fin_cases k <;> rfl) i j hij).symm
+
+private theorem targetTwo_outsideHankelWord_sameB (k : Fin 9)
+    (i j : Fin 5) (hij : i ≠ j) :
+    targetTwo (outsideHankelWord k)
+        (quadraticPair (bCoord i) (bCoord j)
+          (fun h => hij (bCoord_injective h))) =
+      localTwoForm (outsideHankelPlace k) (outsideHankelLocalCoord k)
+        (quadraticPair (bCoord i) (bCoord j)
+          (fun h => hij (bCoord_injective h))) := by
+  rw [targetTwo_sameB]
+  exact (localTwoForm_sameB_of_coord_zero _ _
+    (by fin_cases k <;> rfl) i j hij).symm
+
+local macro "simplify_outside_hankel_cross" : tactic =>
+  `(tactic|
+    simp [outsideHankelWord, outsideHankelPlace,
+        outsideHankelLocalCoord, rankTwoHankelWord, rZeroCoeff,
+        rOneCoeff, rInfinityCoeff, jZeroCoeff, jOneCoeff,
+        jInfinityCoeff, dStarZeroCoeff, dStarOneCoeff, localTwoForm,
+        localKleinPair, closedPlaceLocalBasis, aOneEval, aOneJet,
+        bOneEval, bOneJet, aStarZero, aStarOne, bStarZero, bStarOne,
+        hankelIndex, aLinear, bLinear, squarefreeWedge_pair,
+        Pi.basisFun, Fin.sum_univ_succ,
+        N3Certificate.two_eq_zero_f2] <;> decide)
+
+private theorem targetTwo_outsideHankelWord_cross_0 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 0)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 0) (outsideHankelLocalCoord 0)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_1 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 1)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 1) (outsideHankelLocalCoord 1)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_2 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 2)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 2) (outsideHankelLocalCoord 2)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_3 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 3)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 3) (outsideHankelLocalCoord 3)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_4 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 4)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 4) (outsideHankelLocalCoord 4)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_5 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 5)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 5) (outsideHankelLocalCoord 5)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_6 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 6)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 6) (outsideHankelLocalCoord 6)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_7 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 7)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 7) (outsideHankelLocalCoord 7)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross_8 (i j : Fin 5) :
+    targetTwo (outsideHankelWord 8)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace 8) (outsideHankelLocalCoord 8)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  rw [targetTwo_cross]
+  fin_cases i <;> fin_cases j <;> simplify_outside_hankel_cross
+
+private theorem targetTwo_outsideHankelWord_cross (k : Fin 9)
+    (i j : Fin 5) :
+    targetTwo (outsideHankelWord k)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      localTwoForm (outsideHankelPlace k) (outsideHankelLocalCoord k)
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) := by
+  fin_cases k
+  · exact targetTwo_outsideHankelWord_cross_0 i j
+  · exact targetTwo_outsideHankelWord_cross_1 i j
+  · exact targetTwo_outsideHankelWord_cross_2 i j
+  · exact targetTwo_outsideHankelWord_cross_3 i j
+  · exact targetTwo_outsideHankelWord_cross_4 i j
+  · exact targetTwo_outsideHankelWord_cross_5 i j
+  · exact targetTwo_outsideHankelWord_cross_6 i j
+  · exact targetTwo_outsideHankelWord_cross_7 i j
+  · exact targetTwo_outsideHankelWord_cross_8 i j
+
+/-- Exact local two-form realization of all nine non-rational Hankel normal
+forms. -/
+theorem targetTwo_outsideHankelWord (k : Fin 9) :
+    targetTwo (outsideHankelWord k) =
+      localTwoForm (outsideHankelPlace k) (outsideHankelLocalCoord k) := by
+  apply twoForm_ext_blocks
+  · exact targetTwo_outsideHankelWord_sameA k
+  · exact targetTwo_outsideHankelWord_sameB k
+  · exact targetTwo_outsideHankelWord_cross k
 
 /-- Canonical quotient section for a doubled rational place. -/
 def rationalCanonicalCoord (q : LocalKleinParam) : LocalKleinCoord :=

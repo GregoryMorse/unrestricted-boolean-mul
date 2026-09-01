@@ -161,6 +161,110 @@ theorem rankTwoHankel_support {c : TargetCoeff} (h : HankelRankLETwo c) :
   exact Submodule.smul_mem _ _
     (Submodule.subset_span ⟨i, rfl⟩)
 
+@[simp] theorem rZeroCoeff_mem_rationalCoeffSpace :
+    rZeroCoeff ∈ rationalCoeffSpace :=
+  Submodule.subset_span (Set.mem_insert _ _)
+
+@[simp] theorem rOneCoeff_mem_rationalCoeffSpace :
+    rOneCoeff ∈ rationalCoeffSpace :=
+  Submodule.subset_span (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
+
+@[simp] theorem rInfinityCoeff_mem_rationalCoeffSpace :
+    rInfinityCoeff ∈ rationalCoeffSpace :=
+  Submodule.subset_span
+    (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _)))
+
+/-- The sixteen rank-at-most-two Hankel words, displayed in closed-place
+coordinates.  The first seven lie in the rational evaluation space; the
+remaining nine have place types `2P₀`, `2P₁`, `2P∞`, and `P⋆`. -/
+def rankTwoHankelWord : Fin 16 → TargetCoeff :=
+  ![0,
+    rZeroCoeff,
+    rOneCoeff,
+    rZeroCoeff + rOneCoeff,
+    rInfinityCoeff,
+    rZeroCoeff + rInfinityCoeff,
+    rOneCoeff + rInfinityCoeff,
+    jZeroCoeff,
+    rZeroCoeff + jZeroCoeff,
+    rZeroCoeff + rInfinityCoeff + jOneCoeff,
+    rZeroCoeff + rOneCoeff + rInfinityCoeff + jOneCoeff,
+    rZeroCoeff + rOneCoeff + jInfinityCoeff,
+    rZeroCoeff + rOneCoeff + rInfinityCoeff + jInfinityCoeff,
+    rOneCoeff + rInfinityCoeff + dStarZeroCoeff,
+    rZeroCoeff + rOneCoeff + dStarOneCoeff,
+    rZeroCoeff + rInfinityCoeff + dStarZeroCoeff + dStarOneCoeff]
+
+/- A small Boolean-algebra certificate for the exact normal form.  The
+proposition exposes the envelope equation and the seven Hankel minors used by
+the kernel reduction. -/
+set_option maxRecDepth 100000 in
+private theorem rankTwoHankel_selected_certificate :
+    ∀ c : TargetCoeff,
+      c 2 + c 3 + c 5 + c 6 = 0 →
+      hankelMinorThree c 0 1 2 0 1 2 = 0 →
+      hankelMinorThree c 1 2 3 2 3 4 = 0 →
+      hankelMinorThree c 0 3 4 0 3 4 = 0 →
+      hankelMinorThree c 0 1 3 1 3 4 = 0 →
+      hankelMinorThree c 0 1 4 0 1 4 = 0 →
+      hankelMinorThree c 0 1 2 1 2 3 = 0 →
+      hankelMinorThree c 0 1 3 0 1 4 = 0 →
+      ∃ i : Fin 16, c = rankTwoHankelWord i := by
+  letI : DecidableEq TargetCoeff := Fintype.decidablePiFintype
+  letI : DecidablePred (fun c : TargetCoeff =>
+      ∃ i : Fin 16, c = rankTwoHankelWord i) :=
+    fun _ => Fintype.decidableExistsFintype
+  exact @of_decide_eq_true _ Fintype.decidableForallFintype rfl
+
+/-- Exact algebraic classification of rank-at-most-two five-by-five Hankel
+words. -/
+theorem rankTwoHankel_classification {c : TargetCoeff}
+    (h : HankelRankLETwo c) :
+    ∃ i : Fin 16, c = rankTwoHankelWord i :=
+  rankTwoHankel_selected_certificate c (rankTwoHankel_equation h)
+    (h 0 1 2 0 1 2) (h 1 2 3 2 3 4) (h 0 3 4 0 3 4)
+    (h 0 1 3 1 3 4) (h 0 1 4 0 1 4) (h 0 1 2 1 2 3)
+    (h 0 1 3 0 1 4)
+
+/-- Outside the rational evaluation space, exactly nine rank-two Hankel words
+remain, grouped by their four closed-place types. -/
+theorem rankTwoHankel_outside_rational_classification {c : TargetCoeff}
+    (h : HankelRankLETwo c) (hc : c ∉ rationalCoeffSpace) :
+    c = rankTwoHankelWord 7 ∨ c = rankTwoHankelWord 8 ∨
+    c = rankTwoHankelWord 9 ∨ c = rankTwoHankelWord 10 ∨
+    c = rankTwoHankelWord 11 ∨ c = rankTwoHankelWord 12 ∨
+    c = rankTwoHankelWord 13 ∨ c = rankTwoHankelWord 14 ∨
+    c = rankTwoHankelWord 15 := by
+  rcases rankTwoHankel_classification h with ⟨i, rfl⟩
+  fin_cases i
+  · exact (hc (by simp [rankTwoHankelWord])).elim
+  · exact (hc (by simp [rankTwoHankelWord])).elim
+  · exact (hc (by simp [rankTwoHankelWord])).elim
+  · exact (hc (by
+      simpa [rankTwoHankelWord] using
+        rationalCoeffSpace.add_mem rZeroCoeff_mem_rationalCoeffSpace
+          rOneCoeff_mem_rationalCoeffSpace)).elim
+  · exact (hc (by simp [rankTwoHankelWord])).elim
+  · exact (hc (by
+      simpa [rankTwoHankelWord] using
+        rationalCoeffSpace.add_mem rZeroCoeff_mem_rationalCoeffSpace
+          rInfinityCoeff_mem_rationalCoeffSpace)).elim
+  · exact (hc (by
+      simpa [rankTwoHankelWord] using
+        rationalCoeffSpace.add_mem rOneCoeff_mem_rationalCoeffSpace
+          rInfinityCoeff_mem_rationalCoeffSpace)).elim
+  · exact Or.inl rfl
+  · exact Or.inr (Or.inl rfl)
+  · exact Or.inr (Or.inr (Or.inl rfl))
+  · exact Or.inr (Or.inr (Or.inr (Or.inl rfl)))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl))))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (Or.inr (Or.inl rfl)))))))
+  · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (Or.inr (Or.inr rfl)))))))
+
 /-- Manuscript Lemma 4.2 (secant support), in its algebraic support form.  If
 the sum of two decomposable forms has a four-dimensional support `K`, both
 endpoints lie in `Lambda^2 K`. -/
