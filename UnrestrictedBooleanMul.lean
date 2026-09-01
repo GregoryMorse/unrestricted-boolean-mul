@@ -27,6 +27,7 @@ import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.TargetClean
 import UnrestrictedBooleanMul.N5.TargetCleanMatrix
 import UnrestrictedBooleanMul.N5.EnvelopeKernel
+import UnrestrictedBooleanMul.N5.ColourBirth
 
 /-!
 # Unrestricted Boolean multiplicative complexity
