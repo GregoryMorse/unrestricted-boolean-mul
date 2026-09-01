@@ -284,6 +284,427 @@ theorem canonicalRankOne_lower_parts_zero
     rw [canonicalRankThree_vectorWedge_ker_eq_bot] at hell
     simpa using hell
 
+/-! ## A basis-free hyperbolic pivot
+
+The canonical calculation above is useful as a small certificate.  For the
+actual missing coset, however, it is cleaner not to choose an entire
+symplectic basis.  A single nonzero coefficient splits off one decomposable
+hyperbolic plane.  The following definitions record that split. -/
+
+/-- The coefficient row of an ambient squarefree two-form. -/
+def ambientPivotRow (p : TwoForm) (i : Fin 10) : LinearForm :=
+  fun k => ambientTwoCoeff p i k
+
+/-- The decomposable plane split off by the pivot `(i,j)`. -/
+def ambientPivotPlane (p : TwoForm) (i j : Fin 10) : TwoForm :=
+  squarefreeWedge (ambientPivotRow p i) (ambientPivotRow p j)
+
+/-- The residual two-form after splitting off the pivot plane. -/
+def ambientPivotResidual (p : TwoForm) (i j : Fin 10) : TwoForm :=
+  p + ambientPivotPlane p i j
+
+@[simp] theorem ambientPivotRow_same (p : TwoForm) (i : Fin 10) :
+    ambientPivotRow p i i = 0 := by
+  simp [ambientPivotRow]
+
+theorem ambientPivotRow_comm (p : TwoForm) (i j : Fin 10) :
+    ambientPivotRow p i j = ambientPivotRow p j i := by
+  exact ambientTwoCoeff_comm p i j
+
+theorem ambientTwoCoeff_ambientPivotPlane
+    (p : TwoForm) (i j k l : Fin 10) :
+    ambientTwoCoeff (ambientPivotPlane p i j) k l =
+      ambientPivotRow p i k * ambientPivotRow p j l +
+        ambientPivotRow p i l * ambientPivotRow p j k := by
+  simp [ambientPivotPlane, ambientPivotRow,
+    ambientTwoCoeff_squarefreeWedge]
+
+/-- A unit pivot makes its residual vanish in the two pivot rows. -/
+theorem ambientTwoCoeff_ambientPivotResidual_left
+    (p : TwoForm) (i j k : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1) :
+    ambientTwoCoeff (ambientPivotResidual p i j) i k = 0 := by
+  rw [ambientPivotResidual, ambientTwoCoeff_add,
+    ambientTwoCoeff_ambientPivotPlane]
+  simp only [ambientPivotRow]
+  rw [ambientTwoCoeff_same, zero_mul, zero_add,
+    ambientTwoCoeff_comm p j i, hpivot, mul_one]
+  exact CharTwo.add_self_eq_zero (R := F₂) _
+
+theorem ambientTwoCoeff_ambientPivotResidual_right
+    (p : TwoForm) (i j k : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1) :
+    ambientTwoCoeff (ambientPivotResidual p i j) j k = 0 := by
+  rw [ambientPivotResidual, ambientTwoCoeff_add,
+    ambientTwoCoeff_ambientPivotPlane]
+  simp only [ambientPivotRow]
+  rw [ambientTwoCoeff_same, mul_zero, add_zero, hpivot, one_mul]
+  exact CharTwo.add_self_eq_zero (R := F₂) _
+
+/-- The coefficient of the annihilator on the pivot plane. -/
+def ambientPivotScalar (q : TwoForm) (i j : Fin 10) : F₂ :=
+  ambientTwoCoeff q i j
+
+/-- First off-pivot row of a two-form, in pivot coordinates. -/
+def ambientPivotX (p q : TwoForm) (i j : Fin 10) : LinearForm :=
+  ambientPivotRow q j +
+    ambientPivotScalar q i j • ambientPivotRow p j
+
+/-- Second off-pivot row of a two-form, in pivot coordinates. -/
+def ambientPivotY (p q : TwoForm) (i j : Fin 10) : LinearForm :=
+  ambientPivotRow q i +
+    ambientPivotScalar q i j • ambientPivotRow p i
+
+/-- Part of `q` supported completely away from the pivot plane. -/
+def ambientPivotRemainder (p q : TwoForm) (i j : Fin 10) : TwoForm :=
+  q + ambientPivotScalar q i j • ambientPivotPlane p i j +
+    squarefreeWedge (ambientPivotRow p i) (ambientPivotX p q i j) +
+    squarefreeWedge (ambientPivotRow p j) (ambientPivotY p q i j)
+
+@[simp] theorem ambientPivotX_left
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1) :
+    ambientPivotX p q i j i = 0 := by
+  simp only [ambientPivotX, ambientPivotRow, ambientPivotScalar,
+    Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  rw [ambientTwoCoeff_comm q j i, ambientTwoCoeff_comm p j i,
+    hpivot, mul_one]
+  exact CharTwo.add_self_eq_zero _
+
+@[simp] theorem ambientPivotX_right
+    (p q : TwoForm) (i j : Fin 10) :
+    ambientPivotX p q i j j = 0 := by
+  simp [ambientPivotX, ambientPivotRow]
+
+@[simp] theorem ambientPivotY_left
+    (p q : TwoForm) (i j : Fin 10) :
+    ambientPivotY p q i j i = 0 := by
+  simp [ambientPivotY, ambientPivotRow]
+
+@[simp] theorem ambientPivotY_right
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1) :
+    ambientPivotY p q i j j = 0 := by
+  simp only [ambientPivotY, ambientPivotRow, ambientPivotScalar,
+    Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  rw [hpivot, mul_one]
+  exact CharTwo.add_self_eq_zero _
+
+theorem ambientTwoCoeff_ambientPivotRemainder_left
+    (p q : TwoForm) (i j k : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1) :
+    ambientTwoCoeff (ambientPivotRemainder p q i j) i k = 0 := by
+  simp only [ambientPivotRemainder, ambientTwoCoeff_add,
+    ambientTwoCoeff_smul, ambientTwoCoeff_ambientPivotPlane,
+    ambientTwoCoeff_squarefreeWedge, ambientTwoCoeff_same,
+    ambientPivotX, ambientPivotY,
+    zero_mul, zero_add, mul_zero, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul, ambientPivotRow, ambientPivotScalar]
+  rw [ambientTwoCoeff_comm p j i, ambientTwoCoeff_comm q j i,
+    hpivot, one_mul, mul_one]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2]
+
+theorem ambientTwoCoeff_ambientPivotRemainder_right
+    (p q : TwoForm) (i j k : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1) :
+    ambientTwoCoeff (ambientPivotRemainder p q i j) j k = 0 := by
+  simp only [ambientPivotRemainder, ambientTwoCoeff_add,
+    ambientTwoCoeff_smul, ambientTwoCoeff_ambientPivotPlane,
+    ambientTwoCoeff_squarefreeWedge, ambientTwoCoeff_same,
+    ambientPivotX, ambientPivotY,
+    zero_mul, zero_add, mul_zero, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul, ambientPivotRow, ambientPivotScalar]
+  rw [hpivot, one_mul, mul_one]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2]
+
+theorem ambientPivot_decomposition
+    (p q : TwoForm) (i j : Fin 10) :
+    q = ambientPivotScalar q i j • ambientPivotPlane p i j +
+        squarefreeWedge (ambientPivotRow p i) (ambientPivotX p q i j) +
+        squarefreeWedge (ambientPivotRow p j) (ambientPivotY p q i j) +
+        ambientPivotRemainder p q i j := by
+  funext s
+  simp only [ambientPivotRemainder, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2]
+
+/-- The four-form equation determines the completely off-pivot part of an
+annihilator. -/
+theorem ambientPivotRemainder_eq_smul_residual_of_wedge_zero
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1)
+    (hwedge : ambientWedgeTwo p q = 0) :
+    ambientPivotRemainder p q i j =
+      ambientPivotScalar q i j • ambientPivotResidual p i j := by
+  apply ambientTwoCoeff_injective
+  intro k l
+  have hijkl :=
+    congrFun (congrFun (congrFun (congrFun hwedge i) j) k) l
+  simp only [ambientWedgeTwo, Pi.zero_apply] at hijkl
+  rw [hpivot, one_mul] at hijkl
+  simp only [ambientPivotRemainder, ambientPivotResidual,
+    ambientTwoCoeff_add, ambientTwoCoeff_smul,
+    ambientTwoCoeff_ambientPivotPlane,
+    ambientTwoCoeff_squarefreeWedge, ambientPivotX, ambientPivotY,
+    ambientPivotRow, ambientPivotScalar, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul]
+  ring_nf at hijkl ⊢
+  have hA : ambientTwoCoeff p i k * ambientTwoCoeff q i j *
+      ambientTwoCoeff p j l * 2 = 0 := by
+    rw [N3Certificate.two_eq_zero_f2, mul_zero]
+  have hB : ambientTwoCoeff q i j * ambientTwoCoeff p i l *
+      ambientTwoCoeff p j k * 2 = 0 := by
+    rw [N3Certificate.two_eq_zero_f2, mul_zero]
+  have hC : ambientTwoCoeff q i j * ambientTwoCoeff p k l * 2 = 0 := by
+    rw [N3Certificate.two_eq_zero_f2, mul_zero]
+  linear_combination hijkl + hA + hB - hC
+
+/-- Pivot normal form of a quadratic annihilator. -/
+theorem ambientPivot_decomposition_of_wedge_zero
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1)
+    (hwedge : ambientWedgeTwo p q = 0) :
+    q = ambientPivotScalar q i j • p +
+        squarefreeWedge (ambientPivotRow p i) (ambientPivotX p q i j) +
+        squarefreeWedge (ambientPivotRow p j) (ambientPivotY p q i j) := by
+  calc
+    q = ambientPivotScalar q i j • ambientPivotPlane p i j +
+          squarefreeWedge (ambientPivotRow p i) (ambientPivotX p q i j) +
+          squarefreeWedge (ambientPivotRow p j) (ambientPivotY p q i j) +
+          ambientPivotRemainder p q i j :=
+      ambientPivot_decomposition p q i j
+    _ = _ := by
+      rw [ambientPivotRemainder_eq_smul_residual_of_wedge_zero
+        p q i j hpivot hwedge]
+      funext s
+      simp only [ambientPivotResidual, Pi.add_apply, Pi.smul_apply,
+        smul_eq_mul]
+      ring_nf
+      simp [N3Certificate.two_eq_zero_f2]
+
+theorem ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+    (p q : TwoForm) (i j k l : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1)
+    (hwedge : ambientWedgeTwo p q = 0) :
+    ambientTwoCoeff q k l =
+      ambientPivotScalar q i j * ambientTwoCoeff p k l +
+      ambientPivotRow p i k * ambientPivotX p q i j l +
+      ambientPivotRow p i l * ambientPivotX p q i j k +
+      ambientPivotRow p j k * ambientPivotY p q i j l +
+      ambientPivotRow p j l * ambientPivotY p q i j k := by
+  have h := congrArg (fun r => ambientTwoCoeff r k l)
+    (ambientPivot_decomposition_of_wedge_zero p q i j hpivot hwedge)
+  simpa only [ambientTwoCoeff_add, ambientTwoCoeff_smul,
+    ambientTwoCoeff_squarefreeWedge, smul_eq_mul, add_assoc] using h
+
+/-- The first off-pivot row annihilates the pivot residual. -/
+theorem ambientPivotX_vectorWedge_residual_zero
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1)
+    (hwedge : ambientWedgeTwo p q = 0) :
+    ambientVectorWedgeTwo (ambientPivotX p q i j)
+      (ambientPivotResidual p i j) = 0 := by
+  funext k l m
+  have h := congrFun (congrFun (congrFun (congrFun hwedge j) k) l) m
+  simp only [ambientWedgeTwo, Pi.zero_apply] at h
+  rw [ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j l m hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j k m hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j k l hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j j k hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j j l hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j j m hpivot hwedge] at h
+  simp only [ambientPivotRow, hpivot, ambientTwoCoeff_same,
+    ambientPivotX_right, ambientPivotY_right p q i j hpivot,
+    one_mul, zero_mul, mul_zero, add_zero] at h
+  simp only [ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    ambientPivotResidual, ambientTwoCoeff_add,
+    ambientTwoCoeff_ambientPivotPlane, ambientPivotRow, Pi.zero_apply]
+  ring_nf at h ⊢
+  simp only [N3Certificate.two_eq_zero_f2, mul_zero, add_zero] at h ⊢
+  linear_combination h
+
+/-- The second off-pivot row annihilates the pivot residual. -/
+theorem ambientPivotY_vectorWedge_residual_zero
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1)
+    (hwedge : ambientWedgeTwo p q = 0) :
+    ambientVectorWedgeTwo (ambientPivotY p q i j)
+      (ambientPivotResidual p i j) = 0 := by
+  funext k l m
+  have h := congrFun (congrFun (congrFun (congrFun hwedge i) k) l) m
+  simp only [ambientWedgeTwo, Pi.zero_apply] at h
+  rw [ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j l m hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j k m hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j k l hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j i k hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j i l hpivot hwedge,
+      ambientTwoCoeff_eq_pivot_normal_of_wedge_zero
+        p q i j i m hpivot hwedge] at h
+  simp only [ambientPivotRow, hpivot, ambientTwoCoeff_same,
+    ambientTwoCoeff_comm p j i, ambientPivotX_left p q i j hpivot,
+    ambientPivotY_left, one_mul, zero_mul, mul_zero,
+    add_zero] at h
+  simp only [ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    ambientPivotResidual, ambientTwoCoeff_add,
+    ambientTwoCoeff_ambientPivotPlane, ambientPivotRow, Pi.zero_apply]
+  ring_nf at h ⊢
+  simp only [N3Certificate.two_eq_zero_f2, mul_zero, add_zero] at h ⊢
+  linear_combination h
+
+theorem ambientPivotPlane_add_residual
+    (p : TwoForm) (i j : Fin 10) :
+    ambientPivotPlane p i j + ambientPivotResidual p i j = p := by
+  funext s
+  simp only [ambientPivotResidual, Pi.add_apply]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2]
+
+/-- A one-coefficient hyperbolic pivot proves the degree-two kernel theorem
+without constructing a full symplectic basis. -/
+theorem ambientWedgeTwo_eq_zero_iff_smul_of_not_sum_two_decomposable
+    (p q : TwoForm) (i j : Fin 10)
+    (hpivot : ambientTwoCoeff p i j = 1)
+    (hnotSecant : ¬ ∃ x y z w : LinearForm,
+      p = squarefreeWedge x y + squarefreeWedge z w) :
+    ambientWedgeTwo p q = 0 ↔ ∃ a : F₂, q = a • p := by
+  constructor
+  · intro hwedge
+    have hresidual : ¬ IsDecomposableTwo (ambientPivotResidual p i j) := by
+      rintro ⟨x, y, hxy⟩
+      apply hnotSecant
+      refine ⟨ambientPivotRow p i, ambientPivotRow p j, x, y, ?_⟩
+      rw [← hxy]
+      simpa only [ambientPivotPlane] using
+        (ambientPivotPlane_add_residual p i j).symm
+    have hX : ambientPivotX p q i j = 0 := by
+      by_contra hXne
+      rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+          (ambientPivotResidual p i j) (ambientPivotX p q i j) hXne
+          (ambientPivotX_vectorWedge_residual_zero
+            p q i j hpivot hwedge) with ⟨v, hv⟩
+      exact hresidual ⟨ambientPivotX p q i j, v, hv⟩
+    have hY : ambientPivotY p q i j = 0 := by
+      by_contra hYne
+      rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+          (ambientPivotResidual p i j) (ambientPivotY p q i j) hYne
+          (ambientPivotY_vectorWedge_residual_zero
+            p q i j hpivot hwedge) with ⟨v, hv⟩
+      exact hresidual ⟨ambientPivotY p q i j, v, hv⟩
+    refine ⟨ambientPivotScalar q i j, ?_⟩
+    have hnormal :=
+      ambientPivot_decomposition_of_wedge_zero p q i j hpivot hwedge
+    rw [hX, hY] at hnormal
+    simpa [squarefreeWedge] using hnormal
+  · rintro ⟨a, rfl⟩
+    exact ambientWedgeTwo_smul_right p p a |>.trans (by simp)
+
+@[simp] theorem ambientTwoCoeff_targetTwo_cross
+    (c : TargetCoeff) (r s : Fin 5) :
+    ambientTwoCoeff (targetTwo c) (aCoord r) (bCoord s) =
+      c (hankelIndex r s) := by
+  simp [ambientTwoCoeff, aCoord_ne_bCoord]
+
+private theorem one_of_four_eq_one {a b c d : F₂}
+    (h : a + b + c + d = 1) :
+    a = 1 ∨ b = 1 ∨ c = 1 ∨ d = 1 := by
+  by_contra hnone
+  push Not at hnone
+  rcases hnone with ⟨ha, hb, hc, hd⟩
+  have ha0 : a = 0 := (f2_eq_zero_or_one a).resolve_right ha
+  have hb0 : b = 0 := (f2_eq_zero_or_one b).resolve_right hb
+  have hc0 : c = 0 := (f2_eq_zero_or_one c).resolve_right hc
+  have hd0 : d = 0 := (f2_eq_zero_or_one d).resolve_right hd
+  simp [ha0, hb0, hc0, hd0] at h
+
+/-- Every member of the missing affine coset has a unit coefficient among
+the four coordinates detected by the missing functional. -/
+theorem missingCoset_has_unit_pivot
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    ∃ i j : Fin 10,
+      ambientTwoCoeff (targetTwo (firstOrderMissingCoeff + u)) i j = 1 := by
+  let c := firstOrderMissingCoeff + u
+  have hu0 : firstOrderMissingFunctional u = 0 :=
+    (mem_firstOrderEnvelopeCoeffSpace u).1 hu
+  have hc1 : firstOrderMissingFunctional c = 1 := by
+    dsimp [c]
+    rw [map_add, firstOrderMissingFunctional_missing, hu0, add_zero]
+  change c 2 + c 3 + c 5 + c 6 = 1 at hc1
+  rcases one_of_four_eq_one hc1 with h2 | h3 | h5 | h6
+  · refine ⟨aCoord 0, bCoord 2, ?_⟩
+    simpa [c, hankelIndex] using h2
+  · refine ⟨aCoord 0, bCoord 3, ?_⟩
+    simpa [c, hankelIndex] using h3
+  · refine ⟨aCoord 2, bCoord 3, ?_⟩
+    simpa [c, hankelIndex] using h5
+  · refine ⟨aCoord 2, bCoord 4, ?_⟩
+    simpa [c, hankelIndex] using h6
+
+/-- Manuscript equation (11.2), degree-two part, for every member of the
+missing target coset. -/
+theorem missingCoset_wedge_eq_zero_iff
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (q : TwoForm) :
+    ambientWedgeTwo (targetTwo (firstOrderMissingCoeff + u)) q = 0 ↔
+      ∃ a : F₂, q = a • targetTwo (firstOrderMissingCoeff + u) := by
+  rcases missingCoset_has_unit_pivot u hu with ⟨i, j, hpivot⟩
+  exact ambientWedgeTwo_eq_zero_iff_smul_of_not_sum_two_decomposable
+    (targetTwo (firstOrderMissingCoeff + u)) q i j hpivot
+      (missingCoset_not_sum_two_decomposable u hu)
+
+/-- Linear-map form of the full degree-two missing-coset kernel. -/
+theorem missingCoset_wedge_ker_eq_span
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    LinearMap.ker
+        (ambientWedgeTwoMap (targetTwo (firstOrderMissingCoeff + u))) =
+      Submodule.span F₂
+        ({targetTwo (firstOrderMissingCoeff + u)} : Set TwoForm) := by
+  ext q
+  constructor
+  · intro hq
+    rw [LinearMap.mem_ker] at hq
+    rcases (missingCoset_wedge_eq_zero_iff u hu q).1 hq with ⟨a, rfl⟩
+    exact Submodule.smul_mem _ _
+      (Submodule.mem_span_singleton_self
+        (targetTwo (firstOrderMissingCoeff + u)))
+  · intro hq
+    rcases Submodule.mem_span_singleton.mp hq with ⟨a, rfl⟩
+    rw [LinearMap.mem_ker]
+    exact (missingCoset_wedge_eq_zero_iff u hu _).2 ⟨a, rfl⟩
+
+/-- The simultaneous quartic and cubic equations kill both lower parts in
+the non-target branch of manuscript Theorem 12.3. -/
+theorem missingCoset_lower_parts_zero
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (C : TwoForm) (ell : LinearForm)
+    (hfour : ambientWedgeTwo
+      (targetTwo (firstOrderMissingCoeff + u)) C = 0)
+    (hnotTarget : C ≠ targetTwo (firstOrderMissingCoeff + u))
+    (hthree : ambientVectorWedgeTwo ell
+      (targetTwo (firstOrderMissingCoeff + u)) = 0) :
+    C = 0 ∧ ell = 0 := by
+  constructor
+  · rcases (missingCoset_wedge_eq_zero_iff u hu C).1 hfour with ⟨a, rfl⟩
+    rcases f2_eq_zero_or_one a with rfl | rfl
+    · simp
+    · exact (hnotTarget (by simp)).elim
+  · exact (missingCoset_vectorWedge_eq_zero_iff u hu ell).1 hthree
+
 end
 end N5
 end UnrestrictedBooleanMul
