@@ -2,6 +2,7 @@ import UnrestrictedBooleanMul.N3TruthTable
 import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
 import UnrestrictedBooleanMul.N5.DisplacementBound
+import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
 
 /-!
 # Unrestricted Boolean multiplicative complexity
