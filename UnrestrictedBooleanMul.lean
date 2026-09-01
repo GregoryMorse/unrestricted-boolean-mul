@@ -4,6 +4,7 @@ import UnrestrictedBooleanMul.N5.Statement
 import UnrestrictedBooleanMul.N5.DisplacementBound
 import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
 import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
+import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
 
 /-!
 # Unrestricted Boolean multiplicative complexity
@@ -21,7 +22,9 @@ closed places.  For defect dimension at most three, its relation kernel and
 relation-gift range are reduced algebraically to Fano line and quadrilateral
 supports.  The representative degree-two-plus-two-rational obstruction is
 equipped with explicit translation and reversal actions on input forms,
-local Klein charts, canonical lifts, and the nine-dimensional Hankel target.
+local Klein charts, canonical lifts, and the nine-dimensional Hankel target;
+all three rational-pair profiles have empty triple fibers, zero relation gift,
+and target capacity seven.
 The `N3`, `N4`, and `N5` module names describe theorem scope rather than an
 internal research workflow.
 -/

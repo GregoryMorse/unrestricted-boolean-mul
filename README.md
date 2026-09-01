@@ -72,8 +72,10 @@ first independent layer of the `n = 5` proof:
   gift vanishes, and the target capacity is exactly seven; and
 - explicit translation and reversal actions on the ten input coordinates,
   their functorial exterior-square action, the four local Klein charts, and
-  the nine-dimensional Hankel target, ready to transport that representative
-  row to the other two rational-place pairs without enumeration.
+  the nine-dimensional Hankel target, transporting the representative row to
+  the other two rational-place pairs without enumeration; all three
+  degree-two-plus-two-rational profiles have empty triple fibers, zero
+  relation gift, and target capacity exactly seven.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -128,6 +130,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/ThreeRationalProfile.lean`](UnrestrictedBooleanMul/N5/ThreeRationalProfile.lean)
 - [`UnrestrictedBooleanMul/N5/ThreePlaceDegreeTwo.lean`](UnrestrictedBooleanMul/N5/ThreePlaceDegreeTwo.lean)
 - [`UnrestrictedBooleanMul/N5/RationalPlaceSymmetry.lean`](UnrestrictedBooleanMul/N5/RationalPlaceSymmetry.lean)
+- [`UnrestrictedBooleanMul/N5/TwoRationalDegreeTwoProfile.lean`](UnrestrictedBooleanMul/N5/TwoRationalDegreeTwoProfile.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementBound.lean`](UnrestrictedBooleanMul/N5/DisplacementBound.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)

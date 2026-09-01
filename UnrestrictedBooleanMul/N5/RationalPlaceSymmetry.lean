@@ -615,6 +615,124 @@ theorem rationalPlaceTwoFormLinear_decomposable
   rcases hp with ⟨u, v, rfl⟩
   exact ⟨_, _, rationalPlaceTwoFormLinear_squarefreeWedge θ u v⟩
 
+/-- Transport of a two-rational-plus-degree-two candidate, including the
+canonical-section correction absorbed into the Hankel target. -/
+theorem rationalPlaceTwoFormLinear_threePlaceCandidate
+    (θ : Fin 2) (place₀ place₁ : Fin 4)
+    (hplace₀ : place₀ ≠ 3) (hplace₁ : place₁ ≠ 3)
+    (q r s : LocalKleinParam) (c : TargetCoeff) :
+    rationalPlaceTwoFormLinear θ
+        (closedPlaceLift place₀ q + closedPlaceLift place₁ r +
+          closedPlaceLift 3 s + targetTwo c) =
+      closedPlaceLift (rationalPlacePerm θ place₀) q +
+        closedPlaceLift (rationalPlacePerm θ place₁) r +
+        closedPlaceLift 3 (degreeTwoSymmetryParam s) +
+        targetTwo
+          (rationalTargetCoeffChange θ c +
+            closedPlaceTargetCoeff 3 (degreeTwoSymmetryTarget θ s)) := by
+  rw [map_add, map_add, map_add,
+    rationalPlaceTwoFormLinear_rationalLift θ place₀ hplace₀,
+    rationalPlaceTwoFormLinear_rationalLift θ place₁ hplace₁,
+    rationalPlaceTwoFormLinear_degreeTwoLift,
+    rationalPlaceTwoFormLinear_targetTwo]
+  have htadd :
+      targetTwo
+          (rationalTargetCoeffChange θ c +
+            closedPlaceTargetCoeff 3 (degreeTwoSymmetryTarget θ s)) =
+        targetTwo (rationalTargetCoeffChange θ c) +
+          targetTwo (closedPlaceTargetCoeff 3
+            (degreeTwoSymmetryTarget θ s)) := by
+    exact targetTwoLinear.map_add _ _
+  rw [htadd]
+  module
+
+/-- Transported algebraic obstruction for `2P₁,2P_∞,P_*`. -/
+theorem three123_not_decomposable
+    (q r s : LocalKleinParam)
+    (hq : RationalLocalEffective q) (hr : RationalLocalEffective r)
+    (hs : DegreeTwoLocalEffective s) (c : TargetCoeff) :
+    ¬ IsDecomposableTwo
+      (closedPlaceLift 1 q + closedPlaceLift 2 r +
+        closedPlaceLift 3 s + targetTwo c) := by
+  intro hdec
+  have htransport := rationalPlaceTwoFormLinear_decomposable 1 hdec
+  rw [rationalPlaceTwoFormLinear_threePlaceCandidate
+    1 1 2 (by decide) (by decide) q r s c] at htransport
+  let c' := rationalTargetCoeffChange 1 c +
+    closedPlaceTargetCoeff 3 (degreeTwoSymmetryTarget 1 s)
+  have hrepresentative : IsDecomposableTwo
+      (closedPlaceLift 0 r + closedPlaceLift 1 q +
+        closedPlaceLift 3 (degreeTwoSymmetryParam s) + targetTwo c') := by
+    rcases htransport with ⟨u, v, huv⟩
+    refine ⟨u, v, ?_⟩
+    calc
+      closedPlaceLift 0 r + closedPlaceLift 1 q +
+          closedPlaceLift 3 (degreeTwoSymmetryParam s) + targetTwo c' =
+        closedPlaceLift (rationalPlacePerm 1 1) q +
+          closedPlaceLift (rationalPlacePerm 1 2) r +
+          closedPlaceLift 3 (degreeTwoSymmetryParam s) +
+          targetTwo
+            (rationalTargetCoeffChange 1 c +
+              closedPlaceTargetCoeff 3 (degreeTwoSymmetryTarget 1 s)) := by
+            simp [c', rationalPlacePerm]
+            module
+      _ = squarefreeWedge u v := huv
+  exact three013_not_decomposable r q (degreeTwoSymmetryParam s)
+    hr hq (degreeTwoSymmetryParam_effective s hs) c' hrepresentative
+
+/-- Transported algebraic obstruction for `2P₀,2P_∞,P_*`. -/
+theorem three023_not_decomposable
+    (q r s : LocalKleinParam)
+    (hq : RationalLocalEffective q) (hr : RationalLocalEffective r)
+    (hs : DegreeTwoLocalEffective s) (c : TargetCoeff) :
+    ¬ IsDecomposableTwo
+      (closedPlaceLift 0 q + closedPlaceLift 2 r +
+        closedPlaceLift 3 s + targetTwo c) := by
+  intro hdec
+  have htransport := rationalPlaceTwoFormLinear_decomposable 0 hdec
+  rw [rationalPlaceTwoFormLinear_threePlaceCandidate
+    0 0 2 (by decide) (by decide) q r s c] at htransport
+  let c' := rationalTargetCoeffChange 0 c +
+    closedPlaceTargetCoeff 3 (degreeTwoSymmetryTarget 0 s)
+  have hprofile : IsDecomposableTwo
+      (closedPlaceLift 1 q + closedPlaceLift 2 r +
+        closedPlaceLift 3 (degreeTwoSymmetryParam s) + targetTwo c') := by
+    simpa [c', rationalPlacePerm] using htransport
+  exact three123_not_decomposable q r (degreeTwoSymmetryParam s)
+    hq hr (degreeTwoSymmetryParam_effective s hs) c' hprofile
+
+theorem rational12_degreeTwo_mixed_decomposableFiber_empty
+    (q r s : LocalKleinParam)
+    (hq : RationalLocalEffective q) (hr : RationalLocalEffective r)
+    (hs : DegreeTwoLocalEffective s) :
+    decomposableFiber
+      (closedPlaceQuotientPoint 1 q + closedPlaceQuotientPoint 2 r +
+        closedPlaceQuotientPoint 3 s) = ∅ := by
+  ext p
+  simp only [Set.mem_empty_iff_false, iff_false]
+  intro hp
+  rcases exists_threePlaceCandidate_of_mem_decomposableFiber
+      1 q 2 r 3 s p hp with ⟨c, hc⟩
+  apply three123_not_decomposable q r s hq hr hs c
+  rw [← hc]
+  exact hp.1
+
+theorem rational02_degreeTwo_mixed_decomposableFiber_empty
+    (q r s : LocalKleinParam)
+    (hq : RationalLocalEffective q) (hr : RationalLocalEffective r)
+    (hs : DegreeTwoLocalEffective s) :
+    decomposableFiber
+      (closedPlaceQuotientPoint 0 q + closedPlaceQuotientPoint 2 r +
+        closedPlaceQuotientPoint 3 s) = ∅ := by
+  ext p
+  simp only [Set.mem_empty_iff_false, iff_false]
+  intro hp
+  rcases exists_threePlaceCandidate_of_mem_decomposableFiber
+      0 q 2 r 3 s p hp with ⟨c, hc⟩
+  apply three023_not_decomposable q r s hq hr hs c
+  rw [← hc]
+  exact hp.1
+
 end
 
 end N5
