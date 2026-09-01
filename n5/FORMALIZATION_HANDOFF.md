@@ -38,6 +38,15 @@ only when the `N5` proof needs the exact abstraction and the old theorem can be
 reproved by a short wrapper.  This keeps the 24,885-line checked development
 stable while the new proof grows.
 
+## Recovered computational guide
+
+The programs in `n5/verification/exploration/` preserve the coordinate engines
+and finite scans used while discovering the `W_{PQ}`, `W_{3P}`, and
+defect-at-most-one arguments.  They may be used to test Lean definitions or to
+locate the intended pivots, but no printed table is an allowed theorem premise.
+The directory README records which programs are exhaustive, accelerated,
+sampled, or only syntax-replayed in this handoff.
+
 ## Dependency-ordered module plan
 
 ### Phase 0: target and upper circuit

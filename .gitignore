@@ -6,6 +6,8 @@
 *.pdf
 *.synctex.gz
 *.tex
+__pycache__/
+*.py[cod]
 
 .lake
 

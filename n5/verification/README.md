@@ -1,15 +1,15 @@
-# `n = 5` regression checks
+# `n = 5` verification and discovery code
 
-This directory is for finite checks used during discovery or as regression
+This directory contains finite checks used during discovery or as regression
 tests.  They are not proof premises and must not be imported into Lean.
 
-The initial handoff contains the independent-shadow check for the `W_*`
-envelope:
+The two top-level programs are small, curated regression checks.  The
+independent-shadow check for the `W_*` envelope is:
 
 - [`wstar_independent_shadow_check.cpp`](wstar_independent_shadow_check.cpp)
 - [`wstar_independent_shadow_check_results.txt`](wstar_independent_shadow_check_results.txt)
 
-It also contains
+The upper-circuit check is
 [`five_upper_formula_check.py`](five_upper_formula_check.py), a dependency-free
 symbolic expansion of the thirteen displayed affine products.  It checks all
 nine output identities against the 25 bilinear monomials:
@@ -39,10 +39,25 @@ g++ -O3 -std=c++20 wstar_independent_shadow_check.cpp -o wstar_check
 diff -u wstar_independent_shadow_check_results.txt actual.txt
 ```
 
-The final `CONSTANT` line is the pass condition.  On the 2026-08-31 audit
+The final `CONSTANT` line is the pass condition.  On the 2026-09-01 handoff
 container the replay completed successfully and matched the recorded counts.
 
-The much larger 166,199,235-presentation projection run, 43-fiber census, and
-other exploratory programs are not present in this snapshot.  The manuscript
-replaces their conclusions by algebraic proofs and does not claim that this
-repository reproduces those historical searches.
+## Recovered discovery programs
+
+The [`exploration/`](exploration/) directory preserves nine Python programs
+used to discover and stress-test the `W_{PQ}`, `W_{3P}`, and defect-at-most-one
+arguments.  They are retained because the coordinate models, pivots, rank
+profiles, and counterexample searches are useful guides for the Lean
+formalization.  They are labelled as discovery code rather than certificates;
+the manuscript replaces every load-bearing conclusion by an algebraic proof.
+
+All nine files pass Python bytecode compilation.  The short deterministic
+local-orbit program has a recorded transcript.  Two accelerated scans require
+NumPy; the other seven use only the Python standard library.  See
+[`exploration/README.md`](exploration/README.md) for the inventory and replay
+status.
+
+The source of the much larger 166,199,235-presentation projection run and the
+original 43-fiber census was not recoverable from this workspace.  The
+manuscript replaces their conclusions by algebraic proofs and does not claim
+that this repository reproduces those historical searches.

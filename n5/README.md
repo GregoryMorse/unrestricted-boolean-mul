@@ -44,8 +44,10 @@ kernel checked.
   architecture, dependency order, trust policy, and completion gates.
 - [`THEOREM_LEDGER.md`](THEOREM_LEDGER.md) maps every load-bearing manuscript
   result to its planned Lean module and current status.
-- [`verification/`](verification/) is reserved for regression checks that are
-  explicitly not proof premises.
+- [`verification/`](verification/) contains curated regression checks and the
+  recovered Python discovery programs for the later envelopes.  They are
+  explicitly not proof premises, but preserve useful coordinate models and
+  search structure for the Lean work.
 
 The existing `n = 4` development is the reusable framework.  It already
 contains the unrestricted circuit semantics, Boolean ANFs, homogeneous-degree
