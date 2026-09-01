@@ -132,6 +132,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/RationalPlaceSymmetry.lean`](UnrestrictedBooleanMul/N5/RationalPlaceSymmetry.lean)
 - [`UnrestrictedBooleanMul/N5/TwoRationalDegreeTwoProfile.lean`](UnrestrictedBooleanMul/N5/TwoRationalDegreeTwoProfile.lean)
 - [`UnrestrictedBooleanMul/N5/TwoPlaceProfile.lean`](UnrestrictedBooleanMul/N5/TwoPlaceProfile.lean)
+- [`UnrestrictedBooleanMul/N5/DefectTwoCapacity.lean`](UnrestrictedBooleanMul/N5/DefectTwoCapacity.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementBound.lean`](UnrestrictedBooleanMul/N5/DisplacementBound.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)

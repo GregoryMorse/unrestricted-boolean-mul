@@ -26,7 +26,7 @@ Status meanings:
 | Theorem 5.3, 43 fibers | `N5.effectiveFibers_eq`, `N5.effectiveFibers_card`, `N5/EffectiveClassification.lean` | algebraic rank-two secants, localization, and local Klein counts | checked |
 | Theorem 6.1, mixed-place exclusion | `N5.strongMixedPlace`, `N5/MixedPlaceDegreeInfinity.lean` | closed-place support | checked |
 | Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/DisplacementProfile.lean` | exact represented-place profile and Fano line/quadrilateral generation checked; sparse gift pivots remain | in progress |
-| Theorem 7.1, `rho_2(5)=6` | `N5.rhoTwo_five`, `N5/Capacity.lean` | local differences, equality classification | planned |
+| Theorem 7.1, `rho_2(5)=6` | `N5.targetCapacity_le_six_of_finrank_le_two`, `N5.exists_finrank_le_two_targetCapacity_eq_six`, `N5/DefectTwoCapacity.lean` | algebraic defect-line relation bound and explicit rational-plus-degree-two witness checked; full equality classification remains | in progress |
 | Theorem 7.2, `rho_3(5)=7` | `N5.rhoThree_five`, `N5/Capacity.lean` | mixed-place and displacement | planned |
 | Proposition 8.1, capacity obstruction | `N5.capacity_obstruction`, `N5/Capacity.lean` | target--defect exact sequence | planned |
 | Lemma 9.1, circuit bookkeeping | `N5.circuit_bookkeeping`, `N5/Prefix.lean` | generic circuit flags | planned |

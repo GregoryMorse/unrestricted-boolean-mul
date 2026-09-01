@@ -87,6 +87,56 @@ theorem relationGiftRank_le_three_of_two_distinct_places
     (populatedRelationKernel_finrank_le_three_of_two_distinct_places
       Q hQ i j hi hj hij)
 
+/-- On a defect line, mixed-place exclusion leaves no additive relation at
+all: zero and the forbidden mixed sum occupy the two vectors omitted from the
+populated family. -/
+theorem populatedRelationKernel_finrank_eq_zero_of_two_distinct_places
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 2)
+    (i j : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hij : i ≠ j) :
+    Module.finrank F₂
+      ↑(relationKernel (populatedQuotientPoint (Q := Q))) = 0 := by
+  let z :=
+    populatedQuotientPoint (representedPopulatedPoint Q i hi) +
+    populatedQuotientPoint (representedPopulatedPoint Q j hj)
+  have hz := representedPair_sum_missing Q i j hi hj hij
+  exact populatedRelationKernel_finrank_eq_zero_of_missing_span_point
+    Q hQ z hz.1 hz.2.1 hz.2.2
+
+/-- Distinct represented place types on a defect line have zero relation
+gift. -/
+theorem relationGiftRank_eq_zero_of_two_distinct_places_finrank_le_two
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 2)
+    (i j : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hij : i ≠ j) :
+    relationGiftRank Q = 0 := by
+  have hgift := relationGiftRank_le_relationKernel Q
+  rw [populatedRelationKernel_finrank_eq_zero_of_two_distinct_places
+    Q hQ i j hi hj hij] at hgift
+  omega
+
+/-- Three distinct represented place types cannot lie in a defect of
+dimension at most two. -/
+theorem not_three_distinct_represented_places_of_finrank_le_two
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 2)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
+  have hlin := representedTriple_linearIndependent
+    Q i j k hi hj hk hij hik hjk
+  have hcard := hlin.fintype_card_le_finrank
+  have : 3 ≤ Module.finrank F₂ Q := by simpa using hcard
+  omega
+
 end
 
 end N5

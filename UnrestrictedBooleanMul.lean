@@ -6,6 +6,7 @@ import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
 import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
 import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
 import UnrestrictedBooleanMul.N5.TwoPlaceProfile
+import UnrestrictedBooleanMul.N5.DefectTwoCapacity
 
 /-!
 # Unrestricted Boolean multiplicative complexity
@@ -25,7 +26,9 @@ supports.  The representative degree-two-plus-two-rational obstruction is
 equipped with explicit translation and reversal actions on input forms,
 local Klein charts, canonical lifts, and the nine-dimensional Hankel target;
 all three rational-pair profiles have empty triple fibers, zero relation gift,
-and target capacity seven.
+and target capacity seven.  In defect dimension at most two, mixed-place
+exclusion also gives the sharp universal capacity bound six, attained by an
+explicit rational-plus-degree-two defect line.
 The `N3`, `N4`, and `N5` module names describe theorem scope rather than an
 internal research workflow.
 -/

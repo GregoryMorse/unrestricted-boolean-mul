@@ -294,6 +294,78 @@ theorem populatedRelationKernel_finrank_le_three_of_missing_span_point
   interval_cases hS : Module.finrank F₂ S <;>
     norm_num [hS] at hcard hkernel ⊢ <;> omega
 
+/-- A defect of dimension at most two has at most one additive relation among
+its populated nonzero points. -/
+theorem populatedRelationKernel_finrank_le_one_of_finrank_le_two
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 2) :
+    Module.finrank F₂
+      ↑(relationKernel (populatedQuotientPoint (Q := Q))) ≤ 1 := by
+  let q := populatedQuotientPoint (Q := Q)
+  let S : Submodule F₂ QuadraticQuotient :=
+    Submodule.span F₂ (Set.range q)
+  have hSle : S ≤ Q := by
+    apply Submodule.span_le.mpr
+    rintro _ ⟨x, rfl⟩
+    exact x.1.2
+  have hSrank : Module.finrank F₂ S ≤ 2 :=
+    (Submodule.finrank_mono hSle).trans hQ
+  have hcard : Fintype.card (PopulatedPoint Q) + 1 ≤
+      2 ^ Module.finrank F₂ S := by
+    exact card_add_one_le_pow_finrank_span q
+      (populatedQuotientPoint_injective Q) (fun x ↦ x.2.1)
+  have hkernel := relationKernel_finrank_add_span q
+  change Module.finrank F₂ ↑(relationKernel q) +
+      Module.finrank F₂ S = Fintype.card (PopulatedPoint Q) at hkernel
+  change Module.finrank F₂ ↑(relationKernel q) ≤ 1
+  interval_cases hS : Module.finrank F₂ S
+  · norm_num [hS] at hcard
+    omega
+  · norm_num [hS] at hcard hkernel
+    omega
+  · norm_num [hS] at hcard hkernel
+    omega
+
+/-- In defect dimension at most two, a further missing nonzero point in the
+populated span eliminates the relation kernel entirely. -/
+theorem populatedRelationKernel_finrank_eq_zero_of_missing_span_point
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 2)
+    (z : QuadraticQuotient)
+    (hzspan : z ∈ Submodule.span F₂
+      (Set.range (populatedQuotientPoint (Q := Q))))
+    (hz0 : z ≠ 0) (hzmissing : ¬ IsPopulatedFiber z) :
+    Module.finrank F₂
+      ↑(relationKernel (populatedQuotientPoint (Q := Q))) = 0 := by
+  let q := populatedQuotientPoint (Q := Q)
+  let S : Submodule F₂ QuadraticQuotient :=
+    Submodule.span F₂ (Set.range q)
+  have hSle : S ≤ Q := by
+    apply Submodule.span_le.mpr
+    rintro _ ⟨x, rfl⟩
+    exact x.1.2
+  have hSrank : Module.finrank F₂ S ≤ 2 :=
+    (Submodule.finrank_mono hSle).trans hQ
+  have hcard : Fintype.card (PopulatedPoint Q) + 2 ≤
+      2 ^ Module.finrank F₂ S := by
+    apply card_add_two_le_pow_finrank_span_of_missing q
+      (populatedQuotientPoint_injective Q) (fun x ↦ x.2.1) z hzspan hz0
+    intro x hx
+    apply hzmissing
+    rw [← hx]
+    exact x.2.2
+  have hkernel := relationKernel_finrank_add_span q
+  change Module.finrank F₂ ↑(relationKernel q) +
+      Module.finrank F₂ S = Fintype.card (PopulatedPoint Q) at hkernel
+  change Module.finrank F₂ ↑(relationKernel q) = 0
+  interval_cases hS : Module.finrank F₂ S
+  · norm_num [hS] at hcard
+    omega
+  · norm_num [hS] at hcard hkernel
+    omega
+  · norm_num [hS] at hcard hkernel
+    omega
+
 /-- For a defect space of dimension at most three, the additive relation
 kernel of its populated nonzero points has dimension at most four. -/
 theorem populatedRelationKernel_finrank_le_four
