@@ -27,3 +27,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rational01_mixed_decomposableFiber_empty
 #print axioms UnrestrictedBooleanMul.N5.rational02_mixed_decomposableFiber_empty
 #print axioms UnrestrictedBooleanMul.N5.rational12_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.rational03_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.rational13_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.rational23_mixed_decomposableFiber_empty
+#print axioms UnrestrictedBooleanMul.N5.strongMixedPlace
