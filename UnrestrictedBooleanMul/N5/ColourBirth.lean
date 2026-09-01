@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.EnvelopeKernel
+import UnrestrictedBooleanMul.N4.BooleanIdentities
 
 /-!
 # Independent cubic colours create a new high-degree direction
@@ -24,6 +25,48 @@ def colourDirection : Fin 4 → ANF 10 :=
       monomial ({0, 2, 5} : Finset (Fin 10)),
     monomial ({0, 5, 7} : Finset (Fin 10)) +
       monomial ({1, 5, 6} : Finset (Fin 10))]
+
+/-- Cubic pivot coordinates separating the four displayed colours. -/
+def colourCubicRow : Fin 4 → Finset (Fin 10) :=
+  ![({0, 1, 5} : Finset (Fin 10)),
+    ({0, 5, 6} : Finset (Fin 10)),
+    ({0, 1, 6} : Finset (Fin 10)),
+    ({0, 5, 7} : Finset (Fin 10))]
+
+def colourCubicCoordinate (r : Fin 4) : ANF 10 →ₗ[F₂] F₂ where
+  toFun p := p.coeff ⟨colourCubicRow r⟩
+  map_add' p q := by simp
+  map_smul' a p := by simp
+
+/-- The selected cubic coefficient matrix is the identity. -/
+theorem colourDirection_cubic_coefficient (r k : Fin 4) :
+    colourCubicCoordinate r (colourDirection k) =
+      if r = k then 1 else 0 := by
+  fin_cases r <;> fin_cases k <;>
+    simp (disch := decide) [colourCubicCoordinate, colourCubicRow,
+      colourDirection, coeff_monomial] <;> decide
+
+/-- The four normalized cubic colours in (12.1) are independent. -/
+theorem colourDirection_linearIndependent :
+    LinearIndependent F₂ colourDirection := by
+  rw [Fintype.linearIndependent_iff]
+  intro f hf i
+  have hi := congrArg (colourCubicCoordinate i) hf
+  rw [map_sum, map_zero] at hi
+  simp only [map_smul, smul_eq_mul,
+    colourDirection_cubic_coefficient] at hi
+  rw [Finset.sum_eq_single i] at hi
+  · simpa using hi
+  · intro b _hb hbi
+    simp [Ne.symm hbi]
+  · simp
+
+/-- The normalized cubic colour module `C₀`. -/
+def colourSpace : Submodule F₂ (ANF 10) :=
+  Submodule.span F₂ (Set.range colourDirection)
+
+theorem colourSpace_finrank : Module.finrank F₂ colourSpace = 4 :=
+  finrank_span_eq_card colourDirection_linearIndependent
 
 /-- Left endpoint of the ordered pair list
 `(c₁c₂,c₁c₃,c₁c₄,c₂c₃,c₂c₄,c₃c₄)`. -/
@@ -147,6 +190,23 @@ theorem colourBirthMap_ker_eq_bot : LinearMap.ker colourBirthMap = ⊥ := by
 independent pairwise cubic-colour products are born in high degree. -/
 theorem independentColours_birth : Function.Injective colourBirthMap :=
   LinearMap.ker_eq_bot.mp colourBirthMap_ker_eq_bot
+
+/-- The Boolean identities (12.5) used in the old-product-colour branch. -/
+theorem colourProduct_tautologies (c d : ANF 10) :
+    c * c = c ∧ d * d = d ∧
+    c * (c * d) = c * d ∧ d * (c * d) = c * d ∧
+    (c * d) * (c * d) = c * d := by
+  constructor
+  · exact N4.anf_mul_self c
+  constructor
+  · exact N4.anf_mul_self d
+  constructor
+  · exact N4.left_absorbs_product c d
+  constructor
+  · calc
+      d * (c * d) = c * (d * d) := by ac_rfl
+      _ = c * d := by rw [N4.anf_mul_self]
+  · exact N4.anf_mul_self (c * d)
 
 end
 end N5
