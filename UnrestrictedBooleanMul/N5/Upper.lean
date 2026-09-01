@@ -52,13 +52,19 @@ def fiveOutputSupport : Fin 9 → Finset (Fin 13) :=
 def fiveRecombine (s : Fin 9) : ANF 10 :=
   ∑ i ∈ fiveOutputSupport s, five.gate i
 
+/-- Characteristic-two normalization needed by three recombination rows. -/
+private theorem three_eq_one_anf : (3 : ANF 10) = 1 := by
+  calc
+    (3 : ANF 10) = 2 + 1 := by norm_num
+    _ = 1 := by simp
+
 /-- The nine recombination identities, proved inside the Boolean ANF ring. -/
 theorem five_formula : Mul 5 = fiveRecombine := by
   funext s
   fin_cases s <;>
     simp [Mul, mulCoefficient, Fin.sum_univ_succ, fiveRecombine,
       fiveOutputSupport, five, fiveLeft, fiveRight, fiveLinearSupport,
-      Circuit.ofAffineProducts] <;> ring_nf <;> simp
+      Circuit.ofAffineProducts] <;> ring_nf <;> simp [three_eq_one_anf]
 
 theorem five_computes : five.Computes (Mul 5) := by
   rw [five_formula]

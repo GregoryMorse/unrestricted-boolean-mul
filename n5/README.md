@@ -17,26 +17,32 @@ The repository currently contains:
 
 - a separated canonical proposition `UnrestrictedBooleanMul.N5.MainStatement`;
 - nine private target coordinates for `Mul 5`;
-- a staged Lean proof that the nine output coordinates are linearly
+- a kernel-checked Lean proof that the nine output coordinates are linearly
   independent;
-- the resulting staged dimension bound that every circuit for `Mul 5` has at
+- the resulting checked dimension bound that every circuit for `Mul 5` has at
   least nine AND gates;
 - an explicit thirteen-product bilinear circuit, with all nine recombination
-  identities staged for ring normalization; and
+  identities checked by ring normalization;
+- the 45-dimensional squarefree quadratic space, nine-dimensional target,
+  and 36-dimensional quotient;
+- the zero-fiber theorem, target--defect exact sequence, and exact relation-map
+  formula; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
-The current declarations awaiting their first clean kernel replay are in:
+The checked declarations are in:
 
 - [`../UnrestrictedBooleanMul/N5/Target.lean`](../UnrestrictedBooleanMul/N5/Target.lean)
 - [`../UnrestrictedBooleanMul/N5/Upper.lean`](../UnrestrictedBooleanMul/N5/Upper.lean)
 - [`../UnrestrictedBooleanMul/N5/Statement.lean`](../UnrestrictedBooleanMul/N5/Statement.lean)
+- [`../UnrestrictedBooleanMul/N5/QuadraticSpace.lean`](../UnrestrictedBooleanMul/N5/QuadraticSpace.lean)
+- [`../UnrestrictedBooleanMul/N5/Fiber.lean`](../UnrestrictedBooleanMul/N5/Fiber.lean)
+- [`../UnrestrictedBooleanMul/N5/RelationMap.lean`](../UnrestrictedBooleanMul/N5/RelationMap.lean)
 
 No theorem named `mc_mul_five` is present yet, and the new declarations above
-must not be described as checked until the pinned toolchain has replayed them.
-In particular, this directory must not be described as a Lean certificate for
-the paper until the final lower bound and staged upper circuit have both been
-kernel checked.
+do not yet constitute the final lower bound. This directory must not be
+described as a Lean certificate for the paper until that final theorem has
+also been kernel checked.
 
 ## Formalization handoff
 

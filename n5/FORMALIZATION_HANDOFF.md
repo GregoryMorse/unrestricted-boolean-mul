@@ -52,12 +52,10 @@ sampled, or only syntax-replayed in this handoff.
 ### Phase 0: target and upper circuit
 
 - `N5/Target.lean` — private target projection, target independence, rank nine
-  (implemented; first clean kernel replay pending).
-- `N5/Statement.lean` — separated canonical proposition (implemented; first
-  clean kernel replay pending).
+  (checked).
+- `N5/Statement.lean` — separated canonical proposition (checked).
 - `N5/Upper.lean` — explicit thirteen-product bilinear circuit and
-  `mul_five_upper : HasCircuit (Mul 5) 13` (implemented; first clean kernel
-  replay pending).
+  `mul_five_upper : HasCircuit (Mul 5) 13` (checked).
 
 The upper circuit is explicit ANF data rather than a literature axiom.  Its
 nine recombination identities are written as a ring-normalization proof, and
@@ -73,6 +71,10 @@ nine recombination identities are written as a ring-normalization proof, and
   theorem, and the target--defect exact sequence.
 - `N5/RelationMap.lean` — relation kernel `K_X`, displacement map `lambda`, and
   the exact formula `rho(Q) = 3 + d + rank lambda`.
+
+These three Phase 1 modules are checked. The exact theorem is first stated as
+a submodule identity in the ambient quotient and only then converted to a
+finrank formula.
 
 Formalize the equality as a finite-dimensional submodule identity first; use
 finrank only in the final corollary.  This avoids arithmetic obscuring the

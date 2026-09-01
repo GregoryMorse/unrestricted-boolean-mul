@@ -11,13 +11,13 @@ Status meanings:
 
 | Manuscript result | Planned Lean declaration/module | Dependencies | Status |
 |---|---|---|---|
-| Nine target coordinates are independent | `N5.mulFive_linearIndependent`, `N5/Target.lean` | generic ANF coefficient projection | replay pending |
-| Every circuit for `Mul 5` has at least nine ANDs | `N5.mul_five_dimension_lower`, `N5/Target.lean` | preceding row, generic circuit projection bound | replay pending |
-| Explicit thirteen-product upper circuit | `N5.mul_five_upper`, `N5/Upper.lean` | thirteen affine products and nine ring identities | replay pending |
-| Main statement `MC(Mul_5)=13` | `N5.MainStatement`, `N5/Statement.lean` | existing `MC`, `Mul` definitions | replay pending (statement only) |
-| Lemma 2.1, zero fiber | `N5.zeroFiber_eq_rational`, `N5/Fiber.lean` | quadratic quotient, Hankel rank one | planned |
-| Lemma 2.2, target--defect exact sequence | `N5.targetDefect_exact`, `N5/Fiber.lean` | finite submodule quotient | planned |
-| Theorem 3.2, exact relation-map formula | `N5.relationMap_finrank`, `N5/RelationMap.lean` | relation kernel and displacement map | interface fixed |
+| Nine target coordinates are independent | `N5.mulFive_linearIndependent`, `N5/Target.lean` | generic ANF coefficient projection | checked |
+| Every circuit for `Mul 5` has at least nine ANDs | `N5.mul_five_dimension_lower`, `N5/Target.lean` | preceding row, generic circuit projection bound | checked |
+| Explicit thirteen-product upper circuit | `N5.mul_five_upper`, `N5/Upper.lean` | thirteen affine products and nine ring identities | checked |
+| Main statement `MC(Mul_5)=13` | `N5.MainStatement`, `N5/Statement.lean` | existing `MC`, `Mul` definitions | checked (statement only) |
+| Lemma 2.1, zero fiber | `N5.zeroFiber_eq_rational`, `N5/Fiber.lean` | quadratic quotient, Hankel rank one | checked |
+| Lemma 2.2, target--defect exact sequence | `N5.targetDefect_exact`, `N5/Fiber.lean` | finite submodule quotient | checked |
+| Theorem 3.2, exact relation-map formula | `N5.relationMap_finrank`, `N5/RelationMap.lean` | relation kernel and displacement map | checked |
 | Lemma 4.1, rank-two Hankel support | `N5.rankTwoHankel_support`, `N5/HankelSupport.lean` | Hankel coordinates | planned |
 | Lemma 4.2, secant support | `N5.secant_support`, `N5/HankelSupport.lean` | preceding row | planned |
 | Lemma 5.2, local Klein counts | `N5.localKlein_counts`, `N5/LocalKlein.lean` | four local algebras | planned |
@@ -39,7 +39,7 @@ Status meanings:
 | Theorem 12.3, three-colour saturation | `N5.threeColour_saturation`, `N5/ThreeColour.lean` | `e+s<=3`, first-order envelope | interface fixed |
 | Theorem 13.2, no twelve-gate circuit | `N5.no_twelve_gate_circuit`, `N5/Main.lean` | capacity and suffix regimes | planned |
 | Theorem 13.2, exact value 13 | `N5.mc_mul_five`, `N5/Main.lean` | lower theorem and explicit upper circuit | planned |
-| Proposition 13.1 upper-circuit expansion | `n5/verification/five_upper_formula_check.py` | displayed thirteen products | regression only; Lean replay pending |
+| Proposition 13.1 upper-circuit expansion | `n5/verification/five_upper_formula_check.py` | displayed thirteen products | regression only; Lean checked independently |
 | 15,728,640-presentation `W_*` check | `n5/verification/` | standalone C++20 | regression only |
 | 166,199,235 projection run and 43-fiber scan | not yet released | discovery programs and exact inputs | regression only; absent artifact must not be claimed |
 
