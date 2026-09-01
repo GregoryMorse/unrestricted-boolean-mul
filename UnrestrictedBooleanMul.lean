@@ -24,6 +24,7 @@ import UnrestrictedBooleanMul.N5.PrefixState
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import UnrestrictedBooleanMul.N5.MissingCoset
+import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
 import UnrestrictedBooleanMul.N5.TargetClean
 import UnrestrictedBooleanMul.N5.TargetCleanMatrix
 import UnrestrictedBooleanMul.N5.EnvelopeKernel
