@@ -153,6 +153,58 @@ theorem fanoLine_rationalZero_gift_mem
   rw [hcancel] at hsum
   exact hsum
 
+/-- A populated Fano-line gift through the effective degree-two place
+satisfies the three norm-block secant pivots.  As in the rational case, this
+is independent of the choice of populated lift. -/
+theorem fanoLine_degreeTwo_gift_mem
+    (Q : Submodule F₂ QuadraticQuotient)
+    (r : FanoLineRelation
+      (populatedQuotientPoint (Q := Q)))
+    (x : PopulatedPoint Q) (hx : x ∈ r.support)
+    (q : LocalKleinParam) (hq : DegreeTwoLocalEffective q)
+    (hxPoint : populatedQuotientPoint x =
+      closedPlaceQuotientPoint 3 q) :
+    sparseRelationGiftCoeff Q r.1 ∈ degreeTwoSecantCoeffSpace := by
+  let g := sparseRelationGiftCoeff Q r.1
+  have hxProjection : quadraticQuotientProjection (populatedLift x) =
+      closedPlaceQuotientPoint 3 q :=
+    (populatedLift_projection x).trans hxPoint
+  rcases exists_closedPlaceLift_add_target_of_projection_eq
+      3 q (populatedLift x) hxProjection with ⟨a, ha⟩
+  have haSecant : ∃ u v y z : LinearForm,
+      closedPlaceLift 3 q + targetTwo a =
+        squarefreeWedge u v + squarefreeWedge y z := by
+    rcases (populatedLift_mem_fiber x).1 with ⟨u, v, huv⟩
+    refine ⟨u, v, 0, 0, ?_⟩
+    rw [← ha, huv]
+    simp
+  have haMem : a ∈ degreeTwoSecantCoeffSpace :=
+    degreeTwo_normalizedLocalSecant_mem q hq a haSecant
+  have hagSecant : ∃ u v y z : LinearForm,
+      closedPlaceLift 3 q + targetTwo (a + g) =
+        squarefreeWedge u v + squarefreeWedge y z := by
+    rcases fanoLine_gift_has_two_wedge_secant Q r x hx with
+      ⟨u, v, y, z, hline⟩
+    refine ⟨u, v, y, z, ?_⟩
+    change closedPlaceLift 3 q + targetTwoLinear (a + g) = _
+    rw [targetTwoLinear.map_add, ← add_assoc]
+    change populatedLift x =
+      closedPlaceLift 3 q + targetTwoLinear a at ha
+    rw [← ha]
+    change populatedLift x +
+      targetTwoLinear (sparseRelationGiftCoeff Q r.1) = _ at hline
+    simpa only [g] using hline
+  have hagMem : a + g ∈ degreeTwoSecantCoeffSpace :=
+    degreeTwo_normalizedLocalSecant_mem q hq (a + g) hagSecant
+  have hsum := degreeTwoSecantCoeffSpace.add_mem hagMem haMem
+  have hcancel : (a + g) + a = g := by
+    funext i
+    simp only [Pi.add_apply]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
+  rw [hcancel] at hsum
+  exact hsum
+
 end
 
 end N5
