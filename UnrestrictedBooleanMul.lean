@@ -3,6 +3,7 @@ import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
 import UnrestrictedBooleanMul.N5.DisplacementBound
 import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
+import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
 
 /-!
 # Unrestricted Boolean multiplicative complexity
@@ -18,7 +19,9 @@ and the choice-independent represented-place profile of its displacement.
 The profile is evaluated numerically as the weighted count of represented
 closed places.  For defect dimension at most three, its relation kernel and
 relation-gift range are reduced algebraically to Fano line and quadrilateral
-supports.
+supports.  The representative degree-two-plus-two-rational obstruction is
+equipped with explicit translation and reversal actions on input forms,
+local Klein charts, canonical lifts, and the nine-dimensional Hankel target.
 The `N3`, `N4`, and `N5` module names describe theorem scope rather than an
 internal research workflow.
 -/

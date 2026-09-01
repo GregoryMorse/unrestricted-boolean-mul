@@ -63,3 +63,8 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rational01_degreeTwo_mixed_decomposableFiber_empty
 #print axioms UnrestrictedBooleanMul.N5.relationGiftRank_eq_zero_of_rational01_degreeTwo_places
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_seven_of_rational01_degreeTwo_places
+#print axioms UnrestrictedBooleanMul.N5.rationalPlaceTwoFormLinear_squarefreeWedge
+#print axioms UnrestrictedBooleanMul.N5.rationalPlaceTwoFormLinear_localTwoForm
+#print axioms UnrestrictedBooleanMul.N5.rationalPlaceTwoFormLinear_targetTwo
+#print axioms UnrestrictedBooleanMul.N5.rationalPlaceTwoFormLinear_degreeTwoLift
+#print axioms UnrestrictedBooleanMul.N5.degreeTwoSymmetryParam_effective

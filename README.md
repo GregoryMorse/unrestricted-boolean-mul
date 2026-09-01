@@ -69,7 +69,11 @@ first independent layer of the `n = 5` proof:
 - the sparse Fano relation reduction, the sharp zero-place and three-rational
   capacity rows, and a fully algebraic Pluecker proof of the representative
   `P_* + 2` rational row, where the triple-sum fiber is empty, the relation
-  gift vanishes, and the target capacity is exactly seven.
+  gift vanishes, and the target capacity is exactly seven; and
+- explicit translation and reversal actions on the ten input coordinates,
+  their functorial exterior-square action, the four local Klein charts, and
+  the nine-dimensional Hankel target, ready to transport that representative
+  row to the other two rational-place pairs without enumeration.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -122,6 +126,8 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/DecomposableAnchor.lean`](UnrestrictedBooleanMul/N5/DecomposableAnchor.lean)
 - [`UnrestrictedBooleanMul/N5/SparseAnchorGifts.lean`](UnrestrictedBooleanMul/N5/SparseAnchorGifts.lean)
 - [`UnrestrictedBooleanMul/N5/ThreeRationalProfile.lean`](UnrestrictedBooleanMul/N5/ThreeRationalProfile.lean)
+- [`UnrestrictedBooleanMul/N5/ThreePlaceDegreeTwo.lean`](UnrestrictedBooleanMul/N5/ThreePlaceDegreeTwo.lean)
+- [`UnrestrictedBooleanMul/N5/RationalPlaceSymmetry.lean`](UnrestrictedBooleanMul/N5/RationalPlaceSymmetry.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementBound.lean`](UnrestrictedBooleanMul/N5/DisplacementBound.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
