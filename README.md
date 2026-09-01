@@ -54,9 +54,10 @@ first independent layer of the `n = 5` proof:
 - the zero-fiber classification proved from Hankel minors; and
 - the target/defect ledger and exact relation-map formula;
 - dimension-polymorphic secant support and the symbolic local Klein counts;
-  and
 - an exact Hermite certificate proving that the four effective local charts
-  embed as 43 distinct global quotient points.
+  embed as 43 distinct global quotient points; and
+- the exact algebraic classification proving that those 43 points are all and
+  only the effective quadratic fibers.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -90,6 +91,8 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/HankelSupport.lean`](UnrestrictedBooleanMul/N5/HankelSupport.lean)
 - [`UnrestrictedBooleanMul/N5/LocalKlein.lean`](UnrestrictedBooleanMul/N5/LocalKlein.lean)
 - [`UnrestrictedBooleanMul/N5/EffectiveFibers.lean`](UnrestrictedBooleanMul/N5/EffectiveFibers.lean)
+- [`UnrestrictedBooleanMul/N5/RankTwoSecants.lean`](UnrestrictedBooleanMul/N5/RankTwoSecants.lean)
+- [`UnrestrictedBooleanMul/N5/EffectiveClassification.lean`](UnrestrictedBooleanMul/N5/EffectiveClassification.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

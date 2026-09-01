@@ -21,3 +21,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.secant_support
 #print axioms UnrestrictedBooleanMul.N5.localKlein_counts
 #print axioms UnrestrictedBooleanMul.N5.effectiveFiberAtlas_card
+#print axioms UnrestrictedBooleanMul.N5.target_sum_two_decomposable_rankTwo
+#print axioms UnrestrictedBooleanMul.N5.effectiveFibers_eq
+#print axioms UnrestrictedBooleanMul.N5.effectiveFibers_card

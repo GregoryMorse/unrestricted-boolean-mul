@@ -21,7 +21,7 @@ Status meanings:
 | Lemma 4.1, rank-two Hankel support | `N5.rankTwoHankel_support`, `N5/HankelSupport.lean` | Hankel coordinates and Boolean ideal certificate | checked |
 | Lemma 4.2, secant support | `N5.secant_support`, `N5/HankelSupport.lean` | dimension-polymorphic contraction support | checked |
 | Lemma 5.2, local Klein counts | `N5.localKlein_counts`, `N5/LocalKlein.lean` | two symbolic local Klein equations | checked |
-| Theorem 5.3, 43 fibers | `N5.effectiveFibers_eq`, `N5/EffectiveFibers.lean` | localization and Klein counts | atlas injectivity and cardinality 43 checked; exhaustiveness pending |
+| Theorem 5.3, 43 fibers | `N5.effectiveFibers_eq`, `N5.effectiveFibers_card`, `N5/EffectiveClassification.lean` | algebraic rank-two secants, localization, and local Klein counts | checked |
 | Theorem 6.1, mixed-place exclusion | `N5.strongMixedPlace`, `N5/MixedPlace.lean` | closed-place support | planned |
 | Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/Displacement.lean` | relation map and incidence | planned |
 | Theorem 7.1, `rho_2(5)=6` | `N5.rhoTwo_five`, `N5/Capacity.lean` | local differences, equality classification | planned |
