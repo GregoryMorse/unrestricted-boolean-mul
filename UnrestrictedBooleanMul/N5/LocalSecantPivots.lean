@@ -142,6 +142,31 @@ theorem rationalZeroLocalCoeffSpace_finrank :
     Module.finrank F₂ rationalZeroLocalCoeffSpace = 4 :=
   finrank_span_eq_card rationalZeroLocalCoeffDirection_linearIndependent
 
+/-- The actual zero-place target-plane translation is among the four local
+rational directions used in the quotient pivot. -/
+theorem closedPlaceTargetCoeff_zero_mem_rationalZeroLocalCoeffSpace
+    (z : LocalTargetParam) :
+    closedPlaceTargetCoeff 0 z ∈ rationalZeroLocalCoeffSpace := by
+  have h0 : rZeroCoeff ∈ rationalZeroLocalCoeffSpace := by
+    have h := Submodule.subset_span
+      (R := F₂) (s := Set.range rationalZeroLocalCoeffDirection)
+      (Set.mem_range_self (0 : Fin 4))
+    change rZeroCoeff ∈
+      Submodule.span F₂ (Set.range rationalZeroLocalCoeffDirection)
+    simpa [rationalZeroLocalCoeffDirection, closedPlaceDirections] using h
+  have h1 : outsideHankelWord 0 ∈ rationalZeroLocalCoeffSpace := by
+    have h := Submodule.subset_span
+      (R := F₂) (s := Set.range rationalZeroLocalCoeffDirection)
+      (Set.mem_range_self (3 : Fin 4))
+    change outsideHankelWord 0 ∈
+      Submodule.span F₂ (Set.range rationalZeroLocalCoeffDirection)
+    simpa [rationalZeroLocalCoeffDirection, closedPlaceDirections,
+      outsideHankelWord, rankTwoHankelWord] using h
+  simpa [closedPlaceTargetCoeff] using
+    rationalZeroLocalCoeffSpace.add_mem
+      (rationalZeroLocalCoeffSpace.smul_mem (z 0) h0)
+      (rationalZeroLocalCoeffSpace.smul_mem (z 1) h1)
+
 theorem rationalZeroLocalCoeffSpace_le_secant :
     rationalZeroLocalCoeffSpace ≤ rationalZeroSecantCoeffSpace := by
   apply Submodule.span_le.mpr
@@ -265,6 +290,443 @@ candidate whose Pfaffians provide the pivot equations. -/
 def localSecantCandidate (place : Fin 4) (q : LocalKleinParam)
     (z : LocalTargetParam) (c : TargetCoeff) : TwoForm :=
   localTwoForm place (closedPlaceLocalPoint place q z) + targetTwo c
+
+/-- Move the local target translation into the single target-coefficient
+correction.  This is the coefficient normal form used by the symbolic
+Pfaffian certificates below. -/
+theorem localSecantCandidate_eq_lift_add_target
+    (place : Fin 4) (q : LocalKleinParam)
+    (z : LocalTargetParam) (c : TargetCoeff) :
+    localSecantCandidate place q z c =
+      closedPlaceLift place q +
+        targetTwo (closedPlaceTargetCoeff place z + c) := by
+  rw [localSecantCandidate, localTwoForm_closedPlaceLocalPoint]
+  change closedPlaceLift place q +
+      targetTwoLinear (closedPlaceTargetCoeff place z) + targetTwoLinear c =
+    closedPlaceLift place q +
+      targetTwoLinear (closedPlaceTargetCoeff place z + c)
+  rw [targetTwoLinear.map_add]
+  exact add_assoc _ _ _
+
+/-- Off-diagonal coefficient of a normalized local secant candidate. -/
+theorem ambientTwoCoeff_localSecantCandidate
+    (place : Fin 4) (q : LocalKleinParam)
+    (z : LocalTargetParam) (c : TargetCoeff)
+    (i j : Fin 10) (hij : i ≠ j) :
+    ambientTwoCoeff (localSecantCandidate place q z c) i j =
+      explicitLocalLiftCoeff place q i j +
+        explicitTargetCoeff (closedPlaceTargetCoeff place z + c) i j := by
+  rw [localSecantCandidate_eq_lift_add_target, ambientTwoCoeff_add]
+  simp [ambientTwoCoeff, hij,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff]
+
+/-- Pfaffian equation for a canonical local lift plus one target word. -/
+def normalizedLocalSecantEquation
+    (place : Fin 4) (q : LocalKleinParam) (c : TargetCoeff)
+    (i j k l m n : Fin 10) : F₂ :=
+  secantPfaffianValue (closedPlaceLift place q + targetTwo c)
+    i j k l m n
+
+/-- A normalized two-wedge presentation annihilates every selected
+six-coordinate equation. -/
+theorem normalizedLocalSecantEquation_eq_zero
+    (place : Fin 4) (q : LocalKleinParam) (c : TargetCoeff)
+    (i j k l m n : Fin 10)
+    (hsecant : ∃ u v x y : LinearForm,
+      closedPlaceLift place q + targetTwo c =
+        squarefreeWedge u v + squarefreeWedge x y) :
+    normalizedLocalSecantEquation place q c i j k l m n = 0 := by
+  unfold normalizedLocalSecantEquation
+  exact secantPfaffianValue_eq_zero_of_two_decomposable
+    (closedPlaceLift place q + targetTwo c) i j k l m n hsecant
+
+/-- Any lift with the named closed-place quotient differs from the canonical
+local lift by a unique target word. -/
+theorem exists_closedPlaceLift_add_target_of_projection_eq
+    (place : Fin 4) (q : LocalKleinParam) (p : TwoForm)
+    (hp : quadraticQuotientProjection p =
+      closedPlaceQuotientPoint place q) :
+    ∃ c : TargetCoeff,
+      p = closedPlaceLift place q + targetTwo c := by
+  have hzero : quadraticQuotientProjection
+      (p - closedPlaceLift place q) = 0 := by
+    rw [map_sub, hp]
+    simp [closedPlaceQuotientPoint]
+  have htarget : p - closedPlaceLift place q ∈ targetTwoSpace :=
+    (quadraticQuotientProjection_eq_zero_iff _).1 hzero
+  rcases htarget with ⟨c, hc⟩
+  refine ⟨c, ?_⟩
+  change p = closedPlaceLift place q + targetTwoLinear c
+  rw [hc]
+  module
+
+private theorem secant_pow_three_f2 (x : F₂) : x ^ 3 = x := by
+  rw [show 3 = 2 + 1 by omega, pow_succ, N3Certificate.pow_two_f2,
+    N3Certificate.mul_self_f2]
+
+private theorem secant_pow_four_f2 (x : F₂) : x ^ 4 = x := by
+  rw [show 4 = 3 + 1 by omega, pow_succ, secant_pow_three_f2,
+    N3Certificate.mul_self_f2]
+
+set_option maxRecDepth 10000 in
+/-- The first rational secant constraint on the `q₂=1` effectiveness
+chart. -/
+theorem rationalA_secant_constraint_zero_identity
+    (q0 q1 q3 : F₂) (c : TargetCoeff) :
+    c 3 + c 5 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 0
+        (rationalEffectiveA q0 q1 q3) c i j k l m n
+      c 6 * E 0 1 2 5 8 9 +
+      c 1 * E 0 1 2 6 7 9 +
+      c 7 * E 0 1 3 5 7 8 +
+      c 6 * E 0 1 3 5 7 9 +
+      c 1 * E 0 1 3 6 7 8 +
+      c 7 * E 0 1 3 6 7 8 +
+      E 0 1 3 6 7 9 +
+      E 0 1 3 6 8 9 +
+      c 4 * E 0 1 3 6 8 9 +
+      c 5 * E 0 1 3 6 8 9 +
+      E 0 1 4 6 7 8 +
+      c 6 * E 0 1 4 6 7 8 +
+      c 4 * E 0 2 3 5 8 9 +
+      c 5 * E 0 2 3 6 7 8 +
+      E 1 2 3 5 6 7 +
+      c 2 * E 1 2 3 5 7 9 +
+      c 3 * E 1 2 3 5 8 9 +
+      c 2 * E 1 2 3 6 7 8 +
+      E 1 2 3 7 8 9 +
+      c 3 * E 1 2 3 7 8 9 +
+      c 4 * E 1 2 4 6 7 8 +
+      c 2 * E 1 3 4 5 6 8 +
+      c 5 * E 2 3 4 5 6 7 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    rationalEffectiveA, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+/-- The middle rational secant constraint on the `q₂=1` effectiveness
+chart, as a compact Boolean-ideal combination of eleven Pfaffians. -/
+theorem rationalA_secant_constraint_one_identity
+    (q0 q1 q3 : F₂) (c : TargetCoeff) :
+    c 4 + c 6 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 0
+        (rationalEffectiveA q0 q1 q3) c i j k l m n
+      c 7 * E 0 1 2 6 7 9 +
+      c 2 * E 0 1 2 7 8 9 +
+      c 5 * E 0 1 2 7 8 9 +
+      c 8 * E 0 1 2 7 8 9 +
+      c 6 * E 0 1 4 6 7 8 +
+      c 4 * E 0 2 3 6 8 9 +
+      c 2 * E 1 2 3 6 7 8 +
+      c 8 * E 1 2 3 6 7 8 +
+      E 2 3 4 5 6 7 +
+      c 2 * E 2 3 4 6 7 8 +
+      E 2 3 4 7 8 9 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    rationalEffectiveA, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+/-- The third rational secant constraint on the `q₂=1` effectiveness
+chart. -/
+theorem rationalA_secant_constraint_two_identity
+    (q0 q1 q3 : F₂) (c : TargetCoeff) :
+    c 4 + c 5 + c 6 + c 7 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 0
+        (rationalEffectiveA q0 q1 q3) c i j k l m n
+      c 8 * E 0 1 2 6 7 8 +
+      E 0 1 2 6 7 9 +
+      c 8 * E 0 1 2 7 8 9 +
+      E 0 1 3 6 7 8 +
+      c 6 * E 0 1 3 6 7 9 +
+      c 4 * E 0 2 3 6 8 9 +
+      c 2 * E 0 2 3 7 8 9 +
+      c 3 * E 0 2 3 7 8 9 +
+      E 0 3 4 7 8 9 +
+      c 5 * E 1 2 3 5 8 9 +
+      c 5 * E 1 2 3 6 7 8 +
+      c 5 * E 1 2 3 6 7 9 +
+      c 6 * E 1 2 3 6 7 9 +
+      c 7 * E 1 2 3 6 8 9 +
+      c 2 * E 1 2 3 7 8 9 +
+      c 4 * E 1 2 4 6 7 8 +
+      c 6 * E 1 2 4 6 7 9 +
+      c 6 * E 1 2 4 7 8 9 +
+      c 6 * E 1 3 4 5 6 7 +
+      c 4 * E 1 3 4 5 6 9 +
+      c 5 * E 1 3 4 5 7 8 +
+      c 3 * E 1 3 4 5 7 9 +
+      c 2 * E 1 3 4 6 7 8 +
+      E 1 3 4 6 8 9 +
+      c 6 * E 1 3 4 6 8 9 +
+      c 6 * E 2 3 4 5 6 8 +
+      c 2 * E 2 3 4 5 7 9 +
+      c 6 * E 2 3 4 5 8 9 +
+      c 3 * E 2 3 4 6 7 8 +
+      c 7 * E 2 3 4 6 7 8 +
+      q1 * E 2 3 4 6 7 9 +
+      c 5 * E 2 3 4 6 7 9 +
+      c 4 * E 2 3 4 7 8 9 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    rationalEffectiveA, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+/-- The first rational secant constraint on the `q₁=1,q₂=0` chart. -/
+theorem rationalD_secant_constraint_zero_identity
+    (q0 q3 : F₂) (c : TargetCoeff) :
+    c 3 + c 5 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 0
+        (rationalEffectiveD q0 q3) c i j k l m n
+      c 5 * E 0 1 2 5 6 9 +
+      c 3 * E 0 1 2 5 8 9 +
+      c 1 * E 0 1 3 5 6 9 +
+      c 5 * E 0 1 3 5 8 9 +
+      c 5 * E 0 1 4 5 6 7 +
+      c 1 * E 0 1 4 5 6 8 +
+      c 3 * E 0 2 3 5 6 9 +
+      c 5 * E 0 2 3 6 7 8 +
+      c 3 * E 0 2 4 5 6 8 +
+      c 6 * E 0 3 4 5 6 7 +
+      c 4 * E 0 3 4 5 7 8 +
+      E 1 2 3 5 6 7 +
+      c 4 * E 1 2 3 5 7 9 +
+      c 1 * E 2 3 4 6 7 8 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    rationalEffectiveD, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+/-- The middle rational secant constraint on the `q₁=1,q₂=0` chart. -/
+theorem rationalD_secant_constraint_one_identity
+    (q0 q3 : F₂) (c : TargetCoeff) :
+    c 4 + c 6 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 0
+        (rationalEffectiveD q0 q3) c i j k l m n
+      c 2 * E 0 1 2 6 8 9 +
+      c 8 * E 0 1 2 6 8 9 +
+      c 5 * E 0 1 3 6 7 9 +
+      c 2 * E 1 2 3 5 7 8 +
+      E 1 2 3 6 7 8 +
+      c 5 * E 1 2 4 5 6 8 +
+      E 1 2 4 6 8 9 +
+      c 8 * E 1 3 4 5 6 7 +
+      E 2 3 4 5 7 9 +
+      E 2 3 4 7 8 9 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    rationalEffectiveD, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2]
+
+set_option maxRecDepth 10000 in
+/-- The third rational secant constraint on the `q₁=1,q₂=0` chart. -/
+theorem rationalD_secant_constraint_two_identity
+    (q0 q3 : F₂) (c : TargetCoeff) :
+    c 4 + c 5 + c 6 + c 7 =
+      let E := fun i j k l m n => normalizedLocalSecantEquation 0
+        (rationalEffectiveD q0 q3) c i j k l m n
+      c 7 * E 0 1 2 6 7 8 +
+      c 2 * E 0 1 3 6 7 9 +
+      E 0 1 3 7 8 9 +
+      c 2 * E 0 1 4 6 7 8 +
+      c 5 * E 0 1 4 7 8 9 +
+      c 6 * E 0 3 4 6 7 8 +
+      c 5 * E 0 3 4 6 7 9 +
+      c 8 * E 0 3 4 6 7 9 +
+      c 7 * E 0 3 4 6 8 9 +
+      c 3 * E 1 2 3 5 8 9 +
+      c 6 * E 1 2 3 5 8 9 +
+      c 3 * E 1 2 3 6 8 9 +
+      E 1 2 3 7 8 9 +
+      c 2 * E 1 2 3 7 8 9 +
+      c 6 * E 1 2 4 5 6 7 +
+      c 8 * E 1 2 4 5 6 8 +
+      c 7 * E 1 2 4 5 6 9 +
+      c 2 * E 1 3 4 5 6 7 +
+      c 4 * E 1 3 4 5 6 8 +
+      c 8 * E 1 3 4 5 7 9 +
+      c 7 * E 1 3 4 5 8 9 +
+      c 6 * E 2 3 4 5 6 7 +
+      c 6 * E 2 3 4 5 6 8 +
+      c 8 * E 2 3 4 5 6 9 +
+      E 2 3 4 5 7 8 +
+      c 5 * E 2 3 4 5 7 8 +
+      c 3 * E 2 3 4 6 7 9 := by
+  simp [normalizedLocalSecantEquation, secantPfaffianValue,
+    ambientTwoCoeff,
+    closedPlaceLift_pair_eq_explicitLocalLiftCoeff,
+    targetTwo_pair_eq_explicitTargetCoeff,
+    explicitLocalLiftCoeff, explicitClosedPlaceCanonicalCoord,
+    explicitClosedPlaceBasisCoeff, explicitTargetCoeff,
+    rationalEffectiveD, localKleinPair, Fin.sum_univ_succ]
+  ring_nf
+  simp only [N3Certificate.pow_two_f2, secant_pow_three_f2,
+    secant_pow_four_f2]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2,
+    N3Certificate.four_eq_zero_f2,
+    N3Certificate.six_eq_zero_f2,
+    N3Certificate.eight_eq_zero_f2]
+
+/-- On the principal rational effectiveness chart, every normalized
+rank-four secant correction satisfies the three rational pivot equations. -/
+theorem rationalA_normalizedLocalSecant_mem
+    (q0 q1 q3 : F₂) (c : TargetCoeff)
+    (hsecant : ∃ u v x y : LinearForm,
+      closedPlaceLift 0 (rationalEffectiveA q0 q1 q3) + targetTwo c =
+        squarefreeWedge u v + squarefreeWedge x y) :
+    c ∈ rationalZeroSecantCoeffSpace := by
+  have hE (i j k l m n : Fin 10) :
+      normalizedLocalSecantEquation 0
+        (rationalEffectiveA q0 q1 q3) c i j k l m n = 0 :=
+    normalizedLocalSecantEquation_eq_zero 0
+      (rationalEffectiveA q0 q1 q3) c i j k l m n hsecant
+  change rationalZeroSecantConstraint c = 0
+  ext t
+  fin_cases t
+  · change c 3 + c 5 = 0
+    have hid := rationalA_secant_constraint_zero_identity q0 q1 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+  · change c 4 + c 6 = 0
+    have hid := rationalA_secant_constraint_one_identity q0 q1 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+  · change c 4 + c 5 + c 6 + c 7 = 0
+    have hid := rationalA_secant_constraint_two_identity q0 q1 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+
+/-- The companion rational effectiveness chart satisfies the same three
+rank-four secant pivots. -/
+theorem rationalD_normalizedLocalSecant_mem
+    (q0 q3 : F₂) (c : TargetCoeff)
+    (hsecant : ∃ u v x y : LinearForm,
+      closedPlaceLift 0 (rationalEffectiveD q0 q3) + targetTwo c =
+        squarefreeWedge u v + squarefreeWedge x y) :
+    c ∈ rationalZeroSecantCoeffSpace := by
+  have hE (i j k l m n : Fin 10) :
+      normalizedLocalSecantEquation 0
+        (rationalEffectiveD q0 q3) c i j k l m n = 0 :=
+    normalizedLocalSecantEquation_eq_zero 0
+      (rationalEffectiveD q0 q3) c i j k l m n hsecant
+  change rationalZeroSecantConstraint c = 0
+  ext t
+  fin_cases t
+  · change c 3 + c 5 = 0
+    have hid := rationalD_secant_constraint_zero_identity q0 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+  · change c 4 + c 6 = 0
+    have hid := rationalD_secant_constraint_one_identity q0 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+  · change c 4 + c 5 + c 6 + c 7 = 0
+    have hid := rationalD_secant_constraint_two_identity q0 q3 c
+    dsimp only at hid
+    simpa only [hE, mul_zero, add_zero] using hid
+
+/-- Algebraic rational-place pivot: effectiveness and a normalized
+two-wedge presentation force the correction into the codimension-three
+rational secant coefficient space. -/
+theorem rationalZero_normalizedLocalSecant_mem
+    (q : LocalKleinParam) (hq : RationalLocalEffective q)
+    (c : TargetCoeff)
+    (hsecant : ∃ u v x y : LinearForm,
+      closedPlaceLift 0 q + targetTwo c =
+        squarefreeWedge u v + squarefreeWedge x y) :
+    c ∈ rationalZeroSecantCoeffSpace := by
+  rcases rationalLocalEffective_cases q hq with
+    ⟨q0, q1, q3, rfl⟩ | ⟨q0, q3, _hq03, rfl⟩
+  · exact rationalA_normalizedLocalSecant_mem q0 q1 q3 c hsecant
+  · exact rationalD_normalizedLocalSecant_mem q0 q3 c hsecant
+
+/-- Rational-place local pivot in the original affine coordinates: the
+target correction itself lies in the six-dimensional secant space. -/
+theorem rationalZero_localSecantCorrection_mem
+    (q : LocalKleinParam) (hq : RationalLocalEffective q)
+    (z : LocalTargetParam) (c : TargetCoeff)
+    (hsecant : ∃ u v x y : LinearForm,
+      localSecantCandidate 0 q z c =
+        squarefreeWedge u v + squarefreeWedge x y) :
+    c ∈ rationalZeroSecantCoeffSpace := by
+  let d := closedPlaceTargetCoeff 0 z + c
+  have hnormalized : ∃ u v x y : LinearForm,
+      closedPlaceLift 0 q + targetTwo d =
+        squarefreeWedge u v + squarefreeWedge x y := by
+    simpa only [d, localSecantCandidate_eq_lift_add_target] using hsecant
+  have hd : d ∈ rationalZeroSecantCoeffSpace :=
+    rationalZero_normalizedLocalSecant_mem q hq d hnormalized
+  have hz : closedPlaceTargetCoeff 0 z ∈ rationalZeroSecantCoeffSpace :=
+    rationalZeroLocalCoeffSpace_le_secant
+      (closedPlaceTargetCoeff_zero_mem_rationalZeroLocalCoeffSpace z)
+  have hsum := rationalZeroSecantCoeffSpace.add_mem hd hz
+  have hcancel : d + closedPlaceTargetCoeff 0 z = c := by
+    funext i
+    simp only [d, Pi.add_apply]
+    simp [add_assoc, add_comm, add_left_comm, CharTwo.add_self_eq_zero]
+  rw [hcancel] at hsum
+  exact hsum
 
 /-- Every two-wedge presentation of a local secant candidate supplies all
 six-coordinate Pfaffian equations. -/
