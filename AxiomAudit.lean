@@ -46,3 +46,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.fanoLine_effective_places_eq
 #print axioms UnrestrictedBooleanMul.N5.fanoQuadrilateral_mixed_complement_sum_not_populated
 #print axioms UnrestrictedBooleanMul.N5.relationGiftRank_eq_coefficients
+#print axioms UnrestrictedBooleanMul.N5.localDisplacementCoeffSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_six_sub_representedPlaceWeight
