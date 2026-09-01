@@ -1,5 +1,8 @@
 import UnrestrictedBooleanMul.N5.ThreeRationalProfile
 import UnrestrictedBooleanMul.N5.PointedFanoRelations
+import UnrestrictedBooleanMul.N5.AllRationalPointedPivots
+import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
+import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
 
 /-!
 # The five-term displacement bound
@@ -91,6 +94,67 @@ theorem targetCapacity_le_seven_of_only_rationalZero
     Q hQ h₀ h₁ h₂ h₃
   omega
 
+/-- The profile with only rational place one represented. -/
+theorem displacement_add_gifts_le_four_of_only_rationalOne
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (h₀ : ¬ IsRepresentedPlace Q 0)
+    (h₁ : IsRepresentedPlace Q 1)
+    (h₂ : ¬ IsRepresentedPlace Q 2)
+    (h₃ : ¬ IsRepresentedPlace Q 3) :
+    displacementRank Q + relationGiftRank Q ≤ 4 := by
+  rw [displacementRank_eq_representedPlaceWeight]
+  have hweight : representedPlaceWeight Q = 1 := by
+    simp [representedPlaceWeight, representedRationalPlaceCount,
+      representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+  rw [hweight]
+  have hgift := relationGiftRank_le_three_of_represented_rationalOne Q hQ h₁
+  omega
+
+theorem targetCapacity_le_seven_of_only_rationalOne
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (h₀ : ¬ IsRepresentedPlace Q 0)
+    (h₁ : IsRepresentedPlace Q 1)
+    (h₂ : ¬ IsRepresentedPlace Q 2)
+    (h₃ : ¬ IsRepresentedPlace Q 3) :
+    targetCapacity Q ≤ 7 := by
+  rw [targetCapacity_eq_three_add_displacement_add_gifts]
+  have hbound := displacement_add_gifts_le_four_of_only_rationalOne
+    Q hQ h₀ h₁ h₂ h₃
+  omega
+
+/-- The profile with only rational place infinity represented. -/
+theorem displacement_add_gifts_le_four_of_only_rationalInfinity
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (h₀ : ¬ IsRepresentedPlace Q 0)
+    (h₁ : ¬ IsRepresentedPlace Q 1)
+    (h₂ : IsRepresentedPlace Q 2)
+    (h₃ : ¬ IsRepresentedPlace Q 3) :
+    displacementRank Q + relationGiftRank Q ≤ 4 := by
+  rw [displacementRank_eq_representedPlaceWeight]
+  have hweight : representedPlaceWeight Q = 1 := by
+    simp [representedPlaceWeight, representedRationalPlaceCount,
+      representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+  rw [hweight]
+  have hgift :=
+    relationGiftRank_le_three_of_represented_rationalInfinity Q hQ h₂
+  omega
+
+theorem targetCapacity_le_seven_of_only_rationalInfinity
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (h₀ : ¬ IsRepresentedPlace Q 0)
+    (h₁ : ¬ IsRepresentedPlace Q 1)
+    (h₂ : IsRepresentedPlace Q 2)
+    (h₃ : ¬ IsRepresentedPlace Q 3) :
+    targetCapacity Q ≤ 7 := by
+  rw [targetCapacity_eq_three_add_displacement_add_gifts]
+  have hbound := displacement_add_gifts_le_four_of_only_rationalInfinity
+    Q hQ h₀ h₁ h₂ h₃
+  omega
+
 /-- The profile with only the degree-two place represented has weight two. -/
 theorem representedPlaceWeight_eq_two_of_only_degreeTwo
     (Q : Submodule F₂ QuadraticQuotient)
@@ -127,6 +191,154 @@ theorem targetCapacity_le_seven_of_only_degreeTwo
   rw [targetCapacity_eq_three_add_displacement_add_gifts]
   have hbound := displacement_add_gifts_le_four_of_only_degreeTwo
     Q hQ h₀ h₁ h₂ h₃
+  omega
+
+/-! ## The complete profile assembly -/
+
+/-- Manuscript Theorem 6.2: intrinsic closed-place displacement plus global
+relation gift has dimension at most four in every defect of dimension at
+most three.  The proof is a symbolic case split on the four represented
+closed places; no effective-fiber atlas is enumerated. -/
+theorem displacement_rank_le
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3) :
+    displacementRank Q + relationGiftRank Q ≤ 4 := by
+  rw [displacementRank_eq_representedPlaceWeight]
+  by_cases h₃ : IsRepresentedPlace Q 3
+  · by_cases h₀ : IsRepresentedPlace Q 0
+    · by_cases h₁ : IsRepresentedPlace Q 1
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · exfalso
+          exact (not_all_closedPlaces_represented Q hQ) (by
+            intro i
+            fin_cases i
+            · exact h₀
+            · exact h₁
+            · exact h₂
+            · exact h₃)
+        · have hgift :=
+            relationGiftRank_eq_zero_of_rational01_degreeTwo_places
+              Q hQ h₀ h₁ h₃
+          have hweight : representedPlaceWeight Q = 4 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight, hgift]
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift :=
+            relationGiftRank_eq_zero_of_rational02_degreeTwo_places
+              Q hQ h₀ h₂ h₃
+          have hweight : representedPlaceWeight Q = 4 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight, hgift]
+        · have hgift := relationGiftRank_le_one_of_represented_degreeTwo
+            Q hQ h₃
+          have hweight : representedPlaceWeight Q = 3 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+    · by_cases h₁ : IsRepresentedPlace Q 1
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift :=
+            relationGiftRank_eq_zero_of_rational12_degreeTwo_places
+              Q hQ h₁ h₂ h₃
+          have hweight : representedPlaceWeight Q = 4 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight, hgift]
+        · have hgift := relationGiftRank_le_one_of_represented_degreeTwo
+            Q hQ h₃
+          have hweight : representedPlaceWeight Q = 3 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift := relationGiftRank_le_one_of_represented_degreeTwo
+            Q hQ h₃
+          have hweight : representedPlaceWeight Q = 3 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+        · have hgift := relationGiftRank_le_one_of_represented_degreeTwo
+            Q hQ h₃
+          have hweight : representedPlaceWeight Q = 2 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+  · by_cases h₀ : IsRepresentedPlace Q 0
+    · by_cases h₁ : IsRepresentedPlace Q 1
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift := relationGiftRank_le_one_of_three_rational_places
+            Q hQ h₀ h₁ h₂
+          have hweight : representedPlaceWeight Q = 3 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+        · have hgift := relationGiftRank_le_two_of_represented_rationalZero
+            Q hQ h₀
+          have hweight : representedPlaceWeight Q = 2 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift := relationGiftRank_le_two_of_represented_rationalZero
+            Q hQ h₀
+          have hweight : representedPlaceWeight Q = 2 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+        · have hgift := relationGiftRank_le_two_of_represented_rationalZero
+            Q hQ h₀
+          have hweight : representedPlaceWeight Q = 1 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+    · by_cases h₁ : IsRepresentedPlace Q 1
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift := relationGiftRank_le_two_of_represented_rationalOne
+            Q hQ h₁
+          have hweight : representedPlaceWeight Q = 2 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+        · have hgift := relationGiftRank_le_two_of_represented_rationalOne
+            Q hQ h₁
+          have hweight : representedPlaceWeight Q = 1 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+      · by_cases h₂ : IsRepresentedPlace Q 2
+        · have hgift :=
+            relationGiftRank_le_two_of_represented_rationalInfinity Q hQ h₂
+          have hweight : representedPlaceWeight Q = 1 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+        · have hgift := relationGiftRank_le_four Q hQ
+          have hweight : representedPlaceWeight Q = 0 := by
+            simp [representedPlaceWeight, representedRationalPlaceCount,
+              representedDegreeTwoIndicator, h₀, h₁, h₂, h₃]
+          rw [hweight]
+          omega
+
+/-- Capacity form of the complete displacement bound. -/
+theorem targetCapacity_le_seven_of_finrank_le_three
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3) :
+    targetCapacity Q ≤ 7 := by
+  rw [targetCapacity_eq_three_add_displacement_add_gifts]
+  have h := displacement_rank_le Q hQ
   omega
 
 end

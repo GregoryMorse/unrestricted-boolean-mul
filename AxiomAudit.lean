@@ -105,3 +105,10 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_two_of_represented_degreeTwo
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_only_rationalZero
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_only_degreeTwo
+#print axioms UnrestrictedBooleanMul.N5.strongRationalSecantCoeffSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_two_of_represented_rational
+#print axioms UnrestrictedBooleanMul.N5.strongDegreeTwoSecantCoeffSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_one_of_represented_degreeTwo
+#print axioms UnrestrictedBooleanMul.N5.displacement_rank_le
+#print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_finrank_le_three
+#print axioms UnrestrictedBooleanMul.N5.targetCapacity_rank_three_exact

@@ -107,8 +107,10 @@ The checked closed-place layer consists of the eight independent closed-place
 directions, an algebraic five-minor/Boolean-ideal proof of rank-two Hankel
 support, the secant-support theorem, the two symbolic local Klein equations
 with counts `11,11,11,10`, the injective 43-point Hermite atlas, and its exact
-localization-exhaustiveness theorem.  Mixed-place exclusion, displacement,
-and capacity remain pending.
+localization-exhaustiveness theorem.  Mixed-place exclusion, the complete
+displacement bound, and the exact capacities `rho_2(5)=6` and `rho_3(5)=7`
+are now kernel checked.  The unrestricted twelve-gate exclusion remains the
+next completion gate.
 
 ### Unrestricted prefix bookkeeping
 

@@ -1,5 +1,6 @@
 import UnrestrictedBooleanMul.N5.DefectTwoCapacity
 import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
+import UnrestrictedBooleanMul.N5.DisplacementBound
 
 /-!
 # A sharp three-dimensional capacity witness
@@ -65,6 +66,17 @@ theorem exists_finrank_le_three_targetCapacity_eq_seven :
       Module.finrank F₂ Q ≤ 3 ∧ targetCapacity Q = 7 :=
   ⟨defectThreeCapacitySpace, defectThreeCapacitySpace_finrank_le_three,
     defectThreeCapacitySpace_targetCapacity⟩
+
+/-- Manuscript Theorem 7.2 in exact upper-bound-plus-attainment form:
+`ρ₃(5) = 7`. -/
+theorem targetCapacity_rank_three_exact :
+    (∀ Q : Submodule F₂ QuadraticQuotient,
+        Module.finrank F₂ Q ≤ 3 → targetCapacity Q ≤ 7) ∧
+      ∃ Q : Submodule F₂ QuadraticQuotient,
+        Module.finrank F₂ Q ≤ 3 ∧ targetCapacity Q = 7 := by
+  constructor
+  · exact targetCapacity_le_seven_of_finrank_le_three
+  · exact exists_finrank_le_three_targetCapacity_eq_seven
 
 end
 
