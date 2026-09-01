@@ -1,14 +1,16 @@
 import UnrestrictedBooleanMul.N5.SparseAnchorGifts
 
 /-!
-# The three-rational-place displacement profile
+# Three distinct represented place types
 
-When all three rational place types are represented in a defect space of
+When three distinct place types are represented in a defect space of
 dimension at most three, their chosen effective points form a basis.  Strong
 mixed-place exclusion removes all three pair sums from the populated family.
 Thus every populated point is one of the three basis points or their total
 sum, so the relation kernel and relation-gift image have dimension at most
-one.  This proves the sharp displacement bound for the all-rational profile.
+one.  For the three rational places this already proves the sharp displacement
+bound.  For the degree-two place together with two rational places it isolates
+the remaining local pivot to the possible quadrilateral gift.
 -/
 
 namespace UnrestrictedBooleanMul
@@ -16,42 +18,44 @@ namespace N5
 
 noncomputable section
 
-private abbrev rationalWitness
+private abbrev representedTripleWitness
     (Q : Submodule F₂ QuadraticQuotient)
-    (h₀ : IsRepresentedPlace Q 0)
-    (h₁ : IsRepresentedPlace Q 1)
-    (h₂ : IsRepresentedPlace Q 2) : Fin 3 → PopulatedPoint Q :=
-  ![representedPopulatedPoint Q 0 h₀,
-    representedPopulatedPoint Q 1 h₁,
-    representedPopulatedPoint Q 2 h₂]
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k) : Fin 3 → PopulatedPoint Q :=
+  ![representedPopulatedPoint Q i hi,
+    representedPopulatedPoint Q j hj,
+    representedPopulatedPoint Q k hk]
 
 /-- Every populated point in the three-rational-place profile is a basis
 point or the sum of all three basis points. -/
-theorem populatedPoint_cases_of_three_rational_places
+theorem populatedPoint_cases_of_three_distinct_places
     (Q : Submodule F₂ QuadraticQuotient)
     (hQ : Module.finrank F₂ Q ≤ 3)
-    (h₀ : IsRepresentedPlace Q 0)
-    (h₁ : IsRepresentedPlace Q 1)
-    (h₂ : IsRepresentedPlace Q 2)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
     (y : PopulatedPoint Q) :
-    y = rationalWitness Q h₀ h₁ h₂ 0 ∨
-    y = rationalWitness Q h₀ h₁ h₂ 1 ∨
-    y = rationalWitness Q h₀ h₁ h₂ 2 ∨
+    y = representedTripleWitness Q i j k hi hj hk 0 ∨
+    y = representedTripleWitness Q i j k hi hj hk 1 ∨
+    y = representedTripleWitness Q i j k hi hj hk 2 ∨
     populatedQuotientPoint y =
-      populatedQuotientPoint (rationalWitness Q h₀ h₁ h₂ 0) +
-      populatedQuotientPoint (rationalWitness Q h₀ h₁ h₂ 1) +
-      populatedQuotientPoint (rationalWitness Q h₀ h₁ h₂ 2) := by
-  let x := rationalWitness Q h₀ h₁ h₂
+      populatedQuotientPoint (representedTripleWitness Q i j k hi hj hk 0) +
+      populatedQuotientPoint (representedTripleWitness Q i j k hi hj hk 1) +
+      populatedQuotientPoint (representedTripleWitness Q i j k hi hj hk 2) := by
+  let x := representedTripleWitness Q i j k hi hj hk
   let v : Fin 3 → Q := fun i ↦ (x i).1
   have hlin : LinearIndependent F₂ v := by
     rw [show v =
-        (![ (representedPopulatedPoint Q 0 h₀).1,
-            (representedPopulatedPoint Q 1 h₁).1,
-            (representedPopulatedPoint Q 2 h₂).1 ] : Fin 3 → Q) by
+        (![ (representedPopulatedPoint Q i hi).1,
+            (representedPopulatedPoint Q j hj).1,
+            (representedPopulatedPoint Q k hk).1 ] : Fin 3 → Q) by
       funext i
       fin_cases i <;> rfl]
-    exact representedTriple_linearIndependent Q 0 1 2 h₀ h₁ h₂
-      (by decide) (by decide) (by decide)
+    exact representedTriple_linearIndependent Q i j k hi hj hk hij hik hjk
   have hrank : Module.finrank F₂ Q = 3 := by
     have hcard := hlin.fintype_card_le_finrank
     have : 3 ≤ Module.finrank F₂ Q := by simpa using hcard
@@ -95,9 +99,9 @@ theorem populatedPoint_cases_of_three_rational_places
       rw [← heq]
       exact y.2.2
     exact (not_populated_sum_of_distinct_effective_places
-      (representedClosedPlaceParam Q 1 h₁)
-      (representedClosedPlaceParam Q 2 h₂)
-      (by simp) hpop).elim
+      (representedClosedPlaceParam Q j hj)
+      (representedClosedPlaceParam Q k hk)
+      (by simpa using hjk) hpop).elim
   · left
     apply populatedQuotientPoint_injective Q
     change (y.1 : Q).1 = ((x 0).1 : Q).1
@@ -115,9 +119,9 @@ theorem populatedPoint_cases_of_three_rational_places
       rw [← heq]
       exact y.2.2
     exact (not_populated_sum_of_distinct_effective_places
-      (representedClosedPlaceParam Q 0 h₀)
-      (representedClosedPlaceParam Q 2 h₂)
-      (by simp) hpop).elim
+      (representedClosedPlaceParam Q i hi)
+      (representedClosedPlaceParam Q k hk)
+      (by simpa using hik) hpop).elim
   · have heq : populatedQuotientPoint y =
         populatedQuotientPoint (x 0) + populatedQuotientPoint (x 1) := by
       change (y.1 : Q).1 = ((x 0).1 : Q).1 + ((x 1).1 : Q).1
@@ -129,51 +133,54 @@ theorem populatedPoint_cases_of_three_rational_places
       rw [← heq]
       exact y.2.2
     exact (not_populated_sum_of_distinct_effective_places
-      (representedClosedPlaceParam Q 0 h₀)
-      (representedClosedPlaceParam Q 1 h₁)
-      (by simp) hpop).elim
+      (representedClosedPlaceParam Q i hi)
+      (representedClosedPlaceParam Q j hj)
+      (by simpa using hij) hpop).elim
   · right; right; right
     change (y.1 : Q).1 =
       ((x 0).1 : Q).1 + ((x 1).1 : Q).1 + ((x 2).1 : Q).1
     have := congrArg Subtype.val ha
     simpa [coefficientSum, Fin.sum_univ_succ, ha₀, ha₁, ha₂,
-      v, x, rationalWitness, add_assoc] using this.symm
+      v, x, representedTripleWitness, add_assoc] using this.symm
 
 /-- Four-valued coordinate of a populated point in the three-rational
 profile. -/
-def threeRationalPopulatedIndex
+def threePlacePopulatedIndex
     (Q : Submodule F₂ QuadraticQuotient)
     (_hQ : Module.finrank F₂ Q ≤ 3)
-    (h₀ : IsRepresentedPlace Q 0)
-    (h₁ : IsRepresentedPlace Q 1)
-    (h₂ : IsRepresentedPlace Q 2)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
     (y : PopulatedPoint Q) : Fin 4 := by
   classical
-  exact if y = rationalWitness Q h₀ h₁ h₂ 0 then 0
-    else if y = rationalWitness Q h₀ h₁ h₂ 1 then 1
-    else if y = rationalWitness Q h₀ h₁ h₂ 2 then 2
+  exact if y = representedTripleWitness Q i j k hi hj hk 0 then 0
+    else if y = representedTripleWitness Q i j k hi hj hk 1 then 1
+    else if y = representedTripleWitness Q i j k hi hj hk 2 then 2
     else 3
 
-theorem threeRationalPopulatedIndex_injective
+theorem threePlacePopulatedIndex_injective
     (Q : Submodule F₂ QuadraticQuotient)
     (hQ : Module.finrank F₂ Q ≤ 3)
-    (h₀ : IsRepresentedPlace Q 0)
-    (h₁ : IsRepresentedPlace Q 1)
-    (h₂ : IsRepresentedPlace Q 2) :
-    Function.Injective (threeRationalPopulatedIndex Q hQ h₀ h₁ h₂) := by
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+    Function.Injective (threePlacePopulatedIndex Q hQ i j k hi hj hk) := by
   classical
   intro y z hyz
-  let x₀ := representedPopulatedPoint Q 0 h₀
-  let x₁ := representedPopulatedPoint Q 1 h₁
-  let x₂ := representedPopulatedPoint Q 2 h₂
-  let index := threeRationalPopulatedIndex Q hQ h₀ h₁ h₂
+  let x₀ := representedPopulatedPoint Q i hi
+  let x₁ := representedPopulatedPoint Q j hj
+  let x₂ := representedPopulatedPoint Q k hk
+  let index := threePlacePopulatedIndex Q hQ i j k hi hj hk
   change index y = index z at hyz
   have hx₀₁ : x₀ ≠ x₁ := by
-    exact representedPopulatedPoint_ne Q 0 1 h₀ h₁ (by decide)
+    exact representedPopulatedPoint_ne Q i j hi hj hij
   have hx₀₂ : x₀ ≠ x₂ := by
-    exact representedPopulatedPoint_ne Q 0 2 h₀ h₂ (by decide)
+    exact representedPopulatedPoint_ne Q i k hi hk hik
   have hx₁₂ : x₁ ≠ x₂ := by
-    exact representedPopulatedPoint_ne Q 1 2 h₁ h₂ (by decide)
+    exact representedPopulatedPoint_ne Q j k hj hk hjk
   have hindex₀ (w : PopulatedPoint Q) : index w = 0 ↔ w = x₀ := by
     change (if w = x₀ then 0 else if w = x₁ then 1
       else if w = x₂ then 2 else 3) = 0 ↔ w = x₀
@@ -207,14 +214,16 @@ theorem threeRationalPopulatedIndex_injective
       populatedQuotientPoint y =
         populatedQuotientPoint x₀ + populatedQuotientPoint x₁ +
           populatedQuotientPoint x₂ := by
-    simpa [x₀, x₁, x₂, rationalWitness] using
-      populatedPoint_cases_of_three_rational_places Q hQ h₀ h₁ h₂ y
+    simpa [x₀, x₁, x₂, representedTripleWitness] using
+      populatedPoint_cases_of_three_distinct_places Q hQ i j k hi hj hk
+        hij hik hjk y
   have hzCases : z = x₀ ∨ z = x₁ ∨ z = x₂ ∨
       populatedQuotientPoint z =
         populatedQuotientPoint x₀ + populatedQuotientPoint x₁ +
           populatedQuotientPoint x₂ := by
-    simpa [x₀, x₁, x₂, rationalWitness] using
-      populatedPoint_cases_of_three_rational_places Q hQ h₀ h₁ h₂ z
+    simpa [x₀, x₁, x₂, representedTripleWitness] using
+      populatedPoint_cases_of_three_distinct_places Q hQ i j k hi hj hk
+        hij hik hjk z
   rcases hyCases with hy | hy | hy | hy
   · exact (hy₀ ((hindex₀ y).mpr hy)).elim
   · exact (hy₁ ((hindex₁ y).mpr hy)).elim
@@ -231,37 +240,40 @@ theorem threeRationalPopulatedIndex_injective
 
 /-- At most four nonzero quotient points are populated in the
 three-rational-place profile. -/
-theorem populatedPoint_card_le_four_of_three_rational_places
+theorem populatedPoint_card_le_four_of_three_distinct_places
     (Q : Submodule F₂ QuadraticQuotient)
     (hQ : Module.finrank F₂ Q ≤ 3)
-    (h₀ : IsRepresentedPlace Q 0)
-    (h₁ : IsRepresentedPlace Q 1)
-    (h₂ : IsRepresentedPlace Q 2) :
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
     Fintype.card (PopulatedPoint Q) ≤ 4 := by
   simpa using Fintype.card_le_of_injective
-    (threeRationalPopulatedIndex Q hQ h₀ h₁ h₂)
-    (threeRationalPopulatedIndex_injective Q hQ h₀ h₁ h₂)
+    (threePlacePopulatedIndex Q hQ i j k hi hj hk)
+    (threePlacePopulatedIndex_injective Q hQ i j k hi hj hk hij hik hjk)
 
 /-- The relation kernel has dimension at most one in the all-rational
 profile. -/
-theorem populatedRelationKernel_finrank_le_one_of_three_rational_places
+theorem populatedRelationKernel_finrank_le_one_of_three_distinct_places
     (Q : Submodule F₂ QuadraticQuotient)
     (hQ : Module.finrank F₂ Q ≤ 3)
-    (h₀ : IsRepresentedPlace Q 0)
-    (h₁ : IsRepresentedPlace Q 1)
-    (h₂ : IsRepresentedPlace Q 2) :
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
     Module.finrank F₂
       (relationKernel (populatedQuotientPoint (Q := Q))) ≤ 1 := by
-  let x := rationalWitness Q h₀ h₁ h₂
+  let x := representedTripleWitness Q i j k hi hj hk
   have hlinQ : LinearIndependent F₂ (fun i : Fin 3 ↦ (x i).1) := by
     rw [show (fun i : Fin 3 ↦ (x i).1) =
-        (![ (representedPopulatedPoint Q 0 h₀).1,
-            (representedPopulatedPoint Q 1 h₁).1,
-            (representedPopulatedPoint Q 2 h₂).1 ] : Fin 3 → Q) by
+        (![ (representedPopulatedPoint Q i hi).1,
+            (representedPopulatedPoint Q j hj).1,
+            (representedPopulatedPoint Q k hk).1 ] : Fin 3 → Q) by
       funext i
       fin_cases i <;> rfl]
-    exact representedTriple_linearIndependent Q 0 1 2 h₀ h₁ h₂
-      (by decide) (by decide) (by decide)
+    exact representedTriple_linearIndependent Q i j k hi hj hk hij hik hjk
   have hlin : LinearIndependent F₂
       (fun i : Fin 3 ↦ populatedQuotientPoint (x i)) :=
     hlinQ.map' Q.subtype (LinearMap.ker_eq_bot_of_injective Subtype.val_injective)
@@ -280,11 +292,57 @@ theorem populatedRelationKernel_finrank_le_one_of_three_rational_places
     simpa using hrank
   have hkernel := relationKernel_finrank_add_span
     (populatedQuotientPoint (Q := Q))
-  have hcard := populatedPoint_card_le_four_of_three_rational_places
-    Q hQ h₀ h₁ h₂
+  have hcard := populatedPoint_card_le_four_of_three_distinct_places
+    Q hQ i j k hi hj hk hij hik hjk
   omega
 
 /-- Sharp relation-gift bound in the all-rational profile. -/
+theorem relationGiftRank_le_one_of_three_distinct_places
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+    relationGiftRank Q ≤ 1 :=
+  (relationGiftRank_le_relationKernel Q).trans
+    (populatedRelationKernel_finrank_le_one_of_three_distinct_places
+      Q hQ i j k hi hj hk hij hik hjk)
+
+/-- Before the final degree-two quadrilateral pivot, three distinct place
+types already give the one-off bound `d + rank(λ) ≤ 5`. -/
+theorem displacement_add_gifts_le_five_of_three_distinct_places
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+    displacementRank Q + relationGiftRank Q ≤ 5 := by
+  rw [displacementRank_eq_representedPlaceWeight]
+  have hweight := representedPlaceWeight_le_four_of_finrank_le_three Q hQ
+  have hgift := relationGiftRank_le_one_of_three_distinct_places
+    Q hQ i j k hi hj hk hij hik hjk
+  omega
+
+/-- Capacity form of the generic three-distinct-place incidence bound. -/
+theorem targetCapacity_le_eight_of_three_distinct_places
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+    targetCapacity Q ≤ 8 := by
+  rw [targetCapacity_eq_three_add_displacement_add_gifts]
+  have hbound := displacement_add_gifts_le_five_of_three_distinct_places
+    Q hQ i j k hi hj hk hij hik hjk
+  omega
+
+/-- Relation-gift specialization for the three rational place types. -/
 theorem relationGiftRank_le_one_of_three_rational_places
     (Q : Submodule F₂ QuadraticQuotient)
     (hQ : Module.finrank F₂ Q ≤ 3)
@@ -292,9 +350,8 @@ theorem relationGiftRank_le_one_of_three_rational_places
     (h₁ : IsRepresentedPlace Q 1)
     (h₂ : IsRepresentedPlace Q 2) :
     relationGiftRank Q ≤ 1 :=
-  (relationGiftRank_le_relationKernel Q).trans
-    (populatedRelationKernel_finrank_le_one_of_three_rational_places
-      Q hQ h₀ h₁ h₂)
+  relationGiftRank_le_one_of_three_distinct_places Q hQ 0 1 2 h₀ h₁ h₂
+    (by decide) (by decide) (by decide)
 
 /-- With all rational places represented, the degree-two place is excluded,
 so the represented-place displacement weight is exactly three. -/
