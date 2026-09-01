@@ -136,6 +136,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/DefectThreeWitness.lean`](UnrestrictedBooleanMul/N5/DefectThreeWitness.lean)
 - [`UnrestrictedBooleanMul/N5/SecantPfaffian.lean`](UnrestrictedBooleanMul/N5/SecantPfaffian.lean)
 - [`UnrestrictedBooleanMul/N5/LocalSecantPivots.lean`](UnrestrictedBooleanMul/N5/LocalSecantPivots.lean)
+- [`UnrestrictedBooleanMul/N5/LineSecantGifts.lean`](UnrestrictedBooleanMul/N5/LineSecantGifts.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementBound.lean`](UnrestrictedBooleanMul/N5/DisplacementBound.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)

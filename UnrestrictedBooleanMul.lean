@@ -10,6 +10,7 @@ import UnrestrictedBooleanMul.N5.DefectTwoCapacity
 import UnrestrictedBooleanMul.N5.DefectThreeWitness
 import UnrestrictedBooleanMul.N5.SecantPfaffian
 import UnrestrictedBooleanMul.N5.LocalSecantPivots
+import UnrestrictedBooleanMul.N5.LineSecantGifts
 
 /-!
 # Unrestricted Boolean multiplicative complexity

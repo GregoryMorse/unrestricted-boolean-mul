@@ -86,3 +86,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.degreeTwoSecantCoeffSpace_finrank
 #print axioms UnrestrictedBooleanMul.N5.rationalZeroSecantQuotientRank_le_two
 #print axioms UnrestrictedBooleanMul.N5.degreeTwoSecantQuotientRank_le_one
+#print axioms UnrestrictedBooleanMul.N5.fanoLine_gift_has_two_wedge_secant
