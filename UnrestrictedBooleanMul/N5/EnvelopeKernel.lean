@@ -572,6 +572,59 @@ def firstOrderPlaneCoeff (x y : Fin 8 → F₂) : FirstOrderPairCoeff :=
     x (firstOrderPairLeft k) * y (firstOrderPairRight k) +
       x (firstOrderPairRight k) * y (firstOrderPairLeft k)
 
+/-- Cross matrix of a target direction written in the exact first-order
+basis. -/
+def firstOrderCrossCombination (x : Fin 8 → F₂) : CrossMatrix :=
+  ∑ i : Fin 8, x i • hankelMatrix (exactFirstOrderDirections i)
+
+set_option maxRecDepth 10000 in
+private theorem crossWedge_eight_combination
+    (v : Fin 8 → CrossMatrix) (x y : Fin 8 → F₂) :
+    crossWedge (∑ i : Fin 8, x i • v i) (∑ i : Fin 8, y i • v i) =
+      ∑ k : Fin 28, firstOrderPlaneCoeff x y k •
+        crossWedge (v (firstOrderPairLeft k))
+          (v (firstOrderPairRight k)) := by
+  funext i k j l
+  simp only [Fin.sum_univ_succ, Finset.sum_apply, Pi.smul_apply,
+    smul_eq_mul, firstOrderPlaneCoeff, firstOrderPairLeft,
+    firstOrderPairRight, crossWedge]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2]
+  ring
+
+/-- The 28 Pluecker coordinates give exactly the polarized exterior product
+of the two corresponding first-order cross matrices. -/
+theorem firstOrderEnvelopePolarizedMap_planeCoeff
+    (x y : Fin 8 → F₂) :
+    firstOrderEnvelopePolarizedMap (firstOrderPlaneCoeff x y) =
+      crossWedge (firstOrderCrossCombination x)
+        (firstOrderCrossCombination y) := by
+  change (∑ k : Fin 28, firstOrderPlaneCoeff x y k •
+      crossWedge
+        (hankelMatrix (exactFirstOrderDirections (firstOrderPairLeft k)))
+        (hankelMatrix (exactFirstOrderDirections (firstOrderPairRight k)))) =
+    crossWedge
+      (∑ i : Fin 8, x i • hankelMatrix (exactFirstOrderDirections i))
+      (∑ i : Fin 8, y i • hankelMatrix (exactFirstOrderDirections i))
+  exact (crossWedge_eight_combination
+    (fun i => hankelMatrix (exactFirstOrderDirections i)) x y).symm
+
+theorem hankelMatrix_exactFirstOrderCombination (x : Fin 8 → F₂) :
+    hankelMatrix (exactFirstOrderCombination x) =
+      firstOrderCrossCombination x := by
+  ext i j
+  simp [hankelMatrix, exactFirstOrderCombination,
+    firstOrderCrossCombination]
+
+/-- Target-coefficient form of the polarized bridge. -/
+theorem targetCrossWedge_exactFirstOrderCombination
+    (x y : Fin 8 → F₂) :
+    targetCrossWedge (exactFirstOrderCombination x)
+        (exactFirstOrderCombination y) =
+      firstOrderEnvelopePolarizedMap (firstOrderPlaneCoeff x y) := by
+  rw [firstOrderEnvelopePolarizedMap_planeCoeff]
+  simp only [targetCrossWedge, hankelMatrix_exactFirstOrderCombination]
+
 private theorem firstOrderPlaneCoeff_plucker_0134 (x y : Fin 8 → F₂) :
     firstOrderPlaneCoeff x y 0 * firstOrderPlaneCoeff x y 18 +
       firstOrderPlaneCoeff x y 2 * firstOrderPlaneCoeff x y 9 +
@@ -654,6 +707,20 @@ theorem firstOrderPlaneCoeff_eq_local_of_kernel_of_ne_zero
   · exact ⟨0, by simpa [firstOrderLocalKernelDirections] using h⟩
   · exact ⟨1, by simpa [firstOrderLocalKernelDirections] using h⟩
   · exact ⟨2, by simpa [firstOrderLocalKernelDirections] using h⟩
+
+/-- Basis-independent input form of the local-plane classification for two
+actual target directions in the first-order envelope. -/
+theorem exactFirstOrderCombination_zeroWedge_eq_local
+    (x y : Fin 8 → F₂)
+    (hzero : targetCrossWedge (exactFirstOrderCombination x)
+      (exactFirstOrderCombination y) = 0)
+    (hne : firstOrderPlaneCoeff x y ≠ 0) :
+    ∃ i : Fin 3,
+      firstOrderPlaneCoeff x y = firstOrderLocalKernelDirections i := by
+  apply firstOrderPlaneCoeff_eq_local_of_kernel_of_ne_zero x y
+  · rw [← targetCrossWedge_exactFirstOrderCombination]
+    exact hzero
+  · exact hne
 
 end
 
