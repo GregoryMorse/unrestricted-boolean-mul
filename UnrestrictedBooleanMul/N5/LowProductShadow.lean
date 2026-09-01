@@ -35,6 +35,58 @@ def lowProductQuadraticShadow
     ambientBooleanContraction ell c + ambientBooleanContraction m q +
     ambientTwoHadamard q c
 
+/-- The complete high part (quartic, then cubic) of a product of two
+degree-at-most-two factors. -/
+def lowProductHighPart (ell m : LinearForm) (q c : TwoForm) :
+    AmbientFourForm × AmbientThreeForm :=
+  (ambientWedgeTwo q c, factorPlaneCubic ell m q c)
+
+/-- The complete high part is symmetric in the two factors. -/
+theorem lowProductHighPart_swap
+    (ell m : LinearForm) (q c : TwoForm) :
+    lowProductHighPart ell m q c = lowProductHighPart m ell c q := by
+  apply Prod.ext
+  · funext i j k l
+    simp only [lowProductHighPart, ambientWedgeTwo]
+    ring
+  · simp only [lowProductHighPart, factorPlaneCubic]
+    rw [add_comm]
+
+/-- The elementary factor rotation `Y ↦ X + Y` leaves both the quartic
+and cubic homogeneous parts unchanged. -/
+theorem lowProductHighPart_rotate_right
+    (ell m : LinearForm) (q c : TwoForm) :
+    lowProductHighPart ell (ell + m) q (q + c) =
+      lowProductHighPart ell m q c := by
+  apply Prod.ext
+  · change ambientWedgeTwo q (q + c) = ambientWedgeTwo q c
+    calc
+      ambientWedgeTwo q (q + c) =
+          ambientWedgeTwo q q + ambientWedgeTwo q c :=
+        map_add (ambientWedgeTwoMap q) q c
+      _ = ambientWedgeTwo q c := by rw [ambientWedgeTwo_self, zero_add]
+  · funext i j k
+    simp only [lowProductHighPart, factorPlaneCubic,
+      ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_add, Pi.add_apply]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
+
+/-- The companion rotation `X ↦ X + Y` leaves the complete high part
+unchanged. -/
+theorem lowProductHighPart_rotate_left
+    (ell m : LinearForm) (q c : TwoForm) :
+    lowProductHighPart (ell + m) m (q + c) c =
+      lowProductHighPart ell m q c := by
+  calc
+    lowProductHighPart (ell + m) m (q + c) c =
+        lowProductHighPart m (ell + m) c (q + c) :=
+      lowProductHighPart_swap (ell + m) m (q + c) c
+    _ = lowProductHighPart m ell c q := by
+      simpa [add_comm] using lowProductHighPart_rotate_right m ell c q
+    _ = lowProductHighPart ell m q c :=
+      lowProductHighPart_swap m ell c q
+
 theorem ambientBooleanContraction_add_left
     (ell m : LinearForm) (q : TwoForm) :
     ambientBooleanContraction (ell + m) q =
@@ -197,6 +249,50 @@ theorem two_rotations_shadow_mod_submodule
   rw [add_comm a b, add_comm ell m, add_comm q c]
   rw [lowProductQuadraticShadow_swap a b ell m q c]
   exact rotate_right_shadow_mod_submodule W b a m ell c q hc
+
+/-- One right rotation preserves the complete high part and changes the
+quadratic shadow only inside an old quadratic envelope containing `q`. -/
+theorem lowProduct_rotate_right_high_and_shadow_mod_submodule
+    (W : Submodule F₂ TwoForm)
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
+    (hq : q ∈ W) :
+    lowProductHighPart ell (ell + m) q (q + c) =
+        lowProductHighPart ell m q c ∧
+      lowProductQuadraticShadow a (a + b) ell (ell + m) q (q + c) +
+        lowProductQuadraticShadow a b ell m q c ∈ W :=
+  ⟨lowProductHighPart_rotate_right ell m q c,
+    rotate_right_shadow_mod_submodule W a b ell m q c hq⟩
+
+/-- Companion complete-high/shadow statement for a left rotation. -/
+theorem lowProduct_rotate_left_high_and_shadow_mod_submodule
+    (W : Submodule F₂ TwoForm)
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
+    (hc : c ∈ W) :
+    lowProductHighPart (ell + m) m (q + c) c =
+        lowProductHighPart ell m q c ∧
+      lowProductQuadraticShadow (a + b) b (ell + m) m (q + c) c +
+        lowProductQuadraticShadow a b ell m q c ∈ W :=
+  ⟨lowProductHighPart_rotate_left ell m q c,
+    rotate_left_shadow_mod_submodule W a b ell m q c hc⟩
+
+/-- The two-step change `(X, Y) ↦ (Y, X + Y)` likewise preserves the
+complete high part and the quadratic shadow modulo the old envelope. -/
+theorem lowProduct_two_rotations_high_and_shadow_mod_submodule
+    (W : Submodule F₂ TwoForm)
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
+    (hc : c ∈ W) :
+    lowProductHighPart m (ell + m) c (q + c) =
+        lowProductHighPart ell m q c ∧
+      lowProductQuadraticShadow b (a + b) m (ell + m) c (q + c) +
+        lowProductQuadraticShadow a b ell m q c ∈ W := by
+  constructor
+  · calc
+      lowProductHighPart m (ell + m) c (q + c) =
+          lowProductHighPart m ell c q := by
+        simpa [add_comm] using lowProductHighPart_rotate_right m ell c q
+      _ = lowProductHighPart ell m q c :=
+        lowProductHighPart_swap m ell c q
+  · exact two_rotations_shadow_mod_submodule W a b ell m q c hc
 
 end
 end N5
