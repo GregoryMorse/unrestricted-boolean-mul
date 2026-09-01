@@ -89,7 +89,11 @@ first independent layer of the `n = 5` proof:
 - unrestricted-prefix target/defect bookkeeping together with a
   ten-variable semantic flattening theorem.  The flattening reuses the
   recursive Reed--Muller minimum-word argument, performs no truth-table
-  enumeration, and excludes every all-quadratic twelve-AND circuit.
+  enumeration, and excludes every all-quadratic circuit with at most twelve
+  ANDs; and
+- a canonical last-quadratic-prefix state.  Quotient-image monotonicity and
+  the algebraic first-high defect-birth lemma show that this state has defect
+  at most two in every relevant nonredundant circuit.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -162,6 +166,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/Capacity.lean`](UnrestrictedBooleanMul/N5/Capacity.lean)
 - [`UnrestrictedBooleanMul/N5/Prefix.lean`](UnrestrictedBooleanMul/N5/Prefix.lean)
 - [`UnrestrictedBooleanMul/N5/QuadraticFlattening.lean`](UnrestrictedBooleanMul/N5/QuadraticFlattening.lean)
+- [`UnrestrictedBooleanMul/N5/PrefixState.lean`](UnrestrictedBooleanMul/N5/PrefixState.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

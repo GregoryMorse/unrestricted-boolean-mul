@@ -127,9 +127,10 @@ next completion gate.
   Reed--Muller product alternative, and construction of a decomposable
   flattening certificate for every all-quadratic prefix (checked).  This also
   excludes the all-quadratic twelve-gate case.
-- The remaining prefix task is to choose the last all-quadratic circuit state
-  in a nonquadratic twelve-gate circuit and package the alternatives
-  `e in {0,1,2}` for the suffix modules.
+- `N5/PrefixState.lean` — chooses the last all-quadratic circuit state, proves
+  quotient-defect monotonicity and first-high defect birth, and packages the
+  alternatives `e in {0,1,2}` for every relevant nonredundant circuit
+  (checked).
 - `N5/SuffixBudget.lean` — define `d_post` over every finite suffix constrained
   only by total defect at most three.  There is deliberately no gate-count
   parameter.

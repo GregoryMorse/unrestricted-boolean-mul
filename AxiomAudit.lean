@@ -118,3 +118,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.quadratic_product_projection_alternative_ten
 #print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_bookkeeping
 #print axioms UnrestrictedBooleanMul.N5.no_all_quadratic_twelve_circuit
+#print axioms UnrestrictedBooleanMul.N5.final_target_rank_five
+#print axioms UnrestrictedBooleanMul.N5.firstHighGate_defect_succ
+#print axioms UnrestrictedBooleanMul.N5.no_all_quadratic_circuit_le_twelve
+#print axioms UnrestrictedBooleanMul.N5.lastQuadraticPrefix_defect_le_two

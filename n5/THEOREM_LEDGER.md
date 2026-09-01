@@ -29,7 +29,7 @@ Status meanings:
 | Theorem 7.1, `rho_2(5)=6` | `N5.targetCapacity_le_six_of_finrank_le_two`, `N5.exists_finrank_le_two_targetCapacity_eq_six`, `N5/DefectTwoCapacity.lean` | algebraic defect-line relation bound and explicit rational-plus-degree-two witness; the separate equality-case classification is not yet formalized | checked |
 | Theorem 7.2, `rho_3(5)=7` | `N5.targetCapacity_rank_three_exact`, `N5/DefectThreeWitness.lean` | universal displacement upper bound and explicit two-rational-plus-degree-two equality witness | checked |
 | Proposition 8.1, capacity obstruction | `N5.capacity_obstruction`, `N5/Capacity.lean` | target--defect exact sequence and geometric capacity span | checked |
-| Lemma 9.1, circuit bookkeeping | `N5.circuit_bookkeeping`, `N5.allQuadraticPrefix_bookkeeping`, `N5/Prefix.lean`, `N5/QuadraticFlattening.lean` | generic circuit flags and dimension-polymorphic Reed--Muller flattening | checked |
+| Lemma 9.1, circuit bookkeeping | `N5.circuit_bookkeeping`, `N5.allQuadraticPrefix_bookkeeping`, `N5.lastQuadraticPrefix_defect_le_two`, `N5/Prefix.lean`, `N5/QuadraticFlattening.lean`, `N5/PrefixState.lean` | generic circuit flags, dimension-polymorphic Reed--Muller flattening, and first-high defect birth | checked |
 | Proposition 10.2, two-defect envelopes | `N5.E2.envelopes_exhaustive`, `N5/E2/Envelopes.lean` | equality classification and symmetries | interface fixed |
 | Theorem 10.4, stable two-defect bound | `N5.E2.suffix_target_le`, `N5/E2/Main.lean` | four envelope modules | planned |
 | Lemma 10.6, suffix-deficit monotonicity | `N5.suffixDeficit_mono`, `N5/SuffixBudget.lean` | equal defect two, no length allowance | interface fixed |
