@@ -130,3 +130,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.missingCoset_not_sum_two_decomposable
 #print axioms UnrestrictedBooleanMul.N5.missingCoset_vectorWedge_ker_eq_bot
 #print axioms UnrestrictedBooleanMul.N5.targetTwoSpace_inf_targetCleanSecondJetSpace
+#print axioms UnrestrictedBooleanMul.N5.targetCleanProjectedMatrix_not_symmetricRankOne
