@@ -170,6 +170,13 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.lowProductQuadraticShadow_linear_difference
 #print axioms UnrestrictedBooleanMul.N5.ambientBooleanContraction_factorSpan_of_disjoint
 #print axioms UnrestrictedBooleanMul.N5.transversePair_booleanCorrection_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_zero_one_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_zero_infinity_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_one_infinity_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_booleanCorrection_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_shadow_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalPair_shadow_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_booleanCorrection_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_targetCoeff_mem

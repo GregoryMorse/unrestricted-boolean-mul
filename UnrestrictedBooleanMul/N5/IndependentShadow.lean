@@ -31,6 +31,48 @@ theorem rationalZeroJetTwo_eq_target :
   rw [rationalZeroJetTwo, targetTwo_eq_double_sum]
   simp [jZeroCoeff, hankelIndex, Fin.sum_univ_succ]
 
+/-- Left rational-value direction in one of the three rational-pair
+exceptional planes. -/
+def rationalPairLeftValueTwo (pair : Fin 3) : TwoForm :=
+  targetTwo (rationalValueCoeff (rationalPairLeft pair))
+
+/-- Right rational-value direction in one of the three rational-pair
+exceptional planes. -/
+def rationalPairRightValueTwo (pair : Fin 3) : TwoForm :=
+  targetTwo (rationalValueCoeff (rationalPairRight pair))
+
+theorem rationalPairLeftValueTwo_eq_wedge (pair : Fin 3) :
+    rationalPairLeftValueTwo pair =
+      squarefreeWedge (rationalValueA (rationalPairLeft pair))
+        (rationalValueB (rationalPairLeft pair)) := by
+  rw [rationalPairLeftValueTwo, targetTwo_rationalValueCoeff]
+
+theorem rationalPairRightValueTwo_eq_wedge (pair : Fin 3) :
+    rationalPairRightValueTwo pair =
+      squarefreeWedge (rationalValueA (rationalPairRight pair))
+        (rationalValueB (rationalPairRight pair)) := by
+  rw [rationalPairRightValueTwo, targetTwo_rationalValueCoeff]
+
+/-- The `a`- and `b`-side factors of every rational value have disjoint
+coordinate support. -/
+theorem rationalValue_factors_disjoint (place : Fin 3) :
+    ∀ i, rationalValueA place i * rationalValueB place i = 0 := by
+  intro i
+  fin_cases place <;> fin_cases i <;>
+    simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+      aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+      Fin.sum_univ_succ]
+
+/-- Every rational value direction is already in the first-order envelope. -/
+theorem rationalValueTwo_mem_firstOrderEnvelope (place : Fin 3) :
+    targetTwo (rationalValueCoeff place) ∈ firstOrderEnvelopeTwoSpace := by
+  refine ⟨rationalValueCoeff place, ?_, rfl⟩
+  change rationalValueCoeff place ∈ firstOrderEnvelopeCoeffSpace
+  rw [mem_firstOrderEnvelopeCoeffSpace]
+  fin_cases place <;>
+    simp [firstOrderMissingFunctional, rationalValueCoeff,
+      rZeroCoeff, rOneCoeff, rInfinityCoeff]
+
 @[simp] theorem ambientBooleanContraction_pair
     (ell : LinearForm) (q : TwoForm)
     (i j : Fin 10) (hij : i ≠ j) :
@@ -245,6 +287,385 @@ theorem rationalZero_cubic_syzygy
     hy1, hA2.2, hA3.2, hA4.2,
     hy6, hB2.2, hB3.2, hB4.2⟩
 
+/-- Cubic kernel on the rational-value plane `⟨r₀,r₁⟩`.  The first changed
+linear factor is supported on the value-one factors and the second on the
+value-zero factors. -/
+theorem rationalPair_zero_one_cubic_syzygy
+    (x y : LinearForm)
+    (h : factorPlaneCubic x y (rationalPairLeftValueTwo 0)
+      (rationalPairRightValueTwo 0) = 0) :
+    ∃ p q r s : F₂,
+      x = p • rationalValueA 1 + q • rationalValueB 1 ∧
+      y = r • rationalValueA 0 + s • rationalValueB 0 := by
+  rw [rationalPairLeftValueTwo_eq_wedge,
+    rationalPairRightValueTwo_eq_wedge] at h
+  have hc (i j k : Fin 10) := congrFun (congrFun (congrFun h i) j) k
+  have hadd (a b : F₂) (hab : a + b = 0) : b = a := by
+    rw [add_comm, ← CharTwo.sub_eq_add] at hab
+    exact sub_eq_zero.mp hab
+  have hxA1 : x (aCoord 1) = x (aCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 0) (aCoord 1) (bCoord 1))
+  have hxA2 : x (aCoord 2) = x (aCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 0) (aCoord 2) (bCoord 1))
+  have hxA3 : x (aCoord 3) = x (aCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 0) (aCoord 3) (bCoord 1))
+  have hxA4 : x (aCoord 4) = x (aCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 0) (aCoord 4) (bCoord 1))
+  have hxB1 : x (bCoord 1) = x (bCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 1) (bCoord 0) (bCoord 1))
+  have hxB2 : x (bCoord 2) = x (bCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 1) (bCoord 0) (bCoord 2))
+  have hxB3 : x (bCoord 3) = x (bCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 1) (bCoord 0) (bCoord 3))
+  have hxB4 : x (bCoord 4) = x (bCoord 0) := hadd _ _ (by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] using
+      hc (aCoord 1) (bCoord 0) (bCoord 4))
+  simp [aCoord, bCoord] at hxA1 hxA2 hxA3 hxA4 hxB1 hxB2 hxB3 hxB4
+  have hyA1 : y (aCoord 1) = 0 := by
+    have hz := hc (aCoord 0) (aCoord 1) (bCoord 0)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxA1] at hz
+    simpa [aCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyA2 : y (aCoord 2) = 0 := by
+    have hz := hc (aCoord 0) (aCoord 2) (bCoord 0)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxA2] at hz
+    simpa [aCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyA3 : y (aCoord 3) = 0 := by
+    have hz := hc (aCoord 0) (aCoord 3) (bCoord 0)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxA3] at hz
+    simpa [aCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyA4 : y (aCoord 4) = 0 := by
+    have hz := hc (aCoord 0) (aCoord 4) (bCoord 0)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxA4] at hz
+    simpa [aCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyB1 : y (bCoord 1) = 0 := by
+    have hz := hc (aCoord 0) (bCoord 0) (bCoord 1)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxB1] at hz
+    simpa [bCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyB2 : y (bCoord 2) = 0 := by
+    have hz := hc (aCoord 0) (bCoord 0) (bCoord 2)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxB2] at hz
+    simpa [bCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyB3 : y (bCoord 3) = 0 := by
+    have hz := hc (aCoord 0) (bCoord 0) (bCoord 3)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxB3] at hz
+    simpa [bCoord, CharTwo.add_self_eq_zero] using hz.symm
+  have hyB4 : y (bCoord 4) = 0 := by
+    have hz := hc (aCoord 0) (bCoord 0) (bCoord 4)
+    simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+      ambientTwoCoeff_squarefreeWedge, rationalPairLeft, rationalPairRight,
+      rationalValueA, rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+      Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hz
+    rw [hxB4] at hz
+    simpa [bCoord, CharTwo.add_self_eq_zero] using hz.symm
+  simp [aCoord, bCoord] at hyA1 hyA2 hyA3 hyA4 hyB1 hyB2 hyB3 hyB4
+  refine ⟨x (aCoord 0), x (bCoord 0),
+    y (aCoord 0), y (bCoord 0), ?_, ?_⟩
+  · funext i
+    fin_cases i <;>
+      simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ, hxA1, hxA2, hxA3, hxA4,
+        hxB1, hxB2, hxB3, hxB4]
+  · funext i
+    fin_cases i <;>
+      simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ, hyA1, hyA2, hyA3, hyA4,
+        hyB1, hyB2, hyB3, hyB4]
+
+/-- Cubic kernel on the rational-value plane `⟨r₀,r∞⟩`. -/
+theorem rationalPair_zero_infinity_cubic_syzygy
+    (x y : LinearForm)
+    (h : factorPlaneCubic x y (rationalPairLeftValueTwo 1)
+      (rationalPairRightValueTwo 1) = 0) :
+    ∃ p q r s : F₂,
+      x = p • rationalValueA 2 + q • rationalValueB 2 ∧
+      y = r • rationalValueA 0 + s • rationalValueB 0 := by
+  rw [rationalPairLeftValueTwo_eq_wedge,
+    rationalPairRightValueTwo_eq_wedge] at h
+  have hxA (i : Fin 5) (hi : i ≠ 4) : x (aCoord i) = 0 := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord i)) (aCoord 4)) (bCoord 4)
+    fin_cases i <;> try exact (hi rfl).elim
+    all_goals
+      simp [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      exact hc
+  have hxB (i : Fin 5) (hi : i ≠ 4) : x (bCoord i) = 0 := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord 4)) (bCoord i)) (bCoord 4)
+    fin_cases i <;> try exact (hi rfl).elim
+    all_goals
+      simp [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      exact hc
+  have hyA (j : Fin 5) (hj : j ≠ 0) : y (aCoord j) = 0 := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord 0)) (aCoord j)) (bCoord 0)
+    fin_cases j
+    · exact (hj rfl).elim
+    all_goals
+      simp [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      exact hc
+  have hyB (j : Fin 5) (hj : j ≠ 0) : y (bCoord j) = 0 := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord 0)) (bCoord 0)) (bCoord j)
+    fin_cases j
+    · exact (hj rfl).elim
+    all_goals
+      simp [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      exact hc
+  refine ⟨x (aCoord 4), x (bCoord 4),
+    y (aCoord 0), y (bCoord 0), ?_, ?_⟩
+  · funext i
+    fin_cases i <;>
+      simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ]
+    all_goals first
+      | simpa [aCoord] using hxA 0 (by decide)
+      | simpa [aCoord] using hxA 1 (by decide)
+      | simpa [aCoord] using hxA 2 (by decide)
+      | simpa [aCoord] using hxA 3 (by decide)
+      | simpa [bCoord] using hxB 0 (by decide)
+      | simpa [bCoord] using hxB 1 (by decide)
+      | simpa [bCoord] using hxB 2 (by decide)
+      | simpa [bCoord] using hxB 3 (by decide)
+  · funext i
+    fin_cases i <;>
+      simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ]
+    all_goals first
+      | simpa [aCoord] using hyA 1 (by decide)
+      | simpa [aCoord] using hyA 2 (by decide)
+      | simpa [aCoord] using hyA 3 (by decide)
+      | simpa [aCoord] using hyA 4 (by decide)
+      | simpa [bCoord] using hyB 1 (by decide)
+      | simpa [bCoord] using hyB 2 (by decide)
+      | simpa [bCoord] using hyB 3 (by decide)
+      | simpa [bCoord] using hyB 4 (by decide)
+
+/-- Cubic kernel on the rational-value plane `⟨r₁,r∞⟩`. -/
+theorem rationalPair_one_infinity_cubic_syzygy
+    (x y : LinearForm)
+    (h : factorPlaneCubic x y (rationalPairLeftValueTwo 2)
+      (rationalPairRightValueTwo 2) = 0) :
+    ∃ p q r s : F₂,
+      x = p • rationalValueA 2 + q • rationalValueB 2 ∧
+      y = r • rationalValueA 1 + s • rationalValueB 1 := by
+  rw [rationalPairLeftValueTwo_eq_wedge,
+    rationalPairRightValueTwo_eq_wedge] at h
+  have hyA (j : Fin 5) : y (aCoord j) = y (aCoord 0) := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord 0)) (aCoord j)) (bCoord 0)
+    fin_cases j
+    · rfl
+    all_goals
+      simp [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      exact hc.symm
+  have hyB (j : Fin 5) : y (bCoord j) = y (bCoord 0) := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord 0)) (bCoord 0)) (bCoord j)
+    fin_cases j
+    · rfl
+    all_goals
+      simp [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      exact hc.symm
+  have hxA (i : Fin 5) (hi : i ≠ 4) : x (aCoord i) = 0 := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord i)) (aCoord 4)) (bCoord 4)
+    have hyi := hyA i
+    have hy4 := hyA 4
+    simp only [factorPlaneCubic, Pi.add_apply, Pi.zero_apply,
+      ambientVectorWedgeTwo, N4.vectorWedgeTwoN] at hc
+    rw [hyi, hy4] at hc
+    fin_cases i <;> try exact (hi rfl).elim
+    all_goals
+      simp [ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      simpa [aCoord, CharTwo.add_self_eq_zero] using hc
+  have hxB (i : Fin 5) (hi : i ≠ 4) : x (bCoord i) = 0 := by
+    have hc := congrFun (congrFun (congrFun h
+      (aCoord 4)) (bCoord i)) (bCoord 4)
+    have hyi := hyB i
+    have hy4 := hyB 4
+    simp only [factorPlaneCubic, Pi.add_apply, Pi.zero_apply,
+      ambientVectorWedgeTwo, N4.vectorWedgeTwoN] at hc
+    rw [hyi, hy4] at hc
+    fin_cases i <;> try exact (hi rfl).elim
+    all_goals
+      simp [ambientTwoCoeff_squarefreeWedge,
+        rationalPairLeft, rationalPairRight, rationalValueA,
+        rationalValueB, aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ] at hc
+      simpa [bCoord, CharTwo.add_self_eq_zero] using hc
+  refine ⟨x (aCoord 4), x (bCoord 4),
+    y (aCoord 0), y (bCoord 0), ?_, ?_⟩
+  · funext i
+    fin_cases i <;>
+      simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ]
+    all_goals first
+      | simpa [aCoord] using hxA 0 (by decide)
+      | simpa [aCoord] using hxA 1 (by decide)
+      | simpa [aCoord] using hxA 2 (by decide)
+      | simpa [aCoord] using hxA 3 (by decide)
+      | simpa [bCoord] using hxB 0 (by decide)
+      | simpa [bCoord] using hxB 1 (by decide)
+      | simpa [bCoord] using hxB 2 (by decide)
+      | simpa [bCoord] using hxB 3 (by decide)
+  · funext i
+    fin_cases i <;>
+      simp [rationalValueA, rationalValueB, aOneEval, bOneEval,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ]
+    all_goals first
+      | simpa [aCoord] using hyA 1
+      | simpa [aCoord] using hyA 2
+      | simpa [aCoord] using hyA 3
+      | simpa [aCoord] using hyA 4
+      | simpa [bCoord] using hyB 1
+      | simpa [bCoord] using hyB 2
+      | simpa [bCoord] using hyB 3
+      | simpa [bCoord] using hyB 4
+
+/-- Uniform cubic-kernel classification for the three rational-pair
+exceptional planes. -/
+theorem rationalPair_cubic_syzygy
+    (pair : Fin 3) (x y : LinearForm)
+    (h : factorPlaneCubic x y (rationalPairLeftValueTwo pair)
+      (rationalPairRightValueTwo pair) = 0) :
+    ∃ p q r s : F₂,
+      x = p • rationalValueA (rationalPairRight pair) +
+          q • rationalValueB (rationalPairRight pair) ∧
+      y = r • rationalValueA (rationalPairLeft pair) +
+          s • rationalValueB (rationalPairLeft pair) := by
+  fin_cases pair
+  · simpa [rationalPairLeft, rationalPairRight] using
+      rationalPair_zero_one_cubic_syzygy x y h
+  · simpa [rationalPairLeft, rationalPairRight] using
+      rationalPair_zero_infinity_cubic_syzygy x y h
+  · simpa [rationalPairLeft, rationalPairRight] using
+      rationalPair_one_infinity_cubic_syzygy x y h
+
+/-- On every rational-pair exceptional plane, the Boolean lowering
+correction is one decomposable form modulo the first-order envelope. -/
+theorem rationalPair_booleanCorrection_decomposition
+    (pair : Fin 3) (x y : LinearForm)
+    (hcubic : factorPlaneCubic x y (rationalPairLeftValueTwo pair)
+      (rationalPairRightValueTwo pair) = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ z : LinearForm,
+      squarefreeWedge x y +
+          ambientBooleanContraction x (rationalPairRightValueTwo pair) +
+          ambientBooleanContraction y (rationalPairLeftValueTwo pair) =
+        r + squarefreeWedge x z := by
+  rcases rationalPair_cubic_syzygy pair x y hcubic with
+    ⟨p, q, r, s, hx, hy⟩
+  rw [rationalPairLeftValueTwo_eq_wedge,
+    rationalPairRightValueTwo_eq_wedge]
+  exact transversePair_booleanCorrection_decomposition
+    firstOrderEnvelopeTwoSpace
+    (rationalValueA (rationalPairLeft pair))
+    (rationalValueB (rationalPairLeft pair))
+    (rationalValueA (rationalPairRight pair))
+    (rationalValueB (rationalPairRight pair))
+    (rationalValue_factors_disjoint (rationalPairLeft pair))
+    (rationalValue_factors_disjoint (rationalPairRight pair))
+    p q r s x y hx hy
+    (by
+      rw [← targetTwo_rationalValueCoeff]
+      exact rationalValueTwo_mem_firstOrderEnvelope
+        (rationalPairLeft pair))
+    (by
+      rw [← targetTwo_rationalValueCoeff]
+      exact rationalValueTwo_mem_firstOrderEnvelope
+        (rationalPairRight pair))
+
 /-- A local Boolean correction which is one decomposable form modulo an old
 quadratic envelope turns the whole shadow difference into two decomposable
 forms modulo that envelope. -/
@@ -266,6 +687,82 @@ theorem lowProductShadow_decomposition_of_correction
   rw [lowProductQuadraticShadow_linear_difference, hcorrection,
     squarefreeWedge_add_right]
   module
+
+/-- Structural shadow form for all three rational-pair exceptional planes:
+equal cubics leave only two decomposable forms modulo the first-order
+envelope. -/
+theorem rationalPair_shadow_decomposition
+    (pair : Fin 3) (a b a' b' : F₂) (ell m x y : LinearForm)
+    (hcubic : factorPlaneCubic x y (rationalPairLeftValueTwo pair)
+      (rationalPairRightValueTwo pair) = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ u v s t : LinearForm,
+      lowProductQuadraticShadow a b ell m
+          (rationalPairLeftValueTwo pair)
+          (rationalPairRightValueTwo pair) +
+        lowProductQuadraticShadow a' b' (ell + x) (m + y)
+          (rationalPairLeftValueTwo pair)
+          (rationalPairRightValueTwo pair) =
+        r + squarefreeWedge u v + squarefreeWedge s t := by
+  rcases rationalPair_booleanCorrection_decomposition pair x y hcubic with
+    ⟨r, hr, z, hcorrection⟩
+  exact lowProductShadow_decomposition_of_correction
+    firstOrderEnvelopeTwoSpace a b a' b' ell m x y
+    (rationalPairLeftValueTwo pair) (rationalPairRightValueTwo pair)
+    (rationalValueTwo_mem_firstOrderEnvelope (rationalPairLeft pair))
+    (rationalValueTwo_mem_firstOrderEnvelope (rationalPairRight pair))
+    r hr z hcorrection
+
+/-- No rational-pair independent plane can produce the unique target coset
+outside the first-order envelope. -/
+theorem rationalPair_shadow_not_missingCoset
+    (pair : Fin 3) (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic :
+      factorPlaneCubic ell m (rationalPairLeftValueTwo pair)
+          (rationalPairRightValueTwo pair) =
+        factorPlaneCubic ell' m' (rationalPairLeftValueTwo pair)
+          (rationalPairRightValueTwo pair))
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m
+          (rationalPairLeftValueTwo pair)
+          (rationalPairRightValueTwo pair) +
+        lowProductQuadraticShadow a' b' ell' m'
+          (rationalPairLeftValueTwo pair)
+          (rationalPairRightValueTwo pair) ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  intro hmissing
+  let x : LinearForm := ell + ell'
+  let y : LinearForm := m + m'
+  have hx : ell + x = ell' := by
+    change ell + (ell + ell') = ell'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hy : m + y = m' := by
+    change m + (m + m') = m'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hcubicZero :
+      factorPlaneCubic x y (rationalPairLeftValueTwo pair)
+        (rationalPairRightValueTwo pair) = 0 :=
+    factorPlaneCubic_difference_eq_zero ell m ell' m'
+      (rationalPairLeftValueTwo pair) (rationalPairRightValueTwo pair)
+      hcubic
+  rcases rationalPair_shadow_decomposition pair
+      a b a' b' ell m x y hcubicZero with
+    ⟨r, hr, p, q, s, t, hdecomp⟩
+  apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    r hr p q s t u hu
+  have hdecomp' :
+      lowProductQuadraticShadow a b ell m
+            (rationalPairLeftValueTwo pair)
+            (rationalPairRightValueTwo pair) +
+          lowProductQuadraticShadow a' b' ell' m'
+            (rationalPairLeftValueTwo pair)
+            (rationalPairRightValueTwo pair) =
+        r + squarefreeWedge p q + squarefreeWedge s t := by
+    simpa only [hx, hy] using hdecomp
+  exact hdecomp'.symm.trans hmissing
 
 /-- On the rational-zero value--jet plane, the Boolean lowering correction
 is a single exterior product modulo the first-order envelope. -/
