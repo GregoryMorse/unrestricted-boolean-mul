@@ -108,6 +108,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/Displacement.lean`](UnrestrictedBooleanMul/N5/Displacement.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementProfile.lean`](UnrestrictedBooleanMul/N5/DisplacementProfile.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementRank.lean`](UnrestrictedBooleanMul/N5/DisplacementRank.lean)
+- [`UnrestrictedBooleanMul/N5/FanoRelations.lean`](UnrestrictedBooleanMul/N5/FanoRelations.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

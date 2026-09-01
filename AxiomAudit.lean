@@ -40,3 +40,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.localDisplacementSpace_eq_activeDisplacementTwoSpace
 #print axioms UnrestrictedBooleanMul.N5.displacementRank_eq_representedPlaceWeight
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_three_add_representedPlaceWeight_add_gifts
+#print axioms UnrestrictedBooleanMul.N5.populatedRelationKernel_finrank_le_four
+#print axioms UnrestrictedBooleanMul.N5.relationKernel_eq_fanoRelationSpan
+#print axioms UnrestrictedBooleanMul.N5.defectRelationMap_range_eq_span_smallRelationGifts

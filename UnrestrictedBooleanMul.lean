@@ -1,7 +1,7 @@
 import UnrestrictedBooleanMul.N3TruthTable
 import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
-import UnrestrictedBooleanMul.N5.DisplacementRank
+import UnrestrictedBooleanMul.N5.FanoRelations
 
 /-!
 # Unrestricted Boolean multiplicative complexity
@@ -15,7 +15,9 @@ in-progress `n = 5` lower-bound formalization.  It also exports the canonical
 defect-capacity construction, its exact displacement/relation-gift ledger,
 and the choice-independent represented-place profile of its displacement.
 The profile is evaluated numerically as the weighted count of represented
-closed places.
+closed places.  For defect dimension at most three, its relation kernel and
+relation-gift range are reduced algebraically to Fano line and quadrilateral
+supports.
 The `N3`, `N4`, and `N5` module names describe theorem scope rather than an
 internal research workflow.
 -/
