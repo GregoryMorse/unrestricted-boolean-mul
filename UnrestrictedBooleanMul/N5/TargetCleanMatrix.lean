@@ -256,6 +256,481 @@ theorem exists_exactFirstOrderCombination
   rcases hc with ⟨s, hs⟩
   exact ⟨s, hs⟩
 
+/-! ## Removing the local second-jet summands -/
+
+/-- A core wedge has only its `(a_0,b_0)` entry visible in the retained
+cross block.  That entry is a scalar multiple of the rational zero-place
+direction, hence can be absorbed into `U`. -/
+theorem targetCleanRetainedCross_core
+    (p : TwoForm) (hp : p ∈ quadraticExterior secondJetCoreSpace) :
+    targetCleanRetainedCrossMap p =
+      p (quadraticPair (aCoord 0) (bCoord 0) (aCoord_ne_bCoord 0 0)) •
+        targetCleanRetainedCrossMap (targetTwo rZeroCoeff) := by
+  refine Submodule.span_induction (p := fun p _ =>
+      targetCleanRetainedCrossMap p =
+        p (quadraticPair (aCoord 0) (bCoord 0) (aCoord_ne_bCoord 0 0)) •
+          targetCleanRetainedCrossMap (targetTwo rZeroCoeff)) ?_ ?_ ?_ ?_ hp
+  · rintro p ⟨u, hu, v, hv, rfl⟩
+    change ∀ i, i ∉ secondJetCoreSet → u i = 0 at hu
+    change ∀ i, i ∉ secondJetCoreSet → v i = 0 at hv
+    have hua2 : u (aCoord 2) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hua3 : u (aCoord 3) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hua4 : u (aCoord 4) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hub2 : u (bCoord 2) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hub3 : u (bCoord 3) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hub4 : u (bCoord 4) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hva2 : v (aCoord 2) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hva3 : v (aCoord 3) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hva4 : v (aCoord 4) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hvb2 : v (bCoord 2) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hvb3 : v (bCoord 3) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hvb4 : v (bCoord 4) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [targetCleanRetainedCrossMap, targetCleanRetainedIndex,
+        squarefreeWedge_pair, rZeroCoeff, hankelIndex,
+        hua2, hua3, hua4, hub2, hub3, hub4,
+        hva2, hva3, hva4, hvb2, hvb3, hvb4]
+  · simp
+  · intro p q _ _ hp hq
+    simp only [map_add, Pi.add_apply, hp, hq, add_smul]
+  · intro a p _ hp
+    simp only [map_smul, Pi.smul_apply, hp, smul_smul, smul_eq_mul]
+
+/-- Wedges with one factor in the deleted extension block have zero retained
+cross block. -/
+theorem targetCleanRetainedCross_extension
+    (p : TwoForm) (hp : p ∈ leftWedgeSpace secondJetExtensionSpace) :
+    targetCleanRetainedCrossMap p = 0 := by
+  refine Submodule.span_induction (p := fun p _ =>
+      targetCleanRetainedCrossMap p = 0) ?_ ?_ ?_ ?_ hp
+  · rintro p ⟨u, hu, v, rfl⟩
+    change ∀ i, i ∉ secondJetExtensionSet → u i = 0 at hu
+    have hua0 : u (aCoord 0) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hua2 : u (aCoord 2) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hua3 : u (aCoord 3) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hua4 : u (aCoord 4) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hub0 : u (bCoord 0) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hub2 : u (bCoord 2) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hub3 : u (bCoord 3) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hub4 : u (bCoord 4) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [targetCleanRetainedCrossMap, targetCleanRetainedIndex,
+        squarefreeWedge_pair, hua0, hua2, hua3, hua4,
+        hub0, hub2, hub3, hub4]
+  · simp
+  · intro p q _ _ hp hq
+    simpa only [map_add, hp, hq, add_zero]
+  · intro a p _ hp
+    simpa only [map_smul, hp, smul_zero]
+
+/-- Every second-jet element has the same retained cross block as some
+member of the first-order target envelope. -/
+theorem exists_firstOrderEnvelope_same_retainedCross
+    (z : TwoForm) (hz : z ∈ targetCleanSecondJetSpace) :
+    ∃ c ∈ firstOrderEnvelopeCoeffSpace,
+      targetCleanRetainedCrossMap z = targetCleanRetainedCrossMap (targetTwo c) := by
+  change z ∈ (firstOrderEnvelopeTwoSpace ⊔
+    quadraticExterior secondJetCoreSpace) ⊔
+      leftWedgeSpace secondJetExtensionSpace at hz
+  rcases Submodule.mem_sup.mp hz with ⟨w, hw, e, he, rfl⟩
+  rcases Submodule.mem_sup.mp hw with ⟨t, ht, q, hq, rfl⟩
+  rcases ht with ⟨c, hc, rfl⟩
+  let a := q (quadraticPair (aCoord 0) (bCoord 0)
+    (aCoord_ne_bCoord 0 0))
+  refine ⟨c + a • rZeroCoeff, ?_, ?_⟩
+  · exact firstOrderEnvelopeCoeffSpace.add_mem hc
+      (firstOrderEnvelopeCoeffSpace.smul_mem a
+        (exactFirstOrderDirection_mem 0))
+  · simp only [map_add]
+    rw [targetCleanRetainedCross_core q hq,
+      targetCleanRetainedCross_extension e he, add_zero]
+    change targetCleanRetainedCrossMap (targetTwo c) +
+        a • targetCleanRetainedCrossMap (targetTwo rZeroCoeff) =
+      targetCleanRetainedCrossMap (targetTwo (c + a • rZeroCoeff))
+    change targetCleanRetainedCrossMap (targetTwoLinear c) +
+        a • targetCleanRetainedCrossMap (targetTwoLinear rZeroCoeff) =
+      targetCleanRetainedCrossMap
+        (targetTwoLinear (c + a • rZeroCoeff))
+    rw [map_add targetTwoLinear, map_smul targetTwoLinear,
+      map_add targetCleanRetainedCrossMap,
+      map_smul targetCleanRetainedCrossMap]
+
+/-- The retained cross block of every element of the affine family
+`tau + Z_0` is one of the explicit matrices (11.8). -/
+theorem exists_projectedMatrix_eq_retainedCross_affine
+    (z : TwoForm) (hz : z ∈ targetCleanSecondJetSpace) :
+    ∃ s : Fin 8 → F₂,
+      targetCleanRetainedCrossMap (targetTwo firstOrderMissingCoeff + z) =
+        targetCleanProjectedMatrix (visibleTargetCleanParams s) := by
+  rcases exists_firstOrderEnvelope_same_retainedCross z hz with ⟨c, hc, hzc⟩
+  rcases exists_exactFirstOrderCombination c hc with ⟨s, rfl⟩
+  refine ⟨s, ?_⟩
+  rw [map_add, hzc]
+  change targetCleanRetainedCrossMap
+      (targetTwoLinear firstOrderMissingCoeff +
+        targetTwoLinear (exactFirstOrderCombination s)) = _
+  rw [← map_add]
+  change targetCleanRetainedCrossMap
+      (targetTwo (firstOrderMissingCoeff + exactFirstOrderCombination s)) = _
+  exact targetCleanRetainedCross_exactCombination s
+
+/-! ## The retained same-side block and outer rank -/
+
+/-- Alternating same-`A` block on the four retained indices. -/
+def targetCleanRetainedSameAMap :
+    TwoForm →ₗ[F₂] (Fin 4 → Fin 4 → F₂) where
+  toFun p i j := ambientTwoCoeff p
+    (aCoord (targetCleanRetainedIndex i))
+    (aCoord (targetCleanRetainedIndex j))
+  map_add' p q := by
+    ext i j
+    exact ambientTwoCoeff_add p q _ _
+  map_smul' a p := by
+    ext i j
+    change ambientTwoCoeff (a • p)
+        (aCoord (targetCleanRetainedIndex i))
+        (aCoord (targetCleanRetainedIndex j)) =
+      a • ambientTwoCoeff p
+        (aCoord (targetCleanRetainedIndex i))
+        (aCoord (targetCleanRetainedIndex j))
+    by_cases h : aCoord (targetCleanRetainedIndex i) =
+        aCoord (targetCleanRetainedIndex j)
+    · simp only [ambientTwoCoeff, dif_pos h, smul_zero]
+    · simp only [ambientTwoCoeff, dif_neg h, Pi.smul_apply,
+        smul_eq_mul]
+
+theorem targetCleanRetainedSameA_target (c : TargetCoeff) :
+    targetCleanRetainedSameAMap (targetTwo c) = 0 := by
+  ext i j
+  change ambientTwoCoeff (targetTwo c)
+      (aCoord (targetCleanRetainedIndex i))
+      (aCoord (targetCleanRetainedIndex j)) = 0
+  by_cases hij : targetCleanRetainedIndex i = targetCleanRetainedIndex j
+  · have haij : aCoord (targetCleanRetainedIndex i) =
+        aCoord (targetCleanRetainedIndex j) := congrArg aCoord hij
+    simp only [ambientTwoCoeff, dif_pos haij]
+  · have haij : aCoord (targetCleanRetainedIndex i) ≠
+        aCoord (targetCleanRetainedIndex j) := by
+      intro h
+      exact hij (aCoord_injective h)
+    simp only [ambientTwoCoeff, dif_neg haij]
+    exact targetTwo_sameA c _ _ hij
+
+theorem targetCleanRetainedSameA_core
+    (p : TwoForm) (hp : p ∈ quadraticExterior secondJetCoreSpace) :
+    targetCleanRetainedSameAMap p = 0 := by
+  refine Submodule.span_induction (p := fun p _ =>
+      targetCleanRetainedSameAMap p = 0) ?_ ?_ ?_ ?_ hp
+  · rintro p ⟨u, hu, v, hv, rfl⟩
+    change ∀ i, i ∉ secondJetCoreSet → u i = 0 at hu
+    change ∀ i, i ∉ secondJetCoreSet → v i = 0 at hv
+    have hua2 : u (aCoord 2) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hua3 : u (aCoord 3) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hua4 : u (aCoord 4) = 0 := hu _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hva2 : v (aCoord 2) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hva3 : v (aCoord 3) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    have hva4 : v (aCoord 4) = 0 := hv _ (by
+      simp [secondJetCoreSet, aCoord, bCoord])
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [targetCleanRetainedSameAMap, targetCleanRetainedIndex,
+        ambientTwoCoeff_squarefreeWedge,
+        hua2, hua3, hua4, hva2, hva3, hva4,
+        CharTwo.add_self_eq_zero]
+  · simp
+  · intro p q _ _ hp hq
+    simpa only [map_add, hp, hq, add_zero]
+  · intro a p _ hp
+    simpa only [map_smul, hp, smul_zero]
+
+theorem targetCleanRetainedSameA_extension
+    (p : TwoForm) (hp : p ∈ leftWedgeSpace secondJetExtensionSpace) :
+    targetCleanRetainedSameAMap p = 0 := by
+  refine Submodule.span_induction (p := fun p _ =>
+      targetCleanRetainedSameAMap p = 0) ?_ ?_ ?_ ?_ hp
+  · rintro p ⟨u, hu, v, rfl⟩
+    change ∀ i, i ∉ secondJetExtensionSet → u i = 0 at hu
+    have hua0 : u (aCoord 0) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hua2 : u (aCoord 2) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hua3 : u (aCoord 3) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    have hua4 : u (aCoord 4) = 0 := hu _ (by
+      simp [secondJetExtensionSet, aCoord, bCoord])
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [targetCleanRetainedSameAMap, targetCleanRetainedIndex,
+        ambientTwoCoeff_squarefreeWedge,
+        hua0, hua2, hua3, hua4]
+  · simp
+  · intro p q _ _ hp hq
+    simpa only [map_add, hp, hq, add_zero]
+  · intro a p _ hp
+    simpa only [map_smul, hp, smul_zero]
+
+theorem targetCleanRetainedSameA_secondJet
+    (z : TwoForm) (hz : z ∈ targetCleanSecondJetSpace) :
+    targetCleanRetainedSameAMap z = 0 := by
+  change z ∈ (firstOrderEnvelopeTwoSpace ⊔
+    quadraticExterior secondJetCoreSpace) ⊔
+      leftWedgeSpace secondJetExtensionSpace at hz
+  rcases Submodule.mem_sup.mp hz with ⟨w, hw, e, he, rfl⟩
+  rcases Submodule.mem_sup.mp hw with ⟨t, ht, q, hq, rfl⟩
+  rcases ht with ⟨c, hc, rfl⟩
+  change targetCleanRetainedSameAMap (targetTwo c + q + e) = 0
+  rw [map_add, map_add, targetCleanRetainedSameA_target,
+    targetCleanRetainedSameA_core q hq,
+    targetCleanRetainedSameA_extension e he, add_zero, zero_add]
+
+/-- Retained restrictions of the two halves of a linear form. -/
+def targetCleanRetainedAPart (u : LinearForm) : Fin 4 → F₂ :=
+  fun i => u (aCoord (targetCleanRetainedIndex i))
+
+def targetCleanRetainedBPart (u : LinearForm) : Fin 4 → F₂ :=
+  fun i => u (bCoord (targetCleanRetainedIndex i))
+
+/-- Ordinary (possibly zero) outer rank at most one. -/
+def IsOuterRankOne (M : Fin 4 → Fin 4 → F₂) : Prop :=
+  ∃ x y : Fin 4 → F₂, ∀ i j, M i j = x i * y j
+
+theorem targetCleanRetainedCross_squarefreeWedge
+    (u v : LinearForm) (i j : Fin 4) :
+    targetCleanRetainedCrossMap (squarefreeWedge u v) i j =
+      targetCleanRetainedAPart u i * targetCleanRetainedBPart v j +
+      targetCleanRetainedAPart v i * targetCleanRetainedBPart u j := by
+  simp [targetCleanRetainedCrossMap, targetCleanRetainedAPart,
+    targetCleanRetainedBPart, squarefreeWedge_pair, mul_comm]
+
+/-- If the retained same-`A` block of a decomposable form vanishes, its
+retained cross block has outer rank at most one. -/
+theorem targetCleanRetainedCross_outer_of_sameA_zero
+    (u v : LinearForm)
+    (hA : targetCleanRetainedSameAMap (squarefreeWedge u v) = 0) :
+    IsOuterRankOne (targetCleanRetainedCrossMap (squarefreeWedge u v)) := by
+  have hdep : targetCleanRetainedAPart u = 0 ∨
+      targetCleanRetainedAPart v = 0 ∨
+      targetCleanRetainedAPart u = targetCleanRetainedAPart v := by
+    apply N4.dependent_of_vectorWedge_zero
+    intro i j
+    have hij := congrFun (congrFun hA i) j
+    simpa [targetCleanRetainedSameAMap, targetCleanRetainedAPart,
+      ambientTwoCoeff_squarefreeWedge] using hij
+  rcases hdep with hu | hv | huv
+  · refine ⟨targetCleanRetainedAPart v,
+      targetCleanRetainedBPart u, ?_⟩
+    intro i j
+    rw [targetCleanRetainedCross_squarefreeWedge]
+    have hui : targetCleanRetainedAPart u i = 0 := congrFun hu i
+    simp [hui]
+  · refine ⟨targetCleanRetainedAPart u,
+      targetCleanRetainedBPart v, ?_⟩
+    intro i j
+    rw [targetCleanRetainedCross_squarefreeWedge]
+    have hvi : targetCleanRetainedAPart v i = 0 := congrFun hv i
+    simp [hvi]
+  · refine ⟨targetCleanRetainedAPart u,
+      fun j => targetCleanRetainedBPart v j +
+        targetCleanRetainedBPart u j, ?_⟩
+    intro i j
+    rw [targetCleanRetainedCross_squarefreeWedge]
+    have hvi : targetCleanRetainedAPart v i =
+        targetCleanRetainedAPart u i := congrFun huv.symm i
+    rw [hvi]
+    ring
+
+theorem targetCleanProjectedMatrix_symmetric (s : Fin 7 → F₂) :
+    ∀ i j, targetCleanProjectedMatrix s i j =
+      targetCleanProjectedMatrix s j i := by
+  intro i j
+  fin_cases i <;> fin_cases j <;>
+    simp [targetCleanProjectedMatrix]
+
+/-- A symmetric outer product over `F₂` is intrinsically of the form
+`v v^T`. -/
+theorem symmetricRankOne_of_outerRankOne
+    (M : Fin 4 → Fin 4 → F₂)
+    (houter : IsOuterRankOne M)
+    (hsymm : ∀ i j, M i j = M j i) :
+    IsSymmetricRankOne M := by
+  rcases houter with ⟨x, y, hxy⟩
+  by_cases hx : x = 0
+  · refine ⟨0, ?_⟩
+    intro i j
+    rw [hxy]
+    simp [hx]
+  by_cases hy : y = 0
+  · refine ⟨0, ?_⟩
+    intro i j
+    rw [hxy]
+    simp [hy]
+  have hex : ∃ k, x k ≠ 0 := by
+    by_contra hk
+    push Not at hk
+    exact hx (funext hk)
+  rcases hex with ⟨k, hxk0⟩
+  have hxk : x k = 1 := (f2_eq_zero_or_one (x k)).resolve_left hxk0
+  have hyk0 : y k ≠ 0 := by
+    intro hyk
+    apply hy
+    funext j
+    have hs := hsymm k j
+    rw [hxy, hxy] at hs
+    simpa [hxk, hyk] using hs
+  have hyk : y k = 1 := (f2_eq_zero_or_one (y k)).resolve_left hyk0
+  have hyx : y = x := by
+    funext j
+    have hs := hsymm k j
+    rw [hxy, hxy] at hs
+    simpa [hxk, hyk] using hs
+  refine ⟨x, ?_⟩
+  intro i j
+  rw [hxy, hyx]
+
+/-- The affine target-clean family contains no decomposable two-form. -/
+theorem firstOrderMissing_add_targetClean_not_decomposable
+    (z : TwoForm) (hz : z ∈ targetCleanSecondJetSpace) :
+    ¬ IsDecomposableTwo (targetTwo firstOrderMissingCoeff + z) := by
+  rintro ⟨u, v, huv⟩
+  have hsame : targetCleanRetainedSameAMap
+      (targetTwo firstOrderMissingCoeff + z) = 0 := by
+    rw [map_add, targetCleanRetainedSameA_target,
+      targetCleanRetainedSameA_secondJet z hz, add_zero]
+  have hsameWedge : targetCleanRetainedSameAMap
+      (squarefreeWedge u v) = 0 := by
+    rw [← huv]
+    exact hsame
+  have houter := targetCleanRetainedCross_outer_of_sameA_zero u v hsameWedge
+  rcases exists_projectedMatrix_eq_retainedCross_affine z hz with ⟨s, hs⟩
+  have houterM : IsOuterRankOne
+      (targetCleanProjectedMatrix (visibleTargetCleanParams s)) := by
+    rw [← hs, huv]
+    exact houter
+  have hrank := symmetricRankOne_of_outerRankOne
+    (targetCleanProjectedMatrix (visibleTargetCleanParams s)) houterM
+    (targetCleanProjectedMatrix_symmetric (visibleTargetCleanParams s))
+  exact targetCleanProjectedMatrix_not_symmetricRankOne
+    (visibleTargetCleanParams s) hrank
+
+/-- Manuscript equation (11.7): adjoining one decomposable quadratic form
+to the target-clean second jet still creates no new target direction. -/
+theorem targetTwoSpace_inf_targetClean_sup_decomposable
+    (q : TwoForm) (hqdec : IsDecomposableTwo q) :
+    targetTwoSpace ⊓
+        (targetCleanSecondJetSpace ⊔
+          Submodule.span F₂ ({q} : Set TwoForm)) =
+      firstOrderEnvelopeTwoSpace := by
+  apply le_antisymm
+  · rintro p ⟨hpT, hpSup⟩
+    rcases hpT with ⟨c, rfl⟩
+    rcases Submodule.mem_sup.mp hpSup with ⟨z, hz, r, hr, hzr⟩
+    rcases Submodule.mem_span_singleton.mp hr with ⟨a, rfl⟩
+    rcases f2_eq_zero_or_one a with ha | ha
+    · rw [ha, zero_smul, add_zero] at hzr
+      have htargetZ : targetTwo c ∈ targetCleanSecondJetSpace := by
+        change targetTwoLinear c ∈ targetCleanSecondJetSpace
+        rw [← hzr]
+        exact hz
+      exact (target_mem_targetCleanSecondJetSpace_iff_firstOrder
+        (targetTwo c) ⟨c, rfl⟩).1 htargetZ
+    · rw [ha, one_smul] at hzr
+      by_cases hcU : c ∈ firstOrderEnvelopeCoeffSpace
+      · exact ⟨c, hcU, rfl⟩
+      · have hfc0 : firstOrderMissingFunctional c ≠ 0 := by
+          intro hfc
+          exact hcU ((mem_firstOrderEnvelopeCoeffSpace c).2 hfc)
+        have hfc : firstOrderMissingFunctional c = 1 :=
+          (f2_eq_zero_or_one (firstOrderMissingFunctional c)).resolve_left hfc0
+        let uCoeff := c + firstOrderMissingCoeff
+        have huCoeff : uCoeff ∈ firstOrderEnvelopeCoeffSpace := by
+          rw [mem_firstOrderEnvelopeCoeffSpace]
+          simp [uCoeff, hfc, CharTwo.add_self_eq_zero]
+        have hcSplit : c = firstOrderMissingCoeff + uCoeff := by
+          change c = firstOrderMissingCoeff + (c + firstOrderMissingCoeff)
+          ext i
+          calc
+            c i = c i + 0 := (add_zero (c i)).symm
+            _ = c i +
+                (firstOrderMissingCoeff i + firstOrderMissingCoeff i) := by
+              rw [CharTwo.add_self_eq_zero]
+            _ = firstOrderMissingCoeff i +
+                (c i + firstOrderMissingCoeff i) := by
+              ac_rfl
+        have htargetSplit : targetTwo c =
+            targetTwo firstOrderMissingCoeff + targetTwo uCoeff := by
+          change targetTwoLinear c =
+            targetTwoLinear firstOrderMissingCoeff + targetTwoLinear uCoeff
+          rw [hcSplit, map_add]
+        have htargetU : targetTwo uCoeff ∈ firstOrderEnvelopeTwoSpace :=
+          ⟨uCoeff, huCoeff, rfl⟩
+        have htargetZ : targetTwo uCoeff ∈ targetCleanSecondJetSpace :=
+          (target_mem_targetCleanSecondJetSpace_iff_firstOrder
+            (targetTwo uCoeff) ⟨uCoeff, rfl⟩).2 htargetU
+        have hz' : z + targetTwo uCoeff ∈ targetCleanSecondJetSpace :=
+          targetCleanSecondJetSpace.add_mem hz htargetZ
+        have hqeq : q = targetTwo firstOrderMissingCoeff +
+            (z + targetTwo uCoeff) := by
+          ext idx
+          have hzr' := congrFun hzr idx
+          have htargetSplit' := congrFun htargetSplit idx
+          change q idx = targetTwo firstOrderMissingCoeff idx +
+            (z idx + targetTwo uCoeff idx)
+          calc
+            q idx = 0 + q idx := (zero_add (q idx)).symm
+            _ = (z idx + z idx) + q idx := by
+              rw [CharTwo.add_self_eq_zero]
+            _ = z idx + (z idx + q idx) := add_assoc (z idx) (z idx) (q idx)
+            _ = z idx + targetTwo c idx :=
+              congrArg (z idx + ·) hzr'
+            _ = z idx + (targetTwo firstOrderMissingCoeff idx +
+                targetTwo uCoeff idx) :=
+              congrArg (z idx + ·) htargetSplit'
+            _ = targetTwo firstOrderMissingCoeff idx +
+                (z idx + targetTwo uCoeff idx) := by
+              rw [← add_assoc,
+                add_comm (z idx) (targetTwo firstOrderMissingCoeff idx),
+                add_assoc]
+        have haffineDec : IsDecomposableTwo
+            (targetTwo firstOrderMissingCoeff +
+              (z + targetTwo uCoeff)) := by
+          rw [← hqeq]
+          exact hqdec
+        exact (firstOrderMissing_add_targetClean_not_decomposable
+          (z + targetTwo uCoeff) hz' haffineDec).elim
+  · intro p hp
+    have hpT : p ∈ targetTwoSpace :=
+      firstOrderEnvelopeTwoSpace_le_targetTwoSpace hp
+    have hpZ : p ∈ targetCleanSecondJetSpace :=
+      (target_mem_targetCleanSecondJetSpace_iff_firstOrder p hpT).2 hp
+    exact ⟨hpT, Submodule.mem_sup_left hpZ⟩
+
 end
 
 end N5
