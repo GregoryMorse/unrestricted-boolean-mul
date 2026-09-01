@@ -1,4 +1,4 @@
-import UnrestrictedBooleanMul.N5.LocalSecantPivots
+import UnrestrictedBooleanMul.N5.DegreeTwoSecantPivots
 import UnrestrictedBooleanMul.N5.SparseAnchorGifts
 
 /-!
@@ -99,6 +99,14 @@ theorem fanoLine_gift_has_two_wedge_secant
   rcases (populatedLift_mem_fiber q).1 with ⟨y, z, hyz⟩
   exact ⟨u, v, y, z, by simpa [huv, hyz] using hsecant⟩
 
+/-- Coefficient gifts of all populated Fano lines through a fixed point. -/
+def fanoLineGiftCoeffSpaceThrough
+    (Q : Submodule F₂ QuadraticQuotient) (x : PopulatedPoint Q) :
+    Submodule F₂ TargetCoeff :=
+  Submodule.span F₂ {c | ∃ r : FanoLineRelation
+      (populatedQuotientPoint (Q := Q)),
+    x ∈ r.support ∧ c = sparseRelationGiftCoeff Q r.1}
+
 /-- A populated Fano-line gift through an effective point of the zero
 rational chart satisfies the three rational secant pivots.  The chosen
 populated lift need not be the canonical local lift: its target correction
@@ -153,6 +161,38 @@ theorem fanoLine_rationalZero_gift_mem
   rw [hcancel] at hsum
   exact hsum
 
+/-- All populated Fano-line gifts through one effective zero-place point lie
+in the rational secant coefficient space. -/
+theorem fanoLineGiftCoeffSpaceThrough_rationalZero_le
+    (Q : Submodule F₂ QuadraticQuotient) (x : PopulatedPoint Q)
+    (q : LocalKleinParam) (hq : RationalLocalEffective q)
+    (hxPoint : populatedQuotientPoint x =
+      closedPlaceQuotientPoint 0 q) :
+    fanoLineGiftCoeffSpaceThrough Q x ≤ rationalZeroSecantCoeffSpace := by
+  apply Submodule.span_le.mpr
+  rintro c ⟨r, hx, rfl⟩
+  exact fanoLine_rationalZero_gift_mem Q r x hx q hq hxPoint
+
+/-- After quotienting by intrinsic displacement, all line gifts through one
+effective zero-place point span at most two dimensions. -/
+theorem fanoLineGiftCoeffSpaceThrough_rationalZero_quotientRank_le_two
+    (Q : Submodule F₂ QuadraticQuotient) (x : PopulatedPoint Q)
+    (q : LocalKleinParam) (hq : RationalLocalEffective q)
+    (hxPoint : populatedQuotientPoint x =
+      closedPlaceQuotientPoint 0 q)
+    (hzero : IsRepresentedPlace Q 0) :
+    Module.finrank F₂ (LinearMap.range
+        ((Submodule.mkQ (localDisplacementCoeffSpace Q)).domRestrict
+          (fanoLineGiftCoeffSpaceThrough Q x))) ≤ 2 := by
+  refine (finrank_range_mkQ_domRestrict_mono
+    (fanoLineGiftCoeffSpaceThrough Q x) rationalZeroSecantCoeffSpace
+    (localDisplacementCoeffSpace Q)
+    (fanoLineGiftCoeffSpaceThrough_rationalZero_le
+      Q x q hq hxPoint)).trans ?_
+  exact rationalZeroSecantQuotientRank_le_two
+    (localDisplacementCoeffSpace Q)
+    (rationalZeroLocalCoeffSpace_le_localDisplacementCoeffSpace Q hzero)
+
 /-- A populated Fano-line gift through the effective degree-two place
 satisfies the three norm-block secant pivots.  As in the rational case, this
 is independent of the choice of populated lift. -/
@@ -204,6 +244,38 @@ theorem fanoLine_degreeTwo_gift_mem
     simp [N3Certificate.two_eq_zero_f2]
   rw [hcancel] at hsum
   exact hsum
+
+/-- All populated Fano-line gifts through one effective degree-two point lie
+in the degree-two secant coefficient space. -/
+theorem fanoLineGiftCoeffSpaceThrough_degreeTwo_le
+    (Q : Submodule F₂ QuadraticQuotient) (x : PopulatedPoint Q)
+    (q : LocalKleinParam) (hq : DegreeTwoLocalEffective q)
+    (hxPoint : populatedQuotientPoint x =
+      closedPlaceQuotientPoint 3 q) :
+    fanoLineGiftCoeffSpaceThrough Q x ≤ degreeTwoSecantCoeffSpace := by
+  apply Submodule.span_le.mpr
+  rintro c ⟨r, hx, rfl⟩
+  exact fanoLine_degreeTwo_gift_mem Q r x hx q hq hxPoint
+
+/-- After quotienting by intrinsic displacement, all line gifts through one
+effective degree-two point span at most one dimension. -/
+theorem fanoLineGiftCoeffSpaceThrough_degreeTwo_quotientRank_le_one
+    (Q : Submodule F₂ QuadraticQuotient) (x : PopulatedPoint Q)
+    (q : LocalKleinParam) (hq : DegreeTwoLocalEffective q)
+    (hxPoint : populatedQuotientPoint x =
+      closedPlaceQuotientPoint 3 q)
+    (hdegree : IsRepresentedPlace Q 3) :
+    Module.finrank F₂ (LinearMap.range
+        ((Submodule.mkQ (localDisplacementCoeffSpace Q)).domRestrict
+          (fanoLineGiftCoeffSpaceThrough Q x))) ≤ 1 := by
+  refine (finrank_range_mkQ_domRestrict_mono
+    (fanoLineGiftCoeffSpaceThrough Q x) degreeTwoSecantCoeffSpace
+    (localDisplacementCoeffSpace Q)
+    (fanoLineGiftCoeffSpaceThrough_degreeTwo_le
+      Q x q hq hxPoint)).trans ?_
+  exact degreeTwoSecantQuotientRank_le_one
+    (localDisplacementCoeffSpace Q)
+    (degreeTwoLocalCoeffSpace_le_localDisplacementCoeffSpace Q hdegree)
 
 end
 

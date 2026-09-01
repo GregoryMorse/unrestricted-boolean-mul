@@ -50,6 +50,16 @@ theorem localDisplacementCoeffSpace_eq_active
   exact (Submodule.comap_map_eq_of_injective
     targetTwoLinear_injective) (activeDisplacementCoeffSpace Q)
 
+/-- Every active closed-place coefficient direction belongs to the intrinsic
+coefficient displacement space. -/
+theorem closedPlaceDirection_mem_localDisplacementCoeffSpace
+    (Q : Submodule F₂ QuadraticQuotient) (i : Fin 8)
+    (hi : IsActiveDisplacementDirection Q i) :
+    closedPlaceDirections i ∈ localDisplacementCoeffSpace Q := by
+  rw [localDisplacementCoeffSpace_eq_active, activeDisplacementCoeffSpace]
+  apply Submodule.subset_span
+  exact ⟨⟨i, hi⟩, rfl⟩
+
 /-- The active coefficient directions remain linearly independent. -/
 theorem activeDisplacementCoeffDirection_linearIndependent
     (Q : Submodule F₂ QuadraticQuotient) :
