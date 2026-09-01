@@ -62,7 +62,10 @@ first independent layer of the `n = 5` proof:
   closed-place types, including all rational--degree-two pairs; and
 - a choice-independent defect-capacity span with the exact specialized ledger
   `rho(Q) = 3 + d + rank(lambda)` and algebraic localization of every
-  effective fiber difference to its closed-place target plane.
+  effective fiber difference to its closed-place target plane; and
+- the exact represented-place profile of the displacement space, including
+  the one-jet rational and two-direction degree-two local contributions and
+  the proof that ineffective fibers contribute only rational directions.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -103,6 +106,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/MixedPlaceDegreeOne.lean`](UnrestrictedBooleanMul/N5/MixedPlaceDegreeOne.lean)
 - [`UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean`](UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean)
 - [`UnrestrictedBooleanMul/N5/Displacement.lean`](UnrestrictedBooleanMul/N5/Displacement.lean)
+- [`UnrestrictedBooleanMul/N5/DisplacementProfile.lean`](UnrestrictedBooleanMul/N5/DisplacementProfile.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

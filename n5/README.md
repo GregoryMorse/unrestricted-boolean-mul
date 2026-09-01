@@ -30,7 +30,9 @@ The repository currently contains:
 - exact classification of the 43 effective fibers and the full strong
   mixed-place exclusion; and
 - a choice-independent defect-capacity construction with the specialized
-  displacement/relation-gift formula; and
+  displacement/relation-gift formula;
+- exact local and global represented-place profiles for its intrinsic
+  displacement space; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
@@ -49,6 +51,7 @@ The checked declarations are in:
 - [`../UnrestrictedBooleanMul/N5/EffectiveClassification.lean`](../UnrestrictedBooleanMul/N5/EffectiveClassification.lean)
 - [`../UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean`](../UnrestrictedBooleanMul/N5/MixedPlaceDegreeInfinity.lean)
 - [`../UnrestrictedBooleanMul/N5/Displacement.lean`](../UnrestrictedBooleanMul/N5/Displacement.lean)
+- [`../UnrestrictedBooleanMul/N5/DisplacementProfile.lean`](../UnrestrictedBooleanMul/N5/DisplacementProfile.lean)
 
 No theorem named `mc_mul_five` is present yet, and the new declarations above
 do not yet constitute the final lower bound. This directory must not be

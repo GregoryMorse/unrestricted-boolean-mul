@@ -34,3 +34,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.defectCapacitySpan_eq_geometricCapacitySpan
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_three_add_displacement_add_gifts
 #print axioms UnrestrictedBooleanMul.N5.fiberDifferenceSpace_closedPlace_le
+#print axioms UnrestrictedBooleanMul.N5.rational_fiberDifference_profile
+#print axioms UnrestrictedBooleanMul.N5.degreeTwo_fiberDifference_profile
+#print axioms UnrestrictedBooleanMul.N5.localDisplacementSpace_eq_representedPlaceProfile
