@@ -143,6 +143,8 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.firstOrderPlaneCoeff_eq_local_of_kernel_of_ne_zero
 #print axioms UnrestrictedBooleanMul.N5.exactFirstOrderCombination_zeroWedge_eq_local
 #print axioms UnrestrictedBooleanMul.N5.firstOrderPlaneCoeff_difference_classification
+#print axioms UnrestrictedBooleanMul.N5.independentPlane_cubic_recovers_external_shadow
+#print axioms UnrestrictedBooleanMul.N5.singleDirection_cubic_forces_external_shadow_zero
 #print axioms UnrestrictedBooleanMul.N5.independentColours_birth
 #print axioms UnrestrictedBooleanMul.N5.independentColours_product_high_ne_zero
 #print axioms UnrestrictedBooleanMul.N5.independentColours_product_not_mem_colourSpace
