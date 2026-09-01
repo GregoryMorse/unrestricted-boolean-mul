@@ -22,6 +22,22 @@ def rationalZeroValueTwo : TwoForm := targetPairTwo 0 0
 def rationalZeroJetTwo : TwoForm :=
   targetPairTwo 0 1 + targetPairTwo 1 0
 
+/-- Value direction in the rational one two-jet. -/
+def rationalOneValueTwo : TwoForm :=
+  squarefreeWedge aOneEval bOneEval
+
+/-- Exact first-Hasse-jet direction at the rational place one. -/
+def rationalOneJetTwo : TwoForm :=
+  squarefreeWedge aOneEval bOneJet +
+    squarefreeWedge aOneJet bOneEval
+
+/-- Value direction in the rational infinity two-jet. -/
+def rationalInfinityValueTwo : TwoForm := targetPairTwo 4 4
+
+/-- Exact first-Hasse-jet direction at the rational place infinity. -/
+def rationalInfinityJetTwo : TwoForm :=
+  targetPairTwo 4 3 + targetPairTwo 3 4
+
 theorem rationalZeroValueTwo_eq_target :
     rationalZeroValueTwo = targetTwo rZeroCoeff := by
   rw [rationalZeroValueTwo, targetTwo_rZero]
@@ -30,6 +46,47 @@ theorem rationalZeroJetTwo_eq_target :
     rationalZeroJetTwo = targetTwo jZeroCoeff := by
   rw [rationalZeroJetTwo, targetTwo_eq_double_sum]
   simp [jZeroCoeff, hankelIndex, Fin.sum_univ_succ]
+
+theorem rationalOneValueTwo_eq_target :
+    rationalOneValueTwo = targetTwo rOneCoeff := by
+  exact targetTwo_rOne.symm
+
+theorem rationalOneJetTwo_eq_target :
+    rationalOneJetTwo = targetTwo exactJOneCoeff := by
+  apply twoForm_ext_blocks
+  · intro i j hij
+    rw [targetTwo_sameA]
+    simp [rationalOneJetTwo, squarefreeWedge_pair,
+      aOneEval, aOneJet, bOneEval, bOneJet,
+      aLinear, bLinear, Pi.basisFun, Fin.sum_univ_succ,
+      aCoord_ne_bCoord]
+  · intro i j hij
+    rw [targetTwo_sameB]
+    simp [rationalOneJetTwo, squarefreeWedge_pair,
+      aOneEval, aOneJet, bOneEval, bOneJet,
+      aLinear, bLinear, Pi.basisFun, Fin.sum_univ_succ,
+      bCoord_ne_aCoord]
+  · intro i j
+    fin_cases i <;> fin_cases j <;>
+      simp [rationalOneJetTwo, squarefreeWedge_pair,
+        exactJOneCoeff, hankelIndex, aOneEval, aOneJet,
+        bOneEval, bOneJet, aLinear, bLinear, Pi.basisFun,
+        Fin.sum_univ_succ]
+
+theorem rationalInfinityValueTwo_eq_target :
+    rationalInfinityValueTwo = targetTwo rInfinityCoeff := by
+  exact targetTwo_rInfinity.symm
+
+theorem rationalInfinityJetTwo_eq_target :
+    rationalInfinityJetTwo = targetTwo exactJInfinityCoeff := by
+  rw [rationalInfinityJetTwo, targetTwo_eq_double_sum]
+  simp [exactJInfinityCoeff, hankelIndex, Fin.sum_univ_succ]
+  module
+
+theorem targetTwo_exactFirstOrderDirection_mem (i : Fin 8) :
+    targetTwo (exactFirstOrderDirections i) ∈
+      firstOrderEnvelopeTwoSpace :=
+  ⟨exactFirstOrderDirections i, exactFirstOrderDirection_mem i, rfl⟩
 
 /-- Left rational-value direction in one of the three rational-pair
 exceptional planes. -/
@@ -141,6 +198,46 @@ theorem ambientBooleanContraction_factorSpan_of_disjoint
   simp only [N3Certificate.pow_two_f2]
   linear_combination
     u j * p * hi + v j * q * hi + u i * p * hj + v i * q * hj
+
+/-- Universal Boolean lowering identity for a rational value--jet frame.
+The two sides of the local frame may have arbitrary internal overlap; only
+their `A`/`B` coordinate blocks must be disjoint. -/
+theorem rationalValueJet_booleanCorrection_identity
+    (A A' B B' : LinearForm)
+    (hAB : ∀ i, A i * B i = 0)
+    (hAB' : ∀ i, A i * B' i = 0)
+    (hA'B : ∀ i, A' i * B i = 0)
+    (p q r s : F₂) (x y : LinearForm)
+    (hx : x = p • A + q • B)
+    (hy : y = r • A + p • A' + s • B + q • B') :
+    squarefreeWedge x y +
+        ambientBooleanContraction x
+          (squarefreeWedge A B' + squarefreeWedge A' B) +
+        ambientBooleanContraction y (squarefreeWedge A B) =
+      ((p * s + q * r + r + s) • squarefreeWedge A B +
+          (p * q) •
+            (squarefreeWedge A B' + squarefreeWedge A' B)) +
+        squarefreeWedge x (A' + B') := by
+  funext t
+  rcases QuadraticIndex.exists_pair t with ⟨i, j, hij, rfl⟩
+  have hABi := hAB i
+  have hABj := hAB j
+  have hAB'i := hAB' i
+  have hAB'j := hAB' j
+  have hA'Bi := hA'B i
+  have hA'Bj := hA'B j
+  simp only [hx, hy, squarefreeWedge_pair,
+    ambientBooleanContraction_pair, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul]
+  ring_nf at hABi hABj hAB'i hAB'j hA'Bi hA'Bj ⊢
+  simp [N3Certificate.pow_two_f2, N3Certificate.two_eq_zero_f2,
+    hABi, hABj]
+  ring_nf
+  linear_combination
+    A i * r * hABj + A j * p * hAB'i + A i * p * hAB'j +
+    B j * q * hAB'i + A i * p * hA'Bj + B i * s * hABj +
+    A j * p * hA'Bi + B i * q * hAB'j + B i * q * hA'Bj +
+    B j * q * hA'Bi
 
 /-- For two transverse decomposable cross-directions, a cubic syzygy already
 written in the four factor coordinates has a one-decomposable Boolean
@@ -292,6 +389,189 @@ theorem rationalZero_cubic_syzygy
     hx6, hB2.1, hB3.1, hB4.1,
     hy1, hA2.2, hA3.2, hA4.2,
     hy6, hB2.2, hB3.2, hB4.2⟩
+
+/-- Sparse cubic kernel at infinity.  It is the reversed rational-zero
+kernel, stated intrinsically in the value/jet frame. -/
+theorem rationalInfinity_cubic_syzygy
+    (x y : LinearForm)
+    (h : factorPlaneCubic x y rationalInfinityValueTwo
+      rationalInfinityJetTwo = 0) :
+    ∃ p q r s : F₂,
+      x = p • aLinear 4 + q • bLinear 4 ∧
+      y = r • aLinear 4 + p • aLinear 3 +
+        s • bLinear 4 + q • bLinear 3 := by
+  have hc (i j k : Fin 10) := congrFun (congrFun (congrFun h i) j) k
+  have hExternal (e : Fin 10)
+      (heA4 : e ≠ aCoord 4) (heA3 : e ≠ aCoord 3)
+      (heB4 : e ≠ bCoord 4) (heB3 : e ≠ bCoord 3) :
+      x e = 0 ∧ y e = 0 := by
+    have hx := hc e (aCoord 3) (bCoord 4)
+    have hy := hc e (aCoord 4) (bCoord 4)
+    constructor
+    · simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, rationalInfinityValueTwo,
+        rationalInfinityJetTwo, targetPairTwo,
+        ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+        aLinear, bLinear, Pi.basisFun, heA4, heA3, heB4, heB3,
+        aCoord_ne_bCoord, bCoord_ne_aCoord] using hx
+    · simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, rationalInfinityValueTwo,
+        rationalInfinityJetTwo, targetPairTwo,
+        ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+        aLinear, bLinear, Pi.basisFun, heA4, heA3, heB4, heB3,
+        aCoord_ne_bCoord, bCoord_ne_aCoord] using hy
+  have hA0 := hExternal (aCoord 0) (by simp) (by simp)
+    (aCoord_ne_bCoord 0 4) (aCoord_ne_bCoord 0 3)
+  have hA1 := hExternal (aCoord 1) (by simp) (by simp)
+    (aCoord_ne_bCoord 1 4) (aCoord_ne_bCoord 1 3)
+  have hA2 := hExternal (aCoord 2) (by simp) (by simp)
+    (aCoord_ne_bCoord 2 4) (aCoord_ne_bCoord 2 3)
+  have hB0 := hExternal (bCoord 0)
+    (bCoord_ne_aCoord 0 4) (bCoord_ne_aCoord 0 3) (by simp) (by simp)
+  have hB1 := hExternal (bCoord 1)
+    (bCoord_ne_aCoord 1 4) (bCoord_ne_aCoord 1 3) (by simp) (by simp)
+  have hB2 := hExternal (bCoord 2)
+    (bCoord_ne_aCoord 2 4) (bCoord_ne_aCoord 2 3) (by simp) (by simp)
+  have hxA3 : x (aCoord 3) = 0 := by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+      N4.vectorWedgeTwoN, rationalInfinityValueTwo,
+      rationalInfinityJetTwo, targetPairTwo,
+      ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+      aLinear, bLinear, Pi.basisFun] using
+      hc (aCoord 4) (aCoord 3) (bCoord 3)
+  have hxB3 : x (bCoord 3) = 0 := by
+    simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+      N4.vectorWedgeTwoN, rationalInfinityValueTwo,
+      rationalInfinityJetTwo, targetPairTwo,
+      ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+      aLinear, bLinear, Pi.basisFun] using
+      hc (aCoord 3) (bCoord 4) (bCoord 3)
+  have hyA3 : y (aCoord 3) = x (aCoord 4) := by
+    have hxy : x (aCoord 4) + y (aCoord 3) = 0 := by
+      simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, rationalInfinityValueTwo,
+        rationalInfinityJetTwo, targetPairTwo,
+        ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+        aLinear, bLinear, Pi.basisFun, add_comm] using
+        hc (aCoord 4) (aCoord 3) (bCoord 4)
+    rw [← CharTwo.sub_eq_add] at hxy
+    exact (sub_eq_zero.mp hxy).symm
+  have hyB3 : y (bCoord 3) = x (bCoord 4) := by
+    have hxy : x (bCoord 4) + y (bCoord 3) = 0 := by
+      simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+        N4.vectorWedgeTwoN, rationalInfinityValueTwo,
+        rationalInfinityJetTwo, targetPairTwo,
+        ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+        aLinear, bLinear, Pi.basisFun, add_comm] using
+        hc (aCoord 4) (bCoord 4) (bCoord 3)
+    rw [← CharTwo.sub_eq_add] at hxy
+    exact (sub_eq_zero.mp hxy).symm
+  refine ⟨x (aCoord 4), x (bCoord 4), y (aCoord 4), y (bCoord 4), ?_, ?_⟩
+  · funext i
+    fin_cases i <;> simp_all [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+  · funext i
+    fin_cases i <;> simp_all [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+
+/-- Sparse cubic kernel at the rational place one.  Sixteen named exterior
+coordinates recover the four local value/jet coefficients; no assignments
+of the twenty scalar coordinates are enumerated. -/
+theorem rationalOne_cubic_syzygy
+    (x y : LinearForm)
+    (h : factorPlaneCubic x y rationalOneValueTwo
+      rationalOneJetTwo = 0) :
+    ∃ p q r s : F₂,
+      x = p • aOneEval + q • bOneEval ∧
+      y = r • aOneEval + p • aOneJet +
+        s • bOneEval + q • bOneJet := by
+  have hc (i j k : Fin 10) := congrFun (congrFun (congrFun h i) j) k
+  have h025 := hc (aCoord 0) (aCoord 2) (bCoord 0)
+  have h045 := hc (aCoord 0) (aCoord 4) (bCoord 0)
+  have h057 := hc (aCoord 0) (bCoord 0) (bCoord 2)
+  have h059 := hc (aCoord 0) (bCoord 0) (bCoord 4)
+  have h136 := hc (aCoord 1) (aCoord 3) (bCoord 1)
+  have h168 := hc (aCoord 1) (bCoord 1) (bCoord 3)
+  have h015 := hc (aCoord 0) (aCoord 1) (bCoord 0)
+  have h016 := hc (aCoord 0) (aCoord 1) (bCoord 1)
+  have h036 := hc (aCoord 0) (aCoord 3) (bCoord 1)
+  have h056 := hc (aCoord 0) (bCoord 0) (bCoord 1)
+  have h067 := hc (aCoord 0) (bCoord 1) (bCoord 2)
+  have h069 := hc (aCoord 0) (bCoord 1) (bCoord 4)
+  have h125 := hc (aCoord 1) (aCoord 2) (bCoord 0)
+  have h145 := hc (aCoord 1) (aCoord 4) (bCoord 0)
+  have h156 := hc (aCoord 1) (bCoord 0) (bCoord 1)
+  have h158 := hc (aCoord 1) (bCoord 0) (bCoord 3)
+  simp [factorPlaneCubic, ambientVectorWedgeTwo,
+    N4.vectorWedgeTwoN, rationalOneValueTwo, rationalOneJetTwo,
+    ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+    aOneEval, aOneJet, bOneEval, bOneJet,
+    aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+    Fin.sum_univ_succ, CharTwo.add_self_eq_zero] at h025 h045 h057 h059 h136 h168 h015 h016 h036 h056 h067 h069 h125 h145 h156 h158
+  have hxA1 : x 1 = x 0 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h015 + h016
+  have hxA2 : x 2 = x 0 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h025 + h015 + h125
+  have hxA3 : x 3 = x 0 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h136 + h015 + h036
+  have hxA4 : x 4 = x 0 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h045 + h015 + h145
+  have hxB1 : x 6 = x 5 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h056 + h156
+  have hxB2 : x 7 = x 5 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h057 + h056 + h067
+  have hxB3 : x 8 = x 5 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h168 + h056 + h158
+  have hxB4 : x 9 = x 5 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h059 + h056 + h069
+  have hyA1 : y 1 = y 0 + x 0 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2])) h015
+  have hyA2 : y 2 = y 0 := by
+    exact h025.symm
+  have hyA3 : y 3 = y 0 + x 0 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h136 + h015
+  have hyA4 : y 4 = y 0 := by
+    exact h045.symm
+  have hyB1 : y 6 = y 5 + x 5 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2])) h056
+  have hyB2 : y 7 = y 5 := by
+    exact h057.symm
+  have hyB3 : y 8 = y 5 + x 5 := by
+    linear_combination
+      (norm := (ring_nf; simp [N3Certificate.two_eq_zero_f2]))
+      h168 + h056
+  have hyB4 : y 9 = y 5 := by
+    exact h059.symm
+  refine ⟨x (aCoord 0), x (bCoord 0), y (aCoord 0), y (bCoord 0), ?_, ?_⟩
+  · funext i
+    fin_cases i <;>
+      simp [aOneEval, bOneEval, aLinear, bLinear,
+        Pi.basisFun, aCoord, bCoord, Fin.sum_univ_succ,
+        hxA1, hxA2, hxA3, hxA4, hxB1, hxB2, hxB3, hxB4]
+  · funext i
+    fin_cases i <;>
+      simp [aOneEval, aOneJet, bOneEval, bOneJet,
+        aLinear, bLinear, Pi.basisFun, aCoord, bCoord,
+        Fin.sum_univ_succ, hyA1, hyA2, hyA3, hyA4,
+        hyB1, hyB2, hyB3, hyB4]
 
 /-- Cubic kernel on the rational-value plane `⟨r₀,r₁⟩`.  The first changed
 linear factor is supported on the value-one factors and the second on the
@@ -903,6 +1183,246 @@ theorem dStar_shadow_not_missingCoset
   apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
     _ hmem 0 0 0 0 u hu
   simpa using hmissing
+
+/-- The Boolean lowering correction on the infinity value--jet plane is one
+decomposable form modulo the first-order envelope. -/
+theorem rationalInfinity_booleanCorrection_decomposition
+    (x y : LinearForm)
+    (hcubic : factorPlaneCubic x y rationalInfinityValueTwo
+      rationalInfinityJetTwo = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ z : LinearForm,
+      squarefreeWedge x y +
+          ambientBooleanContraction x rationalInfinityJetTwo +
+          ambientBooleanContraction y rationalInfinityValueTwo =
+        r + squarefreeWedge x z := by
+  rcases rationalInfinity_cubic_syzygy x y hcubic with
+    ⟨p, q, r, s, hx, hy⟩
+  have hvalue : rationalInfinityValueTwo ∈
+      firstOrderEnvelopeTwoSpace := by
+    rw [rationalInfinityValueTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 2
+  have hjet : rationalInfinityJetTwo ∈
+      firstOrderEnvelopeTwoSpace := by
+    rw [rationalInfinityJetTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 5
+  have hAB : ∀ i, aLinear 4 i * bLinear 4 i = 0 := by
+    intro i
+    fin_cases i <;> simp [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+  have hAB' : ∀ i, aLinear 4 i * bLinear 3 i = 0 := by
+    intro i
+    fin_cases i <;> simp [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+  have hA'B : ∀ i, aLinear 3 i * bLinear 4 i = 0 := by
+    intro i
+    fin_cases i <;> simp [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+  let rform : TwoForm :=
+    (p * s + q * r + r + s) • rationalInfinityValueTwo +
+      (p * q) • rationalInfinityJetTwo
+  refine ⟨rform,
+    firstOrderEnvelopeTwoSpace.add_mem
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hvalue)
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hjet),
+    aLinear 3 + bLinear 3, ?_⟩
+  simpa only [rform, rationalInfinityValueTwo,
+    rationalInfinityJetTwo, targetPairTwo] using
+    rationalValueJet_booleanCorrection_identity
+      (aLinear 4) (aLinear 3) (bLinear 4) (bLinear 3)
+      hAB hAB' hA'B p q r s x y hx hy
+
+/-- Equal cubic parts on the infinity value--jet plane leave only two
+decomposable quadratic forms modulo the first-order envelope. -/
+theorem rationalInfinity_shadow_decomposition
+    (a b a' b' : F₂) (ell m x y : LinearForm)
+    (hcubic : factorPlaneCubic x y rationalInfinityValueTwo
+      rationalInfinityJetTwo = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ u v s t : LinearForm,
+      lowProductQuadraticShadow a b ell m rationalInfinityValueTwo
+          rationalInfinityJetTwo +
+        lowProductQuadraticShadow a' b' (ell + x) (m + y)
+          rationalInfinityValueTwo rationalInfinityJetTwo =
+        r + squarefreeWedge u v + squarefreeWedge s t := by
+  rcases rationalInfinity_booleanCorrection_decomposition x y hcubic with
+    ⟨r, hr, z, hcorrection⟩
+  have hvalue : rationalInfinityValueTwo ∈
+      firstOrderEnvelopeTwoSpace := by
+    rw [rationalInfinityValueTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 2
+  have hjet : rationalInfinityJetTwo ∈
+      firstOrderEnvelopeTwoSpace := by
+    rw [rationalInfinityJetTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 5
+  exact lowProductShadow_decomposition_of_correction
+    firstOrderEnvelopeTwoSpace a b a' b' ell m x y
+    rationalInfinityValueTwo rationalInfinityJetTwo
+    hvalue hjet r hr z hcorrection
+
+/-- The rational-infinity value--jet plane cannot produce the missing target
+coset. -/
+theorem rationalInfinity_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic : factorPlaneCubic ell m rationalInfinityValueTwo
+        rationalInfinityJetTwo =
+      factorPlaneCubic ell' m' rationalInfinityValueTwo
+        rationalInfinityJetTwo)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m rationalInfinityValueTwo
+          rationalInfinityJetTwo +
+        lowProductQuadraticShadow a' b' ell' m' rationalInfinityValueTwo
+          rationalInfinityJetTwo ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  intro hmissing
+  let x : LinearForm := ell + ell'
+  let y : LinearForm := m + m'
+  have hx : ell + x = ell' := by
+    change ell + (ell + ell') = ell'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hy : m + y = m' := by
+    change m + (m + m') = m'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hcubicZero : factorPlaneCubic x y rationalInfinityValueTwo
+      rationalInfinityJetTwo = 0 :=
+    factorPlaneCubic_difference_eq_zero ell m ell' m'
+      rationalInfinityValueTwo rationalInfinityJetTwo hcubic
+  rcases rationalInfinity_shadow_decomposition
+      a b a' b' ell m x y hcubicZero with
+    ⟨r, hr, p, q, s, t, hdecomp⟩
+  apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    r hr p q s t u hu
+  have hdecomp' :
+      lowProductQuadraticShadow a b ell m rationalInfinityValueTwo
+            rationalInfinityJetTwo +
+          lowProductQuadraticShadow a' b' ell' m'
+            rationalInfinityValueTwo rationalInfinityJetTwo =
+        r + squarefreeWedge p q + squarefreeWedge s t := by
+    simpa only [hx, hy] using hdecomp
+  exact hdecomp'.symm.trans hmissing
+
+/-- The Boolean lowering correction on the rational-one value--jet plane is
+one decomposable form modulo the first-order envelope. -/
+theorem rationalOne_booleanCorrection_decomposition
+    (x y : LinearForm)
+    (hcubic : factorPlaneCubic x y rationalOneValueTwo
+      rationalOneJetTwo = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ z : LinearForm,
+      squarefreeWedge x y +
+          ambientBooleanContraction x rationalOneJetTwo +
+          ambientBooleanContraction y rationalOneValueTwo =
+        r + squarefreeWedge x z := by
+  rcases rationalOne_cubic_syzygy x y hcubic with
+    ⟨p, q, r, s, hx, hy⟩
+  have hvalue : rationalOneValueTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalOneValueTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 1
+  have hjet : rationalOneJetTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalOneJetTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 4
+  have hAB : ∀ i, aOneEval i * bOneEval i = 0 := by
+    intro i
+    fin_cases i <;>
+      simp [aOneEval, bOneEval, aLinear, bLinear, Pi.basisFun,
+        aCoord, bCoord, Fin.sum_univ_succ]
+  have hAB' : ∀ i, aOneEval i * bOneJet i = 0 := by
+    intro i
+    fin_cases i <;>
+      simp [aOneEval, bOneJet, aLinear, bLinear, Pi.basisFun,
+        aCoord, bCoord, Fin.sum_univ_succ]
+  have hA'B : ∀ i, aOneJet i * bOneEval i = 0 := by
+    intro i
+    fin_cases i <;>
+      simp [aOneJet, bOneEval, aLinear, bLinear, Pi.basisFun,
+        aCoord, bCoord, Fin.sum_univ_succ]
+  let rform : TwoForm :=
+    (p * s + q * r + r + s) • rationalOneValueTwo +
+      (p * q) • rationalOneJetTwo
+  refine ⟨rform,
+    firstOrderEnvelopeTwoSpace.add_mem
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hvalue)
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hjet),
+    aOneJet + bOneJet, ?_⟩
+  simpa only [rform, rationalOneValueTwo, rationalOneJetTwo] using
+    rationalValueJet_booleanCorrection_identity
+      aOneEval aOneJet bOneEval bOneJet
+      hAB hAB' hA'B p q r s x y hx hy
+
+/-- Equal cubic parts on the rational-one value--jet plane leave only two
+decomposable quadratic forms modulo the first-order envelope. -/
+theorem rationalOne_shadow_decomposition
+    (a b a' b' : F₂) (ell m x y : LinearForm)
+    (hcubic : factorPlaneCubic x y rationalOneValueTwo
+      rationalOneJetTwo = 0) :
+    ∃ r ∈ firstOrderEnvelopeTwoSpace, ∃ u v s t : LinearForm,
+      lowProductQuadraticShadow a b ell m rationalOneValueTwo
+          rationalOneJetTwo +
+        lowProductQuadraticShadow a' b' (ell + x) (m + y)
+          rationalOneValueTwo rationalOneJetTwo =
+        r + squarefreeWedge u v + squarefreeWedge s t := by
+  rcases rationalOne_booleanCorrection_decomposition x y hcubic with
+    ⟨r, hr, z, hcorrection⟩
+  have hvalue : rationalOneValueTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalOneValueTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 1
+  have hjet : rationalOneJetTwo ∈ firstOrderEnvelopeTwoSpace := by
+    rw [rationalOneJetTwo_eq_target]
+    simpa [exactFirstOrderDirections] using
+      targetTwo_exactFirstOrderDirection_mem 4
+  exact lowProductShadow_decomposition_of_correction
+    firstOrderEnvelopeTwoSpace a b a' b' ell m x y
+    rationalOneValueTwo rationalOneJetTwo
+    hvalue hjet r hr z hcorrection
+
+/-- The rational-one value--jet plane cannot produce the missing target
+coset. -/
+theorem rationalOne_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic : factorPlaneCubic ell m rationalOneValueTwo
+        rationalOneJetTwo =
+      factorPlaneCubic ell' m' rationalOneValueTwo rationalOneJetTwo)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m rationalOneValueTwo
+          rationalOneJetTwo +
+        lowProductQuadraticShadow a' b' ell' m' rationalOneValueTwo
+          rationalOneJetTwo ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  intro hmissing
+  let x : LinearForm := ell + ell'
+  let y : LinearForm := m + m'
+  have hx : ell + x = ell' := by
+    change ell + (ell + ell') = ell'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hy : m + y = m' := by
+    change m + (m + m') = m'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hcubicZero : factorPlaneCubic x y rationalOneValueTwo
+      rationalOneJetTwo = 0 :=
+    factorPlaneCubic_difference_eq_zero ell m ell' m'
+      rationalOneValueTwo rationalOneJetTwo hcubic
+  rcases rationalOne_shadow_decomposition
+      a b a' b' ell m x y hcubicZero with
+    ⟨r, hr, p, q, s, t, hdecomp⟩
+  apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    r hr p q s t u hu
+  have hdecomp' :
+      lowProductQuadraticShadow a b ell m rationalOneValueTwo
+            rationalOneJetTwo +
+          lowProductQuadraticShadow a' b' ell' m'
+            rationalOneValueTwo rationalOneJetTwo =
+        r + squarefreeWedge p q + squarefreeWedge s t := by
+    simpa only [hx, hy] using hdecomp
+  exact hdecomp'.symm.trans hmissing
 
 /-- On the rational-zero value--jet plane, the Boolean lowering correction
 is a single exterior product modulo the first-order envelope. -/

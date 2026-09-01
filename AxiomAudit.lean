@@ -180,6 +180,15 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.dStar_cubic_syzygy
 #print axioms UnrestrictedBooleanMul.N5.dStar_shadow_mem_firstOrderEnvelope
 #print axioms UnrestrictedBooleanMul.N5.dStar_shadow_not_missingCoset
+#print axioms UnrestrictedBooleanMul.N5.rationalValueJet_booleanCorrection_identity
+#print axioms UnrestrictedBooleanMul.N5.rationalOne_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.rationalOne_booleanCorrection_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalOne_shadow_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalOne_shadow_not_missingCoset
+#print axioms UnrestrictedBooleanMul.N5.rationalInfinity_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.rationalInfinity_booleanCorrection_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalInfinity_shadow_decomposition
+#print axioms UnrestrictedBooleanMul.N5.rationalInfinity_shadow_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_booleanCorrection_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_targetCoeff_mem
