@@ -1,7 +1,7 @@
 import UnrestrictedBooleanMul.N3TruthTable
 import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
-import UnrestrictedBooleanMul.N5.DecomposableAnchor
+import UnrestrictedBooleanMul.N5.SparseAnchorGifts
 
 /-!
 # Unrestricted Boolean multiplicative complexity
