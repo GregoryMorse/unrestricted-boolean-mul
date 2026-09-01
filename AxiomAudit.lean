@@ -95,3 +95,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.fanoLine_degreeTwo_gift_mem
 #print axioms UnrestrictedBooleanMul.N5.fanoLineGiftCoeffSpaceThrough_rationalZero_quotientRank_le_two
 #print axioms UnrestrictedBooleanMul.N5.fanoLineGiftCoeffSpaceThrough_degreeTwo_quotientRank_le_one
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_lineQuotientRank_add_one
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_three_of_rationalZero_incidence
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_two_of_degreeTwo_incidence
