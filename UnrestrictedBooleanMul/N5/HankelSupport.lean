@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.ClosedPlaces
+import UnrestrictedBooleanMul.QuadraticSupport
 
 /-!
 # Rank-two Hankel support
@@ -159,6 +160,22 @@ theorem rankTwoHankel_support {c : TargetCoeff} (h : HankelRankLETwo c) :
   intro i _
   exact Submodule.smul_mem _ _
     (Submodule.subset_span ⟨i, rfl⟩)
+
+/-- Manuscript Lemma 4.2 (secant support), in its algebraic support form.  If
+the sum of two decomposable forms has a four-dimensional support `K`, both
+endpoints lie in `Lambda^2 K`. -/
+theorem secant_support (K : Submodule F₂ LinearForm)
+    (hK : Module.finrank F₂ K = 4) (u v x y : LinearForm)
+    (hsupport :
+      quadraticSupport (squarefreeWedge u v + squarefreeWedge x y) = K) :
+    squarefreeWedge u v ∈ quadraticExterior K ∧
+      squarefreeWedge x y ∈ quadraticExterior K := by
+  have hrank : Module.finrank F₂
+      (quadraticSupport (squarefreeWedge u v + squarefreeWedge x y)) = 4 := by
+    rw [hsupport, hK]
+  have hlin := linearIndependent_of_two_wedge_support_finrank_four
+    u v x y hrank
+  exact secant_mem_quadraticExterior K u v x y hlin hsupport.le
 
 end
 

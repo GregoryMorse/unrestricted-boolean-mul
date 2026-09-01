@@ -18,4 +18,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.zeroFiber_eq_rational
 #print axioms UnrestrictedBooleanMul.N5.relationMap_finrank
 #print axioms UnrestrictedBooleanMul.N5.rankTwoHankel_support
+#print axioms UnrestrictedBooleanMul.N5.secant_support
 #print axioms UnrestrictedBooleanMul.N5.localKlein_counts
+#print axioms UnrestrictedBooleanMul.N5.effectiveFiberAtlas_card

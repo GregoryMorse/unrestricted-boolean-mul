@@ -22,7 +22,7 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
-| 5 | 13 | algebraic hand proof; Lean target/upper circuit, quadratic quotient, relation map, rank-two Hankel support, and local Klein counts kernel-checked; full lower-bound formalization in progress |
+| 5 | 13 | algebraic hand proof; Lean target/upper circuit, quadratic quotient, relation map, rank-two/secant support, local Klein counts, and the injective 43-point atlas kernel-checked; full lower-bound formalization in progress |
 
 The manuscripts contain the mathematical exposition and literature citations.
 The Lean development checks the five rows `n = 0` through `n = 4`. For `n = 5`,
@@ -52,7 +52,11 @@ first independent layer of the `n = 5` proof:
 - an intrinsic 45-dimensional squarefree quadratic space, nine-dimensional
   Hankel target, and 36-dimensional quotient;
 - the zero-fiber classification proved from Hankel minors; and
-- the target/defect ledger and exact relation-map formula.
+- the target/defect ledger and exact relation-map formula;
+- dimension-polymorphic secant support and the symbolic local Klein counts;
+  and
+- an exact Hermite certificate proving that the four effective local charts
+  embed as 43 distinct global quotient points.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -85,6 +89,8 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/ClosedPlaces.lean`](UnrestrictedBooleanMul/N5/ClosedPlaces.lean)
 - [`UnrestrictedBooleanMul/N5/HankelSupport.lean`](UnrestrictedBooleanMul/N5/HankelSupport.lean)
 - [`UnrestrictedBooleanMul/N5/LocalKlein.lean`](UnrestrictedBooleanMul/N5/LocalKlein.lean)
+- [`UnrestrictedBooleanMul/N5/EffectiveFibers.lean`](UnrestrictedBooleanMul/N5/EffectiveFibers.lean)
+- [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
 

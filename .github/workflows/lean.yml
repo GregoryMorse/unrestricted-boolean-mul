@@ -31,7 +31,7 @@ jobs:
 
       - name: Reject non-standard proof escape hatches
         run: |
-          if rg -n '(^|[^A-Za-z_])(sorry|admit|native_decide)([^A-Za-z_]|$)|^[[:space:]]*axiom[[:space:]]' UnrestrictedBooleanMul/N5 UnrestrictedBooleanMul/Quadratic.lean; then
+          if rg -n '(^|[^A-Za-z_])(sorry|admit|native_decide)([^A-Za-z_]|$)|^[[:space:]]*axiom[[:space:]]' UnrestrictedBooleanMul/N5 UnrestrictedBooleanMul/Quadratic.lean UnrestrictedBooleanMul/QuadraticSupport.lean; then
             exit 1
           fi
 

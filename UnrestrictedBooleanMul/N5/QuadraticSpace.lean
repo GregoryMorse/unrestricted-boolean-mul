@@ -234,6 +234,28 @@ def anchorRestriction : TwoForm →ₗ[F₂] TargetCoeff where
   map_add' q r := by ext i; simp
   map_smul' a q := by ext i; simp
 
+/-- Left input index of the private anchor for an output coefficient. -/
+def anchorLeftIndex : Fin 9 → Fin 5 :=
+  ![0, 0, 0, 0, 0, 1, 2, 3, 4]
+
+/-- Right input index of the private anchor for an output coefficient. -/
+def anchorRightIndex : Fin 9 → Fin 5 :=
+  ![0, 1, 2, 3, 4, 4, 4, 4, 4]
+
+/-- Every private target anchor is a named cross-block quadratic coordinate. -/
+theorem fiveTargetAnchor_as_quadraticPair (s : Fin 9) :
+    (⟨(fiveTargetAnchor s).vars, fiveTargetAnchor_degree s⟩ : QuadraticIndex 10) =
+      quadraticPair (aCoord (anchorLeftIndex s)) (bCoord (anchorRightIndex s))
+        (aCoord_ne_bCoord _ _) := by
+  fin_cases s <;> apply Subtype.ext <;> decide
+
+@[simp] theorem anchorRestriction_apply (p : TwoForm) (s : Fin 9) :
+    anchorRestriction p s =
+      p (quadraticPair (aCoord (anchorLeftIndex s)) (bCoord (anchorRightIndex s))
+        (aCoord_ne_bCoord _ _)) := by
+  change p ⟨(fiveTargetAnchor s).vars, fiveTargetAnchor_degree s⟩ = _
+  rw [fiveTargetAnchor_as_quadraticPair]
+
 theorem anchorRestriction_quadraticProjection (p : ANF 10) :
     anchorRestriction (quadraticProjection 10 p) = fiveTargetProjection p := by
   rfl
@@ -247,6 +269,85 @@ theorem anchorRestriction_targetTwo (c : TargetCoeff) :
   classical
   simp [targetANFLinear, targetANF, fiveTargetProjection_Mul,
     Pi.basisFun, Pi.single_apply]
+
+/-- Canonical representative of a quadratic quotient class, obtained by
+clearing the nine private target anchors. -/
+def quotientRemainder : TwoForm →ₗ[F₂] TwoForm :=
+  LinearMap.id + targetTwoLinear.comp anchorRestriction
+
+@[simp] theorem quotientRemainder_apply (p : TwoForm) :
+    quotientRemainder p = p + targetTwo (anchorRestriction p) := by
+  rfl
+
+private theorem twoForm_add_self (p : TwoForm) : p + p = 0 := by
+  funext s
+  exact @CharTwo.add_self_eq_zero F₂ _ _ (p s)
+
+@[simp] theorem quotientRemainder_targetTwo (c : TargetCoeff) :
+    quotientRemainder (targetTwo c) = 0 := by
+  rw [quotientRemainder_apply, anchorRestriction_targetTwo]
+  exact twoForm_add_self _
+
+/-- Clearing the private anchors has exactly the Hankel target as kernel. -/
+theorem quotientRemainder_eq_zero_iff (p : TwoForm) :
+    quotientRemainder p = 0 ↔ p ∈ targetTwoSpace := by
+  constructor
+  · intro hp
+    have heq : p = targetTwo (anchorRestriction p) := by
+      have := hp
+      rw [quotientRemainder_apply] at this
+      let t := targetTwo (anchorRestriction p)
+      have htt : t + t = 0 := twoForm_add_self t
+      calc
+        p = p + 0 := (add_zero _).symm
+        _ = p + (t + t) := by rw [htt]
+        _ = (p + t) + t := by rw [add_assoc]
+        _ = t := by rw [this, zero_add]
+    exact ⟨anchorRestriction p, heq.symm⟩
+  · rintro ⟨c, rfl⟩
+    exact quotientRemainder_targetTwo c
+
+/-- Two forms determine the same quotient point exactly when their canonical
+remainders agree. -/
+theorem quadraticQuotientProjection_eq_iff_remainder_eq (p q : TwoForm) :
+    quadraticQuotientProjection p = quadraticQuotientProjection q ↔
+      quotientRemainder p = quotientRemainder q := by
+  change Submodule.Quotient.mk p = Submodule.Quotient.mk q ↔ _
+  rw [Submodule.Quotient.eq]
+  constructor
+  · intro hpq
+    have hz := (quotientRemainder_eq_zero_iff (p - q)).2 hpq
+    rw [map_sub] at hz
+    exact sub_eq_zero.mp hz
+  · intro hpq
+    apply (quotientRemainder_eq_zero_iff (p - q)).1
+    rw [map_sub, hpq, sub_self]
+
+@[simp] theorem quotientRemainder_sameA (p : TwoForm) (i j : Fin 5)
+    (hij : i ≠ j) :
+    quotientRemainder p (quadraticPair (aCoord i) (aCoord j)
+      (fun h => hij (aCoord_injective h))) =
+      p (quadraticPair (aCoord i) (aCoord j)
+        (fun h => hij (aCoord_injective h))) := by
+  rw [quotientRemainder_apply]
+  simp [targetTwo_sameA]
+
+@[simp] theorem quotientRemainder_sameB (p : TwoForm) (i j : Fin 5)
+    (hij : i ≠ j) :
+    quotientRemainder p (quadraticPair (bCoord i) (bCoord j)
+      (fun h => hij (bCoord_injective h))) =
+      p (quadraticPair (bCoord i) (bCoord j)
+        (fun h => hij (bCoord_injective h))) := by
+  rw [quotientRemainder_apply]
+  simp [targetTwo_sameB]
+
+@[simp] theorem quotientRemainder_cross (p : TwoForm) (i j : Fin 5) :
+    quotientRemainder p
+        (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) =
+      p (quadraticPair (aCoord i) (bCoord j) (aCoord_ne_bCoord i j)) +
+        anchorRestriction p (hankelIndex i j) := by
+  rw [quotientRemainder_apply]
+  simp [targetTwo_cross]
 
 theorem targetTwo_injective : Function.Injective targetTwo := by
   intro c d h
