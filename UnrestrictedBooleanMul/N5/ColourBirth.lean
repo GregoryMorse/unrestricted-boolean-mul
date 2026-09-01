@@ -81,6 +81,10 @@ def colourCombination : (Fin 4 → F₂) →ₗ[F₂] ANF 10 where
     intro i _hi
     simp only [smul_smul]
 
+theorem colourCombination_injective : Function.Injective colourCombination := by
+  change Function.Injective (Fintype.linearCombination F₂ colourDirection)
+  exact colourDirection_linearIndependent.fintypeLinearCombination_injective
+
 /-- Left endpoint of the ordered pair list
 `(c₁c₂,c₁c₃,c₁c₄,c₂c₃,c₂c₄,c₃c₄)`. -/
 def colourPairLeft : Fin 6 → Fin 4 := ![0, 0, 0, 1, 1, 2]
@@ -387,6 +391,26 @@ theorem independentColours_product_high_ne_zero
   have hplane := independentColours_birth hbirth
   rw [colourPlaneCoeff_eq_zero_iff_dependent] at hplane
   exact hplane.elim halpha (fun h => h.elim hbeta hne)
+
+/-- Every old cubic colour is killed by the selected quartic projection. -/
+theorem colourSpace_le_colourQuarticProjection_ker :
+    colourSpace ≤ LinearMap.ker colourQuarticProjection := by
+  rw [colourSpace, Submodule.span_le]
+  rintro p ⟨i, rfl⟩
+  change colourQuarticProjection (colourDirection i) = 0
+  funext r
+  exact colourDirection_quartic_zero r i
+
+/-- Equivalent manuscript conclusion: the product of two independent
+colours is not an old colour modulo the selected high-degree coordinates. -/
+theorem independentColours_product_not_mem_colourSpace
+    (alpha beta : Fin 4 → F₂)
+    (halpha : alpha ≠ 0) (hbeta : beta ≠ 0) (hne : alpha ≠ beta) :
+    colourCombination alpha * colourCombination beta ∉ colourSpace := by
+  intro hmem
+  have hker := colourSpace_le_colourQuarticProjection_ker hmem
+  exact independentColours_product_high_ne_zero alpha beta halpha hbeta hne
+    ((LinearMap.mem_ker).mp hker)
 
 /-- The Boolean identities (12.5) used in the old-product-colour branch. -/
 theorem colourProduct_tautologies (c d : ANF 10) :
