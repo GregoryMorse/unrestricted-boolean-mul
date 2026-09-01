@@ -153,6 +153,11 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.closedPlaceTargetDirection_cubic_forces_external_shadow_zero
 #print axioms UnrestrictedBooleanMul.N5.rationalPairPlane_cubic_recovers_external_shadow
 #print axioms UnrestrictedBooleanMul.N5.rationalPairDirection_cubic_forces_external_shadow_zero
+#print axioms UnrestrictedBooleanMul.N5.lowProductQuadraticShadow_rotate_right
+#print axioms UnrestrictedBooleanMul.N5.lowProductQuadraticShadow_rotate_left
+#print axioms UnrestrictedBooleanMul.N5.rotate_right_shadow_mod_submodule
+#print axioms UnrestrictedBooleanMul.N5.rotate_left_shadow_mod_submodule
+#print axioms UnrestrictedBooleanMul.N5.two_rotations_shadow_mod_submodule
 #print axioms UnrestrictedBooleanMul.N5.independentColours_birth
 #print axioms UnrestrictedBooleanMul.N5.independentColours_product_high_ne_zero
 #print axioms UnrestrictedBooleanMul.N5.independentColours_product_not_mem_colourSpace

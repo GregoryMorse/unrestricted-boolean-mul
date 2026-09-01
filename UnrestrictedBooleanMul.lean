@@ -31,6 +31,7 @@ import UnrestrictedBooleanMul.N5.TargetCleanMatrix
 import UnrestrictedBooleanMul.N5.EnvelopeKernel
 import UnrestrictedBooleanMul.N5.ShadowRecovery
 import UnrestrictedBooleanMul.N5.LocalShadow
+import UnrestrictedBooleanMul.N5.LowProductShadow
 import UnrestrictedBooleanMul.N5.ColourBirth
 import UnrestrictedBooleanMul.N5.ColourNormalization
 import UnrestrictedBooleanMul.N5.ThreeColour
