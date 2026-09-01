@@ -73,3 +73,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.relationGiftRank_eq_zero_of_twoRational_degreeTwo_places
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_seven_of_rational12_degreeTwo_places
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_eq_seven_of_rational02_degreeTwo_places
+#print axioms UnrestrictedBooleanMul.N5.populatedRelationKernel_finrank_le_three_of_two_distinct_places
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_three_of_two_distinct_places

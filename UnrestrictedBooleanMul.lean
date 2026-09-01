@@ -5,6 +5,7 @@ import UnrestrictedBooleanMul.N5.DisplacementBound
 import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
 import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
 import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
+import UnrestrictedBooleanMul.N5.TwoPlaceProfile
 
 /-!
 # Unrestricted Boolean multiplicative complexity

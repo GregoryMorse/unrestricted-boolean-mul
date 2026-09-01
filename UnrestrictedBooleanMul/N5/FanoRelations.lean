@@ -185,6 +185,115 @@ theorem card_add_one_le_pow_finrank_span
     Module.card_eq_pow_finrank (K := F₂) (V := S)] at hcard
   simpa [S] using hcard
 
+/-- A finite injective family of nonzero vectors, together with zero and one
+further missing nonzero vector in its span, embeds in that span.  This is the
+cardinality form of the mixed-place exclusion used below: the forbidden sum
+of two effective points removes a second vector from the populated family. -/
+theorem card_add_two_le_pow_finrank_span_of_missing
+    {X V : Type*} [Fintype X] [Fintype V]
+    [AddCommGroup V] [Module F₂ V]
+    (v : X → V) (hinj : Function.Injective v) (
+      hne : ∀ x, v x ≠ 0)
+    (z : V) (hzspan : z ∈ Submodule.span F₂ (Set.range v))
+    (hz0 : z ≠ 0) (hzmissing : ∀ x, v x ≠ z) :
+    Fintype.card X + 2 ≤
+      2 ^ Module.finrank F₂ (Submodule.span F₂ (Set.range v)) := by
+  let S : Submodule F₂ V := Submodule.span F₂ (Set.range v)
+  let inc : Option (Option X) → S := fun o ↦
+    match o with
+    | none => ⟨z, hzspan⟩
+    | some none => 0
+    | some (some x) => ⟨v x, Submodule.subset_span ⟨x, rfl⟩⟩
+  have hinc : Function.Injective inc := by
+    intro x y hxy
+    cases x with
+    | none =>
+        cases y with
+        | none => rfl
+        | some y =>
+            cases y with
+            | none =>
+                exfalso
+                apply hz0
+                exact congrArg Subtype.val hxy
+            | some y =>
+                exfalso
+                apply hzmissing y
+                exact congrArg Subtype.val hxy |>.symm
+    | some x =>
+        cases x with
+        | none =>
+            cases y with
+            | none =>
+                exfalso
+                apply hz0
+                exact congrArg Subtype.val hxy |>.symm
+            | some y =>
+                cases y with
+                | none => rfl
+                | some y =>
+                    exfalso
+                    apply hne y
+                    exact congrArg Subtype.val hxy |>.symm
+        | some x =>
+            cases y with
+            | none =>
+                exfalso
+                apply hzmissing x
+                exact congrArg Subtype.val hxy
+            | some y =>
+                cases y with
+                | none =>
+                    exfalso
+                    apply hne x
+                    exact congrArg Subtype.val hxy
+                | some y =>
+                    congr 2
+                    apply hinj
+                    exact congrArg Subtype.val hxy
+  letI : Fintype S := Fintype.ofFinite S
+  have hcard := Fintype.card_le_of_injective inc hinc
+  rw [Fintype.card_option, Fintype.card_option,
+    Module.card_eq_pow_finrank (K := F₂) (V := S)] at hcard
+  simpa [S, Nat.add_assoc] using hcard
+
+/-- If the populated span contains a nonzero vector whose decomposable fiber
+is empty, then a three-dimensional defect has relation-kernel dimension at
+most three.  The proof is pure rank-nullity plus the preceding two-missing-
+vectors injection. -/
+theorem populatedRelationKernel_finrank_le_three_of_missing_span_point
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (z : QuadraticQuotient)
+    (hzspan : z ∈ Submodule.span F₂
+      (Set.range (populatedQuotientPoint (Q := Q))))
+    (hz0 : z ≠ 0) (hzmissing : ¬ IsPopulatedFiber z) :
+    Module.finrank F₂
+      ↑(relationKernel (populatedQuotientPoint (Q := Q))) ≤ 3 := by
+  let q := populatedQuotientPoint (Q := Q)
+  let S : Submodule F₂ QuadraticQuotient :=
+    Submodule.span F₂ (Set.range q)
+  have hSle : S ≤ Q := by
+    apply Submodule.span_le.mpr
+    rintro _ ⟨x, rfl⟩
+    exact x.1.2
+  have hSrank : Module.finrank F₂ S ≤ 3 :=
+    (Submodule.finrank_mono hSle).trans hQ
+  have hcard : Fintype.card (PopulatedPoint Q) + 2 ≤
+      2 ^ Module.finrank F₂ S := by
+    apply card_add_two_le_pow_finrank_span_of_missing q
+      (populatedQuotientPoint_injective Q) (fun x ↦ x.2.1) z hzspan hz0
+    intro x hx
+    apply hzmissing
+    rw [← hx]
+    exact x.2.2
+  have hkernel := relationKernel_finrank_add_span q
+  change Module.finrank F₂ ↑(relationKernel q) +
+      Module.finrank F₂ S = Fintype.card (PopulatedPoint Q) at hkernel
+  change Module.finrank F₂ ↑(relationKernel q) ≤ 3
+  interval_cases hS : Module.finrank F₂ S <;>
+    norm_num [hS] at hcard hkernel ⊢ <;> omega
+
 /-- For a defect space of dimension at most three, the additive relation
 kernel of its populated nonzero points has dimension at most four. -/
 theorem populatedRelationKernel_finrank_le_four
