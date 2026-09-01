@@ -74,6 +74,50 @@ theorem lowProductQuadraticShadow_linear_difference
   ring_nf
   simp [N3Certificate.two_eq_zero_f2]
 
+/-- Boolean contraction by a decomposable two-form whose two factors have
+disjoint coordinate support.  A linear combination of those factors acts by
+the sum of its two coefficients. -/
+theorem ambientBooleanContraction_factorSpan_of_disjoint
+    (u v : LinearForm) (hdisjoint : ∀ i, u i * v i = 0)
+    (p q : F₂) :
+    ambientBooleanContraction (p • u + q • v) (squarefreeWedge u v) =
+      (p + q) • squarefreeWedge u v := by
+  funext s
+  rcases QuadraticIndex.exists_pair s with ⟨i, j, hij, rfl⟩
+  rw [ambientBooleanContraction_pair]
+  simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul,
+    squarefreeWedge_pair]
+  have hi := hdisjoint i
+  have hj := hdisjoint j
+  ring_nf at hi hj ⊢
+  simp only [N3Certificate.pow_two_f2]
+  linear_combination
+    u j * p * hi + v j * q * hi + u i * p * hj + v i * q * hj
+
+/-- For two transverse decomposable cross-directions, a cubic syzygy already
+written in the four factor coordinates has a one-decomposable Boolean
+correction modulo any envelope containing the two directions. -/
+theorem transversePair_booleanCorrection_decomposition
+    (W : Submodule F₂ TwoForm)
+    (A B U V : LinearForm)
+    (hAB : ∀ i, A i * B i = 0) (hUV : ∀ i, U i * V i = 0)
+    (p q r s : F₂) (x y : LinearForm)
+    (hx : x = p • U + q • V) (hy : y = r • A + s • B)
+    (hq : squarefreeWedge A B ∈ W)
+    (hc : squarefreeWedge U V ∈ W) :
+    ∃ zform ∈ W, ∃ z : LinearForm,
+      squarefreeWedge x y +
+          ambientBooleanContraction x (squarefreeWedge U V) +
+          ambientBooleanContraction y (squarefreeWedge A B) =
+        zform + squarefreeWedge x z := by
+  refine ⟨(p + q) • squarefreeWedge U V +
+      (r + s) • squarefreeWedge A B,
+    W.add_mem (W.smul_mem _ hc) (W.smul_mem _ hq), y, ?_⟩
+  rw [hx, hy,
+    ambientBooleanContraction_factorSpan_of_disjoint U V hUV p q,
+    ambientBooleanContraction_factorSpan_of_disjoint A B hAB r s]
+  module
+
 /-- Equality of two cubic parts is equivalently a zero cubic syzygy for the
 two changed linear parts. -/
 theorem factorPlaneCubic_difference_eq_zero
