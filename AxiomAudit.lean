@@ -143,3 +143,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.colourDirection_linearIndependent
 #print axioms UnrestrictedBooleanMul.N5.colourProduct_tautologies
 #print axioms UnrestrictedBooleanMul.N5.rankOneColour_normalize
+#print axioms UnrestrictedBooleanMul.N5.bornThreeColourDirections_linearIndependent
+#print axioms UnrestrictedBooleanMul.N5.oldProductColour_forces_defect_zero

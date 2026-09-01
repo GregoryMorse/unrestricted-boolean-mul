@@ -401,6 +401,14 @@ theorem colourSpace_le_colourQuarticProjection_ker :
   funext r
   exact colourDirection_quartic_zero r i
 
+theorem colourCombination_mem_colourSpace (alpha : Fin 4 → F₂) :
+    colourCombination alpha ∈ colourSpace := by
+  change (∑ i : Fin 4, alpha i • colourDirection i) ∈ colourSpace
+  apply Submodule.sum_mem
+  intro i _hi
+  exact Submodule.smul_mem _ _
+    (Submodule.subset_span ⟨i, rfl⟩)
+
 /-- Equivalent manuscript conclusion: the product of two independent
 colours is not an old colour modulo the selected high-degree coordinates. -/
 theorem independentColours_product_not_mem_colourSpace
