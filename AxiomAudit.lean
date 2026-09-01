@@ -52,3 +52,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.four_represented_place_points_sum_eq_zero
 #print axioms UnrestrictedBooleanMul.N5.not_all_closedPlaces_represented
 #print axioms UnrestrictedBooleanMul.N5.representedPlaceWeight_le_four_of_finrank_le_three
+#print axioms UnrestrictedBooleanMul.N5.relationGiftCoefficientMap_eq_anchorSum

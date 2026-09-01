@@ -115,6 +115,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/EffectivePointPlaces.lean`](UnrestrictedBooleanMul/N5/EffectivePointPlaces.lean)
 - [`UnrestrictedBooleanMul/N5/FourPlaceRelation.lean`](UnrestrictedBooleanMul/N5/FourPlaceRelation.lean)
 - [`UnrestrictedBooleanMul/N5/FourPlaceExclusion.lean`](UnrestrictedBooleanMul/N5/FourPlaceExclusion.lean)
+- [`UnrestrictedBooleanMul/N5/DecomposableAnchor.lean`](UnrestrictedBooleanMul/N5/DecomposableAnchor.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
