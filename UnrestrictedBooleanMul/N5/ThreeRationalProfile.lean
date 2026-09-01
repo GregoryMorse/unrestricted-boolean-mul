@@ -253,6 +253,104 @@ theorem populatedPoint_card_le_four_of_three_distinct_places
     (threePlacePopulatedIndex Q hQ i j k hi hj hk)
     (threePlacePopulatedIndex_injective Q hQ i j k hi hj hk hij hik hjk)
 
+/-- No populated Fano line survives when three distinct effective place types
+are represented.  At most one populated point lies outside the three chosen
+basis points, so a three-point support contains two distinct basis points;
+mixed-place exclusion forbids their line. -/
+theorem no_fanoLine_of_three_distinct_places
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
+    (r : SparseRelationSupport
+      (populatedQuotientPoint (Q := Q))) :
+    r.support.card ≠ 3 := by
+  classical
+  let x₀ := representedPopulatedPoint Q i hi
+  let x₁ := representedPopulatedPoint Q j hj
+  let x₂ := representedPopulatedPoint Q k hk
+  let B : Finset (PopulatedPoint Q) := {x₀, x₁, x₂}
+  intro hcard
+  have hout : (r.support \ B).card ≤ 1 := by
+    apply Finset.card_le_one.mpr
+    intro x hx y hy
+    have hxnot : x ∉ B := (Finset.mem_sdiff.mp hx).2
+    have hynot : y ∉ B := (Finset.mem_sdiff.mp hy).2
+    have hxCases : x = x₀ ∨ x = x₁ ∨ x = x₂ ∨
+        populatedQuotientPoint x =
+          populatedQuotientPoint x₀ + populatedQuotientPoint x₁ +
+            populatedQuotientPoint x₂ := by
+      simpa [x₀, x₁, x₂, representedTripleWitness] using
+        populatedPoint_cases_of_three_distinct_places Q hQ i j k hi hj hk
+          hij hik hjk x
+    have hyCases : y = x₀ ∨ y = x₁ ∨ y = x₂ ∨
+        populatedQuotientPoint y =
+          populatedQuotientPoint x₀ + populatedQuotientPoint x₁ +
+            populatedQuotientPoint x₂ := by
+      simpa [x₀, x₁, x₂, representedTripleWitness] using
+        populatedPoint_cases_of_three_distinct_places Q hQ i j k hi hj hk
+          hij hik hjk y
+    rcases hxCases with hx₀ | hx₁ | hx₂ | hxq
+    · exact (hxnot (by simp [B, hx₀])).elim
+    · exact (hxnot (by simp [B, hx₁])).elim
+    · exact (hxnot (by simp [B, hx₂])).elim
+    · rcases hyCases with hy₀ | hy₁ | hy₂ | hyq
+      · exact (hynot (by simp [B, hy₀])).elim
+      · exact (hynot (by simp [B, hy₁])).elim
+      · exact (hynot (by simp [B, hy₂])).elim
+      · exact populatedQuotientPoint_injective Q (hxq.trans hyq.symm)
+  have hinterCard : 2 ≤ (r.support ∩ B).card := by
+    have hdecomp := Finset.card_inter_add_card_sdiff r.support B
+    omega
+  rcases Finset.one_lt_card.mp hinterCard with
+    ⟨x, hx, y, hy, hxy⟩
+  have hx' : x ∈ r.support ∧ x ∈ B := Finset.mem_inter.mp hx
+  have hy' : y ∈ r.support ∧ y ∈ B := Finset.mem_inter.mp hy
+  have hxB : x = x₀ ∨ x = x₁ ∨ x = x₂ := by
+    simpa [B] using hx'.2
+  have hyB : y = x₀ ∨ y = x₁ ∨ y = x₂ := by
+    simpa [B] using hy'.2
+  let rline : FanoLineRelation
+      (populatedQuotientPoint (Q := Q)) := ⟨r, hcard⟩
+  rcases hxB with rfl | rfl | rfl <;>
+    rcases hyB with rfl | rfl | rfl
+  · exact (hxy rfl).elim
+  · exact hij (fanoLine_effective_places_eq Q rline x₀ x₁ hx'.1 hy'.1 hxy
+      (representedClosedPlaceParam Q i hi)
+      (representedClosedPlaceParam Q j hj)
+      (representedPopulatedPoint_quotient Q i hi)
+      (representedPopulatedPoint_quotient Q j hj))
+  · exact hik (fanoLine_effective_places_eq Q rline x₀ x₂ hx'.1 hy'.1 hxy
+      (representedClosedPlaceParam Q i hi)
+      (representedClosedPlaceParam Q k hk)
+      (representedPopulatedPoint_quotient Q i hi)
+      (representedPopulatedPoint_quotient Q k hk))
+  · exact hij (fanoLine_effective_places_eq Q rline x₁ x₀ hx'.1 hy'.1 hxy
+      (representedClosedPlaceParam Q j hj)
+      (representedClosedPlaceParam Q i hi)
+      (representedPopulatedPoint_quotient Q j hj)
+      (representedPopulatedPoint_quotient Q i hi)).symm
+  · exact (hxy rfl).elim
+  · exact hjk (fanoLine_effective_places_eq Q rline x₁ x₂ hx'.1 hy'.1 hxy
+      (representedClosedPlaceParam Q j hj)
+      (representedClosedPlaceParam Q k hk)
+      (representedPopulatedPoint_quotient Q j hj)
+      (representedPopulatedPoint_quotient Q k hk))
+  · exact hik (fanoLine_effective_places_eq Q rline x₂ x₀ hx'.1 hy'.1 hxy
+      (representedClosedPlaceParam Q k hk)
+      (representedClosedPlaceParam Q i hi)
+      (representedPopulatedPoint_quotient Q k hk)
+      (representedPopulatedPoint_quotient Q i hi)).symm
+  · exact hjk (fanoLine_effective_places_eq Q rline x₂ x₁ hx'.1 hy'.1 hxy
+      (representedClosedPlaceParam Q k hk)
+      (representedClosedPlaceParam Q j hj)
+      (representedPopulatedPoint_quotient Q k hk)
+      (representedPopulatedPoint_quotient Q j hj)).symm
+  · exact (hxy rfl).elim
+
 /-- The relation kernel has dimension at most one in the all-rational
 profile. -/
 theorem populatedRelationKernel_finrank_le_one_of_three_distinct_places
@@ -309,6 +407,49 @@ theorem relationGiftRank_le_one_of_three_distinct_places
   (relationGiftRank_le_relationKernel Q).trans
     (populatedRelationKernel_finrank_le_one_of_three_distinct_places
       Q hQ i j k hi hj hk hij hik hjk)
+
+/-- Once the possible full quadrilateral anchor sum is intrinsic
+displacement, every relation gift vanishes.  The preceding no-line theorem
+shows that this is the sole local pivot needed for three distinct place
+types. -/
+theorem relationGiftRank_eq_zero_of_three_distinct_places_of_full_anchor_pivot
+    (Q : Submodule F₂ QuadraticQuotient)
+    (hQ : Module.finrank F₂ Q ≤ 3)
+    (i j k : Fin 4)
+    (hi : IsRepresentedPlace Q i)
+    (hj : IsRepresentedPlace Q j)
+    (hk : IsRepresentedPlace Q k)
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
+    (hpivot : Fintype.card (PopulatedPoint Q) = 4 →
+      ∑ x : PopulatedPoint Q, populatedAnchor x ∈
+        localDisplacementCoeffSpace Q) :
+    relationGiftRank Q = 0 := by
+  rw [relationGiftRank_eq_smallAnchorGiftSpan Q hQ]
+  have hspan : Submodule.span F₂ (smallAnchorGiftVectors Q) = ⊥ := by
+    apply le_antisymm
+    · apply Submodule.span_le.mpr
+      intro v hv
+      rcases hv with ⟨a, ⟨r, hrcard, rfl⟩, rfl⟩
+      rcases hrcard with hline | hquad
+      · exact (no_fanoLine_of_three_distinct_places
+          Q hQ i j k hi hj hk hij hik hjk r hline).elim
+      · have hpopCard : Fintype.card (PopulatedPoint Q) = 4 := by
+          have hupper := populatedPoint_card_le_four_of_three_distinct_places
+            Q hQ i j k hi hj hk hij hik hjk
+          have hlower : 4 ≤ Fintype.card (PopulatedPoint Q) := by
+            simpa [hquad] using r.support.card_le_univ
+          omega
+        have hsupport : r.support = Finset.univ := by
+          apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
+          simp [hquad, hpopCard]
+        rw [populatedAnchorQuotientMap_sparse_apply Q r]
+        apply (Submodule.Quotient.mk_eq_zero
+          (localDisplacementCoeffSpace Q)).2
+        rw [hsupport]
+        simpa using hpivot hpopCard
+    · exact bot_le
+  rw [hspan]
+  simp
 
 /-- Before the final degree-two quadrilateral pivot, three distinct place
 types already give the one-off bound `d + rank(λ) ≤ 5`. -/

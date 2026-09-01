@@ -55,5 +55,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.relationGiftCoefficientMap_eq_anchorSum
 #print axioms UnrestrictedBooleanMul.N5.relationGiftRank_eq_smallAnchorGiftSpan
 #print axioms UnrestrictedBooleanMul.N5.relationGiftRank_le_one_of_three_distinct_places
+#print axioms UnrestrictedBooleanMul.N5.no_fanoLine_of_three_distinct_places
+#print axioms UnrestrictedBooleanMul.N5.relationGiftRank_eq_zero_of_three_distinct_places_of_full_anchor_pivot
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_three_rational_places
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_no_represented_places
