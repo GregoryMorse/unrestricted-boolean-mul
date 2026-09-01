@@ -171,6 +171,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/QuadraticFlattening.lean`](UnrestrictedBooleanMul/N5/QuadraticFlattening.lean)
 - [`UnrestrictedBooleanMul/N5/PrefixState.lean`](UnrestrictedBooleanMul/N5/PrefixState.lean)
 - [`UnrestrictedBooleanMul/N5/SuffixBudget.lean`](UnrestrictedBooleanMul/N5/SuffixBudget.lean)
+- [`UnrestrictedBooleanMul/N5/IndependentShadow.lean`](UnrestrictedBooleanMul/N5/IndependentShadow.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
