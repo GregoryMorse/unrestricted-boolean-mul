@@ -134,3 +134,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.firstOrderMissing_add_targetClean_not_decomposable
 #print axioms UnrestrictedBooleanMul.N5.targetTwoSpace_inf_targetClean_sup_decomposable
 #print axioms UnrestrictedBooleanMul.N5.firstOrderEnvelopePolarized_ker_eq_local
+#print axioms UnrestrictedBooleanMul.N5.firstOrderPlaneCoeff_eq_local_of_kernel_of_ne_zero
