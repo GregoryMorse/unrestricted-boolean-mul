@@ -84,10 +84,10 @@ linear map.
 
 - `N5/ClosedPlaces.lean` — the three rational places, the degree-two place,
   their first jets, and coordinate symmetries.
-- `N5/HankelSupport.lean` — rank-two Hankel support and the secant-support
-  lemma.
+- `N5/HankelSupport.lean` — rank-two Hankel support (checked) and the
+  secant-support lemma (pending).
 - `N5/LocalKlein.lean` — the two local Klein-quadric calculations and counts
-  `11,11,11,10`.
+  `11,11,11,10` (checked).
 - `N5/EffectiveFibers.lean` — the 43-fiber theorem as a symbolic
   classification, with any enumeration kept outside the proof term.
 - `N5/MixedPlace.lean` — strong mixed-place exclusion.
@@ -97,6 +97,12 @@ linear map.
 
 The key completion gate for this phase is a theorem excluding a twelve-gate
 all-quadratic circuit with no imported search result.
+
+The checked Phase 2 prefix consists of the eight independent closed-place
+directions, an algebraic five-minor/Boolean-ideal proof of rank-two Hankel
+support, and the two symbolic local Klein equations with counts
+`11,11,11,10`.  Secant localization and the remaining Phase 2 modules are
+still pending.
 
 ### Phase 3: unrestricted prefix bookkeeping
 

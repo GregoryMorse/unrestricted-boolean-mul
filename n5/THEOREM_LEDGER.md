@@ -18,9 +18,9 @@ Status meanings:
 | Lemma 2.1, zero fiber | `N5.zeroFiber_eq_rational`, `N5/Fiber.lean` | quadratic quotient, Hankel rank one | checked |
 | Lemma 2.2, target--defect exact sequence | `N5.targetDefect_exact`, `N5/Fiber.lean` | finite submodule quotient | checked |
 | Theorem 3.2, exact relation-map formula | `N5.relationMap_finrank`, `N5/RelationMap.lean` | relation kernel and displacement map | checked |
-| Lemma 4.1, rank-two Hankel support | `N5.rankTwoHankel_support`, `N5/HankelSupport.lean` | Hankel coordinates | planned |
+| Lemma 4.1, rank-two Hankel support | `N5.rankTwoHankel_support`, `N5/HankelSupport.lean` | Hankel coordinates and Boolean ideal certificate | checked |
 | Lemma 4.2, secant support | `N5.secant_support`, `N5/HankelSupport.lean` | preceding row | planned |
-| Lemma 5.2, local Klein counts | `N5.localKlein_counts`, `N5/LocalKlein.lean` | four local algebras | planned |
+| Lemma 5.2, local Klein counts | `N5.localKlein_counts`, `N5/LocalKlein.lean` | two symbolic local Klein equations | checked |
 | Theorem 5.3, 43 fibers | `N5.effectiveFibers_eq`, `N5/EffectiveFibers.lean` | localization and Klein counts | planned |
 | Theorem 6.1, mixed-place exclusion | `N5.strongMixedPlace`, `N5/MixedPlace.lean` | closed-place support | planned |
 | Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/Displacement.lean` | relation map and incidence | planned |

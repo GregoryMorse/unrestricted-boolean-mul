@@ -22,7 +22,7 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
-| 5 | 13 | algebraic hand proof; Lean statement, target/upper circuit, quadratic quotient, zero fiber, and exact relation map kernel-checked; full lower-bound formalization in progress |
+| 5 | 13 | algebraic hand proof; Lean target/upper circuit, quadratic quotient, relation map, rank-two Hankel support, and local Klein counts kernel-checked; full lower-bound formalization in progress |
 
 The manuscripts contain the mathematical exposition and literature citations.
 The Lean development checks the five rows `n = 0` through `n = 4`. For `n = 5`,
@@ -82,6 +82,9 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/QuadraticSpace.lean`](UnrestrictedBooleanMul/N5/QuadraticSpace.lean)
 - [`UnrestrictedBooleanMul/N5/Fiber.lean`](UnrestrictedBooleanMul/N5/Fiber.lean)
 - [`UnrestrictedBooleanMul/N5/RelationMap.lean`](UnrestrictedBooleanMul/N5/RelationMap.lean)
+- [`UnrestrictedBooleanMul/N5/ClosedPlaces.lean`](UnrestrictedBooleanMul/N5/ClosedPlaces.lean)
+- [`UnrestrictedBooleanMul/N5/HankelSupport.lean`](UnrestrictedBooleanMul/N5/HankelSupport.lean)
+- [`UnrestrictedBooleanMul/N5/LocalKlein.lean`](UnrestrictedBooleanMul/N5/LocalKlein.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)
 

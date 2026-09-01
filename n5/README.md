@@ -38,6 +38,9 @@ The checked declarations are in:
 - [`../UnrestrictedBooleanMul/N5/QuadraticSpace.lean`](../UnrestrictedBooleanMul/N5/QuadraticSpace.lean)
 - [`../UnrestrictedBooleanMul/N5/Fiber.lean`](../UnrestrictedBooleanMul/N5/Fiber.lean)
 - [`../UnrestrictedBooleanMul/N5/RelationMap.lean`](../UnrestrictedBooleanMul/N5/RelationMap.lean)
+- [`../UnrestrictedBooleanMul/N5/ClosedPlaces.lean`](../UnrestrictedBooleanMul/N5/ClosedPlaces.lean)
+- [`../UnrestrictedBooleanMul/N5/HankelSupport.lean`](../UnrestrictedBooleanMul/N5/HankelSupport.lean)
+- [`../UnrestrictedBooleanMul/N5/LocalKlein.lean`](../UnrestrictedBooleanMul/N5/LocalKlein.lean)
 
 No theorem named `mc_mul_five` is present yet, and the new declarations above
 do not yet constitute the final lower bound. This directory must not be
