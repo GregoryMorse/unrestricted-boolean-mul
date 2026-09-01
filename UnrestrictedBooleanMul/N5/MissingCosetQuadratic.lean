@@ -245,6 +245,45 @@ theorem canonicalRankThree_wedge_ker_eq_span :
     rw [LinearMap.mem_ker]
     exact (canonicalRankThree_wedge_eq_zero_iff _).2 ⟨a, rfl⟩
 
+/-- Degree-one companion to the canonical degree-two kernel. -/
+theorem canonicalRankThree_vectorWedge_ker_eq_bot :
+    LinearMap.ker (ambientVectorWedgeMap canonicalRankThreeTwo) = ⊥ := by
+  apply le_antisymm
+  · intro u hu
+    rw [LinearMap.mem_ker] at hu
+    change ambientVectorWedgeTwo u canonicalRankThreeTwo = 0 at hu
+    have h01 (k : Fin 10) := congrFun (congrFun (congrFun hu 0) 1) k
+    have h23 (k : Fin 10) := congrFun (congrFun (congrFun hu 2) 3) k
+    have h45 (k : Fin 10) := congrFun (congrFun (congrFun hu 4) 5) k
+    rw [Submodule.mem_bot]
+    funext k
+    have h01k := h01 k
+    have h23k := h23 k
+    have h45k := h45 k
+    fin_cases k <;>
+      simp_all [ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+        IsCanonicalRankThreePair]
+  · exact bot_le
+
+/-- Canonical homogeneous contradiction used in the rank-one colour branch
+of manuscript Theorem 12.3. -/
+theorem canonicalRankOne_lower_parts_zero
+    (C : TwoForm) (ell : LinearForm)
+    (hfour : ambientWedgeTwo canonicalRankThreeTwo C = 0)
+    (hnotTarget : C ≠ canonicalRankThreeTwo)
+    (hthree : ambientVectorWedgeTwo ell canonicalRankThreeTwo = 0) :
+    C = 0 ∧ ell = 0 := by
+  constructor
+  · rcases (canonicalRankThree_wedge_eq_zero_iff C).1 hfour with ⟨a, rfl⟩
+    rcases f2_eq_zero_or_one a with rfl | rfl
+    · simp
+    · exact (hnotTarget (by simp)).elim
+  · have hell : ell ∈ LinearMap.ker
+        (ambientVectorWedgeMap canonicalRankThreeTwo) :=
+      (LinearMap.mem_ker).2 hthree
+    rw [canonicalRankThree_vectorWedge_ker_eq_bot] at hell
+    simpa using hell
+
 end
 end N5
 end UnrestrictedBooleanMul
