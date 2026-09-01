@@ -41,6 +41,12 @@ exceptional planes. -/
 def rationalPairRightValueTwo (pair : Fin 3) : TwoForm :=
   targetTwo (rationalValueCoeff (rationalPairRight pair))
 
+/-- First basis direction of the degree-two exceptional target plane. -/
+def dStarZeroTwo : TwoForm := targetTwo dStarZeroCoeff
+
+/-- Second basis direction of the degree-two exceptional target plane. -/
+def dStarOneTwo : TwoForm := targetTwo dStarOneCoeff
+
 theorem rationalPairLeftValueTwo_eq_wedge (pair : Fin 3) :
     rationalPairLeftValueTwo pair =
       squarefreeWedge (rationalValueA (rationalPairLeft pair))
@@ -763,6 +769,140 @@ theorem rationalPair_shadow_not_missingCoset
         r + squarefreeWedge p q + squarefreeWedge s t := by
     simpa only [hx, hy] using hdecomp
   exact hdecomp'.symm.trans hmissing
+
+/-- The degree-two exceptional plane has trivial cubic syzygy kernel.  The
+twenty scalar unknowns are removed by twenty sparse Hankel pivots. -/
+theorem dStar_cubic_syzygy (x y : LinearForm)
+    (h : factorPlaneCubic x y dStarZeroTwo dStarOneTwo = 0) :
+    x = 0 ∧ y = 0 := by
+  have hc (i j k : Fin 10) := congrFun (congrFun (congrFun h i) j) k
+  have h026 := hc (aCoord 0) (aCoord 2) (bCoord 1)
+  have h018 := hc (aCoord 0) (aCoord 1) (bCoord 3)
+  have h016 := hc (aCoord 0) (aCoord 1) (bCoord 1)
+  have h028 := hc (aCoord 0) (aCoord 2) (bCoord 3)
+  have h038 := hc (aCoord 0) (aCoord 3) (bCoord 3)
+  have h048 := hc (aCoord 0) (aCoord 4) (bCoord 3)
+  have h058 := hc (aCoord 0) (bCoord 0) (bCoord 3)
+  have h068 := hc (aCoord 0) (bCoord 1) (bCoord 3)
+  have h078 := hc (aCoord 0) (bCoord 2) (bCoord 3)
+  have h168 := hc (aCoord 1) (bCoord 1) (bCoord 3)
+  have h178 := hc (aCoord 1) (bCoord 2) (bCoord 3)
+  have h089 := hc (aCoord 0) (bCoord 3) (bCoord 4)
+  have h017 := hc (aCoord 0) (aCoord 1) (bCoord 2)
+  have h027 := hc (aCoord 0) (aCoord 2) (bCoord 2)
+  have h037 := hc (aCoord 0) (aCoord 3) (bCoord 2)
+  have h047 := hc (aCoord 0) (aCoord 4) (bCoord 2)
+  have h057 := hc (aCoord 0) (bCoord 0) (bCoord 2)
+  have h067 := hc (aCoord 0) (bCoord 1) (bCoord 2)
+  have h167 := hc (aCoord 1) (bCoord 1) (bCoord 2)
+  have h079 := hc (aCoord 0) (bCoord 2) (bCoord 4)
+  simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    ambientTwoCoeff, dStarZeroTwo, dStarOneTwo, dStarZeroCoeff,
+    dStarOneCoeff, hankelIndex, aCoord_ne_bCoord] at h026 h018 h016 h028 h038 h048 h058 h068 h078 h168
+  simp [factorPlaneCubic, ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    ambientTwoCoeff, dStarZeroTwo, dStarOneTwo, dStarZeroCoeff,
+    dStarOneCoeff, hankelIndex, aCoord_ne_bCoord] at h178 h089 h017 h027 h037 h047 h057 h067 h167 h079
+  have hx0 : x (aCoord 0) = 0 := h026
+  have hx1 : x (aCoord 1) = 0 := h018
+  have hy0 : y (aCoord 0) = 0 := h016
+  have hx2 : x (aCoord 2) = 0 := by simpa [hy0] using h028
+  have hx3 : x (aCoord 3) = 0 := by simpa [hx0] using h038.symm
+  have hx4 : x (aCoord 4) = 0 := h048
+  have hx5 : x (bCoord 0) = 0 := h058
+  have hx6 : x (bCoord 1) = 0 := h068
+  have hy8 : y (bCoord 3) = 0 := h168
+  have hx7 : x (bCoord 2) = 0 := by simpa [hy8] using h078
+  have hx8 : x (bCoord 3) = 0 := h178
+  have hx9 : x (bCoord 4) = 0 := h089
+  have hy1 : y (aCoord 1) = 0 := by simpa [hx0] using h017.symm
+  have hy2 : y (aCoord 2) = 0 := h027
+  have hy3 : y (aCoord 3) = 0 := by simpa [hy0] using h037.symm
+  have hy4 : y (aCoord 4) = 0 := by simpa [hx0] using h047.symm
+  have hy5 : y (bCoord 0) = 0 := h057
+  have hy6 : y (bCoord 1) = 0 := h067
+  have hy7 : y (bCoord 2) = 0 := by simpa [hx6] using h167.symm
+  have hy9 : y (bCoord 4) = 0 := h079
+  constructor
+  · funext i
+    fin_cases i <;> simp_all [aCoord, bCoord]
+  · funext i
+    fin_cases i <;> simp_all [aCoord, bCoord]
+
+theorem dStarZeroTwo_mem_firstOrderEnvelope :
+    dStarZeroTwo ∈ firstOrderEnvelopeTwoSpace := by
+  refine ⟨dStarZeroCoeff,
+    Submodule.subset_span ⟨6, by simp [closedPlaceDirections]⟩, rfl⟩
+
+theorem dStarOneTwo_mem_firstOrderEnvelope :
+    dStarOneTwo ∈ firstOrderEnvelopeTwoSpace := by
+  refine ⟨dStarOneCoeff,
+    Submodule.subset_span ⟨7, by simp [closedPlaceDirections]⟩, rfl⟩
+
+/-- Equal cubics on `D_*` leave a quadratic shadow already contained in the
+first-order envelope. -/
+theorem dStar_shadow_mem_firstOrderEnvelope
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic : factorPlaneCubic ell m dStarZeroTwo dStarOneTwo =
+      factorPlaneCubic ell' m' dStarZeroTwo dStarOneTwo) :
+    lowProductQuadraticShadow a b ell m dStarZeroTwo dStarOneTwo +
+        lowProductQuadraticShadow a' b' ell' m'
+          dStarZeroTwo dStarOneTwo ∈ firstOrderEnvelopeTwoSpace := by
+  let x : LinearForm := ell + ell'
+  let y : LinearForm := m + m'
+  have hx : ell + x = ell' := by
+    change ell + (ell + ell') = ell'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hy : m + y = m' := by
+    change m + (m + m') = m'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hcubicZero : factorPlaneCubic x y dStarZeroTwo dStarOneTwo = 0 :=
+    factorPlaneCubic_difference_eq_zero ell m ell' m'
+      dStarZeroTwo dStarOneTwo hcubic
+  rcases dStar_cubic_syzygy x y hcubicZero with ⟨hx0, hy0⟩
+  have hell : ell = ell' := by
+    rw [← hx, hx0, add_zero]
+  have hm : m = m' := by
+    rw [← hy, hy0, add_zero]
+  let r : TwoForm :=
+    (a + a') • dStarOneTwo + (b + b') • dStarZeroTwo
+  have hr : r ∈ firstOrderEnvelopeTwoSpace :=
+    firstOrderEnvelopeTwoSpace.add_mem
+      (firstOrderEnvelopeTwoSpace.smul_mem _
+        dStarOneTwo_mem_firstOrderEnvelope)
+      (firstOrderEnvelopeTwoSpace.smul_mem _
+        dStarZeroTwo_mem_firstOrderEnvelope)
+  have hshadow := lowProductQuadraticShadow_linear_difference
+    a b a' b' ell m (0 : LinearForm) 0 dStarZeroTwo dStarOneTwo
+  rw [show lowProductQuadraticShadow a b ell m dStarZeroTwo dStarOneTwo +
+        lowProductQuadraticShadow a' b' ell' m'
+          dStarZeroTwo dStarOneTwo = r by
+    rw [← hell, ← hm]
+    simpa only [add_zero, squarefreeWedge_zero_left,
+      squarefreeWedge_zero_right, ambientBooleanContraction_zero_left,
+      r] using hshadow]
+  exact hr
+
+/-- The degree-two exceptional plane cannot produce the missing target
+coset. -/
+theorem dStar_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic : factorPlaneCubic ell m dStarZeroTwo dStarOneTwo =
+      factorPlaneCubic ell' m' dStarZeroTwo dStarOneTwo)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m dStarZeroTwo dStarOneTwo +
+        lowProductQuadraticShadow a' b' ell' m'
+          dStarZeroTwo dStarOneTwo ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  intro hmissing
+  have hmem := dStar_shadow_mem_firstOrderEnvelope
+    a b a' b' ell m ell' m' hcubic
+  apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    _ hmem 0 0 0 0 u hu
+  simpa using hmissing
 
 /-- On the rational-zero value--jet plane, the Boolean lowering correction
 is a single exterior product modulo the first-order envelope. -/

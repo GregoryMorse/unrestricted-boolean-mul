@@ -177,6 +177,9 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rationalPair_booleanCorrection_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalPair_shadow_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalPair_shadow_not_missingCoset
+#print axioms UnrestrictedBooleanMul.N5.dStar_cubic_syzygy
+#print axioms UnrestrictedBooleanMul.N5.dStar_shadow_mem_firstOrderEnvelope
+#print axioms UnrestrictedBooleanMul.N5.dStar_shadow_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_booleanCorrection_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_decomposition
 #print axioms UnrestrictedBooleanMul.N5.rationalZero_shadow_targetCoeff_mem
