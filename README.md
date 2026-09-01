@@ -81,7 +81,11 @@ first independent layer of the `n = 5` proof:
   defect proof that pointed Fano lines have codimension at most one in the
   full relation kernel.  These close every represented-place profile without
   enumerating defect planes, prove the universal displacement bound
-  `d + rank(lambda) <= 4`, and establish the exact capacity `rho_3(5) = 7`.
+  `d + rank(lambda) <= 4`, and establish the exact capacity `rho_3(5) = 7`;
+  and
+- the exact-sequence capacity obstruction for arbitrary finite decomposable
+  presentations, including the algebraic exclusion of twelve quadratic
+  products spanning the five-term target.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -151,6 +155,7 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/AllRationalPointedPivots.lean`](UnrestrictedBooleanMul/N5/AllRationalPointedPivots.lean)
 - [`UnrestrictedBooleanMul/N5/StrongDegreeTwoPointedPivots.lean`](UnrestrictedBooleanMul/N5/StrongDegreeTwoPointedPivots.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementBound.lean`](UnrestrictedBooleanMul/N5/DisplacementBound.lean)
+- [`UnrestrictedBooleanMul/N5/Capacity.lean`](UnrestrictedBooleanMul/N5/Capacity.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

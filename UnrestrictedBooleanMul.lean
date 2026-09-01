@@ -18,6 +18,7 @@ import UnrestrictedBooleanMul.N5.PointedFanoRelations
 import UnrestrictedBooleanMul.N5.RationalSecantSymmetry
 import UnrestrictedBooleanMul.N5.AllRationalPointedPivots
 import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
+import UnrestrictedBooleanMul.N5.Capacity
 
 /-!
 # Unrestricted Boolean multiplicative complexity

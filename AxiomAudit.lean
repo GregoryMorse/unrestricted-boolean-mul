@@ -112,3 +112,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.displacement_rank_le
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_seven_of_finrank_le_three
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_rank_three_exact
+#print axioms UnrestrictedBooleanMul.N5.capacity_obstruction
+#print axioms UnrestrictedBooleanMul.N5.no_twelve_decomposable_span

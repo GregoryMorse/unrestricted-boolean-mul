@@ -103,6 +103,13 @@ linear map.
 The next completion gate is a theorem excluding a twelve-gate
 all-quadratic circuit with no imported search result.
 
+The presentation-level capacity obstruction is now checked in
+`N5/Capacity.lean`: any `j` decomposable quadratic products spanning the
+nine-dimensional target generate a defect of dimension at most `j - 9` and
+have full target capacity.  In particular, twelve decomposable quadratic
+products are impossible.  The remaining boundary is the semantic flattening
+and unrestricted suffix analysis for a general twelve-AND circuit.
+
 The checked closed-place layer consists of the eight independent closed-place
 directions, an algebraic five-minor/Boolean-ideal proof of rank-two Hankel
 support, the secant-support theorem, the two symbolic local Klein equations
