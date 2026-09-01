@@ -85,7 +85,11 @@ first independent layer of the `n = 5` proof:
   and
 - the exact-sequence capacity obstruction for arbitrary finite decomposable
   presentations, including the algebraic exclusion of twelve quadratic
-  products spanning the five-term target.
+  products spanning the five-term target; and
+- unrestricted-prefix target/defect bookkeeping together with a
+  ten-variable semantic flattening theorem.  The flattening reuses the
+  recursive Reed--Muller minimum-word argument, performs no truth-table
+  enumeration, and excludes every all-quadratic twelve-AND circuit.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
@@ -156,6 +160,8 @@ The main entry points are:
 - [`UnrestrictedBooleanMul/N5/StrongDegreeTwoPointedPivots.lean`](UnrestrictedBooleanMul/N5/StrongDegreeTwoPointedPivots.lean)
 - [`UnrestrictedBooleanMul/N5/DisplacementBound.lean`](UnrestrictedBooleanMul/N5/DisplacementBound.lean)
 - [`UnrestrictedBooleanMul/N5/Capacity.lean`](UnrestrictedBooleanMul/N5/Capacity.lean)
+- [`UnrestrictedBooleanMul/N5/Prefix.lean`](UnrestrictedBooleanMul/N5/Prefix.lean)
+- [`UnrestrictedBooleanMul/N5/QuadraticFlattening.lean`](UnrestrictedBooleanMul/N5/QuadraticFlattening.lean)
 - [`UnrestrictedBooleanMul/QuadraticSupport.lean`](UnrestrictedBooleanMul/QuadraticSupport.lean)
 - [`n5/FORMALIZATION_HANDOFF.md`](n5/FORMALIZATION_HANDOFF.md)
 - [`AxiomAudit.lean`](AxiomAudit.lean)

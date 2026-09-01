@@ -114,3 +114,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_rank_three_exact
 #print axioms UnrestrictedBooleanMul.N5.capacity_obstruction
 #print axioms UnrestrictedBooleanMul.N5.no_twelve_decomposable_span
+#print axioms UnrestrictedBooleanMul.N5.circuit_bookkeeping
+#print axioms UnrestrictedBooleanMul.N5.quadratic_product_projection_alternative_ten
+#print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_bookkeeping
+#print axioms UnrestrictedBooleanMul.N5.no_all_quadratic_twelve_circuit

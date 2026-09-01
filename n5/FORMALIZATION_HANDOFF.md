@@ -121,9 +121,15 @@ next completion gate.
 
 ### Unrestricted prefix bookkeeping
 
-- `N5/Prefix.lean` — choose the last all-quadratic circuit state, define its
-  target rank and quotient defect, and prove the defect alternatives
-  `e in {0,1,2,3}`.
+- `N5/Prefix.lean` — the exact target/defect ledger and the capacity interface
+  for a flattened prefix (checked).
+- `N5/QuadraticFlattening.lean` — the ten-variable semantic bridge, the
+  Reed--Muller product alternative, and construction of a decomposable
+  flattening certificate for every all-quadratic prefix (checked).  This also
+  excludes the all-quadratic twelve-gate case.
+- The remaining prefix task is to choose the last all-quadratic circuit state
+  in a nonquadratic twelve-gate circuit and package the alternatives
+  `e in {0,1,2}` for the suffix modules.
 - `N5/SuffixBudget.lean` — define `d_post` over every finite suffix constrained
   only by total defect at most three.  There is deliberately no gate-count
   parameter.

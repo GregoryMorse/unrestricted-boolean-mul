@@ -19,6 +19,7 @@ import UnrestrictedBooleanMul.N5.RationalSecantSymmetry
 import UnrestrictedBooleanMul.N5.AllRationalPointedPivots
 import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
 import UnrestrictedBooleanMul.N5.Capacity
+import UnrestrictedBooleanMul.N5.QuadraticFlattening
 
 /-!
 # Unrestricted Boolean multiplicative complexity
