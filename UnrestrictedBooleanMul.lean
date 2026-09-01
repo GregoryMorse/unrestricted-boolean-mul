@@ -7,6 +7,9 @@ import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
 import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
 import UnrestrictedBooleanMul.N5.TwoPlaceProfile
 import UnrestrictedBooleanMul.N5.DefectTwoCapacity
+import UnrestrictedBooleanMul.N5.DefectThreeWitness
+import UnrestrictedBooleanMul.N5.SecantPfaffian
+import UnrestrictedBooleanMul.N5.LocalSecantPivots
 
 /-!
 # Unrestricted Boolean multiplicative complexity

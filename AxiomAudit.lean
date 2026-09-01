@@ -79,3 +79,10 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_six_of_finrank_le_two
 #print axioms UnrestrictedBooleanMul.N5.defectTwoCapacitySpace_targetCapacity
 #print axioms UnrestrictedBooleanMul.N5.exists_finrank_le_two_targetCapacity_eq_six
+#print axioms UnrestrictedBooleanMul.N5.defectThreeCapacitySpace_targetCapacity
+#print axioms UnrestrictedBooleanMul.N5.exists_finrank_le_three_targetCapacity_eq_seven
+#print axioms UnrestrictedBooleanMul.N5.secantPfaffianValue_two_wedges
+#print axioms UnrestrictedBooleanMul.N5.rationalZeroSecantCoeffSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.degreeTwoSecantCoeffSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.rationalZeroSecantQuotientRank_le_two
+#print axioms UnrestrictedBooleanMul.N5.degreeTwoSecantQuotientRank_le_one

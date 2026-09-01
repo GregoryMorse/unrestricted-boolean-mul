@@ -25,9 +25,9 @@ Status meanings:
 | Lemma 5.2, local Klein counts | `N5.localKlein_counts`, `N5/LocalKlein.lean` | two symbolic local Klein equations | checked |
 | Theorem 5.3, 43 fibers | `N5.effectiveFibers_eq`, `N5.effectiveFibers_card`, `N5/EffectiveClassification.lean` | algebraic rank-two secants, localization, and local Klein counts | checked |
 | Theorem 6.1, mixed-place exclusion | `N5.strongMixedPlace`, `N5/MixedPlaceDegreeInfinity.lean` | closed-place support | checked |
-| Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/DisplacementProfile.lean` | exact represented-place profile and Fano line/quadrilateral generation checked; sparse gift pivots remain | in progress |
+| Theorem 6.2, displacement bound | `N5.displacement_rank_le`, `N5/DisplacementProfile.lean` | exact represented-place profile, Fano generators, rank-four secant Pfaffian, and codimension-three rational/degree-two pivot spaces checked; local secant membership and quadrilateral incidence remain | in progress |
 | Theorem 7.1, `rho_2(5)=6` | `N5.targetCapacity_le_six_of_finrank_le_two`, `N5.exists_finrank_le_two_targetCapacity_eq_six`, `N5/DefectTwoCapacity.lean` | algebraic defect-line relation bound and explicit rational-plus-degree-two witness checked; full equality classification remains | in progress |
-| Theorem 7.2, `rho_3(5)=7` | `N5.rhoThree_five`, `N5/Capacity.lean` | mixed-place and displacement | planned |
+| Theorem 7.2, `rho_3(5)=7` | `N5.exists_finrank_le_three_targetCapacity_eq_seven`, `N5/DefectThreeWitness.lean` | explicit two-rational-plus-degree-two equality witness checked; universal displacement upper bound remains | in progress |
 | Proposition 8.1, capacity obstruction | `N5.capacity_obstruction`, `N5/Capacity.lean` | target--defect exact sequence | planned |
 | Lemma 9.1, circuit bookkeeping | `N5.circuit_bookkeeping`, `N5/Prefix.lean` | generic circuit flags | planned |
 | Proposition 10.2, two-defect envelopes | `N5.E2.envelopes_exhaustive`, `N5/E2/Envelopes.lean` | equality classification and symmetries | interface fixed |
