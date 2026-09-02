@@ -181,6 +181,43 @@ theorem firstOrderAnchor_basisChange_products_ne_missingTargetANF
   exact missingCoset_targetTwo_not_mem_firstOrderAnchor
     d hddec u hu (Submodule.mem_sup_left hprojection)
 
+/-- Every ordered pair in `U + <d>` can be normalized so that either the
+anchor is absent or it occurs only in the first direction. -/
+theorem exists_firstOrderAnchor_plane_normalForm
+    (d q c : TwoForm)
+    (hq : q ∈ firstOrderAnchorTwoSpace d)
+    (hc : c ∈ firstOrderAnchorTwoSpace d) :
+    ∃ (g : PlaneBasisChange) (u v : TwoForm),
+      u ∈ firstOrderEnvelopeTwoSpace ∧
+      v ∈ firstOrderEnvelopeTwoSpace ∧
+      (g.basisPair q c = (u, v) ∨
+        g.basisPair q c = (u + d, v)) := by
+  rcases exists_firstOrderEnvelope_add_smul_anchor d q hq with
+    ⟨u, hu, alpha, hqeq⟩
+  rcases exists_firstOrderEnvelope_add_smul_anchor d c hc with
+    ⟨v, hv, beta, hceq⟩
+  rcases f2_eq_zero_or_one alpha with rfl | rfl <;>
+    rcases f2_eq_zero_or_one beta with rfl | rfl
+  · refine ⟨.identity, u, v, hu, hv, Or.inl ?_⟩
+    simpa [PlaneBasisChange.basisPair] using congrArg₂ (fun x y => (x, y)) hqeq hceq
+  · refine ⟨.swap, v, u, hv, hu, Or.inr ?_⟩
+    simp only [zero_smul, add_zero, one_smul] at hqeq hceq
+    simp [PlaneBasisChange.basisPair, hqeq, hceq]
+  · refine ⟨.identity, u, v, hu, hv, Or.inr ?_⟩
+    simp only [zero_smul, add_zero, one_smul] at hqeq hceq
+    simp [PlaneBasisChange.basisPair, hqeq, hceq]
+  · refine ⟨.rotateRight, u, u + v, hu,
+      firstOrderEnvelopeTwoSpace.add_mem hu hv, Or.inr ?_⟩
+    simp only [one_smul] at hqeq hceq
+    simp only [PlaneBasisChange.basisPair, hqeq, hceq, Prod.mk.injEq,
+      true_and]
+    funext s
+    simp only [Pi.add_apply]
+    calc
+      (u s + d s) + (v s + d s) =
+          (d s + d s) + (u s + v s) := by ac_rfl
+      _ = u s + v s := by rw [CharTwo.add_self_eq_zero, zero_add]
+
 /-- Literal high classes are additive in the complete linear/quadratic data
 of the right factor. -/
 theorem lowProductHighClass_add_right
