@@ -80,6 +80,7 @@ import UnrestrictedBooleanMul.N5.FirstOrderEscape
 import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
 import UnrestrictedBooleanMul.N5.RankOneEscape
 import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
+import UnrestrictedBooleanMul.N5.RankOneCircuitEscape
 import UnrestrictedBooleanMul.N5.ColourHighQuotient
 import UnrestrictedBooleanMul.N5.MainInterface
 import UnrestrictedBooleanMul.N5.RegimeClosure
