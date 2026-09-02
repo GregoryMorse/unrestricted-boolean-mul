@@ -19,21 +19,72 @@ namespace N5
 
 noncomputable section
 
-/-- Ambient decomposability of a rational-zero local two-form forces its
-six displayed coordinates to satisfy the Klein equation.  This is the
-single Pluecker relation on the ambient coordinates `0, 1, 5, 6`. -/
+private theorem satisfiesKlein_of_relation (p : LocalKleinCoord)
+    (h : p 0 * p 5 + p 1 * p 4 = p 2 * p 3) :
+    SatisfiesKlein p := by
+  unfold SatisfiesKlein
+  rw [h, CharTwo.add_self_eq_zero]
+
+/-- Ambient decomposability of a displayed local two-form forces its six
+coordinates to satisfy the Klein equation.  In each chart this is one
+Pluecker relation in the four ambient coordinate probes used to prove that
+the local exterior-square embedding is injective. -/
+theorem satisfiesKlein_of_localTwoForm_decomposable
+    (place : Fin 4) (p : LocalKleinCoord)
+    (hp : IsDecomposableTwo (localTwoForm place p)) :
+    SatisfiesKlein p := by
+  rcases hp with ⟨u, v, huv⟩
+  fin_cases place
+  · have hplucker := squarefreeWedge_plucker u v
+      (0 : Fin 10) (1 : Fin 10) (5 : Fin 10) (6 : Fin 10)
+      (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    rw [← huv] at hplucker
+    simp [localTwoForm, localKleinPair,
+      closedPlaceLocalBasis, aOneEval, aOneJet, bOneEval, bOneJet,
+      aStarZero, aStarOne, bStarZero, bStarOne, aLinear, bLinear,
+      aCoord, bCoord, squarefreeWedge_pair, Pi.basisFun,
+      Fin.sum_univ_succ] at hplucker
+    exact satisfiesKlein_of_relation p hplucker
+  · have hplucker := squarefreeWedge_plucker u v
+      (0 : Fin 10) (1 : Fin 10) (5 : Fin 10) (6 : Fin 10)
+      (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    rw [← huv] at hplucker
+    simp [localTwoForm, localKleinPair,
+      closedPlaceLocalBasis, aOneEval, aOneJet, bOneEval, bOneJet,
+      aStarZero, aStarOne, bStarZero, bStarOne, aLinear, bLinear,
+      aCoord, bCoord, squarefreeWedge_pair, Pi.basisFun,
+      Fin.sum_univ_succ] at hplucker
+    apply satisfiesKlein_of_relation p
+    linear_combination hplucker
+  · have hplucker := squarefreeWedge_plucker u v
+      (3 : Fin 10) (4 : Fin 10) (8 : Fin 10) (9 : Fin 10)
+      (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    rw [← huv] at hplucker
+    simp [localTwoForm, localKleinPair,
+      closedPlaceLocalBasis, aOneEval, aOneJet, bOneEval, bOneJet,
+      aStarZero, aStarOne, bStarZero, bStarOne, aLinear, bLinear,
+      aCoord, bCoord, squarefreeWedge_pair, Pi.basisFun,
+      Fin.sum_univ_succ] at hplucker
+    apply satisfiesKlein_of_relation p
+    simpa only [mul_comm] using hplucker
+  · have hplucker := squarefreeWedge_plucker u v
+      (0 : Fin 10) (1 : Fin 10) (5 : Fin 10) (6 : Fin 10)
+      (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+    rw [← huv] at hplucker
+    simp [localTwoForm, localKleinPair,
+      closedPlaceLocalBasis, aOneEval, aOneJet, bOneEval, bOneJet,
+      aStarZero, aStarOne, bStarZero, bStarOne, aLinear, bLinear,
+      aCoord, bCoord, squarefreeWedge_pair, Pi.basisFun,
+      Fin.sum_univ_succ] at hplucker
+    apply satisfiesKlein_of_relation p
+    linear_combination hplucker
+
+/-- Rational-zero specialization of the uniform local Pluecker converse. -/
 theorem rationalZero_satisfiesKlein_of_decomposable
     (p : LocalKleinCoord)
     (hp : IsDecomposableTwo (localTwoForm 0 p)) :
-    SatisfiesKlein p := by
-  rcases hp with ⟨u, v, huv⟩
-  have hplucker := squarefreeWedge_plucker u v
-    (0 : Fin 10) (1 : Fin 10) (5 : Fin 10) (6 : Fin 10)
-    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
-  rw [← huv] at hplucker
-  simpa [SatisfiesKlein, localTwoForm, localKleinPair,
-    closedPlaceLocalBasis, aLinear, bLinear, aCoord, bCoord,
-    squarefreeWedge_pair, Pi.basisFun, Fin.sum_univ_succ] using hplucker
+    SatisfiesKlein p :=
+  satisfiesKlein_of_localTwoForm_decomposable 0 p hp
 
 /-- The two possible quadratic plane types after anchored basis change. -/
 def IsFirstOrderAnchorPlaneNormalForm
