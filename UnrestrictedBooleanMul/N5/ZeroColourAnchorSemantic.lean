@@ -351,6 +351,77 @@ def RationalZeroAnchoredEnvelopeShadowCase
             lowProductQuadraticShadow a' b' ell' m' q' c' ∈
           targetCleanSecondJetSpace
 
+/-- Nondegenerate version of one fixed anchor-bit pattern. -/
+def NonzeroRationalZeroAnchoredEnvelopeShadowCase
+    (epsilon epsilon' alpha : F₂) : Prop :=
+  ∀ (p : LocalKleinCoord), p ≠ 0 → SatisfiesKlein p →
+    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+      (q c q' c' : TwoForm),
+      q ∈ firstOrderEnvelopeTwoSpace →
+      c ∈ firstOrderEnvelopeTwoSpace →
+      q' ∈ firstOrderEnvelopeTwoSpace →
+      c' ∈ firstOrderEnvelopeTwoSpace →
+      lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' →
+      ∀ (u : TargetCoeff),
+        u ∈ firstOrderEnvelopeCoeffSpace →
+        (lowProductQuadraticShadow a b ell m q c +
+            rationalZeroAnchorShadowCorrection p b epsilon m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            alpha • localTwoForm 0 p =
+          targetTwo (firstOrderMissingCoeff + u) →
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+          targetCleanSecondJetSpace
+
+@[simp] theorem localTwoForm_zero (place : Fin 4) :
+    localTwoForm place (0 : LocalKleinCoord) = 0 :=
+  map_zero (localTwoFormLinear place)
+
+@[simp] theorem rationalZeroAnchorHighCorrection_zero
+    (m : LinearForm) (c : TwoForm) :
+    rationalZeroAnchorHighCorrection 0 m c = 0 := by
+  rw [rationalZeroAnchorHighCorrection, lowProductHighClass]
+  have hquadraticZero : quadraticANFOfForm (0 : TwoForm) = 0 :=
+    map_zero quadraticANFOfFormLinear
+  have hzero : quadraticCoordinateANF 0 0 (localTwoForm 0 0) = 0 := by
+    rw [localTwoForm_zero]
+    simp [quadraticCoordinateANF, hquadraticZero]
+  rw [hzero, zero_mul, map_zero]
+
+@[simp] theorem rationalZeroAnchorShadowCorrection_zero
+    (b epsilon : F₂) (m : LinearForm) (c : TwoForm) :
+    rationalZeroAnchorShadowCorrection 0 b epsilon m c = 0 := by
+  simp [rationalZeroAnchorShadowCorrection]
+
+/-- The zero local anchor is the already-closed unanchored envelope case, so
+a proof for nonzero local Klein points proves the full fixed-bit case. -/
+theorem rationalZeroAnchoredEnvelopeShadowCase_of_nonzero
+    (epsilon epsilon' alpha : F₂)
+    (hnonzero :
+      NonzeroRationalZeroAnchoredEnvelopeShadowCase epsilon epsilon' alpha) :
+    RationalZeroAnchoredEnvelopeShadowCase epsilon epsilon' alpha := by
+  intro p hp a b a' b' ell m ell' m' q c q' c'
+    hq hc hq' hc' hhigh u hu heq
+  by_cases hpzero : p = 0
+  · subst p
+    have hhigh' : lowProductHighClass ell m q c =
+        lowProductHighClass ell' m' q' c' := by
+      simpa using hhigh
+    have heq' :
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' =
+          targetTwo (firstOrderMissingCoeff + u) := by
+      simpa using heq
+    exact (semanticEnvelope_exact_shadow
+      a b a' b' ell m ell' m' q c q' c'
+        hq hc hq' hc' hhigh' u hu heq').elim
+  · exact hnonzero p hpzero hp a b a' b' ell m ell' m'
+      q c q' c' hq hc hq' hc' hhigh u hu heq
+
 /-- If the anchor occurs in the left factor plane, toggling that factor's
 companion constant trades the old-correction anchor bit for an old-envelope
 target.  Hence the `alpha = 0` case implies the `alpha = 1` case. -/
@@ -472,6 +543,19 @@ theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_threeCases
       (rationalZeroAnchoredEnvelopeShadowCase_one_of_zero 0 h100)
     h110
       (rationalZeroAnchoredEnvelopeShadowCase_one_of_zero 1 h110)
+
+/-- Final nondegenerate representative interface: the rational-zero active
+core follows from the three scalar patterns restricted to nonzero local
+Klein points. -/
+theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_nonzeroThreeCases
+    (h001 : NonzeroRationalZeroAnchoredEnvelopeShadowCase 0 0 1)
+    (h100 : NonzeroRationalZeroAnchoredEnvelopeShadowCase 1 0 0)
+    (h110 : NonzeroRationalZeroAnchoredEnvelopeShadowCase 1 1 0) :
+    ActiveRationalZeroAnchoredEnvelopeShadowCore :=
+  activeRationalZeroAnchoredEnvelopeShadowCore_of_threeCases
+    (rationalZeroAnchoredEnvelopeShadowCase_of_nonzero 0 0 1 h001)
+    (rationalZeroAnchoredEnvelopeShadowCase_of_nonzero 1 0 0 h100)
+    (rationalZeroAnchoredEnvelopeShadowCase_of_nonzero 1 1 0 h110)
 
 /-- Only the seven active Boolean cases remain: the inactive case collapses
 to `semanticEnvelope_exact_shadow`. -/
