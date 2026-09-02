@@ -279,6 +279,32 @@ theorem exists_firstOrderAnchor_wirePair_normalForm
     have hpair := hprojection.trans hnormal
     exact ⟨congrArg Prod.fst hpair, congrArg Prod.snd hpair⟩
 
+/-- Compact predicate for the two normalized anchored plane types. -/
+def IsFirstOrderAnchorWirePairNormalForm
+    (d : TwoForm) (X Y : ANF 10) : Prop :=
+  ∃ u ∈ firstOrderEnvelopeTwoSpace,
+    ∃ v ∈ firstOrderEnvelopeTwoSpace,
+      ((quadraticProjection 10 X = u ∧ quadraticProjection 10 Y = v) ∨
+        (quadraticProjection 10 X = u + d ∧
+          quadraticProjection 10 Y = v))
+
+/-- Every anchored quadratic wire pair admits the compact normal form by an
+old-wire-preserving basis change. -/
+theorem exists_basisChange_isFirstOrderAnchorWirePairNormalForm
+    (d : TwoForm) (X Y : ANF 10)
+    (hX : X ∈ firstOrderAnchorState d)
+    (hY : Y ∈ firstOrderAnchorState d) :
+    ∃ g : PlaneBasisChange,
+      (g.basisPair X Y).1 ∈ firstOrderAnchorState d ∧
+      (g.basisPair X Y).2 ∈ firstOrderAnchorState d ∧
+      ((g.basisPair X Y).1 * (g.basisPair X Y).2 + X * Y) ∈
+        firstOrderAnchorState d ∧
+      IsFirstOrderAnchorWirePairNormalForm d
+        (g.basisPair X Y).1 (g.basisPair X Y).2 := by
+  rcases exists_firstOrderAnchor_wirePair_normalForm d X Y hX hY with
+    ⟨g, u, v, hu, hv, hXg, hYg, hproduct, hnormal⟩
+  refine ⟨g, hXg, hYg, hproduct, u, hu, v, hv, hnormal⟩
+
 /-- Literal high classes are additive in the complete linear/quadratic data
 of the right factor. -/
 theorem lowProductHighClass_add_right
