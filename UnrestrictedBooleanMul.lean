@@ -35,6 +35,7 @@ import UnrestrictedBooleanMul.N5.LowProductShadow
 import UnrestrictedBooleanMul.N5.RankOneShadow
 import UnrestrictedBooleanMul.N5.IndependentShadow
 import UnrestrictedBooleanMul.N5.EnvelopeShadow
+import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
 import UnrestrictedBooleanMul.N5.ColourBirth
 import UnrestrictedBooleanMul.N5.ColourNormalization
 import UnrestrictedBooleanMul.N5.ThreeColour
