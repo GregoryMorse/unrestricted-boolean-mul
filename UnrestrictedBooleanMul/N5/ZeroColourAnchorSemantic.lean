@@ -657,6 +657,8 @@ theorem exists_localForm_add_displacement_of_decomposableLift
     (hd : d ∈ decomposableFiber (closedPlaceEffectivePoint x)) :
     ∃ p : LocalKleinCoord,
       SatisfiesKlein p ∧
+      localTwoForm x.1 p ∈
+        decomposableFiber (closedPlaceEffectivePoint x) ∧
       ∃ z ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1,
         d = localTwoForm x.1 p + z := by
   rcases exists_localDecomposableLift_of_closedPlaceEffectiveParam x with
@@ -665,7 +667,7 @@ theorem exists_localForm_add_displacement_of_decomposableLift
   have hz : z ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1 :=
     fiberDifferenceSpace_closedPlace_le x hpFiber
       (Submodule.subset_span ⟨d, hd, rfl⟩)
-  refine ⟨p, hpKlein, z, hz, ?_⟩
+  refine ⟨p, hpKlein, hpFiber, z, hz, ?_⟩
   dsimp [z]
   module
 
@@ -697,12 +699,14 @@ theorem exists_localAnchorRepresentative_of_decomposableLift
     (hd : d ∈ decomposableFiber (closedPlaceEffectivePoint x)) :
     ∃ p : LocalKleinCoord,
       SatisfiesKlein p ∧
+      localTwoForm x.1 p ∈
+        decomposableFiber (closedPlaceEffectivePoint x) ∧
       d + localTwoForm x.1 p ∈ firstOrderEnvelopeTwoSpace ∧
       ∀ q c,
         IsFirstOrderAnchorPlaneNormalForm d q c ↔
           IsFirstOrderAnchorPlaneNormalForm (localTwoForm x.1 p) q c := by
   rcases exists_localForm_add_displacement_of_decomposableLift x d hd with
-    ⟨p, hpKlein, z, hz, hdEq⟩
+    ⟨p, hpKlein, hpFiber, z, hz, hdEq⟩
   have hzEnvelope : z ∈ firstOrderEnvelopeTwoSpace :=
     closedPlaceDisplacement_le_firstOrderEnvelopeTwoSpace x.1 hz
   have hcongruent : d + localTwoForm x.1 p ∈
@@ -716,7 +720,7 @@ theorem exists_localAnchorRepresentative_of_decomposableLift
       simp [N3Certificate.two_eq_zero_f2]
     rw [hcancel]
     exact hzEnvelope
-  refine ⟨p, hpKlein, hcongruent, ?_⟩
+  refine ⟨p, hpKlein, hpFiber, hcongruent, ?_⟩
   intro q c
   constructor
   · exact IsFirstOrderAnchorPlaneNormalForm.transport_anchor_mod_envelope
@@ -737,7 +741,7 @@ theorem decomposableLift_mem_rationalPlaceTargetClean
     refine ⟨hd, ?_⟩
     simpa [x, closedPlaceEffectivePoint] using hplace
   rcases exists_localForm_add_displacement_of_decomposableLift x d hdFiber with
-    ⟨p, _hpKlein, z, hz, hdEq⟩
+    ⟨p, _hpKlein, _hpFiber, z, hz, hdEq⟩
   have hpClean : localTwoForm x.1 p ∈
       rationalPlaceTargetCleanSecondJetSpace place := by
     change localTwoForm place.castSucc p ∈
@@ -756,6 +760,114 @@ theorem decomposableLift_mem_rationalPlaceTargetClean
   rw [hdEq, ← hrt]
   exact (rationalPlaceTargetCleanSecondJetSpace place).add_mem hpClean
     ((rationalPlaceTargetCleanSecondJetSpace place).add_mem hrClean htClean)
+
+/-- The anchored localization statement depends only on the anchor modulo
+the first-order envelope.  Both the target correction and the final anchor
+line are transported explicitly. -/
+theorem anchoredEnvelopeShadowLocalizedAt_transport
+    {d e : TwoForm}
+    (hde : d + e ∈ firstOrderEnvelopeTwoSpace)
+    (he : AnchoredEnvelopeShadowLocalizedAt e) :
+    AnchoredEnvelopeShadowLocalizedAt d := by
+  intro a b a' b' ell m ell' m' q c q' c'
+    hleft hright hhigh alpha u hu heq
+  rcases hde with ⟨w, hw, hdeEq⟩
+  change targetTwo w = d + e at hdeEq
+  have hleft' : IsFirstOrderAnchorPlaneNormalForm e q c :=
+    hleft.transport_anchor_mod_envelope ⟨w, hw, hdeEq⟩
+  have hright' : IsFirstOrderAnchorPlaneNormalForm e q' c' :=
+    hright.transport_anchor_mod_envelope ⟨w, hw, hdeEq⟩
+  have hu' : u + alpha • w ∈ firstOrderEnvelopeCoeffSpace :=
+    firstOrderEnvelopeCoeffSpace.add_mem hu
+      (firstOrderEnvelopeCoeffSpace.smul_mem alpha hw)
+  have heq' :
+      lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' +
+            alpha • e =
+        targetTwo (firstOrderMissingCoeff + (u + alpha • w)) := by
+    calc
+      lowProductQuadraticShadow a b ell m q c +
+              lowProductQuadraticShadow a' b' ell' m' q' c' +
+              alpha • e =
+          (lowProductQuadraticShadow a b ell m q c +
+              lowProductQuadraticShadow a' b' ell' m' q' c' +
+              alpha • d) + alpha • (d + e) := by
+            funext s
+            simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+            ring_nf
+            simp [N3Certificate.two_eq_zero_f2]
+      _ = targetTwo (firstOrderMissingCoeff + u) +
+          alpha • targetTwo w := by rw [heq, hdeEq]
+      _ = targetTwo (firstOrderMissingCoeff + u) +
+          targetTwo (alpha • w) := by
+            exact congrArg
+              (fun z : TwoForm => targetTwo (firstOrderMissingCoeff + u) + z)
+              (targetTwoLinear.map_smul alpha w).symm
+      _ = targetTwo ((firstOrderMissingCoeff + u) + alpha • w) := by
+            exact (targetTwoLinear.map_add _ _).symm
+      _ = targetTwo (firstOrderMissingCoeff + (u + alpha • w)) := by
+            rw [add_assoc]
+  rcases he a b a' b' ell m ell' m' q c q' c'
+      hleft' hright' hhigh alpha (u + alpha • w) hu' heq' with
+    ⟨place, hshadow⟩
+  refine ⟨place, ?_⟩
+  let Z := rationalPlaceTargetCleanSecondJetSpace place
+  have hdeClean : d + e ∈ Z :=
+    firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean place
+      ⟨w, hw, hdeEq⟩
+  have heSup : e ∈ Z ⊔ Submodule.span F₂ ({d} : Set TwoForm) := by
+    have hsum : (d + e) + d ∈
+        Z ⊔ Submodule.span F₂ ({d} : Set TwoForm) :=
+      (Z ⊔ Submodule.span F₂ ({d} : Set TwoForm)).add_mem
+        (Submodule.mem_sup_left hdeClean)
+        (Submodule.mem_sup_right (Submodule.mem_span_singleton_self d))
+    have heEq : e = (d + e) + d := by
+      funext s
+      simp only [Pi.add_apply]
+      ring_nf
+      simp [N3Certificate.two_eq_zero_f2]
+    rwa [← heEq] at hsum
+  have hle : Z ⊔ Submodule.span F₂ ({e} : Set TwoForm) ≤
+      Z ⊔ Submodule.span F₂ ({d} : Set TwoForm) := by
+    apply sup_le le_sup_left
+    rw [Submodule.span_le]
+    intro z hz
+    rw [Set.mem_singleton_iff.mp hz]
+    exact heSup
+  exact hle hshadow
+
+/-- Local closed-place form of the remaining anchored shadow calculation.
+It quantifies only over decomposable Klein representatives in the four
+effective charts. -/
+def LocalEffectiveAnchoredEnvelopeShadowLocalization : Prop :=
+  ∀ (x : ClosedPlaceEffectiveParam) (p : LocalKleinCoord),
+    localTwoForm x.1 p ∈
+      decomposableFiber (closedPlaceEffectivePoint x) →
+    AnchoredEnvelopeShadowLocalizedAt (localTwoForm x.1 p)
+
+/-- A proof on the four local charts transports to every decomposable lift
+of the same effective quotient point. -/
+theorem anchoredEnvelopeShadowLocalizedAt_of_localEffective
+    (hlocal : LocalEffectiveAnchoredEnvelopeShadowLocalization)
+    (x : ClosedPlaceEffectiveParam) (d : TwoForm)
+    (hd : d ∈ decomposableFiber (closedPlaceEffectivePoint x)) :
+    AnchoredEnvelopeShadowLocalizedAt d := by
+  rcases exists_localAnchorRepresentative_of_decomposableLift x d hd with
+    ⟨p, _hpKlein, hpFiber, hcongruent, _hnormal⟩
+  exact anchoredEnvelopeShadowLocalizedAt_transport hcongruent
+    (hlocal x p hpFiber)
+
+/-- Atlas-level wrapper: local chart closure suffices for every decomposable
+anchor whose quotient fiber is effective. -/
+theorem anchoredEnvelopeShadowLocalizedAt_of_effective
+    (hlocal : LocalEffectiveAnchoredEnvelopeShadowLocalization)
+    (d : TwoForm) (hd : IsDecomposableTwo d)
+    (heffective : IsEffectiveFiber (quadraticQuotientProjection d)) :
+    AnchoredEnvelopeShadowLocalizedAt d := by
+  rcases exists_closedPlaceEffectiveParam_of_effectiveFiber heffective with
+    ⟨x, hx⟩
+  exact anchoredEnvelopeShadowLocalizedAt_of_localEffective hlocal x d
+    ⟨hd, hx⟩
 
 /-- A decomposable target two-form is one of the rational evaluation
 directions (or zero), hence belongs to their span.  This is the subspace
