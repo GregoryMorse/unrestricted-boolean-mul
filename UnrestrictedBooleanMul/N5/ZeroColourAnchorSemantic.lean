@@ -480,6 +480,29 @@ theorem decomposableEnvelopeTranslate_rational_or_effective
       _ = targetTwo c + d := by rw [← hold]
       _ = d + targetTwo c := add_comm _ _
 
+/-- Closed-place refinement of the decomposable-translate split.  In the
+non-rational branch the common quotient class is represented by one of the
+four effective closed-place charts, so later shadow arguments may separate
+the three rational places from the degree-two place without reopening the
+global fiber classification. -/
+theorem decomposableEnvelopeTranslate_rational_or_closedPlace
+    (d p old : TwoForm)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hold : old ∈ firstOrderEnvelopeTwoSpace)
+    (htranslate : p = old + d) :
+    ∃ c : TargetCoeff,
+      c ∈ firstOrderEnvelopeCoeffSpace ∧ old = targetTwo c ∧
+      (c ∈ rationalCoeffSpace ∨
+        ∃ x : ClosedPlaceEffectiveParam,
+          quadraticQuotientProjection d = closedPlaceEffectivePoint x) := by
+  rcases decomposableEnvelopeTranslate_rational_or_effective
+      d p old hd hp hold htranslate with ⟨c, hc, holdEq, hcase⟩
+  refine ⟨c, hc, holdEq, ?_⟩
+  rcases hcase with hrat | heffective
+  · exact Or.inl hrat
+  · exact Or.inr
+      (exists_closedPlaceEffectiveParam_of_effectiveFiber heffective)
+
 private theorem twoForm_recover_after_duplicate
     (x y : TwoForm) : x = (x + y) + y := by
   funext s
