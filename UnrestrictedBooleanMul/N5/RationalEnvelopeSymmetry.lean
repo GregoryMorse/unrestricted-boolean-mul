@@ -328,6 +328,20 @@ theorem rationalPlace_localTwoForm_mem_targetClean
     simpa [rationalPlacePerm, rationalPlaceLocalTwoCoordChange] using
       rationalPlaceTwoFormLinear_localTwoForm 1 0 p
 
+/-- Coordinate-free wrapper for the preceding inclusion: the wedge of any
+two vectors in a rational closed-place four-space lies in the corresponding
+target-clean second-jet space. -/
+theorem rationalPlace_squarefreeWedge_mem_targetClean
+    (place : Fin 3) (u v : LinearForm)
+    (hu : u ∈ closedPlaceLinearSpace place.castSucc)
+    (hv : v ∈ closedPlaceLinearSpace place.castSucc) :
+    squarefreeWedge u v ∈
+      rationalPlaceTargetCleanSecondJetSpace place := by
+  rcases exists_localWedgeCoord_of_factors_mem place.castSucc u v hu hv with
+    ⟨p, hp⟩
+  rw [← hp]
+  exact rationalPlace_localTwoForm_mem_targetClean place p
+
 /-- The first-order envelope is contained in every rationally normalized
 target-clean second-jet space. -/
 theorem firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean
