@@ -22,6 +22,9 @@ import UnrestrictedBooleanMul.N5.Capacity
 import UnrestrictedBooleanMul.N5.QuadraticFlattening
 import UnrestrictedBooleanMul.N5.PrefixState
 import UnrestrictedBooleanMul.N5.SuffixBudget
+import UnrestrictedBooleanMul.N5.E2.WStarRank
+import UnrestrictedBooleanMul.N5.E2.WPQRank
+import UnrestrictedBooleanMul.N5.E2.WThreePRank
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
