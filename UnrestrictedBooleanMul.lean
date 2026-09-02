@@ -40,6 +40,7 @@ import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
 import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
 import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
 import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+import UnrestrictedBooleanMul.N5.E2.ExtremalState
 import UnrestrictedBooleanMul.N5.E2.StableInterface
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import UnrestrictedBooleanMul.N5.FirstOrderState

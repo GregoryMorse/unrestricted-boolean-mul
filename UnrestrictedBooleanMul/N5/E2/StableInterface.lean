@@ -1,5 +1,6 @@
 import UnrestrictedBooleanMul.N5.StableTarget
 import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+import UnrestrictedBooleanMul.N5.E2.ExtremalState
 
 /-!
 # Stable-envelope interface to the completion contradiction
@@ -52,6 +53,20 @@ theorem wThreeP_suffixDeficit_positive
     omega
   · exact hstable
 
+/-- The normalized extremal degree-two-plus-jet envelope has the same strict
+completion deficit once its rank-eight stability theorem is supplied. -/
+theorem wStarZero_suffixDeficit_positive
+    (hstable : StableTargetRank wStarZeroState 8) :
+    1 ≤ suffixDeficit wStarZeroState := by
+  apply suffixDeficit_positive_of_stableTargetRank_eight
+    (W := wStarZeroState)
+  · exact affine_le_quadraticEnvelopeState wStarZeroTwoSpace
+  · rw [wStarZeroState_defectRank]
+    omega
+  · rw [stateTargetRank, wStarZeroState_targetRank]
+    omega
+  · exact hstable
+
 /-- Every equal-defect substate dominated by the degree-two envelope inherits
 its strict completion deficit. -/
 theorem wStar_dominated_suffixDeficit_positive
@@ -84,6 +99,17 @@ theorem wThreeP_dominated_suffixDeficit_positive
     1 ≤ suffixDeficit W := by
   exact (wThreeP_suffixDeficit_positive hstable).trans
     (suffixDeficit_mono hAff hsub hdef wThreePState_defectRank)
+
+/-- Every equal-defect substate dominated by the normalized extremal
+degree-two-plus-jet envelope inherits its strict completion deficit. -/
+theorem wStarZero_dominated_suffixDeficit_positive
+    {W : Submodule F₂ (ANF 10)}
+    (hAff : affine 10 ≤ W) (hsub : W ≤ wStarZeroState)
+    (hdef : N4.flagDefectRank W (mulTarget 5) = 2)
+    (hstable : StableTargetRank wStarZeroState 8) :
+    1 ≤ suffixDeficit W := by
+  exact (wStarZero_suffixDeficit_positive hstable).trans
+    (suffixDeficit_mono hAff hsub hdef wStarZeroState_defectRank)
 
 end
 end E2

@@ -38,6 +38,9 @@ The repository currently contains:
 - exact algebraic fixed-block classifications for all three nonextremal
   two-defect envelopes, with explicit rank-two completions and fixed nonzero
   minors for equations (10.6), (10.8), and (10.11);
+- the normalized extremal degree-two-plus-rational-jet envelope, including
+  its exact eight-dimensional size, six-dimensional target intersection,
+  defect two, and stable-suffix interface;
 - the algebraic companion classification at all three rational places into
   the regular Koszul-kernel case or one of the three exceptional planes
   through that rational direction; and
