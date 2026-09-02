@@ -19,6 +19,22 @@ namespace N5
 
 noncomputable section
 
+/-- Ambient decomposability of a rational-zero local two-form forces its
+six displayed coordinates to satisfy the Klein equation.  This is the
+single Pluecker relation on the ambient coordinates `0, 1, 5, 6`. -/
+theorem rationalZero_satisfiesKlein_of_decomposable
+    (p : LocalKleinCoord)
+    (hp : IsDecomposableTwo (localTwoForm 0 p)) :
+    SatisfiesKlein p := by
+  rcases hp with ⟨u, v, huv⟩
+  have hplucker := squarefreeWedge_plucker u v
+    (0 : Fin 10) (1 : Fin 10) (5 : Fin 10) (6 : Fin 10)
+    (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
+  rw [← huv] at hplucker
+  simpa [SatisfiesKlein, localTwoForm, localKleinPair,
+    closedPlaceLocalBasis, aLinear, bLinear, aCoord, bCoord,
+    squarefreeWedge_pair, Pi.basisFun, Fin.sum_univ_succ] using hplucker
+
 /-- The two possible quadratic plane types after anchored basis change. -/
 def IsFirstOrderAnchorPlaneNormalForm
     (d q c : TwoForm) : Prop :=
@@ -495,6 +511,16 @@ theorem anchoredEnvelopeShadowLocalizedAt_rationalZero_of_activeCore
     AnchoredEnvelopeShadowLocalizedAt (localTwoForm 0 p) :=
   anchoredEnvelopeShadowLocalizedAt_rationalZero_of_core
     (rationalZeroAnchoredEnvelopeShadowCore_of_active hactive) p hp
+
+/-- Fiber-facing rational-zero wrapper.  Ambient decomposability supplies
+the local Klein equation through the Pluecker converse above. -/
+theorem anchoredEnvelopeShadowLocalizedAt_rationalZero_of_activeCore_of_decomposable
+    (hactive : ActiveRationalZeroAnchoredEnvelopeShadowCore)
+    (p : LocalKleinCoord)
+    (hp : IsDecomposableTwo (localTwoForm 0 p)) :
+    AnchoredEnvelopeShadowLocalizedAt (localTwoForm 0 p) :=
+  anchoredEnvelopeShadowLocalizedAt_rationalZero_of_activeCore
+    hactive p (rationalZero_satisfiesKlein_of_decomposable p hp)
 
 private theorem wireNormalForm_to_planeNormalForm
     (d : TwoForm) (X Y : ANF 10)
