@@ -80,10 +80,16 @@ def AnchoredEnvelopeShadowLocalization : Prop :=
       IsFirstOrderAnchorPlaneNormalForm d q' c' →
       lowProductHighClass ell m q c =
         lowProductHighClass ell' m' q' c' →
-      lowProductQuadraticShadow a b ell m q c +
-          lowProductQuadraticShadow a' b' ell' m' q' c' ∈
-        targetCleanSecondJetSpace ⊔
-          Submodule.span F₂ ({d} : Set TwoForm)
+      ∀ (alpha : F₂) (u : TargetCoeff),
+        u ∈ firstOrderEnvelopeCoeffSpace →
+        lowProductQuadraticShadow a b ell m q c +
+              lowProductQuadraticShadow a' b' ell' m' q' c' +
+              alpha • d =
+            targetTwo (firstOrderMissingCoeff + u) →
+          lowProductQuadraticShadow a b ell m q c +
+              lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+            targetCleanSecondJetSpace ⊔
+              Submodule.span F₂ ({d} : Set TwoForm)
 
 private theorem wireNormalForm_to_planeNormalForm
     (d : TwoForm) (X Y : ANF 10)
@@ -298,7 +304,7 @@ theorem NormalizedAnchorShadowEquation.false_of_localization
       h.leftConst h.leftSecondConst h.rightConst h.rightSecondConst
       h.leftLinear h.leftSecondLinear h.rightLinear h.rightSecondLinear
       h.leftTwo h.leftSecondTwo h.rightTwo h.rightSecondTwo
-      h.left_normal h.right_normal h.high_eq
+      h.left_normal h.right_normal h.high_eq alpha u hu heq
   have hanchor : alpha • d ∈
       Submodule.span F₂ ({d} : Set TwoForm) :=
     Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self d)
