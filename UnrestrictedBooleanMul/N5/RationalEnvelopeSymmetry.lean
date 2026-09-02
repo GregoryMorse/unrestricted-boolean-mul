@@ -285,6 +285,49 @@ def rationalPlaceTargetCleanSecondJetSpace (place : Fin 3) :
     rationalTargetCleanSecondJetSpace 0,
     rationalTargetCleanSecondJetSpace 1] place
 
+/-- The displayed basis of the rational-zero local four-space is supported
+on the second-jet core coordinates. -/
+theorem rationalZeroLocalBasis_mem_secondJetCoreSpace (i : Fin 4) :
+    closedPlaceLocalBasis 0 i ∈ secondJetCoreSpace := by
+  change ∀ k, k ∉ secondJetCoreSet → closedPlaceLocalBasis 0 i k = 0
+  intro k hk
+  fin_cases i <;> fin_cases k <;>
+    simp_all [closedPlaceLocalBasis, secondJetCoreSet,
+      aLinear, bLinear, aCoord, bCoord, Pi.basisFun]
+
+/-- Every exterior two-form on the rational-zero local four-space belongs
+to the target-clean second-jet space. -/
+theorem rationalZero_localTwoForm_mem_targetClean
+    (p : LocalKleinCoord) :
+    localTwoForm 0 p ∈ targetCleanSecondJetSpace := by
+  have hlocal : localTwoForm 0 p ∈ quadraticExterior secondJetCoreSpace := by
+    rw [localTwoForm]
+    apply Submodule.sum_mem
+    intro s _
+    apply Submodule.smul_mem
+    exact squarefreeWedge_mem_quadraticExterior secondJetCoreSpace
+      (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).1)
+      (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).2)
+  exact Submodule.mem_sup_left (Submodule.mem_sup_right hlocal)
+
+/-- Uniform rational-place version: the exterior square of each rational
+local four-space is contained in its transported target-clean second-jet
+space. -/
+theorem rationalPlace_localTwoForm_mem_targetClean
+    (place : Fin 3) (p : LocalKleinCoord) :
+    localTwoForm place.castSucc p ∈
+      rationalPlaceTargetCleanSecondJetSpace place := by
+  fin_cases place
+  · exact rationalZero_localTwoForm_mem_targetClean p
+  · change localTwoForm 1 p ∈ rationalTargetCleanSecondJetSpace 0
+    refine ⟨localTwoForm 0 p, rationalZero_localTwoForm_mem_targetClean p, ?_⟩
+    simpa [rationalPlacePerm, rationalPlaceLocalTwoCoordChange] using
+      rationalPlaceTwoFormLinear_localTwoForm 0 0 p
+  · change localTwoForm 2 p ∈ rationalTargetCleanSecondJetSpace 1
+    refine ⟨localTwoForm 0 p, rationalZero_localTwoForm_mem_targetClean p, ?_⟩
+    simpa [rationalPlacePerm, rationalPlaceLocalTwoCoordChange] using
+      rationalPlaceTwoFormLinear_localTwoForm 1 0 p
+
 /-- The first-order envelope is contained in every rationally normalized
 target-clean second-jet space. -/
 theorem firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean
