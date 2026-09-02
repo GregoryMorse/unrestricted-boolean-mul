@@ -73,6 +73,7 @@ import UnrestrictedBooleanMul.N5.CubicOverlapBasis
 import UnrestrictedBooleanMul.N5.EnvelopeSemantic
 import UnrestrictedBooleanMul.N5.ColourBirth
 import UnrestrictedBooleanMul.N5.ColourNormalization
+import UnrestrictedBooleanMul.N5.ColourCases
 import UnrestrictedBooleanMul.N5.ThreeColour
 import UnrestrictedBooleanMul.N5.StableTargetInduction
 import UnrestrictedBooleanMul.N5.FirstOrderEscape
