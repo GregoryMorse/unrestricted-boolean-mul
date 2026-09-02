@@ -591,6 +591,29 @@ def AnchorTranslateLocalized (d old : TwoForm) : Prop :=
       quadraticQuotientProjection d = closedPlaceEffectivePoint x ∧
       old ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1
 
+/-- The closed-place witness of a fixed nonzero quotient class is unique,
+including its effective local parameter, by injectivity of the atlas. -/
+theorem closedPlaceEffectiveParam_eq_of_anchor_projection
+    {d : TwoForm} {x y : ClosedPlaceEffectiveParam}
+    (hx : quadraticQuotientProjection d = closedPlaceEffectivePoint x)
+    (hy : quadraticQuotientProjection d = closedPlaceEffectivePoint y) :
+    x = y := by
+  apply closedPlaceEffectivePoint_injective
+  exact hx.symm.trans hy
+
+/-- Once one effective chart for an anchor is fixed, every localized target
+translate of that anchor lies in the rational-plus-local displacement space
+of that same chart. -/
+theorem AnchorTranslateLocalized.mem_at_closedPlace
+    {d old : TwoForm} {x : ClosedPlaceEffectiveParam}
+    (h : AnchorTranslateLocalized d old)
+    (hx : quadraticQuotientProjection d = closedPlaceEffectivePoint x) :
+    old ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1 := by
+  rcases h with hrat | ⟨y, hy, hlocal⟩
+  · exact Submodule.mem_sup_left hrat
+  · have hyx : y = x := closedPlaceEffectiveParam_eq_of_anchor_projection hy hx
+    simpa [hyx] using hlocal
+
 /-- Any old-envelope translation that preserves decomposability is localized
 in the preceding sense. -/
 theorem anchorTranslateLocalized_of_decomposable
