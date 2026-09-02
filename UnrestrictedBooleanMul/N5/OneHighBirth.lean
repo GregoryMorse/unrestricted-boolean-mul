@@ -140,6 +140,38 @@ theorem add_mem_base_of_equal_highClass_of_fixed_quadraticPart
     ⟨V.add_mem hv hw, hvwQuad⟩
   rwa [hquad] at hvwPart
 
+/-- Every old wire in the unique-high regime is one actual base low-product
+plus a base quadratic correction. -/
+theorem exists_base_lowProduct_add_base_of_highRank_le_one
+    {A V : Submodule F₂ (ANF 10)}
+    (hreach : DefectLegalSuffix A V)
+    (hAquad : A ≤ N4.quadraticANFSpace 10)
+    (hquad : stateQuadraticPart V = A)
+    (hhigh : stateHighRank V ≤ 1)
+    (v : ANF 10) (hv : v ∈ V) :
+    ∃ p q w : ANF 10,
+      p ∈ A ∧ q ∈ A ∧ w ∈ A ∧ p * q ∈ V ∧
+      v = p * q + w := by
+  by_cases hvQuad : v ∈ N4.quadraticANFSpace 10
+  · have hvA : v ∈ A := by
+      have : v ∈ stateQuadraticPart V := ⟨hv, hvQuad⟩
+      rwa [hquad] at this
+    exact ⟨0, 0, v, A.zero_mem, A.zero_mem, hvA, V.zero_mem, by simp⟩
+  · rcases exists_base_lowProduct_of_unique_highClass
+      hreach hAquad hquad hhigh v hv hvQuad with
+      ⟨p, q, hpA, hqA, hclass, hpqV⟩
+    let w := v + p * q
+    have hwA : w ∈ A :=
+      add_mem_base_of_equal_highClass_of_fixed_quadraticPart
+        hquad hv hpqV hclass
+    refine ⟨p, q, w, hpA, hqA, hwA, hpqV, ?_⟩
+    change v = p * q + (v + p * q)
+    symm
+    calc
+      p * q + (v + p * q) =
+          v + (p * q + p * q) := by ac_rfl
+      _ = v := by rw [anf_add_self, add_zero]
+
 end
 end N5
 end UnrestrictedBooleanMul
