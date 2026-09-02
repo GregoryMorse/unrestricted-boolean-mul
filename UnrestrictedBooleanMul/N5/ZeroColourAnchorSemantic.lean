@@ -231,6 +231,42 @@ theorem rationalZeroAnchorShadowCorrection_mem_targetClean
     (targetCleanSecondJetSpace.smul_mem epsilon
       (rationalZero_ambientTwoHadamard_mem_targetClean p v))
 
+/-- Toggling the constant term of the second factor changes the unanchored
+quadratic shadow by the first quadratic factor. -/
+theorem lowProductQuadraticShadow_toggle_secondConst
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm) :
+    lowProductQuadraticShadow a (b + 1) ell m q c =
+      lowProductQuadraticShadow a b ell m q c + q := by
+  funext s
+  simp only [lowProductQuadraticShadow, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul]
+  ring_nf
+
+/-- When the anchor occurs in the first quadratic factor, the same constant
+toggle changes its displayed correction by exactly the anchor. -/
+theorem rationalZeroAnchorShadowCorrection_toggle_secondConst
+    (p : LocalKleinCoord) (b : F₂) (m : LinearForm) (c : TwoForm) :
+    rationalZeroAnchorShadowCorrection p (b + 1) 1 m c =
+      rationalZeroAnchorShadowCorrection p b 1 m c + localTwoForm 0 p := by
+  funext s
+  simp only [rationalZeroAnchorShadowCorrection, Pi.add_apply,
+    Pi.smul_apply, smul_eq_mul]
+  ring_nf
+
+/-- Combined form of the constant toggle: the full anchored shadow changes
+by the old first-order factor plus the anchor. -/
+theorem rationalZeroAnchoredShadow_toggle_secondConst
+    (p : LocalKleinCoord) (a b : F₂) (ell m : LinearForm)
+    (q c : TwoForm) :
+    lowProductQuadraticShadow a (b + 1) ell m q c +
+        rationalZeroAnchorShadowCorrection p (b + 1) 1 m c =
+      (lowProductQuadraticShadow a b ell m q c +
+        rationalZeroAnchorShadowCorrection p b 1 m c) +
+          (q + localTwoForm 0 p) := by
+  rw [lowProductQuadraticShadow_toggle_secondConst,
+    rationalZeroAnchorShadowCorrection_toggle_secondConst]
+  module
+
 /-- Reduced rational-zero shadow calculation.  All circuit and arbitrary
 anchor data have been removed: the inputs are two literal first-order
 planes and their displayed local-anchor corrections. -/
@@ -315,6 +351,75 @@ def RationalZeroAnchoredEnvelopeShadowCase
             lowProductQuadraticShadow a' b' ell' m' q' c' ∈
           targetCleanSecondJetSpace
 
+/-- If the anchor occurs in the left factor plane, toggling that factor's
+companion constant trades the old-correction anchor bit for an old-envelope
+target.  Hence the `alpha = 0` case implies the `alpha = 1` case. -/
+theorem rationalZeroAnchoredEnvelopeShadowCase_one_of_zero
+    (epsilon' : F₂)
+    (hzero : RationalZeroAnchoredEnvelopeShadowCase 1 epsilon' 0) :
+    RationalZeroAnchoredEnvelopeShadowCase 1 epsilon' 1 := by
+  intro p hp a b a' b' ell m ell' m' q c q' c'
+    hq hc hq' hc' hhigh u hu heq
+  rcases hq with ⟨qCoeff, hqCoeff, hqEq⟩
+  change targetTwo qCoeff = q at hqEq
+  have hu' : u + qCoeff ∈ firstOrderEnvelopeCoeffSpace :=
+    firstOrderEnvelopeCoeffSpace.add_mem hu hqCoeff
+  have htoggle := rationalZeroAnchoredShadow_toggle_secondConst
+    p a b ell m q c
+  have heq' :
+      (lowProductQuadraticShadow a (b + 1) ell m q c +
+          rationalZeroAnchorShadowCorrection p (b + 1) 1 m c) +
+          (lowProductQuadraticShadow a' b' ell' m' q' c' +
+            rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+          (0 : F₂) • localTwoForm 0 p =
+        targetTwo (firstOrderMissingCoeff + (u + qCoeff)) := by
+    calc
+      (lowProductQuadraticShadow a (b + 1) ell m q c +
+            rationalZeroAnchorShadowCorrection p (b + 1) 1 m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            (0 : F₂) • localTwoForm 0 p =
+          ((lowProductQuadraticShadow a b ell m q c +
+              rationalZeroAnchorShadowCorrection p b 1 m c) +
+              (q + localTwoForm 0 p)) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') := by
+                rw [htoggle]
+                simp
+      _ = ((lowProductQuadraticShadow a b ell m q c +
+              rationalZeroAnchorShadowCorrection p b 1 m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            localTwoForm 0 p) + q := by
+              module
+      _ = targetTwo (firstOrderMissingCoeff + u) + q := by
+            simpa using congrArg (fun z : TwoForm => z + q) heq
+      _ = targetTwo (firstOrderMissingCoeff + u) + targetTwo qCoeff := by
+            rw [← hqEq]
+      _ = targetTwo ((firstOrderMissingCoeff + u) + qCoeff) := by
+            exact (targetTwoLinear.map_add _ _).symm
+      _ = targetTwo (firstOrderMissingCoeff + (u + qCoeff)) := by
+            rw [add_assoc]
+  have hclean := hzero p hp a (b + 1) a' b' ell m ell' m'
+    q c q' c' ⟨qCoeff, hqCoeff, hqEq⟩ hc hq' hc' hhigh
+    (u + qCoeff) hu' heq'
+  have hqClean : q ∈ targetCleanSecondJetSpace :=
+    Submodule.mem_sup_left (Submodule.mem_sup_left
+      (show q ∈ firstOrderEnvelopeTwoSpace from
+        ⟨qCoeff, hqCoeff, hqEq⟩))
+  have hsum := targetCleanSecondJetSpace.add_mem hclean hqClean
+  have hrecover :
+      (lowProductQuadraticShadow a (b + 1) ell m q c +
+          lowProductQuadraticShadow a' b' ell' m' q' c') + q =
+        lowProductQuadraticShadow a b ell m q c +
+          lowProductQuadraticShadow a' b' ell' m' q' c' := by
+    rw [lowProductQuadraticShadow_toggle_secondConst]
+    funext s
+    simp only [Pi.add_apply]
+    ring_nf
+    simp only [N3Certificate.two_eq_zero_f2, mul_zero, add_zero]
+  rwa [hrecover] at hsum
+
 /-- Left/right symmetry reduces the seven active Boolean patterns to five:
 `001`, `100`, `101`, `110`, and `111`. -/
 theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_canonicalCases
@@ -353,6 +458,20 @@ theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_canonicalCases
           hq hc hq' hc' hhigh u hu heq
       · exact h111 p hp a b a' b' ell m ell' m' q c q' c'
           hq hc hq' hc' hhigh u hu heq
+
+/-- Constant toggling removes the old-correction anchor bit whenever an
+anchor already occurs in a factor plane.  Therefore only the patterns
+`001`, `100`, and `110` require representative algebra. -/
+theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_threeCases
+    (h001 : RationalZeroAnchoredEnvelopeShadowCase 0 0 1)
+    (h100 : RationalZeroAnchoredEnvelopeShadowCase 1 0 0)
+    (h110 : RationalZeroAnchoredEnvelopeShadowCase 1 1 0) :
+    ActiveRationalZeroAnchoredEnvelopeShadowCore :=
+  activeRationalZeroAnchoredEnvelopeShadowCore_of_canonicalCases
+    h001 h100
+      (rationalZeroAnchoredEnvelopeShadowCase_one_of_zero 0 h100)
+    h110
+      (rationalZeroAnchoredEnvelopeShadowCase_one_of_zero 1 h110)
 
 /-- Only the seven active Boolean cases remain: the inactive case collapses
 to `semanticEnvelope_exact_shadow`. -/
