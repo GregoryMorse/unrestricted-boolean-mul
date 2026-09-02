@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.SuffixBudget
+import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 
 /-!
 # Splitting quadratic defect from genuinely high directions
@@ -153,6 +154,54 @@ theorem DefectLegalSuffix.highRank_le_one_of_quadratic_defect_two
     stateHighRank V ≤ 1 := by
   have hbudget := hreach.quadraticDefect_add_high_le_three hWquad
   omega
+
+/-- A state of high rank at most one has an actual wire representative `g`
+for its unique possible high direction.  Every wire differs from either zero
+or `g` by a quadratic ANF. -/
+theorem exists_single_highRepresentative
+    (V : Submodule F₂ (ANF 10)) (hhigh : stateHighRank V ≤ 1) :
+    ∃ g : ANF 10, g ∈ V ∧
+      ∀ p : ANF 10, p ∈ V →
+        ∃ a : F₂, p + a • g ∈ N4.quadraticANFSpace 10 := by
+  have himage : Module.finrank F₂ (stateHighImage V) ≤ 1 := by
+    rw [stateHighImage_finrank]
+    exact hhigh
+  rcases finrank_le_one_iff.mp himage with ⟨v, hv⟩
+  rcases v.2 with ⟨g, hgV, hg⟩
+  refine ⟨g, hgV, ?_⟩
+  intro p hpV
+  let w : stateHighImage V :=
+    ⟨Submodule.mkQ (N4.quadraticANFSpace 10) p, ⟨p, hpV, rfl⟩⟩
+  rcases hv w with ⟨a, ha⟩
+  have hquot : a • Submodule.mkQ (N4.quadraticANFSpace 10) g =
+      Submodule.mkQ (N4.quadraticANFSpace 10) p := by
+    have := congrArg (fun z : stateHighImage V => z.1) ha
+    simpa [w, hg] using this
+  refine ⟨a, ?_⟩
+  apply (Submodule.Quotient.mk_eq_zero
+    (N4.quadraticANFSpace 10)).mp
+  change (Submodule.mkQ (N4.quadraticANFSpace 10)) (p + a • g) = 0
+  rw [map_add, map_smul, hquot]
+  calc
+    Submodule.mkQ (N4.quadraticANFSpace 10) p +
+        Submodule.mkQ (N4.quadraticANFSpace 10) p =
+        ((1 : F₂) + 1) •
+          Submodule.mkQ (N4.quadraticANFSpace 10) p := by
+            rw [add_smul, one_smul]
+    _ = 0 := by rw [CharTwo.add_self_eq_zero, zero_smul]
+
+/-- Defect-two suffix form: one high representative suffices jointly for all
+wires at any legal endpoint. -/
+theorem DefectLegalSuffix.exists_single_highRepresentative_of_defect_two
+    {W V : Submodule F₂ (ANF 10)}
+    (hreach : DefectLegalSuffix W V)
+    (hWquad : W ≤ N4.quadraticANFSpace 10)
+    (hWdef : N4.flagDefectRank W (mulTarget 5) = 2) :
+    ∃ g : ANF 10, g ∈ V ∧
+      ∀ p : ANF 10, p ∈ V →
+        ∃ a : F₂, p + a • g ∈ N4.quadraticANFSpace 10 :=
+  exists_single_highRepresentative V
+    (hreach.highRank_le_one_of_quadratic_defect_two hWquad hWdef)
 
 end
 end N5
