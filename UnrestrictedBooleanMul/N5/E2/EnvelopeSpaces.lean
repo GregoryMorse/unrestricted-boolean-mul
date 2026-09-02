@@ -96,14 +96,14 @@ theorem wStarTwoSpace_finrank_le_seven :
     Module.finrank F₂ wStarTwoSpace ≤ 7 :=
   envelopeSpan_finrank_le wStarGenerator
 
-private theorem targetTwo_outside8_eq :
+theorem targetTwo_outside8_eq :
     targetTwo (outsideHankelWord 8) = wStarX00 + wStarX11 := by
   rw [targetTwo_outsideHankelWord]
   simp [outsideHankelPlace, outsideHankelLocalCoord, localTwoForm,
     localKleinPair, closedPlaceLocalBasis, wStarX00, wStarX11,
     Fin.sum_univ_succ]
 
-private theorem targetTwo_outside7_eq :
+theorem targetTwo_outside7_eq :
     targetTwo (outsideHankelWord 7) =
       wStarX01 + wStarX10 + wStarX11 := by
   rw [targetTwo_outsideHankelWord]

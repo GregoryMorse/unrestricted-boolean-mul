@@ -29,6 +29,7 @@ import UnrestrictedBooleanMul.N5.E2.WPQRank
 import UnrestrictedBooleanMul.N5.E2.WThreePRank
 import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
 import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
+import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic

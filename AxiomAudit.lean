@@ -320,3 +320,9 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreePTargetBase_finrank
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreePTargetBase_le
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_quotient_dimension_le_two
+#print axioms UnrestrictedBooleanMul.N5.E2.targetTwoSpace_inf_wStarTwoSpace
+#print axioms UnrestrictedBooleanMul.N5.E2.wStar_target_intersection_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.targetTwoSpace_inf_wPQTwoSpace
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQ_target_intersection_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.targetTwoSpace_inf_wThreePTwoSpace
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_target_intersection_finrank
