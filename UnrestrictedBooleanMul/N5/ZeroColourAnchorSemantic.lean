@@ -565,6 +565,78 @@ theorem decomposableEnvelopeTranslate_rational_or_localDisplacement
       decomposableEnvelopeTranslate_mem_closedPlaceDisplacement
         x d p old hd hp hold htranslate hplace⟩⟩
 
+/-- Every rational target direction belongs to the first-order envelope.
+This is recorded at coefficient level so later local arguments can reuse the
+inclusion without unfolding the two-form maps. -/
+theorem rationalCoeffSpace_le_firstOrderEnvelopeCoeffSpace :
+    rationalCoeffSpace ≤ firstOrderEnvelopeCoeffSpace := by
+  apply Submodule.span_le.mpr
+  intro c hc
+  simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hc
+  rcases hc with rfl | rfl | rfl
+  · exact Submodule.subset_span ⟨0, by simp [closedPlaceDirections]⟩
+  · exact Submodule.subset_span ⟨1, by simp [closedPlaceDirections]⟩
+  · exact Submodule.subset_span ⟨2, by simp [closedPlaceDirections]⟩
+
+/-- Two-form version of the rational-direction inclusion. -/
+theorem rationalTwoSpace_le_firstOrderEnvelopeTwoSpace :
+    rationalTwoSpace ≤ firstOrderEnvelopeTwoSpace := by
+  rintro p ⟨c, hc, rfl⟩
+  exact ⟨c, rationalCoeffSpace_le_firstOrderEnvelopeCoeffSpace hc, rfl⟩
+
+/-- Any decomposable lift of an effective closed-place quotient is a local
+Klein lift plus a displacement supported by the rational directions and the
+target plane of that same place. -/
+theorem exists_localForm_add_displacement_of_decomposableLift
+    (x : ClosedPlaceEffectiveParam) (d : TwoForm)
+    (hd : d ∈ decomposableFiber (closedPlaceEffectivePoint x)) :
+    ∃ p : LocalKleinCoord,
+      SatisfiesKlein p ∧
+      ∃ z ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1,
+        d = localTwoForm x.1 p + z := by
+  rcases exists_localDecomposableLift_of_closedPlaceEffectiveParam x with
+    ⟨p, hpKlein, hpFiber⟩
+  let z := d - localTwoForm x.1 p
+  have hz : z ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1 :=
+    fiberDifferenceSpace_closedPlace_le x hpFiber
+      (Submodule.subset_span ⟨d, hd, rfl⟩)
+  refine ⟨p, hpKlein, z, hz, ?_⟩
+  dsimp [z]
+  module
+
+/-- At a rational effective place, every decomposable lift already belongs
+to the target-clean second-jet space normalized at that place. -/
+theorem decomposableLift_mem_rationalPlaceTargetClean
+    (place : Fin 3) (q : EffectiveParamAt place.castSucc)
+    (d : TwoForm) (hd : IsDecomposableTwo d)
+    (hplace : quadraticQuotientProjection d =
+      closedPlaceQuotientPoint place.castSucc q.1) :
+    d ∈ rationalPlaceTargetCleanSecondJetSpace place := by
+  let x : ClosedPlaceEffectiveParam := ⟨place.castSucc, q⟩
+  have hdFiber : d ∈ decomposableFiber (closedPlaceEffectivePoint x) := by
+    refine ⟨hd, ?_⟩
+    simpa [x, closedPlaceEffectivePoint] using hplace
+  rcases exists_localForm_add_displacement_of_decomposableLift x d hdFiber with
+    ⟨p, _hpKlein, z, hz, hdEq⟩
+  have hpClean : localTwoForm x.1 p ∈
+      rationalPlaceTargetCleanSecondJetSpace place := by
+    change localTwoForm place.castSucc p ∈
+      rationalPlaceTargetCleanSecondJetSpace place
+    exact rationalPlace_localTwoForm_mem_targetClean place p
+  rcases Submodule.mem_sup.mp hz with ⟨r, hr, t, ht, hrt⟩
+  have hrClean : r ∈ rationalPlaceTargetCleanSecondJetSpace place :=
+    firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean place
+      (rationalTwoSpace_le_firstOrderEnvelopeTwoSpace hr)
+  have htClean : t ∈ rationalPlaceTargetCleanSecondJetSpace place := by
+    rcases ht with ⟨w, rfl⟩
+    rw [closedPlaceTargetTwoLinear_apply,
+      targetTwo_closedPlaceTargetCoeff]
+    exact rationalPlace_localTwoForm_mem_targetClean place
+      (closedPlaceTargetCoord place.castSucc w)
+  rw [hdEq, ← hrt]
+  exact (rationalPlaceTargetCleanSecondJetSpace place).add_mem hpClean
+    ((rationalPlaceTargetCleanSecondJetSpace place).add_mem hrClean htClean)
+
 /-- A decomposable target two-form is one of the rational evaluation
 directions (or zero), hence belongs to their span.  This is the subspace
 form of the zero-fiber classification used by the anchored plane split. -/
