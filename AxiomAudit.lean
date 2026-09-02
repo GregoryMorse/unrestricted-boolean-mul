@@ -273,6 +273,10 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rationalTriangle_cubic_syzygy
 #print axioms UnrestrictedBooleanMul.N5.independentFirstOrderPlane_intrinsic_classification
 #print axioms UnrestrictedBooleanMul.N5.independentFirstOrderPlanes_shadow_not_missingCoset
+#print axioms UnrestrictedBooleanMul.N5.independentCubicSyzygy_symmetricNormalForm
+#print axioms UnrestrictedBooleanMul.N5.zeroLeftCubic_shadow_decomposition
+#print axioms UnrestrictedBooleanMul.N5.dependentDependentFirstOrderPlanes_shadow_not_missingCoset
+#print axioms UnrestrictedBooleanMul.N5.envelope_shadow
 #print axioms UnrestrictedBooleanMul.N5.targetClean_sup_decomposable_target_mem_firstOrder
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean_not_missingCoset

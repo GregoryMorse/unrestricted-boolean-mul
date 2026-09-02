@@ -31,7 +31,7 @@ private theorem ambientLinearPair_smul_right
   intro i _
   ring
 
-private theorem exists_ambient_dual_pair (x y : LinearForm)
+theorem exists_ambient_dual_pair (x y : LinearForm)
     (hxy : LinearIndependent F₂ ![x, y]) :
     ∃ u v : LinearForm,
       ambientLinearPair x u = 1 ∧ ambientLinearPair y u = 0 ∧
@@ -112,7 +112,7 @@ private theorem ambientCubicFirstContraction_vectorWedgeTwo
   rw [sum_mul_mul_right_local, sum_mul_mul_left_local,
     sum_mul_mul_left_local]
 
-private theorem ambientPlaneCombination_eq_sum_two_wedges_of_cubic
+theorem ambientPlaneCombination_eq_sum_two_wedges_of_cubic
     (x y u : LinearForm) (q c : TwoForm)
     (hcubic : factorPlaneCubic x y q c = 0) :
     ambientLinearPair x u • c + ambientLinearPair y u • q =

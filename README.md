@@ -101,8 +101,9 @@ first independent layer of the `n = 5` proof:
   plane in the first-order envelope.  Independent cubic syzygies are reduced
   to the eight rank-two Hankel lines by contraction, while dependent
   syzygies expose a rational direction.  Combined with the existing shadow
-  lemmas, this gives the unconditional missing-coset exclusion when both
-  low-product planes are independent.
+  lemmas and a symmetric Koszul normal form for dependent planes, this gives
+  the unconditional first-order-envelope missing-coset exclusion for every
+  pair of low products.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient
