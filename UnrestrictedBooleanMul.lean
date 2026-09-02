@@ -26,6 +26,7 @@ import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.CircuitSuffix
 import UnrestrictedBooleanMul.N5.CompletionDeficit
 import UnrestrictedBooleanMul.N5.StableTarget
+import UnrestrictedBooleanMul.N5.HighDefect
 import UnrestrictedBooleanMul.N5.E2.WStarRank
 import UnrestrictedBooleanMul.N5.E2.WPQRank
 import UnrestrictedBooleanMul.N5.E2.WThreePRank

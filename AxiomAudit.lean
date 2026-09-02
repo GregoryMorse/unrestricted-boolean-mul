@@ -339,6 +339,9 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreePState_defectRank
 #print axioms UnrestrictedBooleanMul.N5.suffixPostGain_le_of_stableTargetRank
 #print axioms UnrestrictedBooleanMul.N5.suffixDeficit_positive_of_stableTargetRank_eight
+#print axioms UnrestrictedBooleanMul.N5.flagDefectRank_eq_quadratic_add_high
+#print axioms UnrestrictedBooleanMul.N5.stateHighImage_finrank
+#print axioms UnrestrictedBooleanMul.N5.DefectLegalSuffix.quadraticDefect_add_high_le_three
 #print axioms UnrestrictedBooleanMul.N5.E2.wStar_suffixDeficit_positive
 #print axioms UnrestrictedBooleanMul.N5.E2.wPQ_suffixDeficit_positive
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_suffixDeficit_positive
