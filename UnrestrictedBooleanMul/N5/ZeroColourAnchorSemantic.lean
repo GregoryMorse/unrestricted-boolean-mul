@@ -96,6 +96,50 @@ theorem IsFirstOrderAnchorPlaneNormalForm.members_of_anchor_mem
   · exact ⟨hnormal.1 ▸ firstOrderEnvelopeTwoSpace.add_mem hu hd,
       hnormal.2 ▸ hv⟩
 
+/-- Both directions of a normalized anchored plane lie in the canonical
+one-anchor quadratic space. -/
+theorem IsFirstOrderAnchorPlaneNormalForm.members_anchorSpace
+    {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c) :
+    q ∈ firstOrderAnchorTwoSpace d ∧
+      c ∈ firstOrderAnchorTwoSpace d := by
+  rcases h.exists_anchorBit with ⟨u, hu, v, hv, epsilon, hq, hc⟩
+  constructor
+  · rw [hq]
+    exact (firstOrderAnchorTwoSpace d).add_mem
+      (Submodule.mem_sup_left hu)
+      (Submodule.mem_sup_right
+        (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self d)))
+  · rw [hc]
+    exact Submodule.mem_sup_left hv
+
+/-- The canonical one-anchor quadratic space is contained in every rational
+target-clean second-jet enlargement with that same anchor adjoined. -/
+theorem firstOrderAnchorTwoSpace_le_rationalPlaceTargetClean_sup_anchor
+    (place : Fin 3) (d : TwoForm) :
+    firstOrderAnchorTwoSpace d ≤
+      rationalPlaceTargetCleanSecondJetSpace place ⊔
+        Submodule.span F₂ ({d} : Set TwoForm) := by
+  exact sup_le_sup
+    (firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean place)
+    (le_refl _)
+
+/-- Any ordered basis change of a normalized anchored factor plane changes
+its Boolean quadratic shadow only inside every rational clean space with the
+anchor adjoined. -/
+theorem normalizedAnchorPlane_basisChange_shadow_localized
+    (place : Fin 3) (d : TwoForm) (g : PlaneBasisChange)
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
+    (hnormal : IsFirstOrderAnchorPlaneNormalForm d q c) :
+    changedLowProductQuadraticShadow g a b ell m q c +
+        lowProductQuadraticShadow a b ell m q c ∈
+      rationalPlaceTargetCleanSecondJetSpace place ⊔
+        Submodule.span F₂ ({d} : Set TwoForm) := by
+  have hmem := hnormal.members_anchorSpace
+  exact firstOrderAnchorTwoSpace_le_rationalPlaceTargetClean_sup_anchor
+    place d
+    (planeBasisChange_high_and_shadow_mod_submodule
+      (firstOrderAnchorTwoSpace d) g a b ell m q c hmem.1 hmem.2).2
+
 /-- The exact high and quadratic data left by a normalized anchored
 two-product equation. -/
 structure NormalizedAnchorShadowEquation (d : TwoForm) where
