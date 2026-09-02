@@ -34,6 +34,7 @@ import UnrestrictedBooleanMul.N5.LocalShadow
 import UnrestrictedBooleanMul.N5.LowProductShadow
 import UnrestrictedBooleanMul.N5.RankOneShadow
 import UnrestrictedBooleanMul.N5.IndependentShadow
+import UnrestrictedBooleanMul.N5.DegreeTwoTranslateShadow
 import UnrestrictedBooleanMul.N5.EnvelopeShadow
 import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
 import UnrestrictedBooleanMul.N5.EnvelopeAssembly

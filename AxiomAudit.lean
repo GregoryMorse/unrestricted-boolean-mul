@@ -254,6 +254,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rationalValueRegularCompanion_shadow_not_missingCoset
 #print axioms UnrestrictedBooleanMul.N5.cubicEqualPlaneShadowExcluded_twoBasisChanges
 #print axioms UnrestrictedBooleanMul.N5.sharedRationalValueRegularPlane_shadow_not_missingCoset
+#print axioms UnrestrictedBooleanMul.N5.degreeTwoTranslate_cubic_syzygy
 #print axioms UnrestrictedBooleanMul.N5.targetClean_sup_decomposable_target_mem_firstOrder
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean_not_missingCoset
