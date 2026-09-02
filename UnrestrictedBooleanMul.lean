@@ -52,6 +52,7 @@ import UnrestrictedBooleanMul.N5.FirstOrderQuadraticPart
 import UnrestrictedBooleanMul.N5.OneHighBirth
 import UnrestrictedBooleanMul.N5.ZeroColourEscapeReduction
 import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
+import UnrestrictedBooleanMul.N5.ZeroColourAnchorSemantic
 import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
 import UnrestrictedBooleanMul.N5.RankTwoEscapeBudget
 import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
