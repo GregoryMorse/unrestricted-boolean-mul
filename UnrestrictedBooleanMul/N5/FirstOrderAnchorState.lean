@@ -26,6 +26,16 @@ def firstOrderAnchorTwoSpace (q : TwoForm) : Submodule F₂ TwoForm :=
 def firstOrderAnchorState (q : TwoForm) : Submodule F₂ (ANF 10) :=
   E2.quadraticEnvelopeState (firstOrderAnchorTwoSpace q)
 
+theorem firstOrderEnvelopeState_le_firstOrderAnchorState
+    (q : TwoForm) :
+    firstOrderEnvelopeState ≤ firstOrderAnchorState q := by
+  intro p hp
+  have hpData := (E2.mem_quadraticEnvelopeState_iff
+    firstOrderEnvelopeTwoSpace p).1 hp
+  exact (E2.mem_quadraticEnvelopeState_iff
+    (firstOrderAnchorTwoSpace q) p).2
+    ⟨hpData.1, Submodule.mem_sup_left hpData.2⟩
+
 theorem targetTwoSpace_inf_firstOrderAnchorTwoSpace
     (q : TwoForm) (hqdec : IsDecomposableTwo q) :
     targetTwoSpace ⊓ firstOrderAnchorTwoSpace q =

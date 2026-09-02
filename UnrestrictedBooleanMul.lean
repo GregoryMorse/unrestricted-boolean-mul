@@ -47,6 +47,7 @@ import UnrestrictedBooleanMul.N5.FirstOrderState
 import UnrestrictedBooleanMul.N5.LowDefectPrefix
 import UnrestrictedBooleanMul.N5.LowDefectAnchor
 import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+import UnrestrictedBooleanMul.N5.FirstOrderQuadraticPart
 import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
 import UnrestrictedBooleanMul.N5.RankTwoEscapeBudget
 import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
