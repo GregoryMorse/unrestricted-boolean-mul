@@ -1,5 +1,6 @@
 import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
 import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
+import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
 
 /-!
 # Semantic core of a normalized anchored zero-colour escape
@@ -85,10 +86,11 @@ def AnchoredEnvelopeShadowLocalizedAt (d : TwoForm) : Prop :=
             lowProductQuadraticShadow a' b' ell' m' q' c' +
             alpha • d =
           targetTwo (firstOrderMissingCoeff + u) →
-        lowProductQuadraticShadow a b ell m q c +
-            lowProductQuadraticShadow a' b' ell' m' q' c' ∈
-          targetCleanSecondJetSpace ⊔
-            Submodule.span F₂ ({d} : Set TwoForm)
+        ∃ place : Fin 3,
+          lowProductQuadraticShadow a b ell m q c +
+              lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+            rationalPlaceTargetCleanSecondJetSpace place ⊔
+              Submodule.span F₂ ({d} : Set TwoForm)
 
 def AnchoredEnvelopeShadowLocalization : Prop :=
   ∀ (d : TwoForm), IsDecomposableTwo d →
@@ -363,29 +365,34 @@ theorem NormalizedAnchorShadowEquation.false_of_localization
         h.leftLinear h.leftSecondLinear h.leftTwo h.leftSecondTwo +
       lowProductQuadraticShadow h.rightConst h.rightSecondConst
         h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo
-  have hshadow : shadow ∈ targetCleanSecondJetSpace ⊔
-      Submodule.span F₂ ({d} : Set TwoForm) := by
-    exact hloc d hddec
+  rcases hloc d hddec
       h.leftConst h.leftSecondConst h.rightConst h.rightSecondConst
       h.leftLinear h.leftSecondLinear h.rightLinear h.rightSecondLinear
       h.leftTwo h.leftSecondTwo h.rightTwo h.rightSecondTwo
-      h.left_normal h.right_normal h.high_eq alpha u hu heq
+      h.left_normal h.right_normal h.high_eq alpha u hu heq with
+    ⟨place, hshadow⟩
   have hanchor : alpha • d ∈
       Submodule.span F₂ ({d} : Set TwoForm) :=
     Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self d)
   have htargetClean : targetTwo (firstOrderMissingCoeff + u) ∈
-      targetCleanSecondJetSpace ⊔
+      rationalPlaceTargetCleanSecondJetSpace place ⊔
         Submodule.span F₂ ({d} : Set TwoForm) := by
     rw [← heq]
-    exact (targetCleanSecondJetSpace ⊔
+    exact (rationalPlaceTargetCleanSecondJetSpace place ⊔
       Submodule.span F₂ ({d} : Set TwoForm)).add_mem hshadow
         (Submodule.mem_sup_right hanchor)
   have htarget : targetTwo (firstOrderMissingCoeff + u) ∈ targetTwoSpace :=
     ⟨firstOrderMissingCoeff + u, rfl⟩
   have hfirst : targetTwo (firstOrderMissingCoeff + u) ∈
-      firstOrderEnvelopeTwoSpace :=
-    targetClean_sup_decomposable_target_mem_firstOrder
-      _ d hddec htarget htargetClean
+      firstOrderEnvelopeTwoSpace := by
+    have hinter : targetTwo (firstOrderMissingCoeff + u) ∈
+        targetTwoSpace ⊓
+          (rationalPlaceTargetCleanSecondJetSpace place ⊔
+            Submodule.span F₂ ({d} : Set TwoForm)) :=
+      ⟨htarget, htargetClean⟩
+    rw [targetTwoSpace_inf_rationalPlaceTargetClean_sup_decomposable
+      place d hddec] at hinter
+    exact hinter
   exact missingCoset_targetTwo_not_mem_firstOrderAnchor
     d hddec u hu (Submodule.mem_sup_left hfirst)
 

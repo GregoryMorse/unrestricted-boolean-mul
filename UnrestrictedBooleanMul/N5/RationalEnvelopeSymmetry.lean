@@ -275,6 +275,39 @@ theorem targetTwoSpace_inf_rationalTargetClean_sup_decomposable
       exact hpFirst
     exact ⟨hpInf.1, Submodule.mem_sup_left hpInf.2⟩
 
+/-! ## The three rational clean normalizations -/
+
+/-- Target-clean second-jet space at rational places zero, one, and infinity.
+The latter two are the translation and reversal transports of the first. -/
+def rationalPlaceTargetCleanSecondJetSpace (place : Fin 3) :
+    Submodule F₂ TwoForm :=
+  ![targetCleanSecondJetSpace,
+    rationalTargetCleanSecondJetSpace 0,
+    rationalTargetCleanSecondJetSpace 1] place
+
+/-- Uniform three-rational-place form of equation (11.7). -/
+theorem targetTwoSpace_inf_rationalPlaceTargetClean_sup_decomposable
+    (place : Fin 3) (q : TwoForm) (hqdec : IsDecomposableTwo q) :
+    targetTwoSpace ⊓
+        (rationalPlaceTargetCleanSecondJetSpace place ⊔
+          Submodule.span F₂ ({q} : Set TwoForm)) =
+      firstOrderEnvelopeTwoSpace := by
+  fin_cases place
+  · exact targetTwoSpace_inf_targetClean_sup_decomposable q hqdec
+  · exact targetTwoSpace_inf_rationalTargetClean_sup_decomposable 0 q hqdec
+  · exact targetTwoSpace_inf_rationalTargetClean_sup_decomposable 1 q hqdec
+
+/-- The missing affine target coset contains no decomposable form in any of
+the three rational clean normalizations. -/
+theorem firstOrderMissing_add_rationalPlaceTargetClean_not_decomposable
+    (place : Fin 3) (z : TwoForm)
+    (hz : z ∈ rationalPlaceTargetCleanSecondJetSpace place) :
+    ¬ IsDecomposableTwo (targetTwo firstOrderMissingCoeff + z) := by
+  fin_cases place
+  · exact firstOrderMissing_add_targetClean_not_decomposable z hz
+  · exact firstOrderMissing_add_rationalTargetClean_not_decomposable 0 z hz
+  · exact firstOrderMissing_add_rationalTargetClean_not_decomposable 1 z hz
+
 end
 end N5
 end UnrestrictedBooleanMul
