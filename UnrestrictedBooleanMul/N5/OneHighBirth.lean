@@ -116,6 +116,30 @@ theorem exists_base_lowProduct_of_unique_highClass
               Submodule.span F₂ ({x * y} : Set (ANF 10)) ≤ W')
               (Submodule.mem_span_singleton_self (x * y))
 
+/-- Equal high classes of two old wires differ by a quadratic word; when the
+quadratic part is fixed, that difference lies in the base itself. -/
+theorem add_mem_base_of_equal_highClass_of_fixed_quadraticPart
+    {A V : Submodule F₂ (ANF 10)}
+    (hquad : stateQuadraticPart V = A)
+    {v w : ANF 10} (hv : v ∈ V) (hw : w ∈ V)
+    (hclass : Submodule.mkQ (N4.quadraticANFSpace 10) v =
+      Submodule.mkQ (N4.quadraticANFSpace 10) w) :
+    v + w ∈ A := by
+  have hvwQuad : v + w ∈ N4.quadraticANFSpace 10 := by
+    apply (Submodule.Quotient.mk_eq_zero _).1
+    change Submodule.mkQ (N4.quadraticANFSpace 10) (v + w) = 0
+    rw [map_add, hclass]
+    calc
+      Submodule.mkQ (N4.quadraticANFSpace 10) w +
+          Submodule.mkQ (N4.quadraticANFSpace 10) w =
+        ((1 : F₂) + 1) •
+          Submodule.mkQ (N4.quadraticANFSpace 10) w := by
+            rw [add_smul, one_smul]
+      _ = 0 := by rw [CharTwo.add_self_eq_zero, zero_smul]
+  have hvwPart : v + w ∈ stateQuadraticPart V :=
+    ⟨V.add_mem hv hw, hvwQuad⟩
+  rwa [hquad] at hvwPart
+
 end
 end N5
 end UnrestrictedBooleanMul
