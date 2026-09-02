@@ -297,6 +297,79 @@ theorem NormalizedAnchorShadowEquation.exists_reducedEquation
         (firstOrderMissingCoeff + (h.targetCoeff + oldCoeff)) := by
       rw [add_assoc]
 
+/-- Every target-capable normalized comparison really uses the anchor: in
+the scalar normal form, at least one of the two factor-plane bits or the
+quadratic correction bit is nonzero.  The all-zero branch is exactly the
+already-checked first-order envelope shadow exclusion. -/
+theorem NormalizedAnchorShadowEquation.exists_activeAnchorBits
+    {d : TwoForm} (h : NormalizedAnchorShadowEquation d) :
+    ∃ (q₀ c₀ q₁ c₁ : TwoForm) (ε₀ ε₁ alpha : F₂)
+        (u : TargetCoeff),
+      q₀ ∈ firstOrderEnvelopeTwoSpace ∧
+      c₀ ∈ firstOrderEnvelopeTwoSpace ∧
+      q₁ ∈ firstOrderEnvelopeTwoSpace ∧
+      c₁ ∈ firstOrderEnvelopeTwoSpace ∧
+      u ∈ firstOrderEnvelopeCoeffSpace ∧
+      h.leftTwo = q₀ + ε₀ • d ∧ h.leftSecondTwo = c₀ ∧
+      h.rightTwo = q₁ + ε₁ • d ∧ h.rightSecondTwo = c₁ ∧
+      lowProductQuadraticShadow h.leftConst h.leftSecondConst
+            h.leftLinear h.leftSecondLinear h.leftTwo h.leftSecondTwo +
+          lowProductQuadraticShadow h.rightConst h.rightSecondConst
+            h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo +
+          alpha • d =
+        targetTwo (firstOrderMissingCoeff + u) ∧
+      (ε₀ ≠ 0 ∨ ε₁ ≠ 0 ∨ alpha ≠ 0) := by
+  rcases h.left_normal.exists_anchorBit with
+    ⟨q₀, hq₀, c₀, hc₀, ε₀, hleftQ, hleftC⟩
+  rcases h.right_normal.exists_anchorBit with
+    ⟨q₁, hq₁, c₁, hc₁, ε₁, hrightQ, hrightC⟩
+  rcases h.exists_reducedEquation with ⟨alpha, u, hu, heq⟩
+  refine ⟨q₀, c₀, q₁, c₁, ε₀, ε₁, alpha, u,
+    hq₀, hc₀, hq₁, hc₁, hu,
+    hleftQ, hleftC, hrightQ, hrightC, heq, ?_⟩
+  by_contra hnone
+  have hε₀ : ε₀ = 0 := by
+    by_contra hne
+    exact hnone (Or.inl hne)
+  have hε₁ : ε₁ = 0 := by
+    by_contra hne
+    exact hnone (Or.inr (Or.inl hne))
+  have halpha : alpha = 0 := by
+    by_contra hne
+    exact hnone (Or.inr (Or.inr hne))
+  have hforbidden := semanticEnvelope_exact_shadow
+    h.leftConst h.leftSecondConst h.rightConst h.rightSecondConst
+    h.leftLinear h.leftSecondLinear h.rightLinear h.rightSecondLinear
+    q₀ c₀ q₁ c₁ hq₀ hc₀ hq₁ hc₁ (by
+      simpa [hleftQ, hleftC, hrightQ, hrightC, hε₀, hε₁] using
+        h.high_eq) u hu
+  apply hforbidden
+  simpa [hleftQ, hleftC, hrightQ, hrightC, hε₀, hε₁, halpha]
+    using heq
+
+/-- A genuinely external decomposable anchor cannot itself be target-valued.
+All decomposable target points already lie in the first-order envelope. -/
+theorem externalDecomposableAnchor_not_mem_targetTwoSpace
+    {d : TwoForm} (hddec : IsDecomposableTwo d)
+    (hdU : d ∉ firstOrderEnvelopeTwoSpace) :
+    d ∉ targetTwoSpace := by
+  intro hdT
+  apply hdU
+  have hdInf : d ∈ targetTwoSpace ⊓ firstOrderAnchorTwoSpace d :=
+    ⟨hdT, Submodule.mem_sup_right
+      (Submodule.mem_span_singleton_self d)⟩
+  rwa [targetTwoSpace_inf_firstOrderAnchorTwoSpace d hddec] at hdInf
+
+/-- Hence the quadratic quotient class of an external decomposable anchor
+is nonzero. -/
+theorem externalDecomposableAnchor_quotient_ne_zero
+    {d : TwoForm} (hddec : IsDecomposableTwo d)
+    (hdU : d ∉ firstOrderEnvelopeTwoSpace) :
+    quadraticQuotientProjection d ≠ 0 := by
+  intro hzero
+  exact externalDecomposableAnchor_not_mem_targetTwoSpace hddec hdU
+    ((quadraticQuotientProjection_eq_zero_iff d).1 hzero)
+
 private theorem twoForm_recover_after_duplicate
     (x y : TwoForm) : x = (x + y) + y := by
   funext s
