@@ -2,6 +2,7 @@ import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
 import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
 import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
 import UnrestrictedBooleanMul.N5.Displacement
+import UnrestrictedBooleanMul.N5.DisplacementProfile
 
 /-!
 # Semantic core of a normalized anchored zero-colour escape
@@ -1002,6 +1003,56 @@ theorem nonCubicRigidAnchoredPlane_profile
       (firstOrderEnvelopeTwoSpace.add_mem hq hc)
     module
   · exact Or.inr (Or.inr (Or.inr hsyzygy))
+
+/-- In a non-effective anchor fiber, a decomposable translate by an old
+envelope direction can only use a rational evaluation direction. -/
+theorem decomposableEnvelopeTranslate_mem_rational_of_not_effective
+    (d p old : TwoForm)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hold : old ∈ firstOrderEnvelopeTwoSpace)
+    (htranslate : p = old + d)
+    (hineffective : ¬ IsEffectiveFiber (quadraticQuotientProjection d)) :
+    old ∈ rationalTwoSpace := by
+  rcases decomposableEnvelopeTranslate_rational_or_effective
+      d p old hd hp hold htranslate with ⟨c, _hc, holdEq, hrat | heffective⟩
+  · exact ⟨c, hrat, holdEq.symm⟩
+  · exact (hineffective heffective).elim
+
+/-- Thus a non-rigid anchored plane over a non-effective quotient has only
+three dependent branches, all rational; the fourth branch is an independent
+cubic syzygy. -/
+theorem nonCubicRigidAnchoredPlane_profile_of_not_effective
+    (d q c : TwoForm) (hd : IsDecomposableTwo d)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hineffective : ¬ IsEffectiveFiber (quadraticQuotientProjection d))
+    (hnonrigid : ¬ CubicRigidPlane (q + d) c) :
+    c ∈ rationalTwoSpace ∨
+      q ∈ rationalTwoSpace ∨
+      q + c ∈ rationalTwoSpace ∨
+      ∃ x y : LinearForm, LinearIndependent F₂ ![x, y] ∧
+        factorPlaneCubic x y (q + d) c = 0 := by
+  rcases nonCubicRigidAnchoredPlane_profile d q c hd hq hc hnonrigid with
+    hcrat | hqloc | hsumloc | hind
+  · exact Or.inl hcrat
+  · apply Or.inr
+    apply Or.inl
+    rcases hqloc with hrat | ⟨x, hx, _hlocal⟩
+    · exact hrat
+    · exfalso
+      apply hineffective
+      rw [hx]
+      exact closedPlaceEffectivePoint_effective x
+  · apply Or.inr
+    apply Or.inr
+    apply Or.inl
+    rcases hsumloc with hrat | ⟨x, hx, _hlocal⟩
+    · exact hrat
+    · exfalso
+      apply hineffective
+      rw [hx]
+      exact closedPlaceEffectivePoint_effective x
+  · exact Or.inr (Or.inr (Or.inr hind))
 
 private theorem twoForm_recover_after_duplicate
     (x y : TwoForm) : x = (x + y) + y := by
