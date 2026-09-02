@@ -931,6 +931,24 @@ def IsEffectiveFiber (q : QuadraticQuotient) : Prop :=
     ∃ c : TargetCoeff, c ∉ rationalCoeffSpace ∧
       targetTwo c = p + p'
 
+/-- Two decomposable forms differing by a target word outside the rational
+evaluation space exhibit an effective quotient fiber directly. -/
+theorem isEffectiveFiber_of_decomposable_target_translate
+    (d p : TwoForm) (c : TargetCoeff)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hc : c ∉ rationalCoeffSpace)
+    (htranslate : p = d + targetTwo c) :
+    IsEffectiveFiber (quadraticQuotientProjection d) := by
+  refine ⟨d, p, ?_, ?_, c, hc, ?_⟩
+  · exact ⟨hd, rfl⟩
+  · refine ⟨hp, ?_⟩
+    rw [htranslate, map_add, quadraticQuotientProjection_targetTwo,
+      add_zero]
+  · rw [htranslate]
+    funext s
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+
 /-- Package the nine-way outside-rational Hankel classification with the
 local normal-form index used by the atlas. -/
 theorem exists_outsideHankelWord_of_rankTwo {c : TargetCoeff}
