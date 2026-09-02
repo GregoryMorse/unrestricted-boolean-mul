@@ -218,6 +218,67 @@ theorem exists_firstOrderAnchor_plane_normalForm
           (d s + d s) + (u s + v s) := by ac_rfl
       _ = u s + v s := by rw [CharTwo.add_self_eq_zero, zero_add]
 
+/-- Quadratic projection commutes with each of the six ordered basis
+changes. -/
+theorem quadraticProjection_basisPair
+    (g : PlaneBasisChange) (X Y : ANF 10) :
+    (quadraticProjection 10 (g.basisPair X Y).1,
+        quadraticProjection 10 (g.basisPair X Y).2) =
+      g.basisPair (quadraticProjection 10 X) (quadraticProjection 10 Y) := by
+  cases g <;> simp [PlaneBasisChange.basisPair, map_add]
+
+/-- Ordered basis changes preserve membership in an ANF wire state. -/
+theorem PlaneBasisChange.basisPair_mem_anfSubmodule
+    (g : PlaneBasisChange) (V : Submodule F₂ (ANF 10))
+    (X Y : ANF 10) (hX : X ∈ V) (hY : Y ∈ V) :
+    (g.basisPair X Y).1 ∈ V ∧ (g.basisPair X Y).2 ∈ V := by
+  cases g with
+  | identity => exact ⟨hX, hY⟩
+  | swap => exact ⟨hY, hX⟩
+  | rotateRight => exact ⟨hX, V.add_mem hX hY⟩
+  | rotateLeft => exact ⟨V.add_mem hX hY, hY⟩
+  | cycleRight => exact ⟨hY, V.add_mem hX hY⟩
+  | cycleLeft => exact ⟨V.add_mem hX hY, hX⟩
+
+/-- Circuit-facing normal form for a pair of anchored quadratic wires.  The
+same basis change keeps both factors old and changes their product by an old
+wire, while their quadratic directions become either `(u,v)` or
+`(u+d,v)` with `u,v ∈ U`. -/
+theorem exists_firstOrderAnchor_wirePair_normalForm
+    (d : TwoForm) (X Y : ANF 10)
+    (hX : X ∈ firstOrderAnchorState d)
+    (hY : Y ∈ firstOrderAnchorState d) :
+    ∃ (g : PlaneBasisChange) (u v : TwoForm),
+      u ∈ firstOrderEnvelopeTwoSpace ∧
+      v ∈ firstOrderEnvelopeTwoSpace ∧
+      (g.basisPair X Y).1 ∈ firstOrderAnchorState d ∧
+      (g.basisPair X Y).2 ∈ firstOrderAnchorState d ∧
+      ((g.basisPair X Y).1 * (g.basisPair X Y).2 + X * Y) ∈
+        firstOrderAnchorState d ∧
+      ((quadraticProjection 10 (g.basisPair X Y).1 = u ∧
+          quadraticProjection 10 (g.basisPair X Y).2 = v) ∨
+        (quadraticProjection 10 (g.basisPair X Y).1 = u + d ∧
+          quadraticProjection 10 (g.basisPair X Y).2 = v)) := by
+  have hXdata := (E2.mem_quadraticEnvelopeState_iff
+    (firstOrderAnchorTwoSpace d) X).1 hX
+  have hYdata := (E2.mem_quadraticEnvelopeState_iff
+    (firstOrderAnchorTwoSpace d) Y).1 hY
+  rcases exists_firstOrderAnchor_plane_normalForm d
+      (quadraticProjection 10 X) (quadraticProjection 10 Y)
+      hXdata.2 hYdata.2 with ⟨g, u, v, hu, hv, hnormal⟩
+  have hmem := g.basisPair_mem_anfSubmodule
+    (firstOrderAnchorState d) X Y hX hY
+  have hprojection := quadraticProjection_basisPair g X Y
+  refine ⟨g, u, v, hu, hv, hmem.1, hmem.2,
+    g.product_add_product_mem (firstOrderAnchorState d) X Y hX hY, ?_⟩
+  rcases hnormal with hnormal | hnormal
+  · left
+    have hpair := hprojection.trans hnormal
+    exact ⟨congrArg Prod.fst hpair, congrArg Prod.snd hpair⟩
+  · right
+    have hpair := hprojection.trans hnormal
+    exact ⟨congrArg Prod.fst hpair, congrArg Prod.snd hpair⟩
+
 /-- Literal high classes are additive in the complete linear/quadratic data
 of the right factor. -/
 theorem lowProductHighClass_add_right
