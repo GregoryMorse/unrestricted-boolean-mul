@@ -37,6 +37,22 @@ theorem linearANFTen_add (ell m : LinearForm) :
     linearANFTen (ell + m) = linearANFTen ell + linearANFTen m := by
   simp only [linearANFTen, Pi.add_apply, add_smul, Finset.sum_add_distrib]
 
+/-- The coordinate reconstruction is additive in all three layers. -/
+theorem quadraticCoordinateANF_add
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm) :
+    quadraticCoordinateANF a ell q + quadraticCoordinateANF b m c =
+      quadraticCoordinateANF (a + b) (ell + m) (q + c) := by
+  rw [quadraticCoordinateANF, quadraticCoordinateANF, quadraticCoordinateANF,
+    add_smul, linearANFTen_add]
+  change
+    (a • (1 : ANF 10) + linearANFTen ell + quadraticANFOfFormLinear q) +
+        (b • (1 : ANF 10) + linearANFTen m + quadraticANFOfFormLinear c) =
+      (a • (1 : ANF 10) + b • 1) +
+        (linearANFTen ell + linearANFTen m) +
+          quadraticANFOfFormLinear (q + c)
+  rw [map_add]
+  module
+
 theorem linearANFTen_smul (a : F₂) (ell : LinearForm) :
     linearANFTen (a • ell) = a • linearANFTen ell := by
   simp only [linearANFTen, Pi.smul_apply, smul_eq_mul, Finset.smul_sum,
