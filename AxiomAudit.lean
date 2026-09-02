@@ -299,6 +299,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.semanticEnvelope_shadow
 #print axioms UnrestrictedBooleanMul.N5.lowProductHighClass_eq_of_product_sum_mem_quadratic
 #print axioms UnrestrictedBooleanMul.N5.samePlane_actualLowProducts_ne_missingTargetANF
+#print axioms UnrestrictedBooleanMul.N5.basisChange_actualLowProducts_ne_missingTargetANF
 #print axioms UnrestrictedBooleanMul.N5.targetClean_sup_decomposable_target_mem_firstOrder
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean_not_missingCoset
@@ -339,6 +340,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.anfThreeProjectionTen_linear_mul_quadratic
 #print axioms UnrestrictedBooleanMul.N5.anfThreeProjectionTen_quadraticCoordinateANF_mul
 #print axioms UnrestrictedBooleanMul.N5.factorPlaneCubic_eq_of_samePlane_highClass_eq
+#print axioms UnrestrictedBooleanMul.N5.quadraticOverlapCubic_basisPair
 #print axioms UnrestrictedBooleanMul.N5.anfFourProjectionTen_quadratic_mul_quadratic
 #print axioms UnrestrictedBooleanMul.N5.anfFourProjectionTen_quadraticCoordinateANF_mul
 #print axioms UnrestrictedBooleanMul.N5.ambientWedgeTwo_eq_of_highClass_eq

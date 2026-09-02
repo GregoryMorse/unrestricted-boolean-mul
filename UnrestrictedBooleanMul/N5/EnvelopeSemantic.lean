@@ -1,5 +1,6 @@
 import UnrestrictedBooleanMul.N5.QuarticSemantic
 import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
+import UnrestrictedBooleanMul.N5.CubicOverlapBasis
 
 /-!
 # Circuit-facing first-order envelope semantics
@@ -116,6 +117,49 @@ theorem samePlane_actualLowProducts_ne_missingTargetANF
   have hshadow := semanticEnvelope_shadow
     a b a' b' ell m ell' m' q c q c
       hq hc hq hc hhigh rfl u hu
+  apply hshadow
+  have hprojection := congrArg (quadraticProjection 10) htarget
+  simpa only [map_add, quadraticProjection_quadraticCoordinateANF_mul,
+    quadraticProjection_targetANF] using hprojection
+
+/-- The direct ANF collision exclusion is independent of the ordered basis
+used to present the common quadratic factor plane. -/
+theorem basisChange_actualLowProducts_ne_missingTargetANF
+    (g : PlaneBasisChange)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+        quadraticCoordinateANF a' ell' (g.basisPair q c).1 *
+          quadraticCoordinateANF b' m' (g.basisPair q c).2 ≠
+      targetANF (firstOrderMissingCoeff + u) := by
+  intro htarget
+  have hpair := g.basisPair_mem_submodule firstOrderEnvelopeTwoSpace
+    q c hq hc
+  have htargetQuadratic :
+      targetANF (firstOrderMissingCoeff + u) ∈ N4.quadraticANFSpace 10 :=
+    pureQuadraticANFSpace_le_quadraticANFSpace
+      (targetANF_mem_pure (firstOrderMissingCoeff + u))
+  have hsumQuadratic :
+      quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+          quadraticCoordinateANF a' ell' (g.basisPair q c).1 *
+            quadraticCoordinateANF b' m' (g.basisPair q c).2 ∈
+        N4.quadraticANFSpace 10 := by
+    rw [htarget]
+    exact htargetQuadratic
+  have hhigh : lowProductHighClass ell m q c =
+      lowProductHighClass ell' m' (g.basisPair q c).1
+        (g.basisPair q c).2 :=
+    lowProductHighClass_eq_of_product_sum_mem_quadratic
+      a b a' b' ell m ell' m' q c
+        (g.basisPair q c).1 (g.basisPair q c).2 hsumQuadratic
+  have hshadow := semanticEnvelope_shadow
+    a b a' b' ell m ell' m' q c
+      (g.basisPair q c).1 (g.basisPair q c).2
+      hq hc hpair.1 hpair.2 hhigh
+      (quadraticOverlapCubic_basisPair g q c).symm u hu
   apply hshadow
   have hprojection := congrArg (quadraticProjection 10) htarget
   simpa only [map_add, quadraticProjection_quadraticCoordinateANF_mul,
