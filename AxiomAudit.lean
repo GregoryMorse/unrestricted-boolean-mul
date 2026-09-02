@@ -400,3 +400,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
 #print axioms UnrestrictedBooleanMul.N5.exists_decomposable_anchor_of_presentationDefect_le_one
 #print axioms UnrestrictedBooleanMul.N5.exists_decomposable_anchor_of_quadraticPrefix
+#print axioms UnrestrictedBooleanMul.N5.quadraticPrefixImage_le_firstOrder_sup_anchor
+#print axioms UnrestrictedBooleanMul.N5.exists_firstOrder_decomposable_anchor_of_allQuadraticPrefix

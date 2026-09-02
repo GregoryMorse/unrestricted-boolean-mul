@@ -1,4 +1,4 @@
-import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+import UnrestrictedBooleanMul.N5.LowDefectPrefix
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 /-!
@@ -112,6 +112,83 @@ theorem exists_decomposable_anchor_of_quadraticPrefix
     ⟨q, hqdec, hq, hspan⟩
   rw [hflat.span_eq] at hq hspan
   exact ⟨q, hqdec, hq, hspan⟩
+
+/-- If an anchor covers a quadratic prefix modulo the full target and the
+prefix's actual target wires lie in the first-order envelope, then the full
+quadratic image is covered by the first-order envelope plus that anchor. -/
+theorem quadraticPrefixImage_le_firstOrder_sup_anchor
+    {r j : Nat} (C : Circuit 10 r)
+    (hall : ∀ i : Fin r, i.val < j →
+      C.gate i ∈ N4.quadraticANFSpace 10)
+    (htarget : N4.circuitFlag C j ⊓
+      N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState)
+    (q : TwoForm) (hq : q ∈ quadraticPrefixImage C j)
+    (hcover : quadraticPrefixImage C j ≤
+      targetTwoSpace ⊔ Submodule.span F₂ ({q} : Set TwoForm)) :
+    quadraticPrefixImage C j ≤
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂ ({q} : Set TwoForm) := by
+  rintro p ⟨x, hx, hxp⟩
+  rcases hq with ⟨z, hz, hzq⟩
+  have hpCover := hcover ⟨x, hx, hxp⟩
+  rcases Submodule.mem_sup.mp hpCover with ⟨t, htT, s, hs, hsum⟩
+  rcases Submodule.mem_span_singleton.mp hs with ⟨a, rfl⟩
+  let y := x - a • z
+  have hyV : y ∈ N4.circuitFlag C j :=
+    (N4.circuitFlag C j).sub_mem hx ((N4.circuitFlag C j).smul_mem a hz)
+  have hquadLe : N4.circuitFlag C j ≤ N4.quadraticANFSpace 10 :=
+    N4.wireSpace_le_quadratic_of_prefix C.gate hall
+  have hyquad : y ∈ N4.quadraticANFSpace 10 := hquadLe hyV
+  have hyProjection : quadraticProjection 10 y = t := by
+    simp only [y, map_sub, map_smul, hzq]
+    rw [hxp, ← hsum]
+    exact add_sub_cancel_right t (a • q)
+  have hyTargetEnvelope : y ∈
+      E2.quadraticEnvelopeState targetTwoSpace :=
+    (E2.mem_quadraticEnvelopeState_iff targetTwoSpace y).2
+      ⟨hyquad, hyProjection.symm ▸ htT⟩
+  have hyAmbient : y ∈ N4.targetAmbient 10 (mulTarget 5) := by
+    simpa [E2.quadraticEnvelopeState,
+      E2.targetAmbient_eq_affine_sup_quadraticLift] using hyTargetEnvelope
+  have hyFirst : y ∈ firstOrderEnvelopeState :=
+    htarget ⟨hyV, hyAmbient⟩
+  have htFirst : t ∈ firstOrderEnvelopeTwoSpace := by
+    have hyProjectionMem :=
+      ((E2.mem_quadraticEnvelopeState_iff
+        firstOrderEnvelopeTwoSpace y).1 hyFirst).2
+    rwa [hyProjection] at hyProjectionMem
+  rw [← hsum]
+  exact Submodule.add_mem _
+    (Submodule.mem_sup_left htFirst)
+    (Submodule.mem_sup_right
+      (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self q)))
+
+/-- Every all-quadratic circuit prefix of semantic defect at most one has a
+decomposable anchor whose span with the first-order envelope contains its
+entire quadratic image. -/
+theorem exists_firstOrder_decomposable_anchor_of_allQuadraticPrefix
+    {r j : Nat} (C : Circuit 10 r) (hj : j ≤ r)
+    (hall : AllQuadraticPrefix C j)
+    (hdef : N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) ≤ 1) :
+    ∃ q : TwoForm,
+      IsDecomposableTwo q ∧ q ∈ quadraticPrefixImage C j ∧
+      quadraticPrefixImage C j ≤
+        firstOrderEnvelopeTwoSpace ⊔
+          Submodule.span F₂ ({q} : Set TwoForm) := by
+  let hflat := quadraticPrefixFlattening_of_all_quadratic C hj hall
+  have hpresentation : Module.finrank F₂
+      (presentationDefect hflat.generator) ≤ 1 := by
+    rw [quadraticPrefixFlattening_defect_eq_flagDefect C hflat hall]
+    exact hdef
+  rcases exists_decomposable_anchor_of_quadraticPrefix C hflat
+      hpresentation with ⟨q, hqdec, hq, hcover⟩
+  have htarget : N4.circuitFlag C j ⊓
+      N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState :=
+    allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
+      C hflat hall hdef
+  exact ⟨q, hqdec, hq,
+    quadraticPrefixImage_le_firstOrder_sup_anchor
+      C hall htarget q hq hcover⟩
 
 end
 end N5
