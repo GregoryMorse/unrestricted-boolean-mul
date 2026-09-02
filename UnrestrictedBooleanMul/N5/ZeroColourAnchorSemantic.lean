@@ -565,6 +565,77 @@ theorem decomposableEnvelopeTranslate_rational_or_localDisplacement
       decomposableEnvelopeTranslate_mem_closedPlaceDisplacement
         x d p old hd hp hold htranslate hplace⟩⟩
 
+/-- A decomposable target two-form is one of the rational evaluation
+directions (or zero), hence belongs to their span.  This is the subspace
+form of the zero-fiber classification used by the anchored plane split. -/
+theorem decomposableTarget_mem_rationalTwoSpace
+    {p : TwoForm} (hpdec : IsDecomposableTwo p)
+    (hpTarget : p ∈ targetTwoSpace) :
+    p ∈ rationalTwoSpace := by
+  have hpFiber : p ∈ decomposableFiber 0 :=
+    ⟨hpdec, (quadraticQuotientProjection_eq_zero_iff p).2 hpTarget⟩
+  rw [zeroFiber_eq_rational] at hpFiber
+  simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hpFiber
+  rcases hpFiber with rfl | rfl | rfl | rfl
+  · exact Submodule.zero_mem _
+  · exact ⟨rZeroCoeff, Submodule.subset_span (by simp), rfl⟩
+  · exact ⟨rOneCoeff, Submodule.subset_span (by simp), rfl⟩
+  · exact ⟨rInfinityCoeff, Submodule.subset_span (by simp), rfl⟩
+
+/-- A target displacement of a decomposable anchor is localized when it is
+rational, or when the common nonzero quotient fiber supplies a closed-place
+chart containing that displacement. -/
+def AnchorTranslateLocalized (d old : TwoForm) : Prop :=
+  old ∈ rationalTwoSpace ∨
+    ∃ x : ClosedPlaceEffectiveParam,
+      quadraticQuotientProjection d = closedPlaceEffectivePoint x ∧
+      old ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1
+
+/-- Any old-envelope translation that preserves decomposability is localized
+in the preceding sense. -/
+theorem anchorTranslateLocalized_of_decomposable
+    (d p old : TwoForm)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hold : old ∈ firstOrderEnvelopeTwoSpace)
+    (htranslate : p = old + d) :
+    AnchorTranslateLocalized d old := by
+  rcases decomposableEnvelopeTranslate_rational_or_localDisplacement
+      d p old hd hp hold htranslate with
+    ⟨c, _, holdEq, hrat | ⟨x, hplace, hlocal⟩⟩
+  · left
+    exact ⟨c, hrat, holdEq.symm⟩
+  · exact Or.inr ⟨x, hplace, hlocal⟩
+
+/-- Algebraic profile of a non-rigid plane with one external decomposable
+anchor direction.  The dependent-syzygy branches expose either a rational
+old direction or a closed-place-localized anchor translate; only the final
+branch retains an independent cubic syzygy. -/
+theorem nonCubicRigidAnchoredPlane_profile
+    (d q c : TwoForm) (hd : IsDecomposableTwo d)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hnonrigid : ¬ CubicRigidPlane (q + d) c) :
+    c ∈ rationalTwoSpace ∨
+      AnchorTranslateLocalized d q ∨
+      AnchorTranslateLocalized d (q + c) ∨
+      ∃ x y : LinearForm, LinearIndependent F₂ ![x, y] ∧
+        factorPlaneCubic x y (q + d) c = 0 := by
+  rcases nonCubicRigidPlane_decomposableDirection_or_independentSyzygy
+      (q + d) c hnonrigid with hcdec | hqdec | hsumdec | hsyzygy
+  · exact Or.inl (decomposableTarget_mem_rationalTwoSpace hcdec
+      (firstOrderEnvelopeTwoSpace_le_targetTwoSpace hc))
+  · exact Or.inr (Or.inl
+      (anchorTranslateLocalized_of_decomposable
+        d (q + d) q hd hqdec hq rfl))
+  · apply Or.inr
+    apply Or.inr
+    apply Or.inl
+    apply anchorTranslateLocalized_of_decomposable
+      d ((q + d) + c) (q + c) hd hsumdec
+      (firstOrderEnvelopeTwoSpace.add_mem hq hc)
+    module
+  · exact Or.inr (Or.inr (Or.inr hsyzygy))
+
 private theorem twoForm_recover_after_duplicate
     (x y : TwoForm) : x = (x + y) + y := by
   funext s
