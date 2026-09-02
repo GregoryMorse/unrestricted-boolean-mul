@@ -285,6 +285,42 @@ def rationalPlaceTargetCleanSecondJetSpace (place : Fin 3) :
     rationalTargetCleanSecondJetSpace 0,
     rationalTargetCleanSecondJetSpace 1] place
 
+/-- The two-dimensional first-jet extension at each rational place, obtained
+from the zero-place extension by the same substitutions used for the clean
+quadratic spaces. -/
+def rationalPlaceSecondJetExtensionSpace (place : Fin 3) :
+    Submodule F₂ LinearForm :=
+  ![secondJetExtensionSpace,
+    secondJetExtensionSpace.map (rationalPlaceLinear 0),
+    secondJetExtensionSpace.map (rationalPlaceLinear 1)] place
+
+/-- Transporting one extension factor and an arbitrary companion preserves
+membership in the clean space. -/
+private theorem squarefreeWedge_mem_rationalTargetClean_of_extensionMap
+    (theta : Fin 2) (u v : LinearForm)
+    (hu : u ∈ secondJetExtensionSpace.map (rationalPlaceLinear theta)) :
+    squarefreeWedge u v ∈ rationalTargetCleanSecondJetSpace theta := by
+  rcases hu with ⟨u₀, hu₀, rfl⟩
+  refine ⟨squarefreeWedge u₀ (rationalPlaceLinear theta v), ?_, ?_⟩
+  · apply Submodule.mem_sup_right
+    exact Submodule.subset_span
+      ⟨u₀, hu₀, rationalPlaceLinear theta v, rfl⟩
+  · rw [rationalPlaceTwoFormLinear_squarefreeWedge',
+      rationalPlaceLinear_involutive]
+
+/-- A wedge with one factor in the rational first-jet extension belongs to
+the corresponding target-clean second-jet space. -/
+theorem rationalPlace_extensionWedge_mem_targetClean
+    (place : Fin 3) (u v : LinearForm)
+    (hu : u ∈ rationalPlaceSecondJetExtensionSpace place) :
+    squarefreeWedge u v ∈
+      rationalPlaceTargetCleanSecondJetSpace place := by
+  fin_cases place
+  · apply Submodule.mem_sup_right
+    exact Submodule.subset_span ⟨u, hu, v, rfl⟩
+  · exact squarefreeWedge_mem_rationalTargetClean_of_extensionMap 0 u v hu
+  · exact squarefreeWedge_mem_rationalTargetClean_of_extensionMap 1 u v hu
+
 /-- The displayed basis of the rational-zero local four-space is supported
 on the second-jet core coordinates. -/
 theorem rationalZeroLocalBasis_mem_secondJetCoreSpace (i : Fin 4) :
