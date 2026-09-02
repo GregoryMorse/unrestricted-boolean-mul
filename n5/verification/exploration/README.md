@@ -20,6 +20,7 @@ Run commands from the repository root.  All scripts are deterministic except
 | `e1_independent_numpy.py` | NumPy-accelerated independent/dependent shadow-overlap and affine-span profiles. | NumPy, `e1_pstar_analysis.py`, `w_pq_analysis.py` | Syntax checked; long full scan not part of handoff audit. |
 | `e1_nested_probe.py` | Fixed-seed sampling of nested high gates; useful for finding dangerous forms, not an exhaustive test. | the `e1` modules | Syntax checked; diagnostic only. |
 | `local_pstar_orbits.py` | Local Klein-quadric fiber sizes, stabilizer, and orbit transitivity for the degree-two place. | Python standard library | Fully replayed; transcript recorded. |
+| `first_order_cubic_rigidity_probe.py` | Lightweight discovery audit for the cubic-syzygy rank of all projective planes in the exact first-order envelope basis.  It detects the rational-direction family and the unique non-rational degree-two translate, preventing an over-broad rigidity statement. | `w_pq_analysis.py` | Quick deterministic scan; regression/discovery only. |
 
 The syntax check used for this snapshot is:
 
