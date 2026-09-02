@@ -344,6 +344,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.stateHighImage_finrank
 #print axioms UnrestrictedBooleanMul.N5.DefectLegalSuffix.quadraticDefect_add_high_le_three
 #print axioms UnrestrictedBooleanMul.N5.DefectLegalSuffix.exists_single_highRepresentative_of_defect_two
+#print axioms UnrestrictedBooleanMul.N5.DefectLegalSuffix.exists_oneHigh_gate_normalForms_of_defect_two
 #print axioms UnrestrictedBooleanMul.N5.E2.wStar_suffixDeficit_positive
 #print axioms UnrestrictedBooleanMul.N5.E2.wPQ_suffixDeficit_positive
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_suffixDeficit_positive
