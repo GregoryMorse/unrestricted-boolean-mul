@@ -287,6 +287,73 @@ def ActiveRationalZeroAnchoredEnvelopeShadowCore : Prop :=
             lowProductQuadraticShadow a' b' ell' m' q' c' ∈
           targetCleanSecondJetSpace
 
+/-- One fixed scalar pattern in the rational-zero anchored calculation.
+The three parameters record use of the anchor in the left plane, right
+plane, and old quadratic correction. -/
+def RationalZeroAnchoredEnvelopeShadowCase
+    (epsilon epsilon' alpha : F₂) : Prop :=
+  ∀ (p : LocalKleinCoord), SatisfiesKlein p →
+    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+      (q c q' c' : TwoForm),
+      q ∈ firstOrderEnvelopeTwoSpace →
+      c ∈ firstOrderEnvelopeTwoSpace →
+      q' ∈ firstOrderEnvelopeTwoSpace →
+      c' ∈ firstOrderEnvelopeTwoSpace →
+      lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' →
+      ∀ (u : TargetCoeff),
+        u ∈ firstOrderEnvelopeCoeffSpace →
+        (lowProductQuadraticShadow a b ell m q c +
+            rationalZeroAnchorShadowCorrection p b epsilon m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            alpha • localTwoForm 0 p =
+          targetTwo (firstOrderMissingCoeff + u) →
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+          targetCleanSecondJetSpace
+
+/-- Left/right symmetry reduces the seven active Boolean patterns to five:
+`001`, `100`, `101`, `110`, and `111`. -/
+theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_canonicalCases
+    (h001 : RationalZeroAnchoredEnvelopeShadowCase 0 0 1)
+    (h100 : RationalZeroAnchoredEnvelopeShadowCase 1 0 0)
+    (h101 : RationalZeroAnchoredEnvelopeShadowCase 1 0 1)
+    (h110 : RationalZeroAnchoredEnvelopeShadowCase 1 1 0)
+    (h111 : RationalZeroAnchoredEnvelopeShadowCase 1 1 1) :
+    ActiveRationalZeroAnchoredEnvelopeShadowCore := by
+  intro p hp a b a' b' ell m ell' m' q c q' c' epsilon epsilon'
+    hq hc hq' hc' hhigh alpha u hu heq hactive
+  rcases f2_eq_zero_or_one epsilon with rfl | rfl
+  · rcases f2_eq_zero_or_one epsilon' with rfl | rfl
+    · rcases f2_eq_zero_or_one alpha with rfl | rfl
+      · simp at hactive
+      · exact h001 p hp a b a' b' ell m ell' m' q c q' c'
+          hq hc hq' hc' hhigh u hu heq
+    · rcases f2_eq_zero_or_one alpha with rfl | rfl
+      · have hswap := h100 p hp a' b' a b ell' m' ell m q' c' q c
+            hq' hc' hq hc hhigh.symm u hu (by
+              simpa only [add_zero, add_comm, add_left_comm, add_assoc]
+                using heq)
+        simpa only [add_comm] using hswap
+      · have hswap := h101 p hp a' b' a b ell' m' ell m q' c' q c
+            hq' hc' hq hc hhigh.symm u hu (by
+              simpa only [add_comm, add_left_comm, add_assoc] using heq)
+        simpa only [add_comm] using hswap
+  · rcases f2_eq_zero_or_one epsilon' with rfl | rfl
+    · rcases f2_eq_zero_or_one alpha with rfl | rfl
+      · exact h100 p hp a b a' b' ell m ell' m' q c q' c'
+          hq hc hq' hc' hhigh u hu heq
+      · exact h101 p hp a b a' b' ell m ell' m' q c q' c'
+          hq hc hq' hc' hhigh u hu heq
+    · rcases f2_eq_zero_or_one alpha with rfl | rfl
+      · exact h110 p hp a b a' b' ell m ell' m' q c q' c'
+          hq hc hq' hc' hhigh u hu heq
+      · exact h111 p hp a b a' b' ell m ell' m' q c q' c'
+          hq hc hq' hc' hhigh u hu heq
+
 /-- Only the seven active Boolean cases remain: the inactive case collapses
 to `semanticEnvelope_exact_shadow`. -/
 theorem rationalZeroAnchoredEnvelopeShadowCore_of_active
