@@ -761,6 +761,37 @@ theorem decomposableLift_mem_rationalPlaceTargetClean
   exact (rationalPlaceTargetCleanSecondJetSpace place).add_mem hpClean
     ((rationalPlaceTargetCleanSecondJetSpace place).add_mem hrClean htClean)
 
+/-- At a rational effective place, the entire one-anchor quadratic space is
+already contained in the matching target-clean second jet. -/
+theorem firstOrderAnchorTwoSpace_le_rationalPlaceTargetClean_of_lift
+    (place : Fin 3) (q : EffectiveParamAt place.castSucc)
+    (d : TwoForm) (hd : IsDecomposableTwo d)
+    (hplace : quadraticQuotientProjection d =
+      closedPlaceQuotientPoint place.castSucc q.1) :
+    firstOrderAnchorTwoSpace d ≤
+      rationalPlaceTargetCleanSecondJetSpace place := by
+  apply sup_le
+  · exact firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean place
+  · rw [Submodule.span_le]
+    intro z hz
+    rw [Set.mem_singleton_iff.mp hz]
+    exact decomposableLift_mem_rationalPlaceTargetClean place q d hd hplace
+
+/-- Consequently both directions of every normalized anchored plane lie in
+the matching rational target-clean space. -/
+theorem IsFirstOrderAnchorPlaneNormalForm.members_rationalPlaceTargetClean
+    {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
+    (place : Fin 3) (param : EffectiveParamAt place.castSucc)
+    (hd : IsDecomposableTwo d)
+    (hplace : quadraticQuotientProjection d =
+      closedPlaceQuotientPoint place.castSucc param.1) :
+    q ∈ rationalPlaceTargetCleanSecondJetSpace place ∧
+      c ∈ rationalPlaceTargetCleanSecondJetSpace place := by
+  exact ⟨firstOrderAnchorTwoSpace_le_rationalPlaceTargetClean_of_lift
+      place param d hd hplace h.members_anchorSpace.1,
+    firstOrderAnchorTwoSpace_le_rationalPlaceTargetClean_of_lift
+      place param d hd hplace h.members_anchorSpace.2⟩
+
 /-- The anchored localization statement depends only on the anchor modulo
 the first-order envelope.  Both the target correction and the final anchor
 line are transported explicitly. -/
