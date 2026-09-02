@@ -79,6 +79,7 @@ import UnrestrictedBooleanMul.N5.EnvelopeLocalSymmetry
 import UnrestrictedBooleanMul.N5.EnvelopeOneRotation
 import UnrestrictedBooleanMul.N5.EnvelopeOneRotationExact
 import UnrestrictedBooleanMul.N5.EnvelopeDistinctRational
+import UnrestrictedBooleanMul.N5.EnvelopeDistinctRationalExact
 import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
 import UnrestrictedBooleanMul.N5.EnvelopeComplete
 import UnrestrictedBooleanMul.N5.EnvelopeIndependentComplete

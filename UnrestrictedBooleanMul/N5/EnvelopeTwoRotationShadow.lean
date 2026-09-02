@@ -798,7 +798,7 @@ private theorem twoLocalKernelDifference_twoNormalForms
   exact .intro p v t r s d gMid gMid' hPlace hOther kFirst kSecond
     hgMid hgMid' hhPlace hhOther hkFirst hkSecond
 
-private theorem twoLocalKernelDifference_chain_normalForms
+theorem twoLocalKernelDifference_chain_normalForms
     (q c q' c' : TwoForm) (x y z w rCoord sCoord : Fin 8 → F₂)
     (place other : Fin 3) (hne : place ≠ other)
     (hx : q = exactFirstOrderTwoMap x)

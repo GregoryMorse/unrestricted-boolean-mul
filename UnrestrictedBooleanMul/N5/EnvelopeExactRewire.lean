@@ -112,6 +112,72 @@ theorem exactLowProductCubic_twoProduct_rewire_of_eq
   exact CharTwo.add_eq_zero.mp
     (congrFun (congrFun (congrFun hzero i) j) k)
 
+/-- The full Boolean high quotient obeys the bilinear two-product rewire. -/
+theorem lowProductHighClass_twoProduct_rewire
+    (ell m ell' m' : LinearForm) (q c q' c' : TwoForm) :
+    lowProductHighClass ell m q c +
+        lowProductHighClass ell' m' q' c' =
+      lowProductHighClass ell (m + m') q (c + c') +
+        lowProductHighClass (ell + ell') m' (q + q') c' := by
+  have hright : quadraticCoordinateANF 0 (m + m') (c + c') =
+      quadraticCoordinateANF 0 m c + quadraticCoordinateANF 0 m' c' := by
+    simpa using (quadraticCoordinateANF_add 0 0 m m' c c').symm
+  have hleft : quadraticCoordinateANF 0 (ell + ell') (q + q') =
+      quadraticCoordinateANF 0 ell q + quadraticCoordinateANF 0 ell' q' := by
+    simpa using (quadraticCoordinateANF_add 0 0 ell ell' q q').symm
+  rw [lowProductHighClass, lowProductHighClass,
+    lowProductHighClass, lowProductHighClass, hright, hleft,
+    mul_add, add_mul]
+  simp only [map_add]
+  let A := highProjectionTen
+    (quadraticCoordinateANF 0 ell q * quadraticCoordinateANF 0 m c)
+  let B := highProjectionTen
+    (quadraticCoordinateANF 0 ell q * quadraticCoordinateANF 0 m' c')
+  let C := highProjectionTen
+    (quadraticCoordinateANF 0 ell' q' * quadraticCoordinateANF 0 m' c')
+  change A + C = A + B + (B + C)
+  have hself : B + B = 0 := by
+    calc
+      B + B = ((1 : F₂) + 1) • B := by rw [add_smul, one_smul]
+      _ = 0 := by rw [CharTwo.add_self_eq_zero, zero_smul]
+  calc
+    A + C = (A + C) + 0 := by rw [add_zero]
+    _ = (A + C) + (B + B) := by
+      rw [hself]
+    _ = A + B + (B + C) := by abel
+
+theorem lowProductHighClass_twoProduct_rewire_of_eq
+    (ell m ell' m' : LinearForm) (q c q' c' : TwoForm)
+    (hhigh : lowProductHighClass ell m q c =
+      lowProductHighClass ell' m' q' c') :
+    lowProductHighClass ell (m + m') q (c + c') =
+      lowProductHighClass (ell + ell') m' (q + q') c' := by
+  have hrewire := lowProductHighClass_twoProduct_rewire
+    ell m ell' m' q c q' c'
+  have hzero :
+      lowProductHighClass ell (m + m') q (c + c') +
+        lowProductHighClass (ell + ell') m' (q + q') c' = 0 := by
+    rw [← hrewire, hhigh]
+    calc
+      lowProductHighClass ell' m' q' c' +
+          lowProductHighClass ell' m' q' c' =
+          ((1 : F₂) + 1) • lowProductHighClass ell' m' q' c' := by
+        rw [add_smul, one_smul]
+      _ = 0 := by rw [CharTwo.add_self_eq_zero, zero_smul]
+  let X := lowProductHighClass ell (m + m') q (c + c')
+  let Y := lowProductHighClass (ell + ell') m' (q + q') c'
+  change X = Y
+  change X + Y = 0 at hzero
+  have hself : Y + Y = 0 := by
+    calc
+      Y + Y = ((1 : F₂) + 1) • Y := by rw [add_smul, one_smul]
+      _ = 0 := by rw [CharTwo.add_self_eq_zero, zero_smul]
+  calc
+    X = X + 0 := by rw [add_zero]
+    _ = X + (Y + Y) := by rw [hself]
+    _ = (X + Y) + Y := by ac_rfl
+    _ = Y := by rw [hzero, zero_add]
+
 /-- Applying the same ordered-plane basis change to the linear and
 quadratic layers preserves the complete Boolean high quotient. -/
 theorem PlaneBasisChange.lowProductHighClass_basisPair
