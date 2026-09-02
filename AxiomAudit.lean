@@ -301,6 +301,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.samePlane_actualLowProducts_ne_missingTargetANF
 #print axioms UnrestrictedBooleanMul.N5.basisChange_actualLowProducts_ne_missingTargetANF
 #print axioms UnrestrictedBooleanMul.N5.sameSpan_actualLowProducts_ne_missingTargetANF
+#print axioms UnrestrictedBooleanMul.N5.sameSpan_actualLowProducts_projection_ne_missing
 #print axioms UnrestrictedBooleanMul.N5.targetClean_sup_decomposable_target_mem_firstOrder
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean_not_missingCoset

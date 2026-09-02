@@ -165,6 +165,44 @@ theorem basisChange_actualLowProducts_ne_missingTargetANF
   simpa only [map_add, quadraticProjection_quadraticCoordinateANF_mul,
     quadraticProjection_targetANF] using hprojection
 
+/-- Intrinsic projection form of the basis-change collision theorem.  It
+allows arbitrary affine corrections: only quadraticity of the product sum
+and its quadratic shadow are used. -/
+theorem basisChange_actualLowProducts_projection_ne_missing
+    (g : PlaneBasisChange)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hsum :
+      quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+          quadraticCoordinateANF a' ell' (g.basisPair q c).1 *
+            quadraticCoordinateANF b' m' (g.basisPair q c).2 ∈
+        N4.quadraticANFSpace 10) :
+    quadraticProjection 10
+        (quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+          quadraticCoordinateANF a' ell' (g.basisPair q c).1 *
+            quadraticCoordinateANF b' m' (g.basisPair q c).2) ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  have hpair := g.basisPair_mem_submodule firstOrderEnvelopeTwoSpace
+    q c hq hc
+  have hhigh : lowProductHighClass ell m q c =
+      lowProductHighClass ell' m' (g.basisPair q c).1
+        (g.basisPair q c).2 :=
+    lowProductHighClass_eq_of_product_sum_mem_quadratic
+      a b a' b' ell m ell' m' q c
+        (g.basisPair q c).1 (g.basisPair q c).2 hsum
+  have hshadow := semanticEnvelope_shadow
+    a b a' b' ell m ell' m' q c
+      (g.basisPair q c).1 (g.basisPair q c).2
+      hq hc hpair.1 hpair.2 hhigh
+      (quadraticOverlapCubic_basisPair g q c).symm u hu
+  intro hprojection
+  apply hshadow
+  simpa only [map_add, quadraticProjection_quadraticCoordinateANF_mul]
+    using hprojection
+
 /-- Intrinsic form: two actual products whose independent quadratic factor
 pairs span the same plane cannot collide into the missing target coset. -/
 theorem sameSpan_actualLowProducts_ne_missingTargetANF
@@ -186,6 +224,33 @@ theorem sameSpan_actualLowProducts_ne_missingTargetANF
   subst c'
   exact basisChange_actualLowProducts_ne_missingTargetANF
     g a b a' b' ell m ell' m' q c hq hc u hu
+
+/-- Presentation-free projection form used by first-escape arguments. -/
+theorem sameSpan_actualLowProducts_projection_ne_missing
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hspan : Submodule.span F₂ ({q', c'} : Set TwoForm) =
+      Submodule.span F₂ ({q, c} : Set TwoForm))
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hsum :
+      quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+          quadraticCoordinateANF a' ell' q' *
+            quadraticCoordinateANF b' m' c' ∈
+        N4.quadraticANFSpace 10) :
+    quadraticProjection 10
+        (quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+          quadraticCoordinateANF a' ell' q' *
+            quadraticCoordinateANF b' m' c') ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  rcases exists_planeBasisChange_of_span_eq q c q' c' hind' hspan with
+    ⟨g, hq', hc'⟩
+  subst q'
+  subst c'
+  exact basisChange_actualLowProducts_projection_ne_missing
+    g a b a' b' ell m ell' m' q c hq hc u hu hsum
 
 end
 end N5
