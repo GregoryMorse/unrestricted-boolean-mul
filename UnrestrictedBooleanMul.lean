@@ -25,6 +25,7 @@ import UnrestrictedBooleanMul.N5.QuadraticLift
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.CircuitSuffix
 import UnrestrictedBooleanMul.N5.CompletionDeficit
+import UnrestrictedBooleanMul.N5.StableTarget
 import UnrestrictedBooleanMul.N5.E2.WStarRank
 import UnrestrictedBooleanMul.N5.E2.WPQRank
 import UnrestrictedBooleanMul.N5.E2.WThreePRank
@@ -32,7 +33,9 @@ import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
 import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
 import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
 import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+import UnrestrictedBooleanMul.N5.E2.StableInterface
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+import UnrestrictedBooleanMul.N5.FirstOrderState
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
 import UnrestrictedBooleanMul.N5.RankOneTargetClean

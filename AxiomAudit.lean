@@ -337,3 +337,11 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.E2.wPQState_defectRank
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreePState_targetRank
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreePState_defectRank
+#print axioms UnrestrictedBooleanMul.N5.suffixPostGain_le_of_stableTargetRank
+#print axioms UnrestrictedBooleanMul.N5.suffixDeficit_positive_of_stableTargetRank_eight
+#print axioms UnrestrictedBooleanMul.N5.E2.wStar_suffixDeficit_positive
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQ_suffixDeficit_positive
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_suffixDeficit_positive
+#print axioms UnrestrictedBooleanMul.N5.firstOrderEnvelopeState_targetRank
+#print axioms UnrestrictedBooleanMul.N5.firstOrderEnvelopeState_defectRank
+#print axioms UnrestrictedBooleanMul.N5.stableFirstOrder_targetRank
