@@ -86,6 +86,62 @@ theorem rationalZero_satisfiesKlein_of_decomposable
     SatisfiesKlein p :=
   satisfiesKlein_of_localTwoForm_decomposable 0 p hp
 
+@[simp] theorem localWedgeCoord_zero_left (v : LocalKleinParam) :
+    localWedgeCoord 0 v = 0 := by
+  funext s
+  simp [localWedgeCoord]
+
+@[simp] theorem localWedgeCoord_zero_right (u : LocalKleinParam) :
+    localWedgeCoord u 0 = 0 := by
+  funext s
+  simp [localWedgeCoord]
+
+@[simp] theorem localWedgeCoord_self (u : LocalKleinParam) :
+    localWedgeCoord u u = 0 := by
+  funext s
+  simp [localWedgeCoord, mul_comm]
+
+/-- A nonzero local Klein point has two independent four-coordinate
+factors.  This is the nondegenerate form of the local synthesis theorem. -/
+theorem exists_independent_localWedgeCoord_of_nonzero_satisfiesKlein
+    (p : LocalKleinCoord) (hpzero : p ≠ 0) (hp : SatisfiesKlein p) :
+    ∃ u v : LocalKleinParam,
+      LinearIndependent F₂ (pairDirections u v) ∧
+        p = localWedgeCoord u v := by
+  rcases exists_localWedgeCoord_of_satisfiesKlein p hp with ⟨u, v, huv⟩
+  have hu : u ≠ 0 := by
+    intro hzero
+    subst u
+    simp at huv
+    exact hpzero huv
+  have hv : v ≠ 0 := by
+    intro hzero
+    subst v
+    simp at huv
+    exact hpzero huv
+  have huvne : u ≠ v := by
+    intro heq
+    subst v
+    simp at huv
+    exact hpzero huv
+  exact ⟨u, v, pairDirections_linearIndependent u v hu hv huvne, huv⟩
+
+/-- Ambient factorization of a nonzero local Klein point by the displayed
+four-space basis, retaining independence of the local factor coordinates. -/
+theorem exists_independent_localFactors_of_nonzero_satisfiesKlein
+    (place : Fin 4) (p : LocalKleinCoord)
+    (hpzero : p ≠ 0) (hp : SatisfiesKlein p) :
+    ∃ u v : LocalKleinParam,
+      LinearIndependent F₂ (pairDirections u v) ∧
+      localTwoForm place p =
+        squarefreeWedge
+          (∑ i : Fin 4, u i • closedPlaceLocalBasis place i)
+          (∑ i : Fin 4, v i • closedPlaceLocalBasis place i) := by
+  rcases exists_independent_localWedgeCoord_of_nonzero_satisfiesKlein
+      p hpzero hp with ⟨u, v, hind, huv⟩
+  refine ⟨u, v, hind, ?_⟩
+  rw [huv, localTwoForm_localWedgeCoord]
+
 /-- The two possible quadratic plane types after anchored basis change. -/
 def IsFirstOrderAnchorPlaneNormalForm
     (d q c : TwoForm) : Prop :=
