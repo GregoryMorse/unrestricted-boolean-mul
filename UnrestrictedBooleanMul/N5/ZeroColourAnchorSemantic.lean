@@ -89,6 +89,108 @@ theorem IsFirstOrderAnchorPlaneNormalForm.exists_shadowExpansion
     lowProductQuadraticShadow_add_smul_anchor
       a b ell m u v d epsilon 0
 
+/-- For a literal rational-zero local anchor, removing the underlying
+first-order plane changes the complete Boolean quadratic shadow only inside
+the target-clean second jet. -/
+theorem IsFirstOrderAnchorPlaneNormalForm.exists_rationalZero_shadowReduction
+    {p : LocalKleinCoord} {q c : TwoForm}
+    (h : IsFirstOrderAnchorPlaneNormalForm (localTwoForm 0 p) q c)
+    (a b : F₂) (ell m : LinearForm) :
+    ∃ u ∈ firstOrderEnvelopeTwoSpace,
+      ∃ v ∈ firstOrderEnvelopeTwoSpace,
+        ∃ epsilon : F₂,
+          q = u + epsilon • localTwoForm 0 p ∧ c = v ∧
+          lowProductQuadraticShadow a b ell m q c +
+              lowProductQuadraticShadow a b ell m u v ∈
+            targetCleanSecondJetSpace := by
+  rcases h.exists_shadowExpansion a b ell m with
+    ⟨u, hu, v, hv, epsilon, hq, hc, hshadow⟩
+  refine ⟨u, hu, v, hv, epsilon, hq, hc, ?_⟩
+  have hdClean : localTwoForm 0 p ∈ targetCleanSecondJetSpace :=
+    rationalZero_localTwoForm_mem_targetClean p
+  have hcontraction : ambientBooleanContraction m (localTwoForm 0 p) ∈
+      targetCleanSecondJetSpace :=
+    rationalZero_ambientBooleanContraction_mem_targetClean m p
+  have hhadamard : ambientTwoHadamard (localTwoForm 0 p) v ∈
+      targetCleanSecondJetSpace :=
+    rationalZero_ambientTwoHadamard_mem_targetClean p v
+  have hcorrection :
+      (b * epsilon) • localTwoForm 0 p +
+          epsilon • ambientBooleanContraction m (localTwoForm 0 p) +
+          epsilon • ambientTwoHadamard (localTwoForm 0 p) v ∈
+        targetCleanSecondJetSpace :=
+    targetCleanSecondJetSpace.add_mem
+      (targetCleanSecondJetSpace.add_mem
+        (targetCleanSecondJetSpace.smul_mem (b * epsilon) hdClean)
+        (targetCleanSecondJetSpace.smul_mem epsilon hcontraction))
+      (targetCleanSecondJetSpace.smul_mem epsilon hhadamard)
+  have hreduce :
+      lowProductQuadraticShadow a b ell m q c +
+          lowProductQuadraticShadow a b ell m u v =
+        (b * epsilon) • localTwoForm 0 p +
+          epsilon • ambientBooleanContraction m (localTwoForm 0 p) +
+          epsilon • ambientTwoHadamard (localTwoForm 0 p) v := by
+    rw [hshadow]
+    funext s
+    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
+  rwa [hreduce]
+
+/-- Explicit high correction contributed by a rational-zero local anchor. -/
+def rationalZeroAnchorHighCorrection
+    (p : LocalKleinCoord) (m : LinearForm) (v : TwoForm) :=
+  lowProductHighClass 0 m (localTwoForm 0 p) v
+
+/-- Explicit Boolean quadratic correction contributed by the same anchor. -/
+def rationalZeroAnchorShadowCorrection
+    (p : LocalKleinCoord) (b epsilon : F₂)
+    (m : LinearForm) (v : TwoForm) : TwoForm :=
+  (b * epsilon) • localTwoForm 0 p +
+    epsilon • ambientBooleanContraction m (localTwoForm 0 p) +
+    epsilon • ambientTwoHadamard (localTwoForm 0 p) v
+
+theorem rationalZeroAnchorShadowCorrection_mem_targetClean
+    (p : LocalKleinCoord) (b epsilon : F₂)
+    (m : LinearForm) (v : TwoForm) :
+    rationalZeroAnchorShadowCorrection p b epsilon m v ∈
+      targetCleanSecondJetSpace := by
+  exact targetCleanSecondJetSpace.add_mem
+    (targetCleanSecondJetSpace.add_mem
+      (targetCleanSecondJetSpace.smul_mem (b * epsilon)
+        (rationalZero_localTwoForm_mem_targetClean p))
+      (targetCleanSecondJetSpace.smul_mem epsilon
+        (rationalZero_ambientBooleanContraction_mem_targetClean m p)))
+    (targetCleanSecondJetSpace.smul_mem epsilon
+      (rationalZero_ambientTwoHadamard_mem_targetClean p v))
+
+/-- Reduced rational-zero shadow calculation.  All circuit and arbitrary
+anchor data have been removed: the inputs are two literal first-order
+planes and their displayed local-anchor corrections. -/
+def RationalZeroAnchoredEnvelopeShadowCore : Prop :=
+  ∀ (p : LocalKleinCoord), SatisfiesKlein p →
+    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+      (q c q' c' : TwoForm) (epsilon epsilon' : F₂),
+      q ∈ firstOrderEnvelopeTwoSpace →
+      c ∈ firstOrderEnvelopeTwoSpace →
+      q' ∈ firstOrderEnvelopeTwoSpace →
+      c' ∈ firstOrderEnvelopeTwoSpace →
+      lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' →
+      ∀ (alpha : F₂) (u : TargetCoeff),
+        u ∈ firstOrderEnvelopeCoeffSpace →
+        (lowProductQuadraticShadow a b ell m q c +
+            rationalZeroAnchorShadowCorrection p b epsilon m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            alpha • localTwoForm 0 p =
+          targetTwo (firstOrderMissingCoeff + u) →
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+          targetCleanSecondJetSpace
+
 theorem IsFirstOrderAnchorPlaneNormalForm.members_of_anchor_mem
     {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
     (hd : d ∈ firstOrderEnvelopeTwoSpace) :
@@ -245,6 +347,86 @@ def AnchoredEnvelopeShadowLocalizedAt (d : TwoForm) : Prop :=
 def AnchoredEnvelopeShadowLocalization : Prop :=
   ∀ (d : TwoForm), IsDecomposableTwo d →
     AnchoredEnvelopeShadowLocalizedAt d
+
+/-- The reduced local core implies the complete anchored localization for a
+decomposable rational-zero local representative. -/
+theorem anchoredEnvelopeShadowLocalizedAt_rationalZero_of_core
+    (hcore : RationalZeroAnchoredEnvelopeShadowCore)
+    (p : LocalKleinCoord) (hp : SatisfiesKlein p) :
+    AnchoredEnvelopeShadowLocalizedAt (localTwoForm 0 p) := by
+  intro a b a' b' ell m ell' m' Q C Q' C'
+    hleft hright hhigh alpha u hu heq
+  rcases hleft.exists_anchorBit with
+    ⟨q, hq, c, hc, epsilon, hQ, hC⟩
+  rcases hright.exists_anchorBit with
+    ⟨q', hq', c', hc', epsilon', hQ', hC'⟩
+  have hleftHigh :
+      lowProductHighClass ell m Q C =
+        lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c := by
+    rw [hQ, hC]
+    simpa [rationalZeroAnchorHighCorrection] using
+      lowProductHighClass_add_smul_anchor
+        ell m q c (localTwoForm 0 p) epsilon 0
+  have hrightHigh :
+      lowProductHighClass ell' m' Q' C' =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' := by
+    rw [hQ', hC']
+    simpa [rationalZeroAnchorHighCorrection] using
+      lowProductHighClass_add_smul_anchor
+        ell' m' q' c' (localTwoForm 0 p) epsilon' 0
+  have hreducedHigh :
+      lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' := by
+    rw [← hleftHigh, ← hrightHigh]
+    exact hhigh
+  have hleftShadow :
+      lowProductQuadraticShadow a b ell m Q C =
+        lowProductQuadraticShadow a b ell m q c +
+          rationalZeroAnchorShadowCorrection p b epsilon m c := by
+    rw [hQ, hC]
+    simpa [rationalZeroAnchorShadowCorrection, add_assoc] using
+      lowProductQuadraticShadow_add_smul_anchor
+        a b ell m q c (localTwoForm 0 p) epsilon 0
+  have hrightShadow :
+      lowProductQuadraticShadow a' b' ell' m' Q' C' =
+        lowProductQuadraticShadow a' b' ell' m' q' c' +
+          rationalZeroAnchorShadowCorrection p b' epsilon' m' c' := by
+    rw [hQ', hC']
+    simpa [rationalZeroAnchorShadowCorrection, add_assoc] using
+      lowProductQuadraticShadow_add_smul_anchor
+        a' b' ell' m' q' c' (localTwoForm 0 p) epsilon' 0
+  have hreducedEquation :
+      (lowProductQuadraticShadow a b ell m q c +
+          rationalZeroAnchorShadowCorrection p b epsilon m c) +
+          (lowProductQuadraticShadow a' b' ell' m' q' c' +
+            rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+          alpha • localTwoForm 0 p =
+        targetTwo (firstOrderMissingCoeff + u) := by
+    rw [← hleftShadow, ← hrightShadow]
+    exact heq
+  have hbaseClean := hcore p hp a b a' b' ell m ell' m'
+    q c q' c' epsilon epsilon' hq hc hq' hc' hreducedHigh
+    alpha u hu hreducedEquation
+  have hleftCorrection :=
+    rationalZeroAnchorShadowCorrection_mem_targetClean
+      p b epsilon m c
+  have hrightCorrection :=
+    rationalZeroAnchorShadowCorrection_mem_targetClean
+      p b' epsilon' m' c'
+  refine ⟨0, Submodule.mem_sup_left ?_⟩
+  change
+    lowProductQuadraticShadow a b ell m Q C +
+        lowProductQuadraticShadow a' b' ell' m' Q' C' ∈
+      targetCleanSecondJetSpace
+  rw [hleftShadow, hrightShadow]
+  have hsum := targetCleanSecondJetSpace.add_mem
+    (targetCleanSecondJetSpace.add_mem hbaseClean hleftCorrection)
+    hrightCorrection
+  simpa only [add_assoc, add_left_comm, add_comm] using hsum
 
 private theorem wireNormalForm_to_planeNormalForm
     (d : TwoForm) (X Y : ANF 10)
