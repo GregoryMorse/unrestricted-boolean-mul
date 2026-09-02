@@ -33,6 +33,7 @@ Status meanings:
 | Exact quadratic-prefix coordinate bridge | `N5.circuitFlag_le_quadraticEnvelopeState_of_allQuadratic`, `N5.quadraticPrefixFlattening_defect_eq_flagDefect`; `N5/QuadraticPrefixExact.lean` | affine-plus-pure-quadratic reconstruction and the quotient-map kernel/range identity | checked |
 | Exact low-product ANF coordinates | `N5.exists_quadraticCoordinates`, `N5.quadraticProjection_quadraticCoordinateANF_mul`; `N5/QuadraticCoordinates.lean` | canonical constant/linear/quadratic reconstruction and algebraic Boolean contractions | checked |
 | Circuit-facing low-product semantics | `N5.quadraticCoordinateANF_mul_semanticData`, `N5.lowProductHighClass_rotate_right`; `N5/LowProductSemantic.lean` | literal quotient modulo quadratic ANFs, retaining quadratic--quadratic cubic overlap | checked |
+| Exact cubic semantic bridge | `N5.anfThreeProjectionTen_quadraticCoordinateANF_mul`, `N5.factorPlaneCubic_eq_of_samePlane_highClass_eq`; `N5/CubicSemantic.lean` | literal cubic ANF projection, linear--quadratic exterior identity, and explicit quadratic-overlap cancellation | checked |
 | Proposition 10.2, two-defect envelopes | `N5.E2.envelopes_exhaustive`, `N5/E2/Envelopes.lean` | equality classification and symmetries | interface fixed |
 | Theorem 10.4, stable two-defect bound | `N5.E2.suffix_target_le`, `N5/E2/Main.lean` | four envelope modules | planned |
 | Lemma 10.6, suffix-deficit monotonicity | `N5.suffixPostGain_mono_corrected`, `N5.suffixDeficit_mono`, `N5/SuffixBudget.lean` | equal defect two, no length allowance | checked |
