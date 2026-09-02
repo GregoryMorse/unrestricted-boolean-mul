@@ -415,6 +415,40 @@ theorem lowProductQuadraticShadow_same_linearParts_sum
   ring_nf
   simp [N3Certificate.two_eq_zero_f2]
 
+/-- Positive form of the generic equal-plane shadow calculation.  On a
+cubic-rigid plane, equality of complete high parts puts the total Boolean
+quadratic shadow in every submodule containing the two plane directions. -/
+theorem cubicRigidPlane_shadow_mem_submodule
+    (W : Submodule F₂ TwoForm)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm) (q c : TwoForm)
+    (hq : q ∈ W) (hc : c ∈ W)
+    (hrigid : CubicRigidPlane q c)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q c) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q c ∈ W := by
+  have hcubic : factorPlaneCubic ell m q c =
+      factorPlaneCubic ell' m' q c := congrArg Prod.snd hhigh
+  have hzero := factorPlaneCubic_difference_eq_zero
+    ell m ell' m' q c hcubic
+  rcases hrigid (ell + ell') (m + m') hzero with ⟨hell, hm⟩
+  have hell' : ell = ell' := by
+    funext i
+    have hi := congrFun hell i
+    change ell i + ell' i = 0 at hi
+    rw [← CharTwo.sub_eq_add] at hi
+    exact sub_eq_zero.mp hi
+  have hm' : m = m' := by
+    funext i
+    have hi := congrFun hm i
+    change m i + m' i = 0 at hi
+    rw [← CharTwo.sub_eq_add] at hi
+    exact sub_eq_zero.mp hi
+  subst ell'
+  subst m'
+  rw [lowProductQuadraticShadow_same_linearParts_sum]
+  exact W.add_mem (W.smul_mem _ hc) (W.smul_mem _ hq)
+
 /-- Equal complete high parts on a cubic-rigid plane have identical linear
 parts; hence their shadow difference cannot leave the first-order
 envelope. -/
@@ -522,6 +556,62 @@ theorem sharedCubicRigidPlane_shadow_not_missingCoset
     exact hcorrection
   · exact halignedExcluded
   · exact hu
+
+/-- Positive submodule form of the preceding basis-change argument.  Two
+ordered presentations of one cubic-rigid plane have total quadratic shadow
+inside every submodule containing that plane. -/
+theorem sharedCubicRigidPlane_shadow_mem_submodule
+    (W : Submodule F₂ TwoForm)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) (g : PlaneBasisChange)
+    (hq : q ∈ W) (hc : c ∈ W)
+    (hq' : q' = (g.basisPair q c).1)
+    (hc' : c' = (g.basisPair q c).2)
+    (hrigid : CubicRigidPlane q c)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c') :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ∈ W := by
+  let ab' := g.inverse.basisPair a' b'
+  let lm' := g.inverse.basisPair ell' m'
+  let first := lowProductQuadraticShadow a b ell m q c
+  let actualSecond := lowProductQuadraticShadow a' b' ell' m' q' c'
+  let changedSecond := changedLowProductQuadraticShadow g
+    ab'.1 ab'.2 lm'.1 lm'.2 q c
+  let alignedSecond := lowProductQuadraticShadow
+    ab'.1 ab'.2 lm'.1 lm'.2 q c
+  have hchangedEq : changedSecond = actualSecond := by
+    have hinverse := changedLowProductQuadraticShadow_inverse
+      g a' b' ell' m' q c
+    simpa [changedSecond, actualSecond, ab', lm', hq', hc'] using hinverse
+  have halignedHigh : lowProductHighPart ell m q c =
+      lowProductHighPart lm'.1 lm'.2 q c := by
+    calc
+      _ = lowProductHighPart ell' m' q' c' := hhigh
+      _ = changedLowProductHighPart g lm'.1 lm'.2 q c := by
+        have hinverse := changedLowProductHighPart_inverse
+          g ell' m' q c
+        simpa [lm', hq', hc'] using hinverse.symm
+      _ = lowProductHighPart lm'.1 lm'.2 q c :=
+        planeBasisChange_high g lm'.1 lm'.2 q c
+  have halignedMem : first + alignedSecond ∈ W := by
+    exact cubicRigidPlane_shadow_mem_submodule W
+      a b ab'.1 ab'.2 ell m lm'.1 lm'.2 q c
+        hq hc hrigid halignedHigh
+  have hcorrection : changedSecond + alignedSecond ∈ W := by
+    exact (planeBasisChange_high_and_shadow_mod_submodule
+      W g ab'.1 ab'.2 lm'.1 lm'.2 q c hq hc).2
+  have hsum := W.add_mem halignedMem hcorrection
+  have hreassoc :
+      (first + alignedSecond) + (changedSecond + alignedSecond) =
+        first + actualSecond := by
+    rw [hchangedEq]
+    funext s
+    simp only [Pi.add_apply]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
+  rw [hreassoc] at hsum
+  exact hsum
 
 /-- Two independent first-order factor planes which are not two ordered
 bases of the same plane cannot produce the missing target coset when their

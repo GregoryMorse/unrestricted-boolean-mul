@@ -140,6 +140,47 @@ theorem normalizedAnchorPlane_basisChange_shadow_localized
     (planeBasisChange_high_and_shadow_mod_submodule
       (firstOrderAnchorTwoSpace d) g a b ell m q c hmem.1 hmem.2).2
 
+/-- Generic equal-plane branch of anchored shadow localization.  If the
+common intrinsic plane is cubic-rigid, literal high-class equality forces
+the total quadratic shadow into the one-anchor space, hence into every
+rational target-clean enlargement with that anchor. -/
+theorem sameSpanCubicRigidAnchorPlane_shadow_localized
+    (place : Fin 3) (d : TwoForm)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm)
+    (hnormal : IsFirstOrderAnchorPlaneNormalForm d q c)
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hspan : Submodule.span F₂ ({q', c'} : Set TwoForm) =
+      Submodule.span F₂ ({q, c} : Set TwoForm))
+    (hrigid : CubicRigidPlane q c)
+    (hhigh : lowProductHighClass ell m q c =
+      lowProductHighClass ell' m' q' c') :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+      rationalPlaceTargetCleanSecondJetSpace place ⊔
+        Submodule.span F₂ ({d} : Set TwoForm) := by
+  rcases exists_planeBasisChange_of_span_eq
+      q c q' c' hind' hspan with ⟨g, hq', hc'⟩
+  have hoverlap : quadraticOverlapCubic q c =
+      quadraticOverlapCubic q' c' := by
+    rw [hq', hc']
+    exact (quadraticOverlapCubic_basisPair g q c).symm
+  have hcomplete : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c' :=
+    lowProductHighPart_eq_of_highClass_eq_of_overlap_eq
+      ell m ell' m' q c q' c' hhigh hoverlap
+  have hmem := hnormal.members_anchorSpace
+  have hshadow :
+      lowProductQuadraticShadow a b ell m q c +
+          lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+        firstOrderAnchorTwoSpace d :=
+    sharedCubicRigidPlane_shadow_mem_submodule
+      (firstOrderAnchorTwoSpace d)
+      a b a' b' ell m ell' m' q c q' c' g
+      hmem.1 hmem.2 hq' hc' hrigid hcomplete
+  exact firstOrderAnchorTwoSpace_le_rationalPlaceTargetClean_sup_anchor
+    place d hshadow
+
 /-- The exact high and quadratic data left by a normalized anchored
 two-product equation. -/
 structure NormalizedAnchorShadowEquation (d : TwoForm) where
