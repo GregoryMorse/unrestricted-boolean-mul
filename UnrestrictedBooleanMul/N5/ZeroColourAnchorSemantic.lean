@@ -68,6 +68,23 @@ structure NormalizedAnchorShadowEquation (d : TwoForm) where
           rightLinear rightSecondLinear rightTwo rightSecondTwo +
             correctionTwo)
 
+/-- Exact algebraic interface of the decomposable-defect clause in the
+manuscript's envelope-shadow lemma.  It states that equal complete high
+parts over the two normalized anchored plane types have total Boolean
+quadratic shadow in the target-clean second jet plus the anchor line. -/
+def AnchoredEnvelopeShadowLocalization : Prop :=
+  ∀ (d : TwoForm), IsDecomposableTwo d →
+    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+      (q c q' c' : TwoForm),
+      IsFirstOrderAnchorPlaneNormalForm d q c →
+      IsFirstOrderAnchorPlaneNormalForm d q' c' →
+      lowProductHighClass ell m q c =
+        lowProductHighClass ell' m' q' c' →
+      lowProductQuadraticShadow a b ell m q c +
+          lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+        targetCleanSecondJetSpace ⊔
+          Submodule.span F₂ ({d} : Set TwoForm)
+
 private theorem wireNormalForm_to_planeNormalForm
     (d : TwoForm) (X Y : ANF 10)
     (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
@@ -263,6 +280,44 @@ theorem NormalizedAnchorShadowEquation.false_of_anchor_mem_envelope
         (firstOrderMissingCoeff + (u + alpha • dCoeff)) := by
       rw [add_assoc]
 
+/-- Once the anchored envelope-shadow localization is supplied, equation
+(11.7) turns every normalized anchored collision into a contradiction. -/
+theorem NormalizedAnchorShadowEquation.false_of_localization
+    {d : TwoForm} (h : NormalizedAnchorShadowEquation d)
+    (hddec : IsDecomposableTwo d)
+    (hloc : AnchoredEnvelopeShadowLocalization) : False := by
+  rcases h.exists_reducedEquation with ⟨alpha, u, hu, heq⟩
+  let shadow :=
+    lowProductQuadraticShadow h.leftConst h.leftSecondConst
+        h.leftLinear h.leftSecondLinear h.leftTwo h.leftSecondTwo +
+      lowProductQuadraticShadow h.rightConst h.rightSecondConst
+        h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo
+  have hshadow : shadow ∈ targetCleanSecondJetSpace ⊔
+      Submodule.span F₂ ({d} : Set TwoForm) := by
+    exact hloc d hddec
+      h.leftConst h.leftSecondConst h.rightConst h.rightSecondConst
+      h.leftLinear h.leftSecondLinear h.rightLinear h.rightSecondLinear
+      h.leftTwo h.leftSecondTwo h.rightTwo h.rightSecondTwo
+      h.left_normal h.right_normal h.high_eq
+  have hanchor : alpha • d ∈
+      Submodule.span F₂ ({d} : Set TwoForm) :=
+    Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self d)
+  have htargetClean : targetTwo (firstOrderMissingCoeff + u) ∈
+      targetCleanSecondJetSpace ⊔
+        Submodule.span F₂ ({d} : Set TwoForm) := by
+    rw [← heq]
+    exact (targetCleanSecondJetSpace ⊔
+      Submodule.span F₂ ({d} : Set TwoForm)).add_mem hshadow
+        (Submodule.mem_sup_right hanchor)
+  have htarget : targetTwo (firstOrderMissingCoeff + u) ∈ targetTwoSpace :=
+    ⟨firstOrderMissingCoeff + u, rfl⟩
+  have hfirst : targetTwo (firstOrderMissingCoeff + u) ∈
+      firstOrderEnvelopeTwoSpace :=
+    targetClean_sup_decomposable_target_mem_firstOrder
+      _ d hddec htarget htargetClean
+  exact missingCoset_targetTwo_not_mem_firstOrderAnchor
+    d hddec u hu (Submodule.mem_sup_left hfirst)
+
 /-- The circuit-facing consequence: every fixed-anchor zero-colour escape
 produces the finite-dimensional normalized shadow obstruction. -/
 theorem exists_normalizedAnchorShadowEquation_of_zeroColour_escape
@@ -281,6 +336,27 @@ theorem exists_normalizedAnchorShadowEquation_of_zeroColour_escape
   rcases exists_normalized_anchor_twoProduct_equation_of_zeroColour_escape
       d V X Y hreach hquad hhigh hX hY hXquad hYquad hold hescape with ⟨h⟩
   exact h.exists_shadowEquation
+
+/-- Circuit-facing fixed-anchor zero-colour closure obtained from the single
+algebraic localization interface above. -/
+theorem zeroColour_step_closed_of_fixedAnchor_highRank_le_one_of_localization
+    (hloc : AnchoredEnvelopeShadowLocalization)
+    (d : TwoForm) (hddec : IsDecomposableTwo d)
+    (V : Submodule F₂ (ANF 10)) (X Y : ANF 10)
+    (hreach : DefectLegalSuffix (firstOrderAnchorState d) V)
+    (hquad : stateQuadraticPart V = firstOrderAnchorState d)
+    (hhigh : stateHighRank V ≤ 1)
+    (hX : X ∈ V) (hY : Y ∈ V)
+    (hXquad : X ∈ N4.quadraticANFSpace 10)
+    (hYquad : Y ∈ N4.quadraticANFSpace 10)
+    (hold : V ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
+      firstOrderEnvelopeState) :
+    andExtend V X Y ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
+      firstOrderEnvelopeState := by
+  by_contra hescape
+  rcases exists_normalizedAnchorShadowEquation_of_zeroColour_escape
+      d V X Y hreach hquad hhigh hX hY hXquad hYquad hold hescape with ⟨h⟩
+  exact h.false_of_localization hddec hloc
 
 end
 end N5
