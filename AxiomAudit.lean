@@ -317,6 +317,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.colourProduct_tautologies
 #print axioms UnrestrictedBooleanMul.N5.rankOneColour_normalize
 #print axioms UnrestrictedBooleanMul.N5.highQuotient_factor_trichotomy
+#print axioms UnrestrictedBooleanMul.N5.highQuotient_rankOne_normalize
 #print axioms UnrestrictedBooleanMul.N5.bornThreeColourDirections_linearIndependent
 #print axioms UnrestrictedBooleanMul.N5.oldProductColour_forces_defect_zero
 #print axioms UnrestrictedBooleanMul.N5.E2.wStarTargetBase_finrank

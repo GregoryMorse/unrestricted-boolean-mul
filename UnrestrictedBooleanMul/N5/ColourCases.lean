@@ -88,6 +88,34 @@ theorem highQuotient_factor_trichotomy (X Y : ANF 10) :
   · exact Or.inr (Or.inl hrankOne)
   · exact Or.inr (Or.inr hrankTwo)
 
+/-- A rank-one branch in the literal high quotient admits the manuscript's
+Boolean normalization with a genuinely high first factor and a quadratic
+second factor. -/
+theorem highQuotient_rankOne_normalize
+    (V : Submodule F₂ (ANF 10)) (g :
+      (ANF 10) ⧸ N4.quadraticANFSpace 10)
+    (X Y : ANF 10) (hg : g ≠ 0) (hX : X ∈ V) (hY : Y ∈ V)
+    (hpattern : RankOneColourPattern
+      (Submodule.mkQ (N4.quadraticANFSpace 10)) g X Y) :
+    ∃ U c : ANF 10,
+      U ∈ V ∧ U ∉ N4.quadraticANFSpace 10 ∧
+      c ∈ V ∧ c ∈ N4.quadraticANFSpace 10 ∧
+      andExtend V U c = andExtend V X Y ∧
+      U * (U * c) = U * c ∧ (U * c) * c = U * c := by
+  rcases rankOneColour_normalize V
+      (Submodule.mkQ (N4.quadraticANFSpace 10)) g X Y hX hY hpattern with
+    ⟨U, c, hUV, hcV, hUg, hcZero, hextend, hleft, hright⟩
+  have hUhigh : U ∉ N4.quadraticANFSpace 10 := by
+    intro hUquad
+    apply hg
+    rw [← hUg]
+    exact (Submodule.Quotient.mk_eq_zero _).mpr hUquad
+  have hcquad : c ∈ N4.quadraticANFSpace 10 :=
+    (Submodule.Quotient.mk_eq_zero _).mp hcZero
+  exact ⟨U, c, hUV, hUhigh, hcV, hcquad,
+    by simpa only [andExtend] using hextend,
+    hleft, hright⟩
+
 end
 end N5
 end UnrestrictedBooleanMul
