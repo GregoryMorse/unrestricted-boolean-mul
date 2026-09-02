@@ -1011,6 +1011,70 @@ theorem exists_closedPlaceEffectiveParam_of_effectiveFiber
   rcases hmem with ⟨x, _, hx⟩
   exact ⟨x, hx.symm⟩
 
+/-- Every effective atlas point has a decomposable representative entirely
+inside its displayed closed-place four-space.  This is the local base point
+used to compare arbitrary decomposable lifts by the intrinsic displacement
+space. -/
+theorem exists_localDecomposableLift_of_closedPlaceEffectiveParam
+    (x : ClosedPlaceEffectiveParam) :
+    ∃ p : LocalKleinCoord,
+      SatisfiesKlein p ∧
+      localTwoForm x.1 p ∈ decomposableFiber (closedPlaceEffectivePoint x) := by
+  rcases x with ⟨place, ⟨q, hq⟩⟩
+  fin_cases place
+  · have heffective : RationalLocalEffective q := by
+      simpa [effectiveParamsAt, rationalEffectiveParams] using hq
+    rcases (rationalHasJetDifference_iff q).2 heffective with
+      ⟨z, hz, _w, _hw, _hzw⟩
+    have hK : SatisfiesKlein (closedPlaceLocalPoint 0 q z) := by
+      simpa [closedPlaceLocalPoint, rationalKleinFiber] using hz
+    refine ⟨closedPlaceLocalPoint 0 q z, hK,
+      localTwoForm_decomposable_of_satisfiesKlein 0 _ hK, ?_⟩
+    change quadraticQuotientProjection
+        (localTwoForm 0 (closedPlaceLocalPoint 0 q z)) =
+      closedPlaceQuotientPoint 0 q
+    rw [quadraticQuotientProjection_localTwoForm,
+      closedPlaceQuotientParam_localPoint]
+  · have heffective : RationalLocalEffective q := by
+      simpa [effectiveParamsAt, rationalEffectiveParams] using hq
+    rcases (rationalHasJetDifference_iff q).2 heffective with
+      ⟨z, hz, _w, _hw, _hzw⟩
+    have hK : SatisfiesKlein (closedPlaceLocalPoint 1 q z) := by
+      simpa [closedPlaceLocalPoint, rationalKleinFiber] using hz
+    refine ⟨closedPlaceLocalPoint 1 q z, hK,
+      localTwoForm_decomposable_of_satisfiesKlein 1 _ hK, ?_⟩
+    change quadraticQuotientProjection
+        (localTwoForm 1 (closedPlaceLocalPoint 1 q z)) =
+      closedPlaceQuotientPoint 1 q
+    rw [quadraticQuotientProjection_localTwoForm,
+      closedPlaceQuotientParam_localPoint]
+  · have heffective : RationalLocalEffective q := by
+      simpa [effectiveParamsAt, rationalEffectiveParams] using hq
+    rcases (rationalHasJetDifference_iff q).2 heffective with
+      ⟨z, hz, _w, _hw, _hzw⟩
+    have hK : SatisfiesKlein (closedPlaceLocalPoint 2 q z) := by
+      simpa [closedPlaceLocalPoint, rationalKleinFiber] using hz
+    refine ⟨closedPlaceLocalPoint 2 q z, hK,
+      localTwoForm_decomposable_of_satisfiesKlein 2 _ hK, ?_⟩
+    change quadraticQuotientProjection
+        (localTwoForm 2 (closedPlaceLocalPoint 2 q z)) =
+      closedPlaceQuotientPoint 2 q
+    rw [quadraticQuotientProjection_localTwoForm,
+      closedPlaceQuotientParam_localPoint]
+  · have heffective : DegreeTwoLocalEffective q := by
+      simpa [effectiveParamsAt, degreeTwoEffectiveParams] using hq
+    rcases (degreeTwoHasDifference_iff q).2 heffective with
+      ⟨z, hz, _w, _hw, _hzw⟩
+    have hK : SatisfiesKlein (closedPlaceLocalPoint 3 q z) := by
+      simpa [closedPlaceLocalPoint, degreeTwoKleinFiber] using hz
+    refine ⟨closedPlaceLocalPoint 3 q z, hK,
+      localTwoForm_decomposable_of_satisfiesKlein 3 _ hK, ?_⟩
+    change quadraticQuotientProjection
+        (localTwoForm 3 (closedPlaceLocalPoint 3 q z)) =
+      closedPlaceQuotientPoint 3 q
+    rw [quadraticQuotientProjection_localTwoForm,
+      closedPlaceQuotientParam_localPoint]
+
 /-- Turn two local Klein points in one affine chart into two decomposable
 ambient points in the same global quotient fiber. -/
 theorem closedPlace_effective_of_local_difference (place : Fin 4)
