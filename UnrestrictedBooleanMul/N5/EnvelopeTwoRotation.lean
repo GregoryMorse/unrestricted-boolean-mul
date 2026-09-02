@@ -622,6 +622,121 @@ theorem twoLocalKernelDifference_chain
         (firstOrderLocalKernelDirections i) (by simpa [add_comm] using hdiff)
         hfirst
 
+theorem exactFirstOrderTwoMap_localValueCoordinates (i : Fin 3) :
+    exactFirstOrderTwoMap (firstOrderLocalValueCoordinates i) =
+      (ExceptionalIndependentPlane.rationalJet i).left := by
+  fin_cases i
+  · change exactFirstOrderTwoMap (firstOrderLocalValueCoordinates 0) =
+      rationalZeroValueTwo
+    rw [rationalZeroValueTwo_eq_target]
+    simp [exactFirstOrderTwoMap_apply, exactFirstOrderCombination,
+      exactFirstOrderDirections, firstOrderLocalValueCoordinates,
+      Pi.basisFun]
+  · change exactFirstOrderTwoMap (firstOrderLocalValueCoordinates 1) =
+      rationalOneValueTwo
+    rw [rationalOneValueTwo_eq_target]
+    simp [exactFirstOrderTwoMap_apply, exactFirstOrderCombination,
+      exactFirstOrderDirections, firstOrderLocalValueCoordinates,
+      Pi.basisFun]
+  · change exactFirstOrderTwoMap (firstOrderLocalValueCoordinates 2) =
+      rationalInfinityValueTwo
+    rw [rationalInfinityValueTwo_eq_target]
+    simp [exactFirstOrderTwoMap_apply, exactFirstOrderCombination,
+      exactFirstOrderDirections, firstOrderLocalValueCoordinates,
+      Pi.basisFun]
+
+theorem exactFirstOrderTwoMap_localJetCoordinates (i : Fin 3) :
+    exactFirstOrderTwoMap (firstOrderLocalJetCoordinates i) =
+      (ExceptionalIndependentPlane.rationalJet i).right := by
+  fin_cases i
+  · change exactFirstOrderTwoMap (firstOrderLocalJetCoordinates 0) =
+      rationalZeroJetTwo
+    rw [rationalZeroJetTwo_eq_target]
+    simp [exactFirstOrderTwoMap_apply, exactFirstOrderCombination,
+      exactFirstOrderDirections, firstOrderLocalJetCoordinates,
+      Pi.basisFun]
+  · change exactFirstOrderTwoMap (firstOrderLocalJetCoordinates 1) =
+      rationalOneJetTwo
+    rw [rationalOneJetTwo_eq_target]
+    simp [exactFirstOrderTwoMap_apply, exactFirstOrderCombination,
+      exactFirstOrderDirections, firstOrderLocalJetCoordinates,
+      Pi.basisFun]
+  · change exactFirstOrderTwoMap (firstOrderLocalJetCoordinates 2) =
+      rationalInfinityJetTwo
+    rw [rationalInfinityJetTwo_eq_target]
+    simp [exactFirstOrderTwoMap_apply, exactFirstOrderCombination,
+      exactFirstOrderDirections, firstOrderLocalJetCoordinates,
+      Pi.basisFun]
+
+/-- If the Pluecker vector of an independent envelope plane is one of the
+three local kernel directions, the ambient plane is an arbitrary ordered
+presentation of the corresponding canonical rational value--jet plane. -/
+theorem isExceptionalIndependentPlanePresentation_of_planeCoeff_eq_local
+    (q c : TwoForm) (x y : Fin 8 → F₂) (i : Fin 3)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (heq : firstOrderPlaneCoeff x y =
+      firstOrderLocalKernelDirections i) :
+    IsExceptionalIndependentPlanePresentation q c := by
+  have hxy := exactFirstOrderCoordinates_linearIndependent
+    q c x y hx hy hind
+  have hzero : firstOrderPlaneCoeff x y +
+      firstOrderPlaneCoeff (firstOrderLocalValueCoordinates i)
+        (firstOrderLocalJetCoordinates i) = 0 := by
+    rw [heq, firstOrderPlaneCoeff_localCoordinates]
+    funext k
+    exact CharTwo.add_self_eq_zero _
+  have hcoordSpan :=
+    firstOrderCoordinate_span_eq_of_planeCoeff_add_eq_zero
+      x y (firstOrderLocalValueCoordinates i)
+        (firstOrderLocalJetCoordinates i) hxy
+        (firstOrderLocalCoordinates_linearIndependent i) hzero
+  have hambientSpan :=
+    quadraticPlane_span_eq_of_firstOrderCoordinate_span_eq
+      q c (ExceptionalIndependentPlane.rationalJet i).left
+        (ExceptionalIndependentPlane.rationalJet i).right
+      x y (firstOrderLocalValueCoordinates i)
+        (firstOrderLocalJetCoordinates i) hx hy
+        (exactFirstOrderTwoMap_localValueCoordinates i).symm
+        (exactFirstOrderTwoMap_localJetCoordinates i).symm hcoordSpan
+  exact isExceptionalIndependentPlanePresentation_of_span_eq
+    (ExceptionalIndependentPlane.rationalJet i) q c hind hambientSpan
+
+/-- Ambient form of the two-rotation chain.  The collapsed-midpoint cases
+are discharged immediately as canonical exceptional-plane presentations;
+the remaining branch retains an independent intermediate coordinate plane
+for two successive applications of the one-rotation normal form. -/
+theorem twoLocalKernelDifference_actual_chain
+    (q c : TwoForm) (x y z w : Fin 8 → F₂) (i j : Fin 3)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hij : i ≠ j)
+    (hdiff : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+      firstOrderLocalKernelDirections i +
+        firstOrderLocalKernelDirections j) :
+    IsExceptionalIndependentPlanePresentation q c ∨
+      ∃ r s : Fin 8 → F₂,
+        LinearIndependent F₂ ![r, s] ∧
+        ((firstOrderPlaneCoeff x y + firstOrderPlaneCoeff r s =
+              firstOrderLocalKernelDirections i ∧
+            firstOrderPlaneCoeff r s + firstOrderPlaneCoeff z w =
+              firstOrderLocalKernelDirections j) ∨
+          (firstOrderPlaneCoeff x y + firstOrderPlaneCoeff r s =
+              firstOrderLocalKernelDirections j ∧
+            firstOrderPlaneCoeff r s + firstOrderPlaneCoeff z w =
+              firstOrderLocalKernelDirections i)) := by
+  rcases twoLocalKernelDifference_chain x y z w i j hij hdiff with
+    hi | hj | ⟨r, s, hrs, hchain⟩
+  · exact Or.inl
+      (isExceptionalIndependentPlanePresentation_of_planeCoeff_eq_local
+        q c x y i hx hy hind hi)
+  · exact Or.inl
+      (isExceptionalIndependentPlanePresentation_of_planeCoeff_eq_local
+        q c x y j hx hy hind hj)
+  · exact Or.inr ⟨r, s, hrs, hchain⟩
+
 end
 
 end N5
