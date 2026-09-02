@@ -217,6 +217,11 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.factorPlaneCubic_oneRotation_rewire
 #print axioms UnrestrictedBooleanMul.N5.changedLowProductQuadraticShadow_oneRotation_rewire
 #print axioms UnrestrictedBooleanMul.N5.oneRotation_local_eq_dependent_cubic_of_high_eq
+#print axioms UnrestrictedBooleanMul.N5.twoLocalKernelDifference_span_eq
+#print axioms UnrestrictedBooleanMul.N5.twoLocalKernelDifference_pluecker_sum_eq_one
+#print axioms UnrestrictedBooleanMul.N5.intermediatePlane_of_common_local_line
+#print axioms UnrestrictedBooleanMul.N5.twoLocalKernelDifference_common_line
+#print axioms UnrestrictedBooleanMul.N5.twoLocalKernelDifference_chain
 #print axioms UnrestrictedBooleanMul.N5.targetClean_sup_decomposable_target_mem_firstOrder
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean
 #print axioms UnrestrictedBooleanMul.N5.envelope_shadow_of_targetClean_not_missingCoset

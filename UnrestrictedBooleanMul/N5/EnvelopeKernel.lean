@@ -625,7 +625,7 @@ theorem targetCrossWedge_exactFirstOrderCombination
   rw [firstOrderEnvelopePolarizedMap_planeCoeff]
   simp only [targetCrossWedge, hankelMatrix_exactFirstOrderCombination]
 
-private theorem firstOrderPlaneCoeff_plucker_0134 (x y : Fin 8 → F₂) :
+theorem firstOrderPlaneCoeff_plucker_0134 (x y : Fin 8 → F₂) :
     firstOrderPlaneCoeff x y 0 * firstOrderPlaneCoeff x y 18 +
       firstOrderPlaneCoeff x y 2 * firstOrderPlaneCoeff x y 9 +
         firstOrderPlaneCoeff x y 3 * firstOrderPlaneCoeff x y 8 = 0 := by
@@ -633,7 +633,7 @@ private theorem firstOrderPlaneCoeff_plucker_0134 (x y : Fin 8 → F₂) :
   ring_nf
   simp [N3Certificate.two_eq_zero_f2]
 
-private theorem firstOrderPlaneCoeff_plucker_0235 (x y : Fin 8 → F₂) :
+theorem firstOrderPlaneCoeff_plucker_0235 (x y : Fin 8 → F₂) :
     firstOrderPlaneCoeff x y 1 * firstOrderPlaneCoeff x y 19 +
       firstOrderPlaneCoeff x y 2 * firstOrderPlaneCoeff x y 15 +
         firstOrderPlaneCoeff x y 4 * firstOrderPlaneCoeff x y 13 = 0 := by
@@ -641,7 +641,7 @@ private theorem firstOrderPlaneCoeff_plucker_0235 (x y : Fin 8 → F₂) :
   ring_nf
   simp [N3Certificate.two_eq_zero_f2]
 
-private theorem firstOrderPlaneCoeff_plucker_1245 (x y : Fin 8 → F₂) :
+theorem firstOrderPlaneCoeff_plucker_1245 (x y : Fin 8 → F₂) :
     firstOrderPlaneCoeff x y 7 * firstOrderPlaneCoeff x y 22 +
       firstOrderPlaneCoeff x y 9 * firstOrderPlaneCoeff x y 15 +
         firstOrderPlaneCoeff x y 10 * firstOrderPlaneCoeff x y 14 = 0 := by

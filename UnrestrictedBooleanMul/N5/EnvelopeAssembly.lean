@@ -159,6 +159,24 @@ theorem squarefreeWedge_add_eq_of_firstOrderPlaneCoeff_add_eq
     simpa [squarefreeWedge_pair, firstOrderPlaneCoeff, hki, hkj,
       add_comm] using hk
 
+/-- The Pluecker coordinate table reflects equality between two sums of
+decomposable exterior forms. -/
+theorem squarefreeWedge_add_eq_add_of_firstOrderPlaneCoeff_add_eq_add
+    (x y z w r s u v : Fin 8 → F₂)
+    (h : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+      firstOrderPlaneCoeff r s + firstOrderPlaneCoeff u v) :
+    squarefreeWedge x y + squarefreeWedge z w =
+      squarefreeWedge r s + squarefreeWedge u v := by
+  funext t
+  rcases QuadraticIndex.exists_pair t with ⟨i, j, hij, rfl⟩
+  rcases exists_firstOrderPair_of_ne i j hij with
+    ⟨k, ⟨hki, hkj⟩ | ⟨hkj, hki⟩⟩
+  · have hk := congrFun h k
+    simpa [squarefreeWedge_pair, firstOrderPlaneCoeff, hki, hkj] using hk
+  · have hk := congrFun h k
+    simpa [squarefreeWedge_pair, firstOrderPlaneCoeff, hki, hkj,
+      add_comm] using hk
+
 /-- A sum of two decomposable two-forms which is again supported on an
 independent pair cannot have four independent endpoint vectors. -/
 private theorem not_linearIndependent_four_of_squarefreeWedge_add_eq
@@ -426,7 +444,7 @@ private theorem exists_planeBasisChange_of_span_eq'
 
 /-- A nonzero vector in a two-generator `F₂` plane can be made the first
 vector by one of the six ordered basis changes. -/
-private theorem exists_basisChange_first_eq_of_mem_span
+theorem exists_basisChange_first_eq_of_mem_span
     {V : Type*} [AddCommGroup V] [Module F₂ V]
     (x y p : V) (hp0 : p ≠ 0)
     (hp : p ∈ Submodule.span F₂ ({x, y} : Set V)) :
