@@ -91,6 +91,130 @@ theorem rationalPlaceTwoFormLinear_missingCoset
   rw [rationalPlaceTwoFormLinear_targetTwo,
     rationalTargetCoeffChange_missing_add]
 
+/-! ## Transported target-clean second jets -/
+
+/-- The target-clean second-jet space transported from the rational-zero
+normalization by one rational-place generator. -/
+def rationalTargetCleanSecondJetSpace (theta : Fin 2) :
+    Submodule F₂ TwoForm :=
+  targetCleanSecondJetSpace.map (rationalPlaceTwoFormLinear theta)
+
+/-- Membership in a transported clean space is tested by applying the same
+involutive generator once more. -/
+theorem mem_rationalTargetCleanSecondJetSpace_iff
+    (theta : Fin 2) (q : TwoForm) :
+    q ∈ rationalTargetCleanSecondJetSpace theta ↔
+      rationalPlaceTwoFormLinear theta q ∈ targetCleanSecondJetSpace := by
+  constructor
+  · rintro ⟨z, hz, rfl⟩
+    change z ∈ targetCleanSecondJetSpace at hz
+    simpa only [rationalPlaceTwoFormLinear_involutive] using hz
+  · intro hq
+    exact ⟨rationalPlaceTwoFormLinear theta q, hq,
+      rationalPlaceTwoFormLinear_involutive theta q⟩
+
+/-- The multiplication target meets every rational transport of the clean
+second jet in precisely the old first-order envelope. -/
+theorem targetTwoSpace_inf_rationalTargetCleanSecondJetSpace
+    (theta : Fin 2) :
+    targetTwoSpace ⊓ rationalTargetCleanSecondJetSpace theta =
+      firstOrderEnvelopeTwoSpace := by
+  apply le_antisymm
+  · rintro p ⟨hpTarget, hpClean⟩
+    have htransTarget : rationalPlaceTwoFormLinear theta p ∈
+        targetTwoSpace := by
+      rcases hpTarget with ⟨c, rfl⟩
+      change rationalPlaceTwoFormLinear theta (targetTwo c) ∈ targetTwoSpace
+      rw [rationalPlaceTwoFormLinear_targetTwo]
+      exact ⟨rationalTargetCoeffChange theta c, rfl⟩
+    have htransClean : rationalPlaceTwoFormLinear theta p ∈
+        targetCleanSecondJetSpace :=
+      (mem_rationalTargetCleanSecondJetSpace_iff theta p).1 hpClean
+    have htransFirst : rationalPlaceTwoFormLinear theta p ∈
+        firstOrderEnvelopeTwoSpace :=
+      (target_mem_targetCleanSecondJetSpace_iff_firstOrder
+        (rationalPlaceTwoFormLinear theta p) htransTarget).1 htransClean
+    have hback := rationalPlaceTwoFormLinear_mem_firstOrderEnvelope
+      theta (rationalPlaceTwoFormLinear theta p) htransFirst
+    simpa only [rationalPlaceTwoFormLinear_involutive] using hback
+  · intro p hpFirst
+    have hpTarget : p ∈ targetTwoSpace :=
+      firstOrderEnvelopeTwoSpace_le_targetTwoSpace hpFirst
+    have htransFirst : rationalPlaceTwoFormLinear theta p ∈
+        firstOrderEnvelopeTwoSpace :=
+      rationalPlaceTwoFormLinear_mem_firstOrderEnvelope theta p hpFirst
+    have htransTarget : rationalPlaceTwoFormLinear theta p ∈
+        targetTwoSpace :=
+      firstOrderEnvelopeTwoSpace_le_targetTwoSpace htransFirst
+    have htransClean : rationalPlaceTwoFormLinear theta p ∈
+        targetCleanSecondJetSpace :=
+      (target_mem_targetCleanSecondJetSpace_iff_firstOrder
+        (rationalPlaceTwoFormLinear theta p) htransTarget).2 htransFirst
+    exact ⟨hpTarget,
+      (mem_rationalTargetCleanSecondJetSpace_iff theta p).2 htransClean⟩
+
+theorem rationalTargetCoeffChange_missing
+    (theta : Fin 2) :
+    rationalTargetCoeffChange theta firstOrderMissingCoeff =
+      firstOrderMissingCoeff + rationalMissingCorrection theta := by
+  fin_cases theta <;>
+    funext i <;> fin_cases i <;>
+    simp [rationalTargetCoeffChange, firstOrderMissingCoeff,
+      rationalMissingCorrection, CharTwo.add_self_eq_zero]
+
+/-- The affine nondecomposability part of the target-clean certificate is
+also invariant under rational-place transport. -/
+theorem firstOrderMissing_add_rationalTargetClean_not_decomposable
+    (theta : Fin 2) (z : TwoForm)
+    (hz : z ∈ rationalTargetCleanSecondJetSpace theta) :
+    ¬ IsDecomposableTwo (targetTwo firstOrderMissingCoeff + z) := by
+  intro hdec
+  have htransZ : rationalPlaceTwoFormLinear theta z ∈
+      targetCleanSecondJetSpace :=
+    (mem_rationalTargetCleanSecondJetSpace_iff theta z).1 hz
+  have hcorrectionFirst : targetTwo (rationalMissingCorrection theta) ∈
+      firstOrderEnvelopeTwoSpace :=
+    ⟨rationalMissingCorrection theta,
+      rationalMissingCorrection_mem theta, rfl⟩
+  have hcorrectionClean : targetTwo (rationalMissingCorrection theta) ∈
+      targetCleanSecondJetSpace := by
+    have htarget : targetTwo (rationalMissingCorrection theta) ∈
+        targetTwoSpace :=
+      firstOrderEnvelopeTwoSpace_le_targetTwoSpace hcorrectionFirst
+    exact (target_mem_targetCleanSecondJetSpace_iff_firstOrder
+      (targetTwo (rationalMissingCorrection theta)) htarget).2
+        hcorrectionFirst
+  let z' := targetTwo (rationalMissingCorrection theta) +
+    rationalPlaceTwoFormLinear theta z
+  have hz' : z' ∈ targetCleanSecondJetSpace :=
+    targetCleanSecondJetSpace.add_mem hcorrectionClean htransZ
+  have htransEq :
+      rationalPlaceTwoFormLinear theta
+          (targetTwo firstOrderMissingCoeff + z) =
+        targetTwo firstOrderMissingCoeff + z' := by
+    rw [map_add, rationalPlaceTwoFormLinear_targetTwo,
+      rationalTargetCoeffChange_missing]
+    have htargetAdd :
+        targetTwo
+            (firstOrderMissingCoeff + rationalMissingCorrection theta) =
+          targetTwo firstOrderMissingCoeff +
+            targetTwo (rationalMissingCorrection theta) := by
+      exact targetTwoLinear.map_add _ _
+    rw [htargetAdd]
+    change
+      (targetTwo firstOrderMissingCoeff +
+          targetTwo (rationalMissingCorrection theta)) +
+          rationalPlaceTwoFormLinear theta z =
+        targetTwo firstOrderMissingCoeff +
+          (targetTwo (rationalMissingCorrection theta) +
+            rationalPlaceTwoFormLinear theta z)
+    exact add_assoc _ _ _
+  have htransDec : IsDecomposableTwo
+      (targetTwo firstOrderMissingCoeff + z') := by
+    rw [← htransEq]
+    exact rationalPlaceTwoFormLinear_decomposable theta hdec
+  exact firstOrderMissing_add_targetClean_not_decomposable z' hz' htransDec
+
 end
 end N5
 end UnrestrictedBooleanMul
