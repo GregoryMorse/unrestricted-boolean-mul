@@ -402,6 +402,104 @@ injectivity of its cubic syzygy map. -/
 def CubicRigidPlane (q c : TwoForm) : Prop :=
   ∀ x y : LinearForm, factorPlaneCubic x y q c = 0 → x = 0 ∧ y = 0
 
+private theorem cubicSyzygy_dependent_pair_cases
+    (x y : LinearForm) (hdep : ¬ LinearIndependent F₂ ![x, y]) :
+    x = 0 ∨ y = 0 ∨ x = y := by
+  by_cases hx : x = 0
+  · exact Or.inl hx
+  by_cases hy : y = 0
+  · exact Or.inr (Or.inl hy)
+  by_cases hxy : x = y
+  · exact Or.inr (Or.inr hxy)
+  exfalso
+  apply hdep
+  rw [linearIndependent_fin2]
+  change y ≠ 0 ∧ ∀ a : F₂, a • y ≠ x
+  refine ⟨hy, ?_⟩
+  intro a
+  rcases f2_eq_zero_or_one a with rfl | rfl
+  · simpa using Ne.symm hx
+  · simpa using Ne.symm hxy
+
+private theorem ambientVectorWedgeTwo_zero_left_for_cubic
+    (q : TwoForm) : ambientVectorWedgeTwo 0 q = 0 := by
+  funext i j k
+  simp [ambientVectorWedgeTwo, N4.vectorWedgeTwoN]
+
+private theorem ambientVectorWedgeTwo_add_right_for_cubic
+    (x : LinearForm) (q c : TwoForm) :
+    ambientVectorWedgeTwo x (q + c) =
+      ambientVectorWedgeTwo x q + ambientVectorWedgeTwo x c := by
+  funext i j k
+  simp only [ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    ambientTwoCoeff_add, Pi.add_apply]
+  ring
+
+/-- Basis-free split for a non-rigid cubic plane.  A dependent syzygy makes
+one of the three projective plane directions admit a nonzero annihilating
+vector; the only remaining case has independent syzygy vectors. -/
+theorem nonCubicRigidPlane_syzygy_classification
+    (q c : TwoForm) (hnonrigid : ¬ CubicRigidPlane q c) :
+    (∃ x : LinearForm, x ≠ 0 ∧ ambientVectorWedgeTwo x c = 0) ∨
+      (∃ y : LinearForm, y ≠ 0 ∧ ambientVectorWedgeTwo y q = 0) ∨
+      (∃ x : LinearForm, x ≠ 0 ∧
+        ambientVectorWedgeTwo x (q + c) = 0) ∨
+      (∃ x y : LinearForm, LinearIndependent F₂ ![x, y] ∧
+        factorPlaneCubic x y q c = 0) := by
+  simp only [CubicRigidPlane, not_forall, not_and_or] at hnonrigid
+  rcases hnonrigid with ⟨x, y, hcubic, hnonzero⟩
+  by_cases hxy : LinearIndependent F₂ ![x, y]
+  · exact Or.inr (Or.inr (Or.inr ⟨x, y, hxy, hcubic⟩))
+  · rcases cubicSyzygy_dependent_pair_cases x y hxy with
+      hx0 | hy0 | hxyEq
+    · have hy : y ≠ 0 := by
+        rcases hnonzero with hx | hy
+        · exact (hx hx0).elim
+        · exact hy
+      exact Or.inr (Or.inl ⟨y, hy, by
+        rw [hx0, factorPlaneCubic,
+          ambientVectorWedgeTwo_zero_left_for_cubic, zero_add] at hcubic
+        exact hcubic⟩)
+    · have hx : x ≠ 0 := by
+        rcases hnonzero with hx | hy
+        · exact hx
+        · exact (hy hy0).elim
+      exact Or.inl ⟨x, hx, by
+        rw [hy0, factorPlaneCubic,
+          ambientVectorWedgeTwo_zero_left_for_cubic, add_zero] at hcubic
+        exact hcubic⟩
+    · have hx : x ≠ 0 := by
+        rcases hnonzero with hx | hy
+        · exact hx
+        · intro hx0
+          exact hy (hxyEq.symm.trans hx0)
+      subst y
+      exact Or.inr (Or.inr (Or.inl ⟨x, hx, by
+        rw [ambientVectorWedgeTwo_add_right_for_cubic]
+        simpa [factorPlaneCubic, add_comm] using hcubic⟩))
+
+/-- Geometric consequence of the dependent-syzygy branches: a non-rigid
+plane either has a decomposable projective direction, or admits an
+independent cubic syzygy. -/
+theorem nonCubicRigidPlane_decomposableDirection_or_independentSyzygy
+    (q c : TwoForm) (hnonrigid : ¬ CubicRigidPlane q c) :
+    IsDecomposableTwo c ∨ IsDecomposableTwo q ∨
+      IsDecomposableTwo (q + c) ∨
+      (∃ x y : LinearForm, LinearIndependent F₂ ![x, y] ∧
+        factorPlaneCubic x y q c = 0) := by
+  rcases nonCubicRigidPlane_syzygy_classification q c hnonrigid with
+    ⟨x, hx, hxc⟩ | ⟨y, hy, hyq⟩ | ⟨x, hx, hxsum⟩ | hind
+  · rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+      c x hx hxc with ⟨v, hv⟩
+    exact Or.inl ⟨x, v, hv⟩
+  · rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+      q y hy hyq with ⟨v, hv⟩
+    exact Or.inr (Or.inl ⟨y, v, hv⟩)
+  · rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+      (q + c) x hx hxsum with ⟨v, hv⟩
+    exact Or.inr (Or.inr (Or.inl ⟨x, v, hv⟩))
+  · exact Or.inr (Or.inr (Or.inr hind))
+
 /-- If the linear parts of two products on one quadratic plane agree, their
 quadratic-shadow difference is already in the span of that plane. -/
 theorem lowProductQuadraticShadow_same_linearParts_sum
