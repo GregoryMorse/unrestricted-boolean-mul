@@ -999,6 +999,18 @@ theorem effectiveFiber_mem_atlas {q : QuadraticQuotient}
     Finset.mem_univ _, ?_⟩
   exact hqeq.symm
 
+/-- Existential closed-place form of atlas exhaustiveness.  This is the
+interface used by later local arguments that must distinguish the three
+rational charts from the degree-two chart. -/
+theorem exists_closedPlaceEffectiveParam_of_effectiveFiber
+    {q : QuadraticQuotient} (hq : IsEffectiveFiber q) :
+    ∃ x : ClosedPlaceEffectiveParam, q = closedPlaceEffectivePoint x := by
+  classical
+  have hmem := effectiveFiber_mem_atlas hq
+  rw [effectiveFiberAtlas, Finset.mem_image] at hmem
+  rcases hmem with ⟨x, _, hx⟩
+  exact ⟨x, hx.symm⟩
+
 /-- Turn two local Klein points in one affine chart into two decomposable
 ambient points in the same global quotient fiber. -/
 theorem closedPlace_effective_of_local_difference (place : Fin 4)
