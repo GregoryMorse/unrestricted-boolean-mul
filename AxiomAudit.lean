@@ -417,3 +417,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.firstOrderSaturation_of_colourBranches
 #print axioms UnrestrictedBooleanMul.N5.three_le_stateHighRank_of_independent_high_triple
 #print axioms UnrestrictedBooleanMul.N5.rankTwo_escape_anchor_mem_target_of_product_outside_pair
+#print axioms UnrestrictedBooleanMul.N5.rankTwo_escape_anchor_mem_target_of_localColours

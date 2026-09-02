@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
+import UnrestrictedBooleanMul.N5.ColourHighQuotient
 import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
 
 /-!
@@ -119,6 +120,70 @@ theorem rankTwo_escape_anchor_mem_target_of_product_outside_pair
     three_le_stateHighRank_of_independent_high_triple V _ _ _
       hxImage hyImage hpImage hpair hproduct
   exact anchor_mem_targetTwoSpace_of_three_highRank q hqdec hreach hthree
+
+/-- Once the two factor classes and their product have been localized to the
+four-dimensional rational colour module, the invertible colour-birth matrix
+supplies the independent third class.  Hence the rank-two escape budget forces
+the anchor defect to vanish. -/
+theorem rankTwo_escape_anchor_mem_target_of_localColours
+    (q : TwoForm) (hqdec : IsDecomposableTwo q)
+    (V : Submodule F₂ (ANF 10)) (X Y : ANF 10)
+    (hreach : DefectLegalSuffix (firstOrderAnchorState q) V)
+    (hX : X ∈ V) (hY : Y ∈ V)
+    (hold : V ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
+      firstOrderEnvelopeState)
+    (hescape : ¬ (andExtend V X Y ⊓
+      N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState))
+    (alpha beta : Fin 4 → F₂)
+    (halpha : alpha ≠ 0) (hbeta : beta ≠ 0) (hab : alpha ≠ beta)
+    (hXcolour : Submodule.mkQ (N4.quadraticANFSpace 10) X =
+      colourHighCombination alpha)
+    (hYcolour : Submodule.mkQ (N4.quadraticANFSpace 10) Y =
+      colourHighCombination beta)
+    (hproductColour :
+      Submodule.mkQ (N4.quadraticANFSpace 10) (X * Y) =
+        Submodule.mkQ (N4.quadraticANFSpace 10)
+          (colourCombination alpha * colourCombination beta)) :
+    q ∈ targetTwoSpace := by
+  have hbirth₀ := bornThreeHighDirections_linearIndependent
+    alpha beta halpha hbeta hab
+  have hbirth : LinearIndependent F₂
+      (highTripleDirections
+        (colourHighCombination alpha)
+        (colourHighCombination beta)
+        (Submodule.mkQ (N4.quadraticANFSpace 10)
+          (colourCombination alpha * colourCombination beta))) := by
+    have heq : highTripleDirections
+        (colourHighCombination alpha)
+        (colourHighCombination beta)
+        (Submodule.mkQ (N4.quadraticANFSpace 10)
+          (colourCombination alpha * colourCombination beta)) =
+        bornThreeHighDirections alpha beta := by
+      funext i
+      fin_cases i <;> rfl
+    rw [heq]
+    exact hbirth₀
+  have hbirthXY : LinearIndependent F₂
+      (highTripleDirections
+        (Submodule.mkQ (N4.quadraticANFSpace 10) X)
+        (Submodule.mkQ (N4.quadraticANFSpace 10) Y)
+        (Submodule.mkQ (N4.quadraticANFSpace 10) (X * Y))) := by
+    rw [hXcolour, hYcolour, hproductColour]
+    exact hbirth
+  have hsplit :
+      LinearIndependent F₂
+          (pairDirections
+            (Submodule.mkQ (N4.quadraticANFSpace 10) X)
+            (Submodule.mkQ (N4.quadraticANFSpace 10) Y)) ∧
+        Submodule.mkQ (N4.quadraticANFSpace 10) (X * Y) ∉
+          Submodule.span F₂
+            (Set.range (pairDirections
+              (Submodule.mkQ (N4.quadraticANFSpace 10) X)
+              (Submodule.mkQ (N4.quadraticANFSpace 10) Y))) := by
+    exact linearIndependent_finSnoc.mp (by
+      simpa [highTripleDirections] using hbirthXY)
+  exact rankTwo_escape_anchor_mem_target_of_product_outside_pair
+    q hqdec V X Y hreach hX hY hold hescape hsplit.1 hsplit.2
 
 end
 end N5
