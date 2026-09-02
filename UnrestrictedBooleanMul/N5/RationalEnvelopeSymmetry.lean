@@ -294,6 +294,61 @@ def rationalPlaceSecondJetExtensionSpace (place : Fin 3) :
     secondJetExtensionSpace.map (rationalPlaceLinear 0),
     secondJetExtensionSpace.map (rationalPlaceLinear 1)] place
 
+/-- Boolean contraction of a decomposable two-form distributes the diagonal
+coordinate product across its two exterior factors. -/
+theorem ambientBooleanContraction_squarefreeWedge
+    (ell u v : LinearForm) :
+    ambientBooleanContraction ell (squarefreeWedge u v) =
+      squarefreeWedge (ambientDiagonalProduct ell u) v +
+        squarefreeWedge u (ambientDiagonalProduct ell v) := by
+  funext s
+  rcases QuadraticIndex.exists_pair s with ⟨i, j, hij, rfl⟩
+  simp only [ambientBooleanContraction, squarefreeWedge_pair, Pi.add_apply]
+  simp [quadraticPair, hij, ambientDiagonalProduct]
+  ring
+
+/-- Coordinatewise multiplication by an arbitrary linear form preserves a
+coordinate support subspace. -/
+theorem ambientDiagonalProduct_mem_linearCoordinateSubspace
+    (S : Set (Fin 10)) (ell u : LinearForm)
+    (hu : u ∈ linearCoordinateSubspace S) :
+    ambientDiagonalProduct ell u ∈ linearCoordinateSubspace S := by
+  intro i hi
+  simp [ambientDiagonalProduct, hu i hi]
+
+private theorem ambientBooleanContraction_smul_right
+    (a : F₂) (ell : LinearForm) (q : TwoForm) :
+    ambientBooleanContraction ell (a • q) =
+      a • ambientBooleanContraction ell q := by
+  funext s
+  simp only [ambientBooleanContraction, Pi.smul_apply, smul_eq_mul]
+  ring
+
+/-- The exterior square of a coordinate block is closed under every Boolean
+linear--quadratic contraction. -/
+theorem ambientBooleanContraction_mem_quadraticExterior_coordinate
+    (S : Set (Fin 10)) (ell : LinearForm) (q : TwoForm)
+    (hq : q ∈ quadraticExterior (linearCoordinateSubspace S)) :
+    ambientBooleanContraction ell q ∈
+      quadraticExterior (linearCoordinateSubspace S) := by
+  refine Submodule.span_induction
+    (p := fun q _ => ambientBooleanContraction ell q ∈
+      quadraticExterior (linearCoordinateSubspace S)) ?_ ?_ ?_ ?_ hq
+  · rintro q ⟨u, hu, v, hv, rfl⟩
+    rw [ambientBooleanContraction_squarefreeWedge]
+    exact (quadraticExterior (linearCoordinateSubspace S)).add_mem
+      (squarefreeWedge_mem_quadraticExterior _
+        (ambientDiagonalProduct_mem_linearCoordinateSubspace S ell u hu) hv)
+      (squarefreeWedge_mem_quadraticExterior _ hu
+        (ambientDiagonalProduct_mem_linearCoordinateSubspace S ell v hv))
+  · simp
+  · intro p q _hp _hq hp hq
+    rw [ambientBooleanContraction_add_right]
+    exact (quadraticExterior (linearCoordinateSubspace S)).add_mem hp hq
+  · intro a q _hq hq
+    rw [ambientBooleanContraction_smul_right]
+    exact (quadraticExterior (linearCoordinateSubspace S)).smul_mem a hq
+
 /-- Transporting one extension factor and an arbitrary companion preserves
 membership in the clean space. -/
 private theorem squarefreeWedge_mem_rationalTargetClean_of_extensionMap
@@ -331,19 +386,38 @@ theorem rationalZeroLocalBasis_mem_secondJetCoreSpace (i : Fin 4) :
     simp_all [closedPlaceLocalBasis, secondJetCoreSet,
       aLinear, bLinear, aCoord, bCoord, Pi.basisFun]
 
+/-- The whole exterior square of the rational-zero local four-space is the
+corresponding core exterior summand of the clean second jet. -/
+theorem rationalZero_localTwoForm_mem_quadraticExterior
+    (p : LocalKleinCoord) :
+    localTwoForm 0 p ∈ quadraticExterior secondJetCoreSpace := by
+  rw [localTwoForm]
+  apply Submodule.sum_mem
+  intro s _
+  apply Submodule.smul_mem
+  exact squarefreeWedge_mem_quadraticExterior secondJetCoreSpace
+    (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).1)
+    (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).2)
+
 /-- Every exterior two-form on the rational-zero local four-space belongs
 to the target-clean second-jet space. -/
 theorem rationalZero_localTwoForm_mem_targetClean
     (p : LocalKleinCoord) :
     localTwoForm 0 p ∈ targetCleanSecondJetSpace := by
-  have hlocal : localTwoForm 0 p ∈ quadraticExterior secondJetCoreSpace := by
-    rw [localTwoForm]
-    apply Submodule.sum_mem
-    intro s _
-    apply Submodule.smul_mem
-    exact squarefreeWedge_mem_quadraticExterior secondJetCoreSpace
-      (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).1)
-      (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).2)
+  exact Submodule.mem_sup_left (Submodule.mem_sup_right
+    (rationalZero_localTwoForm_mem_quadraticExterior p))
+
+/-- Contracting a rational-zero local two-form by any linear form remains in
+the clean second-jet space. -/
+theorem rationalZero_ambientBooleanContraction_mem_targetClean
+    (ell : LinearForm) (p : LocalKleinCoord) :
+    ambientBooleanContraction ell (localTwoForm 0 p) ∈
+      targetCleanSecondJetSpace := by
+  have hlocal : ambientBooleanContraction ell (localTwoForm 0 p) ∈
+      quadraticExterior secondJetCoreSpace := by
+    exact ambientBooleanContraction_mem_quadraticExterior_coordinate
+      secondJetCoreSet ell (localTwoForm 0 p)
+        (rationalZero_localTwoForm_mem_quadraticExterior p)
   exact Submodule.mem_sup_left (Submodule.mem_sup_right hlocal)
 
 /-- Uniform rational-place version: the exterior square of each rational
