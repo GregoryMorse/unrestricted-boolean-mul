@@ -396,6 +396,132 @@ theorem dependentIndependentFirstOrderPlanes_shadow_not_missingCoset
       a' b' a b ell' m' ell m q' c' q c
         hq' hc' hq hc hind' hdep hhigh.symm u hu
 
+/-- The generic, non-exceptional equal-plane case is characterized by
+injectivity of its cubic syzygy map. -/
+def CubicRigidPlane (q c : TwoForm) : Prop :=
+  ∀ x y : LinearForm, factorPlaneCubic x y q c = 0 → x = 0 ∧ y = 0
+
+/-- If the linear parts of two products on one quadratic plane agree, their
+quadratic-shadow difference is already in the span of that plane. -/
+theorem lowProductQuadraticShadow_same_linearParts_sum
+    (a b a' b' : F₂) (ell m : LinearForm) (q c : TwoForm) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell m q c =
+      (a + a') • c + (b + b') • q := by
+  funext s
+  simp only [lowProductQuadraticShadow, Pi.add_apply, Pi.smul_apply,
+    smul_eq_mul]
+  ring_nf
+  simp [N3Certificate.two_eq_zero_f2]
+
+/-- Equal complete high parts on a cubic-rigid plane have identical linear
+parts; hence their shadow difference cannot leave the first-order
+envelope. -/
+theorem cubicRigidPlane_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm) (q c : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hrigid : CubicRigidPlane q c)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q c)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q c ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  have hcubic : factorPlaneCubic ell m q c =
+      factorPlaneCubic ell' m' q c := congrArg Prod.snd hhigh
+  have hzero := factorPlaneCubic_difference_eq_zero
+    ell m ell' m' q c hcubic
+  rcases hrigid (ell + ell') (m + m') hzero with ⟨hell, hm⟩
+  have hell' : ell = ell' := by
+    funext i
+    have hi := congrFun hell i
+    change ell i + ell' i = 0 at hi
+    rw [← CharTwo.sub_eq_add] at hi
+    exact sub_eq_zero.mp hi
+  have hm' : m = m' := by
+    funext i
+    have hi := congrFun hm i
+    change m i + m' i = 0 at hi
+    rw [← CharTwo.sub_eq_add] at hi
+    exact sub_eq_zero.mp hi
+  subst ell'
+  subst m'
+  rw [lowProductQuadraticShadow_same_linearParts_sum]
+  have hr : (a + a') • c + (b + b') • q ∈
+      firstOrderEnvelopeTwoSpace :=
+    firstOrderEnvelopeTwoSpace.add_mem
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hc)
+      (firstOrderEnvelopeTwoSpace.smul_mem _ hq)
+  simpa using firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    ((a + a') • c + (b + b') • q) hr 0 0 0 0 u hu
+
+/-- Cubic-rigid shadow exclusion transported across an arbitrary ordered
+basis of the same independent plane. -/
+theorem sharedCubicRigidPlane_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) (g : PlaneBasisChange)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hq' : q' = (g.basisPair q c).1)
+    (hc' : c' = (g.basisPair q c).2)
+    (hrigid : CubicRigidPlane q c)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c')
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  let ab' := g.inverse.basisPair a' b'
+  let lm' := g.inverse.basisPair ell' m'
+  let first := lowProductQuadraticShadow a b ell m q c
+  let actualSecond := lowProductQuadraticShadow a' b' ell' m' q' c'
+  let changedSecond := changedLowProductQuadraticShadow g
+    ab'.1 ab'.2 lm'.1 lm'.2 q c
+  let alignedSecond := lowProductQuadraticShadow
+    ab'.1 ab'.2 lm'.1 lm'.2 q c
+  have hchangedEq : changedSecond = actualSecond := by
+    have hinverse := changedLowProductQuadraticShadow_inverse
+      g a' b' ell' m' q c
+    simpa [changedSecond, actualSecond, ab', lm', hq', hc'] using hinverse
+  have halignedHigh : lowProductHighPart ell m q c =
+      lowProductHighPart lm'.1 lm'.2 q c := by
+    calc
+      _ = lowProductHighPart ell' m' q' c' := hhigh
+      _ = (changedLowProductHighPart g lm'.1 lm'.2 q c) := by
+        have hinverse := changedLowProductHighPart_inverse
+          g ell' m' q c
+        simpa [lm', hq', hc'] using hinverse.symm
+      _ = lowProductHighPart lm'.1 lm'.2 q c :=
+        planeBasisChange_high g lm'.1 lm'.2 q c
+  have halignedExcluded : ∀ (v : TargetCoeff),
+      v ∈ firstOrderEnvelopeCoeffSpace →
+      first + alignedSecond ≠ targetTwo (firstOrderMissingCoeff + v) := by
+    intro v hv
+    exact cubicRigidPlane_shadow_not_missingCoset
+      a b ab'.1 ab'.2 ell m lm'.1 lm'.2 q c
+        hq hc hrigid halignedHigh v hv
+  have hcorrection : changedSecond + alignedSecond ∈
+      firstOrderEnvelopeTwoSpace := by
+    exact (planeBasisChange_high_and_shadow_mod_submodule
+      firstOrderEnvelopeTwoSpace g ab'.1 ab'.2 lm'.1 lm'.2 q c hq hc).2
+  apply missingCoset_exclusion_of_add_mem_firstOrderEnvelope
+    (first + actualSecond) (first + alignedSecond)
+  · have hself : first + first = 0 := by
+      funext s
+      exact @CharTwo.add_self_eq_zero F₂ _ _ (first s)
+    have hsums :
+      (first + actualSecond) + (first + alignedSecond) =
+        changedSecond + alignedSecond := by
+      calc
+        _ = (first + first) + (actualSecond + alignedSecond) := by module
+        _ = actualSecond + alignedSecond := by rw [hself, zero_add]
+        _ = changedSecond + alignedSecond := by rw [hchangedEq]
+    rw [hsums]
+    exact hcorrection
+  · exact halignedExcluded
+  · exact hu
+
 /-- Two independent first-order factor planes which are not two ordered
 bases of the same plane cannot produce the missing target coset when their
 complete high parts agree.  The one- and two-local Pluecker branches are
@@ -522,6 +648,41 @@ theorem independentLocalizedFirstOrderPlanes_shadow_not_missingCoset
     · exact hdiff
     · exact hhigh
     · exact hu
+
+/-- Complete independent-plane assembly, conditional only on the intrinsic
+single-plane dichotomy used in the manuscript: the first plane is either
+cubic-rigid or one of the seven exceptional local presentations. -/
+theorem independentClassifiedFirstOrderPlanes_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hq' : q' ∈ firstOrderEnvelopeTwoSpace)
+    (hc' : c' ∈ firstOrderEnvelopeTwoSpace)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hclassified : CubicRigidPlane q c ∨
+      IsExceptionalIndependentPlanePresentation q c)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c')
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  rcases hclassified with hrigid | hlocalized
+  · by_cases hsame : ∃ g : PlaneBasisChange,
+        q' = (g.basisPair q c).1 ∧ c' = (g.basisPair q c).2
+    · rcases hsame with ⟨g, hqg, hcg⟩
+      exact sharedCubicRigidPlane_shadow_not_missingCoset
+        a b a' b' ell m ell' m' q c q' c' g
+          hq hc hqg hcg hrigid hhigh u hu
+    · exact independentDistinctFirstOrderPlanes_shadow_not_missingCoset
+        a b a' b' ell m ell' m' q c q' c'
+          hq hc hq' hc' hind hind'
+          (fun g hg => hsame ⟨g, hg⟩) hhigh u hu
+  · exact independentLocalizedFirstOrderPlanes_shadow_not_missingCoset
+      a b a' b' ell m ell' m' q c q' c'
+        hq hc hq' hc' hind hind' hlocalized hhigh u hu
 
 end
 
