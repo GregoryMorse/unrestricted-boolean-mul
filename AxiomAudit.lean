@@ -349,3 +349,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.firstOrderEnvelopeState_targetRank
 #print axioms UnrestrictedBooleanMul.N5.firstOrderEnvelopeState_defectRank
 #print axioms UnrestrictedBooleanMul.N5.stableFirstOrder_targetRank
+#print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
