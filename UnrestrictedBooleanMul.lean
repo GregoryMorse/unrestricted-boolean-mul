@@ -87,6 +87,7 @@ import UnrestrictedBooleanMul.N5.EnvelopeIndependentComplete
 import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
 import UnrestrictedBooleanMul.N5.CubicOverlapBasis
 import UnrestrictedBooleanMul.N5.EnvelopeSemantic
+import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
 import UnrestrictedBooleanMul.N5.ColourBirth
 import UnrestrictedBooleanMul.N5.ColourNormalization
 import UnrestrictedBooleanMul.N5.ColourCases
