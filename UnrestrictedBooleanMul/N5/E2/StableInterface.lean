@@ -52,6 +52,39 @@ theorem wThreeP_suffixDeficit_positive
     omega
   · exact hstable
 
+/-- Every equal-defect substate dominated by the degree-two envelope inherits
+its strict completion deficit. -/
+theorem wStar_dominated_suffixDeficit_positive
+    {W : Submodule F₂ (ANF 10)}
+    (hAff : affine 10 ≤ W) (hsub : W ≤ wStarState)
+    (hdef : N4.flagDefectRank W (mulTarget 5) = 2)
+    (hstable : StableTargetRank wStarState 8) :
+    1 ≤ suffixDeficit W := by
+  exact (wStar_suffixDeficit_positive hstable).trans
+    (suffixDeficit_mono hAff hsub hdef wStarState_defectRank)
+
+/-- Every equal-defect substate dominated by the two-rational envelope
+inherits its strict completion deficit. -/
+theorem wPQ_dominated_suffixDeficit_positive
+    {W : Submodule F₂ (ANF 10)}
+    (hAff : affine 10 ≤ W) (hsub : W ≤ wPQState)
+    (hdef : N4.flagDefectRank W (mulTarget 5) = 2)
+    (hstable : StableTargetRank wPQState 8) :
+    1 ≤ suffixDeficit W := by
+  exact (wPQ_suffixDeficit_positive hstable).trans
+    (suffixDeficit_mono hAff hsub hdef wPQState_defectRank)
+
+/-- Every equal-defect substate dominated by the length-three envelope
+inherits its strict completion deficit. -/
+theorem wThreeP_dominated_suffixDeficit_positive
+    {W : Submodule F₂ (ANF 10)}
+    (hAff : affine 10 ≤ W) (hsub : W ≤ wThreePState)
+    (hdef : N4.flagDefectRank W (mulTarget 5) = 2)
+    (hstable : StableTargetRank wThreePState 8) :
+    1 ≤ suffixDeficit W := by
+  exact (wThreeP_suffixDeficit_positive hstable).trans
+    (suffixDeficit_mono hAff hsub hdef wThreePState_defectRank)
+
 end
 end E2
 end N5
