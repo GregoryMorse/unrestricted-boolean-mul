@@ -124,6 +124,16 @@ theorem CostedDefectLegalSuffix.totalGain_le
   unfold suffixTargetGain
   omega
 
+/-- Forgetting defect gain gives the elementary exact-cost target bound. -/
+theorem CostedDefectLegalSuffix.targetRank_le
+    {W V : Submodule F₂ (ANF 10)} {k : Nat}
+    (hAff : affine 10 ≤ W) (h : CostedDefectLegalSuffix W k V) :
+    stateTargetRank V ≤ stateTargetRank W + k := by
+  have htotal := h.targetDefectRank_le hAff
+  have hdefect : N4.flagDefectRank W (mulTarget 5) ≤
+      N4.flagDefectRank V (mulTarget 5) := flagDefectRank_mono h.start_le
+  omega
+
 /-! ## Exact circuit-tail bridge -/
 
 /-- A circuit interval has exact cost `k-j` in the costed suffix relation. -/
@@ -170,7 +180,8 @@ theorem circuitFlag_costedDefectLegalSuffix {r j k : Nat}
         have hstep := CostedDefectLegalSuffix.step hreach
           (C.left i) (C.right i) hleft hright hnextDef
         rw [hwire]
-        convert hstep using 1 <;> omega
+        convert hstep using 1
+        all_goals omega
 
 /-- Every actual tail of a circuit computing `Mul 5` with at most twelve
 gates has exact cost `r-j`. -/

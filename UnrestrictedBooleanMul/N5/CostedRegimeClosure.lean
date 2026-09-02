@@ -1,5 +1,7 @@
 import UnrestrictedBooleanMul.N5.CostedSuffix
 import UnrestrictedBooleanMul.N5.CompletionDeficit
+import UnrestrictedBooleanMul.N5.DefectOneCapacity
+import UnrestrictedBooleanMul.N5.DefectTwoCapacity
 import UnrestrictedBooleanMul.N5.LowDefectPrefix
 import UnrestrictedBooleanMul.N5.MainInterface
 import UnrestrictedBooleanMul.N5.RegimeClosure
@@ -49,6 +51,29 @@ def CostedFirstOrderQuadraticPrefixes : Prop :=
     N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) ≤ 1 →
     NoTargetCompletionWithin (N4.circuitFlag C j) (12 - j)
 
+/-- The genuinely unresolved two-defect range after the sharp capacity-six
+bound: a last quadratic prefix at gate ten or later closes by counting alone. -/
+def CostedTwoDefectEarlyPrefixes : Prop :=
+  ∀ {j : Nat} (C : Circuit 10 12),
+    j ≤ 9 →
+    AllQuadraticPrefix C j →
+    N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) = 2 →
+    NoTargetCompletionWithin (N4.circuitFlag C j) (12 - j)
+
+/-- The genuinely unresolved first-order ranges after the sharp capacity
+bounds: `j <= 8` at defect one and `j <= 6` at defect zero. -/
+def CostedFirstOrderEarlyPrefixes : Prop :=
+  (∀ {j : Nat} (C : Circuit 10 12),
+      j ≤ 8 →
+      AllQuadraticPrefix C j →
+      N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) = 1 →
+      NoTargetCompletionWithin (N4.circuitFlag C j) (12 - j)) ∧
+  (∀ {j : Nat} (C : Circuit 10 12),
+      j ≤ 6 →
+      AllQuadraticPrefix C j →
+      N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) = 0 →
+      NoTargetCompletionWithin (N4.circuitFlag C j) (12 - j))
+
 /-- A stable rank-eight theorem remains a sufficient, though deliberately
 stronger, way to establish a bounded no-completion result. -/
 theorem noTargetCompletionWithin_of_stableTargetRank
@@ -57,6 +82,67 @@ theorem noTargetCompletionWithin_of_stableTargetRank
     NoTargetCompletionWithin W budget := by
   intro k V hk hreach
   exact hstable V hreach.toDefectLegal
+
+/-- Counting alone excludes completion whenever the initial target rank plus
+the available exact gate budget is at most eight. -/
+theorem noTargetCompletionWithin_of_rank_add_budget_le_eight
+    {W : Submodule F₂ (ANF 10)} {budget : Nat}
+    (hAff : affine 10 ≤ W)
+    (hbound : stateTargetRank W + budget ≤ 8) :
+    NoTargetCompletionWithin W budget := by
+  intro k V hk hreach
+  exact (hreach.targetRank_le hAff).trans (by omega)
+
+/-- The capacity-six theorem automatically closes every late two-defect
+quadratic prefix. -/
+theorem costedTwoDefectQuadraticPrefixes_of_early
+    (hearly : CostedTwoDefectEarlyPrefixes) :
+    CostedTwoDefectQuadraticPrefixes := by
+  intro j C hj hall hdef
+  by_cases hjearly : j ≤ 9
+  · exact hearly C hjearly hall hdef
+  · apply noTargetCompletionWithin_of_rank_add_budget_le_eight
+      (affine_le_wireSpace C.gate)
+    have hflat := quadraticPrefixFlattening_of_all_quadratic C hj hall
+    have hQ : Module.finrank F₂
+        (presentationDefect hflat.generator) ≤ 2 := by
+      rw [quadraticPrefixFlattening_defect_eq_flagDefect C hflat hall]
+      omega
+    have ht := (flattenedPrefix_targetRank_le_capacity C hflat).trans
+      (targetCapacity_le_six_of_finrank_le_two _ hQ)
+    change N4.flagTargetRank (N4.circuitFlag C j) (mulTarget 5) +
+        (12 - j) ≤ 8
+    omega
+
+/-- The sharp capacity-five and capacity-three bounds automatically close the
+late first-order prefixes, leaving only the two early ranges above. -/
+theorem costedFirstOrderQuadraticPrefixes_of_early
+    (hearly : CostedFirstOrderEarlyPrefixes) :
+    CostedFirstOrderQuadraticPrefixes := by
+  intro j C hj hall hdef
+  rcases hearly with ⟨hone, hzero⟩
+  by_cases hdefZero : N4.flagDefectRank
+      (N4.circuitFlag C j) (mulTarget 5) = 0
+  · by_cases hjearly : j ≤ 6
+    · exact hzero C hjearly hall hdefZero
+    · apply noTargetCompletionWithin_of_rank_add_budget_le_eight
+        (affine_le_wireSpace C.gate)
+      have ht := allQuadraticPrefix_targetRank_le_three_of_flagDefect_eq_zero
+        C hj hall hdefZero
+      change N4.flagTargetRank (N4.circuitFlag C j) (mulTarget 5) +
+          (12 - j) ≤ 8
+      omega
+  · have hdefOne : N4.flagDefectRank
+        (N4.circuitFlag C j) (mulTarget 5) = 1 := by omega
+    by_cases hjearly : j ≤ 8
+    · exact hone C hjearly hall hdefOne
+    · apply noTargetCompletionWithin_of_rank_add_budget_le_eight
+        (affine_le_wireSpace C.gate)
+      have ht := allQuadraticPrefix_targetRank_le_five_of_flagDefect_le_one
+        C hj hall hdef
+      change N4.flagTargetRank (N4.circuitFlag C j) (mulTarget 5) +
+          (12 - j) ≤ 8
+      omega
 
 /-- The costed two-defect obligation follows from the previous unbounded
 stable-suffix obligation whenever that stronger theorem is available. -/

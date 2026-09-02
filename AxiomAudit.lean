@@ -436,3 +436,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.circuitTail_totalGain_le_remaining
 #print axioms UnrestrictedBooleanMul.N5.no_twelve_gate_circuit_of_costed_regime_closure
 #print axioms UnrestrictedBooleanMul.N5.mc_mul_five_of_costed_regime_closure
+#print axioms UnrestrictedBooleanMul.N5.targetCapacity_le_five_of_finrank_le_one
+#print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_targetRank_le_five_of_flagDefect_le_one
+#print axioms UnrestrictedBooleanMul.N5.costedTwoDefectQuadraticPrefixes_of_early
+#print axioms UnrestrictedBooleanMul.N5.costedFirstOrderQuadraticPrefixes_of_early
