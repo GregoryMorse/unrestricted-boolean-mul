@@ -28,7 +28,7 @@ def rationalZeroOverlapLinear : LinearForm :=
 
 /-- The canonical pure-quadratic section sends a target pair back to its
 two-variable Boolean monomial. -/
-private theorem quadraticANFOfForm_targetPairTwo (i j : Fin 5) :
+theorem quadraticANFOfForm_targetPairTwo (i j : Fin 5) :
     quadraticANFOfForm (targetPairTwo i j) =
       X (aCoord i) * X (bCoord j) := by
   have hij : aCoord i ≠ bCoord j := aCoord_ne_bCoord i j
