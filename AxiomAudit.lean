@@ -420,3 +420,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rankTwo_escape_anchor_mem_target_of_localColours
 #print axioms UnrestrictedBooleanMul.N5.exists_rankOne_rewiring_with_quadratic_correction
 #print axioms UnrestrictedBooleanMul.N5.exists_rankOne_rewiring_of_stateHighRank_le_one
+#print axioms UnrestrictedBooleanMul.N5.rankOne_step_closed_of_zero_quadraticDefect_highRank_le_one
