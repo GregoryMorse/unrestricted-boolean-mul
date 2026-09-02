@@ -285,6 +285,29 @@ def rationalPlaceTargetCleanSecondJetSpace (place : Fin 3) :
     rationalTargetCleanSecondJetSpace 0,
     rationalTargetCleanSecondJetSpace 1] place
 
+/-- The first-order envelope is contained in every rationally normalized
+target-clean second-jet space. -/
+theorem firstOrderEnvelopeTwoSpace_le_rationalPlaceTargetClean
+    (place : Fin 3) :
+    firstOrderEnvelopeTwoSpace ≤
+      rationalPlaceTargetCleanSecondJetSpace place := by
+  intro p hp
+  fin_cases place
+  · have hpInf : p ∈ targetTwoSpace ⊓ targetCleanSecondJetSpace := by
+      rw [targetTwoSpace_inf_targetCleanSecondJetSpace]
+      exact hp
+    exact hpInf.2
+  · have hpInf : p ∈ targetTwoSpace ⊓
+        rationalTargetCleanSecondJetSpace 0 := by
+      rw [targetTwoSpace_inf_rationalTargetCleanSecondJetSpace]
+      exact hp
+    exact hpInf.2
+  · have hpInf : p ∈ targetTwoSpace ⊓
+        rationalTargetCleanSecondJetSpace 1 := by
+      rw [targetTwoSpace_inf_rationalTargetCleanSecondJetSpace]
+      exact hp
+    exact hpInf.2
+
 /-- Uniform three-rational-place form of equation (11.7). -/
 theorem targetTwoSpace_inf_rationalPlaceTargetClean_sup_decomposable
     (place : Fin 3) (q : TwoForm) (hqdec : IsDecomposableTwo q) :
