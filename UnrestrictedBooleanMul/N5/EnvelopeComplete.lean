@@ -895,6 +895,25 @@ private theorem rationalZero_regular_of_no_nonzero_syzygy
   refine ⟨rfl, p, s, ?_⟩
   simpa [rationalValueA, rationalValueB] using hy
 
+/-- Strong coefficient form of the rational-zero classification.  Keeping the
+three exceptional alternatives explicit makes rational-place symmetry a
+linear coefficient transport rather than a case split over all exceptional
+plane presentations. -/
+theorem rationalZero_companion_regular_or_coefficient_exception
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalZeroValueTwo (targetTwo c))) :
+    RationalValueRegularCompanion 0 (targetTwo c) ∨
+      ((∃ α : F₂, c = α • rZeroCoeff + jZeroCoeff) ∨
+        (∃ α : F₂, c = α • rZeroCoeff + rOneCoeff) ∨
+          ∃ α : F₂, c = α • rZeroCoeff + rInfinityCoeff) := by
+  by_cases hex : ∃ x y : LinearForm,
+      factorPlaneCubic x y rationalZeroValueTwo (targetTwo c) = 0 ∧ x ≠ 0
+  · rcases hex with ⟨x, y, hcubic, hx⟩
+    exact Or.inr (rationalZero_nonregular_companion_classification
+      x y c hc hind hx hcubic)
+  · exact Or.inl (rationalZero_regular_of_no_nonzero_syzygy c hex)
+
 /-- Algebraic rational-direction classification at zero.  An independent
 companion is either regular after quotienting the unavoidable two-dimensional
 Koszul kernel, or the plane is one of the three exceptional planes through
@@ -906,16 +925,592 @@ theorem rationalZero_companion_regular_or_exceptional
     RationalValueRegularCompanion 0 (targetTwo c) ∨
       IsExceptionalIndependentPlanePresentation
         rationalZeroValueTwo (targetTwo c) := by
-  by_cases hex : ∃ x y : LinearForm,
-      factorPlaneCubic x y rationalZeroValueTwo (targetTwo c) = 0 ∧ x ≠ 0
-  · rcases hex with ⟨x, y, hcubic, hx⟩
-    rcases rationalZero_nonregular_companion_classification
-        x y c hc hind hx hcubic with
-      ⟨α, hcform⟩ | ⟨α, hcform⟩ | ⟨α, hcform⟩
+  rcases rationalZero_companion_regular_or_coefficient_exception c hc hind with
+    hregular | hforms
+  · exact Or.inl hregular
+  · rcases hforms with ⟨α, hcform⟩ | ⟨α, hcform⟩ | ⟨α, hcform⟩
     · exact Or.inr (rationalZeroJet_exceptional_of_coeff_eq c α hcform)
     · exact Or.inr (rationalZeroOnePair_exceptional_of_coeff_eq c α hcform)
     · exact Or.inr (rationalZeroInfinityPair_exceptional_of_coeff_eq c α hcform)
-  · exact Or.inl (rationalZero_regular_of_no_nonzero_syzygy c hex)
+
+private theorem quadraticPlaneDirections_independent_map_involution
+    (theta : Fin 2) (q c : TwoForm)
+    (hqinv : rationalPlaceTwoFormLinear theta
+        (rationalPlaceTwoFormLinear theta q) = q)
+    (hcinv : rationalPlaceTwoFormLinear theta
+        (rationalPlaceTwoFormLinear theta c) = c)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c)) :
+    LinearIndependent F₂ (quadraticPlaneDirections
+      (rationalPlaceTwoFormLinear theta q)
+      (rationalPlaceTwoFormLinear theta c)) := by
+  rw [linearIndependent_fin2] at hind ⊢
+  change q ≠ 0 ∧ ∀ a : F₂, a • q ≠ c at hind
+  change rationalPlaceTwoFormLinear theta q ≠ 0 ∧
+    ∀ a : F₂, a • rationalPlaceTwoFormLinear theta q ≠
+      rationalPlaceTwoFormLinear theta c
+  refine ⟨?_, ?_⟩
+  · intro hzero
+    apply hind.1
+    have hback := congrArg (rationalPlaceTwoFormLinear theta) hzero
+    simpa only [hqinv, map_zero] using hback
+  · intro a hrelation
+    apply hind.2 a
+    have hback := congrArg (rationalPlaceTwoFormLinear theta) hrelation
+    simpa only [map_smul, hqinv, hcinv] using hback
+
+private theorem rationalTargetCoeffChange_add
+    (theta : Fin 2) (c d : TargetCoeff) :
+    rationalTargetCoeffChange theta (c + d) =
+      rationalTargetCoeffChange theta c + rationalTargetCoeffChange theta d := by
+  funext i
+  fin_cases theta <;> fin_cases i <;>
+    simp [rationalTargetCoeffChange] <;> ring
+
+private theorem rationalTargetCoeffChange_smul
+    (theta : Fin 2) (a : F₂) (c : TargetCoeff) :
+    rationalTargetCoeffChange theta (a • c) =
+      a • rationalTargetCoeffChange theta c := by
+  funext i
+  fin_cases theta <;> fin_cases i <;>
+    simp [rationalTargetCoeffChange] <;> ring
+
+private theorem translation_rZeroCoeff :
+    rationalTargetCoeffChange 0 rZeroCoeff = rOneCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, rZeroCoeff, rOneCoeff]
+
+private theorem translation_jZeroCoeff :
+    rationalTargetCoeffChange 0 jZeroCoeff = exactJOneCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, jZeroCoeff, exactJOneCoeff]
+
+private theorem translation_rOneCoeff :
+    rationalTargetCoeffChange 0 rOneCoeff = rZeroCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, rZeroCoeff, rOneCoeff]
+
+private theorem translation_rInfinityCoeff :
+    rationalTargetCoeffChange 0 rInfinityCoeff = rInfinityCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, rInfinityCoeff]
+
+private theorem reversal_rZeroCoeff :
+    rationalTargetCoeffChange 1 rZeroCoeff = rInfinityCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, rZeroCoeff, rInfinityCoeff]
+
+private theorem reversal_jZeroCoeff :
+    rationalTargetCoeffChange 1 jZeroCoeff = exactJInfinityCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, jZeroCoeff, exactJInfinityCoeff]
+
+private theorem reversal_rOneCoeff :
+    rationalTargetCoeffChange 1 rOneCoeff = rOneCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, rOneCoeff]
+
+private theorem reversal_rInfinityCoeff :
+    rationalTargetCoeffChange 1 rInfinityCoeff = rZeroCoeff := by
+  funext i
+  fin_cases i <;>
+    simp [rationalTargetCoeffChange, rZeroCoeff, rInfinityCoeff]
+
+private theorem rationalJetOne_left_eq :
+    ExceptionalIndependentPlane.left (.rationalJet 1) =
+      rationalOneValueTwo := by rfl
+
+private theorem rationalJetOne_right_eq :
+    ExceptionalIndependentPlane.right (.rationalJet 1) =
+      rationalOneJetTwo := by rfl
+
+private theorem rationalJetInfinity_left_eq :
+    ExceptionalIndependentPlane.left (.rationalJet 2) =
+      rationalInfinityValueTwo := by rfl
+
+private theorem rationalJetInfinity_right_eq :
+    ExceptionalIndependentPlane.right (.rationalJet 2) =
+      rationalInfinityJetTwo := by rfl
+
+private theorem rationalPairZero_right_value_eq :
+    ExceptionalIndependentPlane.right (.rationalPair 0) =
+      rationalOneValueTwo :=
+  rationalPairZero_right_eq.trans rationalOneValueTwo_eq_target.symm
+
+private theorem rationalPairOne_right_value_eq :
+    ExceptionalIndependentPlane.right (.rationalPair 1) =
+      rationalInfinityValueTwo :=
+  rationalPairOne_right_eq.trans rationalInfinityValueTwo_eq_target.symm
+
+private theorem rationalPairTwo_left_value_eq :
+    ExceptionalIndependentPlane.left (.rationalPair 2) =
+      rationalOneValueTwo := by
+  change rationalPairLeftValueTwo 2 = rationalOneValueTwo
+  rw [rationalPairLeftValueTwo, rationalPairLeft, rationalValueCoeff]
+  exact rationalOneValueTwo_eq_target.symm
+
+private theorem rationalPairTwo_right_value_eq :
+    ExceptionalIndependentPlane.right (.rationalPair 2) =
+      rationalInfinityValueTwo := by
+  change rationalPairRightValueTwo 2 = rationalInfinityValueTwo
+  rw [rationalPairRightValueTwo, rationalPairRight, rationalValueCoeff]
+  exact rationalInfinityValueTwo_eq_target.symm
+
+private theorem exceptionalPresentation_firstSecond
+    (P : ExceptionalIndependentPlane) (u v c : TwoForm)
+    (hleft : P.left = u) (hright : P.right = v)
+    (α : F₂) (hc : c = α • u + v) :
+    IsExceptionalIndependentPlanePresentation u c := by
+  rcases f2_eq_zero_or_one α with rfl | rfl
+  · have hc0 : c = v := by simpa using hc
+    refine ⟨P, .identity, ?_, ?_⟩
+    · change u = P.left
+      exact hleft.symm
+    · change c = P.right
+      exact hc0.trans hright.symm
+  · have hc1 : c = u + v := by simpa using hc
+    refine ⟨P, .rotateRight, ?_, ?_⟩
+    · change u = P.left
+      exact hleft.symm
+    · change c = P.left + P.right
+      rw [hleft, hright]
+      exact hc1
+
+private theorem exceptionalPresentation_secondFirst
+    (P : ExceptionalIndependentPlane) (u v c : TwoForm)
+    (hleft : P.left = u) (hright : P.right = v)
+    (α : F₂) (hc : c = α • v + u) :
+    IsExceptionalIndependentPlanePresentation v c := by
+  rcases f2_eq_zero_or_one α with rfl | rfl
+  · have hc0 : c = u := by simpa using hc
+    refine ⟨P, .swap, ?_, ?_⟩
+    · change v = P.right
+      exact hright.symm
+    · change c = P.left
+      exact hc0.trans hleft.symm
+  · have hc1 : c = v + u := by simpa using hc
+    refine ⟨P, .cycleRight, ?_, ?_⟩
+    · change v = P.right
+      exact hright.symm
+    · change c = P.left + P.right
+      rw [hleft, hright]
+      simpa [add_comm] using hc1
+
+private theorem changed_coeff_eq_smul_add_back
+    (theta : Fin 2) (c u v u' v' : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange theta c = α • u + v)
+    (hu : rationalTargetCoeffChange theta u = u')
+    (hv : rationalTargetCoeffChange theta v = v') :
+    c = α • u' + v' := by
+  have hback := congrArg (rationalTargetCoeffChange theta) hc
+  simpa only [rationalTargetCoeffChange_involutive,
+    rationalTargetCoeffChange_add, rationalTargetCoeffChange_smul,
+    hu, hv] using hback
+
+private theorem targetTwo_eq_smul_add_of_coeff_eq
+    (c u v : TargetCoeff) (α : F₂) (hc : c = α • u + v) :
+    targetTwo c = α • targetTwo u + targetTwo v := by
+  calc
+    targetTwo c = targetTwo (α • u + v) := congrArg targetTwo hc
+    _ = α • targetTwo u + targetTwo v := by
+      change targetTwoLinear (α • u + v) = _
+      rw [map_add, map_smul]
+      simp only [targetTwo]
+
+private theorem translation_jet_exceptional
+    (c : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange 0 c =
+      α • rZeroCoeff + jZeroCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalOneValueTwo (targetTwo c) := by
+  have hcCoeff := changed_coeff_eq_smul_add_back 0 c
+    rZeroCoeff jZeroCoeff rOneCoeff exactJOneCoeff α hc
+    translation_rZeroCoeff translation_jZeroCoeff
+  have hcTwoRaw := targetTwo_eq_smul_add_of_coeff_eq
+    c rOneCoeff exactJOneCoeff α hcCoeff
+  have hcTwo : targetTwo c =
+      α • rationalOneValueTwo + rationalOneJetTwo := by
+    simpa only [← rationalOneValueTwo_eq_target,
+      ← rationalOneJetTwo_eq_target] using hcTwoRaw
+  exact exceptionalPresentation_firstSecond (.rationalJet 1)
+    rationalOneValueTwo rationalOneJetTwo (targetTwo c)
+    rationalJetOne_left_eq rationalJetOne_right_eq α hcTwo
+
+private theorem translation_zeroPair_exceptional
+    (c : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange 0 c =
+      α • rZeroCoeff + rOneCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalOneValueTwo (targetTwo c) := by
+  have hcCoeff := changed_coeff_eq_smul_add_back 0 c
+    rZeroCoeff rOneCoeff rOneCoeff rZeroCoeff α hc
+    translation_rZeroCoeff translation_rOneCoeff
+  have hcTwoRaw := targetTwo_eq_smul_add_of_coeff_eq
+    c rOneCoeff rZeroCoeff α hcCoeff
+  have hcTwo : targetTwo c =
+      α • rationalOneValueTwo + rationalZeroValueTwo := by
+    simpa only [← rationalOneValueTwo_eq_target,
+      ← rationalZeroValueTwo_eq_target] using hcTwoRaw
+  exact exceptionalPresentation_secondFirst (.rationalPair 0)
+    rationalZeroValueTwo rationalOneValueTwo (targetTwo c)
+    rationalPairZero_left_eq rationalPairZero_right_value_eq α hcTwo
+
+private theorem translation_infinityPair_exceptional
+    (c : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange 0 c =
+      α • rZeroCoeff + rInfinityCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalOneValueTwo (targetTwo c) := by
+  have hcCoeff := changed_coeff_eq_smul_add_back 0 c
+    rZeroCoeff rInfinityCoeff rOneCoeff rInfinityCoeff α hc
+    translation_rZeroCoeff translation_rInfinityCoeff
+  have hcTwoRaw := targetTwo_eq_smul_add_of_coeff_eq
+    c rOneCoeff rInfinityCoeff α hcCoeff
+  have hcTwo : targetTwo c =
+      α • rationalOneValueTwo + rationalInfinityValueTwo := by
+    simpa only [← rationalOneValueTwo_eq_target,
+      ← rationalInfinityValueTwo_eq_target] using hcTwoRaw
+  exact exceptionalPresentation_firstSecond (.rationalPair 2)
+    rationalOneValueTwo rationalInfinityValueTwo (targetTwo c)
+    rationalPairTwo_left_value_eq rationalPairTwo_right_value_eq α hcTwo
+
+private theorem reversal_jet_exceptional
+    (c : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange 1 c =
+      α • rZeroCoeff + jZeroCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalInfinityValueTwo (targetTwo c) := by
+  have hcCoeff := changed_coeff_eq_smul_add_back 1 c
+    rZeroCoeff jZeroCoeff rInfinityCoeff exactJInfinityCoeff α hc
+    reversal_rZeroCoeff reversal_jZeroCoeff
+  have hcTwoRaw := targetTwo_eq_smul_add_of_coeff_eq
+    c rInfinityCoeff exactJInfinityCoeff α hcCoeff
+  have hcTwo : targetTwo c =
+      α • rationalInfinityValueTwo + rationalInfinityJetTwo := by
+    simpa only [← rationalInfinityValueTwo_eq_target,
+      ← rationalInfinityJetTwo_eq_target] using hcTwoRaw
+  exact exceptionalPresentation_firstSecond (.rationalJet 2)
+    rationalInfinityValueTwo rationalInfinityJetTwo (targetTwo c)
+    rationalJetInfinity_left_eq rationalJetInfinity_right_eq α hcTwo
+
+private theorem reversal_onePair_exceptional
+    (c : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange 1 c =
+      α • rZeroCoeff + rOneCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalInfinityValueTwo (targetTwo c) := by
+  have hcCoeff := changed_coeff_eq_smul_add_back 1 c
+    rZeroCoeff rOneCoeff rInfinityCoeff rOneCoeff α hc
+    reversal_rZeroCoeff reversal_rOneCoeff
+  have hcTwoRaw := targetTwo_eq_smul_add_of_coeff_eq
+    c rInfinityCoeff rOneCoeff α hcCoeff
+  have hcTwo : targetTwo c =
+      α • rationalInfinityValueTwo + rationalOneValueTwo := by
+    simpa only [← rationalInfinityValueTwo_eq_target,
+      ← rationalOneValueTwo_eq_target] using hcTwoRaw
+  exact exceptionalPresentation_secondFirst (.rationalPair 2)
+    rationalOneValueTwo rationalInfinityValueTwo (targetTwo c)
+    rationalPairTwo_left_value_eq rationalPairTwo_right_value_eq α hcTwo
+
+private theorem reversal_zeroPair_exceptional
+    (c : TargetCoeff) (α : F₂)
+    (hc : rationalTargetCoeffChange 1 c =
+      α • rZeroCoeff + rInfinityCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalInfinityValueTwo (targetTwo c) := by
+  have hcCoeff := changed_coeff_eq_smul_add_back 1 c
+    rZeroCoeff rInfinityCoeff rInfinityCoeff rZeroCoeff α hc
+    reversal_rZeroCoeff reversal_rInfinityCoeff
+  have hcTwoRaw := targetTwo_eq_smul_add_of_coeff_eq
+    c rInfinityCoeff rZeroCoeff α hcCoeff
+  have hcTwo : targetTwo c =
+      α • rationalInfinityValueTwo + rationalZeroValueTwo := by
+    simpa only [← rationalInfinityValueTwo_eq_target,
+      ← rationalZeroValueTwo_eq_target] using hcTwoRaw
+  exact exceptionalPresentation_secondFirst (.rationalPair 1)
+    rationalZeroValueTwo rationalInfinityValueTwo (targetTwo c)
+    rationalPairOne_left_eq rationalPairOne_right_value_eq α hcTwo
+
+private theorem translation_rationalZeroValueA :
+    rationalPlaceLinear 0 (rationalValueA 0) = rationalValueA 1 := by
+  simpa [rationalValueA, closedPlaceLocalBasis, rationalPlacePerm,
+    rationalPlaceLocalBasisChange, Fin.sum_univ_succ] using
+      rationalPlaceLinear_closedPlaceLocalBasis 0 0 0
+
+private theorem translation_rationalZeroValueB :
+    rationalPlaceLinear 0 (rationalValueB 0) = rationalValueB 1 := by
+  simpa [rationalValueB, closedPlaceLocalBasis, rationalPlacePerm,
+    rationalPlaceLocalBasisChange, Fin.sum_univ_succ] using
+      rationalPlaceLinear_closedPlaceLocalBasis 0 0 2
+
+private theorem reversal_rationalZeroValueA :
+    rationalPlaceLinear 1 (rationalValueA 0) = rationalValueA 2 := by
+  simpa [rationalValueA, closedPlaceLocalBasis, rationalPlacePerm,
+    rationalPlaceLocalBasisChange, Fin.sum_univ_succ] using
+      rationalPlaceLinear_closedPlaceLocalBasis 1 0 0
+
+private theorem reversal_rationalZeroValueB :
+    rationalPlaceLinear 1 (rationalValueB 0) = rationalValueB 2 := by
+  simpa [rationalValueB, closedPlaceLocalBasis, rationalPlacePerm,
+    rationalPlaceLocalBasisChange, Fin.sum_univ_succ] using
+      rationalPlaceLinear_closedPlaceLocalBasis 1 0 2
+
+private theorem rationalPlaceLinear_eq_zero_of_image_eq_zero
+    (theta : Fin 2) (x : LinearForm)
+    (hx : rationalPlaceLinear theta x = 0) : x = 0 := by
+  have hxback := congrArg (rationalPlaceLinear theta) hx
+  simpa only [rationalPlaceLinear_involutive, map_zero] using hxback
+
+private theorem translation_cubic_zero
+    (x y : LinearForm) (c : TwoForm)
+    (hcubic : factorPlaneCubic x y rationalOneValueTwo c = 0) :
+    factorPlaneCubic (rationalPlaceLinear 0 x) (rationalPlaceLinear 0 y)
+      rationalZeroValueTwo (rationalPlaceTwoFormLinear 0 c) = 0 := by
+  calc
+    _ = factorPlaneCubic
+        (rationalPlaceLinear 0 x) (rationalPlaceLinear 0 y)
+        (rationalPlaceTwoFormLinear 0 rationalOneValueTwo)
+        (rationalPlaceTwoFormLinear 0 c) := by
+      rw [translation_rationalOneValueTwo]
+    _ = rationalPlaceThreeFormLinear 0
+        (factorPlaneCubic x y rationalOneValueTwo c) :=
+      (rationalPlaceThreeFormLinear_factorPlaneCubic
+        0 x y rationalOneValueTwo c).symm
+    _ = 0 := by rw [hcubic, map_zero]
+
+private theorem reversal_cubic_zero
+    (x y : LinearForm) (c : TwoForm)
+    (hcubic : factorPlaneCubic x y rationalInfinityValueTwo c = 0) :
+    factorPlaneCubic (rationalPlaceLinear 1 x) (rationalPlaceLinear 1 y)
+      rationalZeroValueTwo (rationalPlaceTwoFormLinear 1 c) = 0 := by
+  calc
+    _ = factorPlaneCubic
+        (rationalPlaceLinear 1 x) (rationalPlaceLinear 1 y)
+        (rationalPlaceTwoFormLinear 1 rationalInfinityValueTwo)
+        (rationalPlaceTwoFormLinear 1 c) := by
+      rw [reversal_rationalInfinityValueTwo]
+    _ = rationalPlaceThreeFormLinear 1
+        (factorPlaneCubic x y rationalInfinityValueTwo c) :=
+      (rationalPlaceThreeFormLinear_factorPlaneCubic
+        1 x y rationalInfinityValueTwo c).symm
+    _ = 0 := by rw [hcubic, map_zero]
+
+private theorem translation_zero_factorSpan_back
+    (y : LinearForm) (p s : F₂)
+    (hy : rationalPlaceLinear 0 y =
+      p • rationalValueA 0 + s • rationalValueB 0) :
+    y = p • rationalValueA 1 + s • rationalValueB 1 := by
+  have hyback := congrArg (rationalPlaceLinear 0) hy
+  simpa only [map_add, map_smul, rationalPlaceLinear_involutive,
+    translation_rationalZeroValueA, translation_rationalZeroValueB] using hyback
+
+private theorem reversal_zero_factorSpan_back
+    (y : LinearForm) (p s : F₂)
+    (hy : rationalPlaceLinear 1 y =
+      p • rationalValueA 0 + s • rationalValueB 0) :
+    y = p • rationalValueA 2 + s • rationalValueB 2 := by
+  have hyback := congrArg (rationalPlaceLinear 1) hy
+  simpa only [map_add, map_smul, rationalPlaceLinear_involutive,
+    reversal_rationalZeroValueA, reversal_rationalZeroValueB] using hyback
+
+private theorem translation_independent_to_zero
+    (c : TargetCoeff)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalOneValueTwo (targetTwo c))) :
+    LinearIndependent F₂ (quadraticPlaneDirections rationalZeroValueTwo
+      (targetTwo (rationalTargetCoeffChange 0 c))) := by
+  have hqinv : rationalPlaceTwoFormLinear 0
+      (rationalPlaceTwoFormLinear 0 rationalOneValueTwo) =
+      rationalOneValueTwo := by
+    rw [translation_rationalOneValueTwo, translation_rationalZeroValueTwo]
+  have hmap := quadraticPlaneDirections_independent_map_involution
+    0 rationalOneValueTwo (targetTwo c) hqinv
+      (rationalPlaceTwoFormLinear_target_involutive 0 c) hind
+  simpa only [translation_rationalOneValueTwo,
+    rationalPlaceTwoFormLinear_targetTwo] using hmap
+
+private theorem reversal_independent_to_zero
+    (c : TargetCoeff)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalInfinityValueTwo (targetTwo c))) :
+    LinearIndependent F₂ (quadraticPlaneDirections rationalZeroValueTwo
+      (targetTwo (rationalTargetCoeffChange 1 c))) := by
+  have hqinv : rationalPlaceTwoFormLinear 1
+      (rationalPlaceTwoFormLinear 1 rationalInfinityValueTwo) =
+      rationalInfinityValueTwo := by
+    rw [reversal_rationalInfinityValueTwo, reversal_rationalZeroValueTwo]
+  have hmap := quadraticPlaneDirections_independent_map_involution
+    1 rationalInfinityValueTwo (targetTwo c) hqinv
+      (rationalPlaceTwoFormLinear_target_involutive 1 c) hind
+  simpa only [reversal_rationalInfinityValueTwo,
+    rationalPlaceTwoFormLinear_targetTwo] using hmap
+
+private theorem rationalOneRegularCompanion_of_translation
+    (c : TwoForm)
+    (hregular : RationalValueRegularCompanion 0
+      (rationalPlaceTwoFormLinear 0 c)) :
+    RationalValueRegularCompanion 1 c := by
+  intro x y hcubic
+  have hsource : targetTwo (rationalValueCoeff 1) =
+      rationalOneValueTwo := by
+    change targetTwo rOneCoeff = rationalOneValueTwo
+    exact rationalOneValueTwo_eq_target.symm
+  rw [hsource] at hcubic
+  have hcubic' := translation_cubic_zero x y c hcubic
+  have hcubicForRegular : factorPlaneCubic
+      (rationalPlaceLinear 0 x) (rationalPlaceLinear 0 y)
+      (targetTwo (rationalValueCoeff 0))
+      (rationalPlaceTwoFormLinear 0 c) = 0 := by
+    change factorPlaneCubic (rationalPlaceLinear 0 x)
+      (rationalPlaceLinear 0 y) (targetTwo rZeroCoeff)
+      (rationalPlaceTwoFormLinear 0 c) = 0
+    rw [← rationalZeroValueTwo_eq_target]
+    exact hcubic'
+  rcases hregular _ _ hcubicForRegular with ⟨hx, p, s, hy⟩
+  exact ⟨rationalPlaceLinear_eq_zero_of_image_eq_zero 0 x hx,
+    p, s, translation_zero_factorSpan_back y p s hy⟩
+
+private theorem rationalInfinityRegularCompanion_of_reversal
+    (c : TwoForm)
+    (hregular : RationalValueRegularCompanion 0
+      (rationalPlaceTwoFormLinear 1 c)) :
+    RationalValueRegularCompanion 2 c := by
+  intro x y hcubic
+  have hsource : targetTwo (rationalValueCoeff 2) =
+      rationalInfinityValueTwo := by
+    change targetTwo rInfinityCoeff = rationalInfinityValueTwo
+    exact rationalInfinityValueTwo_eq_target.symm
+  rw [hsource] at hcubic
+  have hcubic' := reversal_cubic_zero x y c hcubic
+  have hcubicForRegular : factorPlaneCubic
+      (rationalPlaceLinear 1 x) (rationalPlaceLinear 1 y)
+      (targetTwo (rationalValueCoeff 0))
+      (rationalPlaceTwoFormLinear 1 c) = 0 := by
+    change factorPlaneCubic (rationalPlaceLinear 1 x)
+      (rationalPlaceLinear 1 y) (targetTwo rZeroCoeff)
+      (rationalPlaceTwoFormLinear 1 c) = 0
+    rw [← rationalZeroValueTwo_eq_target]
+    exact hcubic'
+  rcases hregular _ _ hcubicForRegular with ⟨hx, p, s, hy⟩
+  exact ⟨rationalPlaceLinear_eq_zero_of_image_eq_zero 1 x hx,
+    p, s, reversal_zero_factorSpan_back y p s hy⟩
+
+/-- Rational-direction classification transported from zero to the rational
+place one by the algebraic translation involution. -/
+theorem rationalOne_companion_regular_or_exceptional
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalOneValueTwo (targetTwo c))) :
+    RationalValueRegularCompanion 1 (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        rationalOneValueTwo (targetTwo c) := by
+  have hc' : rationalTargetCoeffChange 0 c ∈
+      firstOrderEnvelopeCoeffSpace :=
+    (rationalTargetCoeffChange_mem_firstOrderEnvelope_iff 0 c).2 hc
+  have hind' := translation_independent_to_zero c hind
+  rcases rationalZero_companion_regular_or_coefficient_exception
+      (rationalTargetCoeffChange 0 c) hc' hind' with hregular | hforms
+  · left
+    apply rationalOneRegularCompanion_of_translation (targetTwo c)
+    rw [rationalPlaceTwoFormLinear_targetTwo]
+    exact hregular
+  · rcases hforms with ⟨α, hcform⟩ | ⟨α, hcform⟩ | ⟨α, hcform⟩
+    · exact Or.inr (translation_jet_exceptional c α hcform)
+    · exact Or.inr (translation_zeroPair_exceptional c α hcform)
+    · exact Or.inr (translation_infinityPair_exceptional c α hcform)
+
+/-- Rational-direction classification transported from zero to infinity by
+the algebraic reversal involution. -/
+theorem rationalInfinity_companion_regular_or_exceptional
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalInfinityValueTwo (targetTwo c))) :
+    RationalValueRegularCompanion 2 (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        rationalInfinityValueTwo (targetTwo c) := by
+  have hc' : rationalTargetCoeffChange 1 c ∈
+      firstOrderEnvelopeCoeffSpace :=
+    (rationalTargetCoeffChange_mem_firstOrderEnvelope_iff 1 c).2 hc
+  have hind' := reversal_independent_to_zero c hind
+  rcases rationalZero_companion_regular_or_coefficient_exception
+      (rationalTargetCoeffChange 1 c) hc' hind' with hregular | hforms
+  · left
+    apply rationalInfinityRegularCompanion_of_reversal (targetTwo c)
+    rw [rationalPlaceTwoFormLinear_targetTwo]
+    exact hregular
+  · rcases hforms with ⟨α, hcform⟩ | ⟨α, hcform⟩ | ⟨α, hcform⟩
+    · exact Or.inr (reversal_jet_exceptional c α hcform)
+    · exact Or.inr (reversal_onePair_exceptional c α hcform)
+    · exact Or.inr (reversal_zeroPair_exceptional c α hcform)
+
+private theorem rationalZero_target_companion_regular_or_exceptional
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections (targetTwo rZeroCoeff) (targetTwo c))) :
+    RationalValueRegularCompanion 0 (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        (targetTwo rZeroCoeff) (targetTwo c) := by
+  have hind' : LinearIndependent F₂
+      (quadraticPlaneDirections rationalZeroValueTwo (targetTwo c)) := by
+    rw [rationalZeroValueTwo_eq_target]
+    exact hind
+  have h := rationalZero_companion_regular_or_exceptional c hc hind'
+  rw [rationalZeroValueTwo_eq_target] at h
+  exact h
+
+private theorem rationalOne_target_companion_regular_or_exceptional
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections (targetTwo rOneCoeff) (targetTwo c))) :
+    RationalValueRegularCompanion 1 (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        (targetTwo rOneCoeff) (targetTwo c) := by
+  have hind' : LinearIndependent F₂
+      (quadraticPlaneDirections rationalOneValueTwo (targetTwo c)) := by
+    rw [rationalOneValueTwo_eq_target]
+    exact hind
+  have h := rationalOne_companion_regular_or_exceptional c hc hind'
+  rw [rationalOneValueTwo_eq_target] at h
+  exact h
+
+private theorem rationalInfinity_target_companion_regular_or_exceptional
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections (targetTwo rInfinityCoeff) (targetTwo c))) :
+    RationalValueRegularCompanion 2 (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        (targetTwo rInfinityCoeff) (targetTwo c) := by
+  have hind' : LinearIndependent F₂
+      (quadraticPlaneDirections rationalInfinityValueTwo (targetTwo c)) := by
+    rw [rationalInfinityValueTwo_eq_target]
+    exact hind
+  have h := rationalInfinity_companion_regular_or_exceptional c hc hind'
+  rw [rationalInfinityValueTwo_eq_target] at h
+  exact h
+
+/-- Uniform algebraic classification of every independent first-order plane
+containing a rational value direction. -/
+theorem rationalValue_companion_regular_or_exceptional
+    (place : Fin 3) (c : TargetCoeff)
+    (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections
+      (targetTwo (rationalValueCoeff place)) (targetTwo c))) :
+    RationalValueRegularCompanion place (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        (targetTwo (rationalValueCoeff place)) (targetTwo c) := by
+  fin_cases place
+  · exact rationalZero_target_companion_regular_or_exceptional c hc (by
+      simpa [rationalValueCoeff] using hind)
+  · exact rationalOne_target_companion_regular_or_exceptional c hc (by
+      simpa [rationalValueCoeff] using hind)
+  · exact rationalInfinity_target_companion_regular_or_exceptional c hc (by
+      simpa [rationalValueCoeff] using hind)
 
 /-- Equal complete high parts on a regular rational-value plane cannot have
 quadratic-shadow difference in the missing target coset.  The proof is
