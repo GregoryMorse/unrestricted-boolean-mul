@@ -311,3 +311,12 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rankOneColour_normalize
 #print axioms UnrestrictedBooleanMul.N5.bornThreeColourDirections_linearIndependent
 #print axioms UnrestrictedBooleanMul.N5.oldProductColour_forces_defect_zero
+#print axioms UnrestrictedBooleanMul.N5.E2.wStarTargetBase_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.wStarTargetBase_le
+#print axioms UnrestrictedBooleanMul.N5.E2.wStar_quotient_dimension_le_two
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQTargetBase_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQTargetBase_le
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQ_quotient_dimension_le_two
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreePTargetBase_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreePTargetBase_le
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_quotient_dimension_le_two
