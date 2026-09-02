@@ -165,6 +165,28 @@ theorem basisChange_actualLowProducts_ne_missingTargetANF
   simpa only [map_add, quadraticProjection_quadraticCoordinateANF_mul,
     quadraticProjection_targetANF] using hprojection
 
+/-- Intrinsic form: two actual products whose independent quadratic factor
+pairs span the same plane cannot collide into the missing target coset. -/
+theorem sameSpan_actualLowProducts_ne_missingTargetANF
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hspan : Submodule.span F₂ ({q', c'} : Set TwoForm) =
+      Submodule.span F₂ ({q, c} : Set TwoForm))
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    quadraticCoordinateANF a ell q * quadraticCoordinateANF b m c +
+        quadraticCoordinateANF a' ell' q' *
+          quadraticCoordinateANF b' m' c' ≠
+      targetANF (firstOrderMissingCoeff + u) := by
+  rcases exists_planeBasisChange_of_span_eq q c q' c' hind' hspan with
+    ⟨g, hq', hc'⟩
+  subst q'
+  subst c'
+  exact basisChange_actualLowProducts_ne_missingTargetANF
+    g a b a' b' ell m ell' m' q c hq hc u hu
+
 end
 end N5
 end UnrestrictedBooleanMul
