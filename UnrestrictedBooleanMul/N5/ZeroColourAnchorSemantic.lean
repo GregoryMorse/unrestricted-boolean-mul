@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
+import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
 
 /-!
 # Semantic core of a normalized anchored zero-colour escape
@@ -21,6 +22,15 @@ def IsFirstOrderAnchorPlaneNormalForm
   ∃ u ∈ firstOrderEnvelopeTwoSpace,
     ∃ v ∈ firstOrderEnvelopeTwoSpace,
       ((q = u ∧ c = v) ∨ (q = u + d ∧ c = v))
+
+theorem IsFirstOrderAnchorPlaneNormalForm.members_of_anchor_mem
+    {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
+    (hd : d ∈ firstOrderEnvelopeTwoSpace) :
+    q ∈ firstOrderEnvelopeTwoSpace ∧ c ∈ firstOrderEnvelopeTwoSpace := by
+  rcases h with ⟨u, hu, v, hv, hnormal | hnormal⟩
+  · exact ⟨hnormal.1 ▸ hu, hnormal.2 ▸ hv⟩
+  · exact ⟨hnormal.1 ▸ firstOrderEnvelopeTwoSpace.add_mem hu hd,
+      hnormal.2 ▸ hv⟩
 
 /-- The exact high and quadratic data left by a normalized anchored
 two-product equation. -/
@@ -154,6 +164,104 @@ theorem NormalizedAnchorTwoProductEquation.exists_shadowEquation
     high_eq := hhighEq
     shadow_eq := hshadowEq
   }⟩
+
+/-- Absorb the old anchored correction into the target coefficient and one
+Boolean scalar multiple of the anchor.  This leaves the exact eight-case
+algebraic obstruction: two normalized plane types and one anchor bit. -/
+theorem NormalizedAnchorShadowEquation.exists_reducedEquation
+    {d : TwoForm} (h : NormalizedAnchorShadowEquation d) :
+    ∃ (alpha : F₂) (u : TargetCoeff),
+      u ∈ firstOrderEnvelopeCoeffSpace ∧
+      lowProductQuadraticShadow h.leftConst h.leftSecondConst
+          h.leftLinear h.leftSecondLinear h.leftTwo h.leftSecondTwo +
+          lowProductQuadraticShadow h.rightConst h.rightSecondConst
+            h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo +
+          alpha • d =
+        targetTwo (firstOrderMissingCoeff + u) := by
+  rcases Submodule.mem_sup.mp h.correctionTwo_mem with
+    ⟨old, hold, anchor, hanchor, hcorrection⟩
+  rcases hold with ⟨oldCoeff, holdCoeff, holdEq⟩
+  rcases Submodule.mem_span_singleton.mp hanchor with ⟨alpha, rfl⟩
+  refine ⟨alpha, h.targetCoeff + oldCoeff,
+    firstOrderEnvelopeCoeffSpace.add_mem h.targetCoeff_mem holdCoeff, ?_⟩
+  rw [h.shadow_eq, ← hcorrection, ← holdEq]
+  calc
+    (targetTwo (firstOrderMissingCoeff + h.targetCoeff) +
+          (lowProductQuadraticShadow h.rightConst h.rightSecondConst
+            h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo +
+              (targetTwo oldCoeff + alpha • d))) +
+        lowProductQuadraticShadow h.rightConst h.rightSecondConst
+          h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo +
+        alpha • d =
+      targetTwo (firstOrderMissingCoeff + h.targetCoeff) +
+        targetTwo oldCoeff := by
+          funext s
+          simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+          ring_nf
+          simp only [N3Certificate.two_eq_zero_f2, mul_zero, add_zero]
+    _ = targetTwo
+        ((firstOrderMissingCoeff + h.targetCoeff) + oldCoeff) := by
+      exact (targetTwoLinear.map_add _ _).symm
+    _ = targetTwo
+        (firstOrderMissingCoeff + (h.targetCoeff + oldCoeff)) := by
+      rw [add_assoc]
+
+private theorem twoForm_recover_after_duplicate
+    (x y : TwoForm) : x = (x + y) + y := by
+  funext s
+  change x s = (x s + y s) + y s
+  rw [add_assoc, CharTwo.add_self_eq_zero, add_zero]
+
+/-- The reduced obstruction is impossible when the anchor was target-valued:
+then both normalized planes and the anchor correction all return to the
+literal first-order envelope theorem. -/
+theorem NormalizedAnchorShadowEquation.false_of_anchor_mem_envelope
+    {d : TwoForm} (h : NormalizedAnchorShadowEquation d)
+    (hd : d ∈ firstOrderEnvelopeTwoSpace) : False := by
+  rcases hd with ⟨dCoeff, hdCoeff, hdEq⟩
+  have hleft := h.left_normal.members_of_anchor_mem
+    (show d ∈ firstOrderEnvelopeTwoSpace from ⟨dCoeff, hdCoeff, hdEq⟩)
+  have hright := h.right_normal.members_of_anchor_mem
+    (show d ∈ firstOrderEnvelopeTwoSpace from ⟨dCoeff, hdCoeff, hdEq⟩)
+  rcases h.exists_reducedEquation with ⟨alpha, u, hu, heq⟩
+  have hforbidden := semanticEnvelope_exact_shadow
+    h.leftConst h.leftSecondConst h.rightConst h.rightSecondConst
+    h.leftLinear h.leftSecondLinear h.rightLinear h.rightSecondLinear
+    h.leftTwo h.leftSecondTwo h.rightTwo h.rightSecondTwo
+    hleft.1 hleft.2 hright.1 hright.2 h.high_eq
+    (u + alpha • dCoeff)
+    (firstOrderEnvelopeCoeffSpace.add_mem hu
+      (firstOrderEnvelopeCoeffSpace.smul_mem alpha hdCoeff))
+  apply hforbidden
+  calc
+    lowProductQuadraticShadow h.leftConst h.leftSecondConst
+          h.leftLinear h.leftSecondLinear h.leftTwo h.leftSecondTwo +
+        lowProductQuadraticShadow h.rightConst h.rightSecondConst
+          h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo =
+      (lowProductQuadraticShadow h.leftConst h.leftSecondConst
+            h.leftLinear h.leftSecondLinear h.leftTwo h.leftSecondTwo +
+          lowProductQuadraticShadow h.rightConst h.rightSecondConst
+            h.rightLinear h.rightSecondLinear h.rightTwo h.rightSecondTwo +
+          alpha • d) + alpha • d :=
+      twoForm_recover_after_duplicate _ _
+    _ = targetTwo (firstOrderMissingCoeff + u) + alpha • d := by
+      rw [heq]
+    _ = targetTwo (firstOrderMissingCoeff + u) +
+        alpha • targetTwo dCoeff := by
+      exact congrArg
+        (fun z : TwoForm => targetTwo (firstOrderMissingCoeff + u) + alpha • z)
+        hdEq.symm
+    _ = targetTwo (firstOrderMissingCoeff + u) +
+        targetTwo (alpha • dCoeff) := by
+      exact congrArg
+        (fun z : TwoForm => targetTwo (firstOrderMissingCoeff + u) + z)
+        (targetTwoLinear.map_smul alpha dCoeff).symm
+    _ = targetTwo
+        ((firstOrderMissingCoeff + u) + alpha • dCoeff) := by
+      exact (targetTwoLinear.map_add _ _).symm
+    _ = targetTwo
+        (firstOrderMissingCoeff + (u + alpha • dCoeff)) := by
+      rw [add_assoc]
 
 /-- The circuit-facing consequence: every fixed-anchor zero-colour escape
 produces the finite-dimensional normalized shadow obstruction. -/
