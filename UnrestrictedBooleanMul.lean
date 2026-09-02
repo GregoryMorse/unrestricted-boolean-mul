@@ -39,6 +39,7 @@ import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
 import UnrestrictedBooleanMul.N5.EnvelopeAssembly
 import UnrestrictedBooleanMul.N5.EnvelopeRotationShadow
 import UnrestrictedBooleanMul.N5.EnvelopeTwoRotation
+import UnrestrictedBooleanMul.N5.EnvelopeLocalDependent
 import UnrestrictedBooleanMul.N5.ColourBirth
 import UnrestrictedBooleanMul.N5.ColourNormalization
 import UnrestrictedBooleanMul.N5.ThreeColour
