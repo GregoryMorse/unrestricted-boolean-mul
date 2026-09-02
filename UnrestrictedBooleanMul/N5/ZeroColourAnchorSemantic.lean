@@ -1,6 +1,7 @@
 import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
 import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
 import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
+import UnrestrictedBooleanMul.N5.Displacement
 
 /-!
 # Semantic core of a normalized anchored zero-colour escape
@@ -502,6 +503,67 @@ theorem decomposableEnvelopeTranslate_rational_or_closedPlace
   · exact Or.inl hrat
   · exact Or.inr
       (exists_closedPlaceEffectiveParam_of_effectiveFiber heffective)
+
+/-- Once the quotient place is known, the translating old-envelope target
+word lies in the intrinsic displacement space of that fiber, hence in the
+rational directions plus the target plane of the same closed place. -/
+theorem decomposableEnvelopeTranslate_mem_closedPlaceDisplacement
+    (x : ClosedPlaceEffectiveParam) (d p old : TwoForm)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hold : old ∈ firstOrderEnvelopeTwoSpace)
+    (htranslate : p = old + d)
+    (hplace : quadraticQuotientProjection d =
+      closedPlaceEffectivePoint x) :
+    old ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1 := by
+  have holdTarget : old ∈ targetTwoSpace :=
+    firstOrderEnvelopeTwoSpace_le_targetTwoSpace hold
+  have holdProjection : quadraticQuotientProjection old = 0 :=
+    (quadraticQuotientProjection_eq_zero_iff old).2 holdTarget
+  have hdFiber : d ∈ decomposableFiber (closedPlaceEffectivePoint x) :=
+    ⟨hd, hplace⟩
+  have hpProjection : quadraticQuotientProjection p =
+      closedPlaceEffectivePoint x := by
+    calc
+      quadraticQuotientProjection p =
+          quadraticQuotientProjection (old + d) := by rw [htranslate]
+      _ = quadraticQuotientProjection old +
+          quadraticQuotientProjection d := map_add _ _ _
+      _ = 0 + closedPlaceEffectivePoint x := by
+        rw [holdProjection, hplace]
+      _ = closedPlaceEffectivePoint x := zero_add _
+  have hpFiber : p ∈ decomposableFiber (closedPlaceEffectivePoint x) :=
+    ⟨hp, hpProjection⟩
+  have hdifference : p - d ∈
+      fiberDifferenceSpace (closedPlaceEffectivePoint x) d :=
+    Submodule.subset_span ⟨p, hpFiber, rfl⟩
+  have hlocal := fiberDifferenceSpace_closedPlace_le x hdFiber hdifference
+  have holdEq : old = p - d := by
+    rw [htranslate]
+    module
+  rwa [holdEq]
+
+/-- Final translate interface used by the anchored shadow calculation.  A
+decomposable anchor translate is either rational already, or comes with an
+explicit effective closed place and a proof that its target displacement is
+supported by that place together with the rational directions. -/
+theorem decomposableEnvelopeTranslate_rational_or_localDisplacement
+    (d p old : TwoForm)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hold : old ∈ firstOrderEnvelopeTwoSpace)
+    (htranslate : p = old + d) :
+    ∃ c : TargetCoeff,
+      c ∈ firstOrderEnvelopeCoeffSpace ∧ old = targetTwo c ∧
+      (c ∈ rationalCoeffSpace ∨
+        ∃ x : ClosedPlaceEffectiveParam,
+          quadraticQuotientProjection d = closedPlaceEffectivePoint x ∧
+          old ∈ rationalTwoSpace ⊔ closedPlaceTargetTwoSpace x.1) := by
+  rcases decomposableEnvelopeTranslate_rational_or_closedPlace
+      d p old hd hp hold htranslate with
+    ⟨c, hc, holdEq, hrat | ⟨x, hplace⟩⟩
+  · exact ⟨c, hc, holdEq, Or.inl hrat⟩
+  · exact ⟨c, hc, holdEq, Or.inr ⟨x, hplace,
+      decomposableEnvelopeTranslate_mem_closedPlaceDisplacement
+        x d p old hd hp hold htranslate hplace⟩⟩
 
 private theorem twoForm_recover_after_duplicate
     (x y : TwoForm) : x = (x + y) + y := by
