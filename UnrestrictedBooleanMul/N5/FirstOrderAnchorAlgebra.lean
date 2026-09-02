@@ -1,5 +1,6 @@
 import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
 import UnrestrictedBooleanMul.N5.LowProductSemantic
+import UnrestrictedBooleanMul.N5.EnvelopeRotationShadow
 
 /-!
 # Algebra of a decomposable first-order anchor
@@ -51,6 +52,54 @@ theorem exists_firstOrderEnvelopeANF_add_anchor
   · simp [u]
   · simpa [u, quadraticCoordinateANF] using
       (quadraticCoordinateANF_add c 0 ell 0 q₀ d).symm
+
+/-- Equation (11.7) in the exact affine-coset form needed by anchored
+low-product comparisons. -/
+theorem missingCoset_targetTwo_not_mem_firstOrderAnchor
+    (d : TwoForm) (hddec : IsDecomposableTwo d)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    targetTwo (firstOrderMissingCoeff + u) ∉
+      firstOrderAnchorTwoSpace d := by
+  intro hmem
+  have htarget : targetTwo (firstOrderMissingCoeff + u) ∈
+      targetTwoSpace := ⟨firstOrderMissingCoeff + u, rfl⟩
+  have hintersection : targetTwo (firstOrderMissingCoeff + u) ∈
+      targetTwoSpace ⊓ firstOrderAnchorTwoSpace d := ⟨htarget, hmem⟩
+  rw [targetTwoSpace_inf_firstOrderAnchorTwoSpace d hddec] at hintersection
+  rcases hintersection with ⟨c, hc, hceq⟩
+  have hcoeff : c = firstOrderMissingCoeff + u := by
+    apply targetTwoLinear_injective
+    exact hceq
+  have hmissing : firstOrderMissingCoeff ∈
+      firstOrderEnvelopeCoeffSpace := by
+    have hsum := firstOrderEnvelopeCoeffSpace.add_mem (hcoeff ▸ hc) hu
+    have hcancel : (firstOrderMissingCoeff + u) + u =
+        firstOrderMissingCoeff := by
+      funext i
+      simp only [Pi.add_apply]
+      rw [add_assoc, CharTwo.add_self_eq_zero, add_zero]
+    rwa [hcancel] at hsum
+  exact firstOrderMissingCoeff_not_mem hmissing
+
+/-- If the complete lower data of one low product is obtained from the
+other by an ordered basis change of the same anchored plane, their shadow
+difference lies in the anchored space.  Equation (11.7) therefore excludes
+the missing target class. -/
+theorem anchored_basisChange_shadow_not_missingCoset
+    (d : TwoForm) (hddec : IsDecomposableTwo d)
+    (g : PlaneBasisChange)
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
+    (hq : q ∈ firstOrderAnchorTwoSpace d)
+    (hc : c ∈ firstOrderAnchorTwoSpace d)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    changedLowProductQuadraticShadow g a b ell m q c +
+        lowProductQuadraticShadow a b ell m q c ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  intro heq
+  apply missingCoset_targetTwo_not_mem_firstOrderAnchor d hddec u hu
+  rw [← heq]
+  exact (planeBasisChange_high_and_shadow_mod_submodule
+    (firstOrderAnchorTwoSpace d) g a b ell m q c hq hc).2
 
 /-- Literal high classes are additive in the complete linear/quadratic data
 of the right factor. -/
