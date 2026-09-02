@@ -89,6 +89,76 @@ theorem PlaneBasisChange.inverse_basisPair_apply
     simp [PlaneBasisChange.inverse, PlaneBasisChange.basisPair,
       hleft, hright, hsandwich, houter]
 
+private theorem mem_span_pair_cases_f2
+    {α : Type*} [AddCommGroup α] [Module F₂ α]
+    (x y z : α) (hz : z ∈ Submodule.span F₂ ({x, y} : Set α)) :
+    z = 0 ∨ z = x ∨ z = y ∨ z = x + y := by
+  rcases Submodule.mem_span_pair.mp hz with ⟨a, b, hab⟩
+  rcases f2_eq_zero_or_one a with rfl | rfl <;>
+    rcases f2_eq_zero_or_one b with rfl | rfl
+  · exact Or.inl (by simpa using hab.symm)
+  · exact Or.inr (Or.inr (Or.inl (by simpa using hab.symm)))
+  · exact Or.inr (Or.inl (by simpa using hab.symm))
+  · exact Or.inr (Or.inr (Or.inr (by simpa using hab.symm)))
+
+theorem quadraticPlaneDirections_independent_nonzero_ne
+    (q c : TwoForm)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c)) :
+    q ≠ 0 ∧ c ≠ 0 ∧ q ≠ c := by
+  have h := hind
+  rw [linearIndependent_fin2] at h
+  change q ≠ 0 ∧ ∀ a : F₂, a • q ≠ c at h
+  refine ⟨h.1, ?_, ?_⟩
+  · intro hc
+    apply h.2 0
+    simp [hc]
+  · intro hqc
+    apply h.2 1
+    simpa using hqc
+
+/-- Two independent ordered pairs spanning the same plane differ by exactly
+one of the six basis changes. -/
+theorem exists_planeBasisChange_of_span_eq
+    (q c q' c' : TwoForm)
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hspan : Submodule.span F₂ ({q', c'} : Set TwoForm) =
+      Submodule.span F₂ ({q, c} : Set TwoForm)) :
+    ∃ g : PlaneBasisChange,
+      q' = (g.basisPair q c).1 ∧ c' = (g.basisPair q c).2 := by
+  have hqmem : q' ∈ Submodule.span F₂ ({q, c} : Set TwoForm) := by
+    rw [← hspan]
+    exact Submodule.subset_span (by simp)
+  have hcmem : c' ∈ Submodule.span F₂ ({q, c} : Set TwoForm) := by
+    rw [← hspan]
+    exact Submodule.subset_span (by simp)
+  rcases quadraticPlaneDirections_independent_nonzero_ne q' c' hind' with
+    ⟨hq'ne, hc'ne, hq'c'⟩
+  rcases mem_span_pair_cases_f2 q c q' hqmem with
+    hq0 | hqq | hqc | hqsum
+  · exact (hq'ne hq0).elim
+  · rcases mem_span_pair_cases_f2 q c c' hcmem with
+      hc0 | hcq | hcc | hcsum
+    · exact (hc'ne hc0).elim
+    · exact (hq'c' (hqq.trans hcq.symm)).elim
+    · exact ⟨.identity, by simp [PlaneBasisChange.basisPair, hqq, hcc]⟩
+    · exact ⟨.rotateRight,
+        by simp [PlaneBasisChange.basisPair, hqq, hcsum]⟩
+  · rcases mem_span_pair_cases_f2 q c c' hcmem with
+      hc0 | hcq | hcc | hcsum
+    · exact (hc'ne hc0).elim
+    · exact ⟨.swap, by simp [PlaneBasisChange.basisPair, hqc, hcq]⟩
+    · exact (hq'c' (hqc.trans hcc.symm)).elim
+    · exact ⟨.cycleRight,
+        by simp [PlaneBasisChange.basisPair, hqc, hcsum]⟩
+  · rcases mem_span_pair_cases_f2 q c c' hcmem with
+      hc0 | hcq | hcc | hcsum
+    · exact (hc'ne hc0).elim
+    · exact ⟨.cycleLeft,
+        by simp [PlaneBasisChange.basisPair, hqsum, hcq]⟩
+    · exact ⟨.rotateLeft,
+        by simp [PlaneBasisChange.basisPair, hqsum, hcc]⟩
+    · exact (hq'c' (hqsum.trans hcsum.symm)).elim
+
 /-- Complete high part after changing the ordered factor basis. -/
 def changedLowProductHighPart
     (g : PlaneBasisChange) (ell m : LinearForm) (q c : TwoForm) :
@@ -253,12 +323,60 @@ theorem exceptionalIndependentPlane_basisChange_shadow_not_missingCoset
       a b a' b' ell m ell' m' hcanonicalCubic
   · exact hu
 
+/-- The two equal-high products may use different ordered bases of the same
+exceptional plane. -/
+theorem exceptionalIndependentPlane_twoBasisChanges_shadow_not_missingCoset
+    (P : ExceptionalIndependentPlane) (g g' : PlaneBasisChange)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic :
+      (changedLowProductHighPart g ell m P.left P.right).2 =
+        (changedLowProductHighPart g' ell' m' P.left P.right).2)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    changedLowProductQuadraticShadow g a b ell m P.left P.right +
+        changedLowProductQuadraticShadow g' a' b' ell' m' P.left P.right ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  have hcanonicalCubic :
+      factorPlaneCubic ell m P.left P.right =
+        factorPlaneCubic ell' m' P.left P.right := by
+    rw [← exceptionalPlane_basisChange_cubic P g ell m,
+      ← exceptionalPlane_basisChange_cubic P g' ell' m']
+    exact hcubic
+  have hcorrection :
+      (changedLowProductQuadraticShadow g a b ell m P.left P.right +
+          changedLowProductQuadraticShadow g' a' b' ell' m' P.left P.right) +
+        (lowProductQuadraticShadow a b ell m P.left P.right +
+          lowProductQuadraticShadow a' b' ell' m' P.left P.right) ∈
+        firstOrderEnvelopeTwoSpace := by
+    rw [paired_sums_reassociate]
+    exact firstOrderEnvelopeTwoSpace.add_mem
+      (exceptionalPlane_basisChange_high_and_shadow P g a b ell m).2
+      (exceptionalPlane_basisChange_high_and_shadow P g' a' b' ell' m').2
+  apply missingCoset_exclusion_of_add_mem_firstOrderEnvelope
+    (changedLowProductQuadraticShadow g a b ell m P.left P.right +
+      changedLowProductQuadraticShadow g' a' b' ell' m' P.left P.right)
+    (lowProductQuadraticShadow a b ell m P.left P.right +
+      lowProductQuadraticShadow a' b' ell' m' P.left P.right)
+    hcorrection
+  · exact exceptionalIndependentPlane_shadow_not_missingCoset P
+      a b a' b' ell m ell' m' hcanonicalCubic
+  · exact hu
+
 /-- An arbitrary ordered presentation of one of the seven exceptional
 independent planes. -/
 def IsExceptionalIndependentPlanePresentation (q c : TwoForm) : Prop :=
   ∃ (P : ExceptionalIndependentPlane) (g : PlaneBasisChange),
     q = (g.basisPair P.left P.right).1 ∧
       c = (g.basisPair P.left P.right).2
+
+theorem isExceptionalIndependentPlanePresentation_of_span_eq
+    (P : ExceptionalIndependentPlane) (q c : TwoForm)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hspan : Submodule.span F₂ ({q, c} : Set TwoForm) =
+      Submodule.span F₂ ({P.left, P.right} : Set TwoForm)) :
+    IsExceptionalIndependentPlanePresentation q c := by
+  rcases exists_planeBasisChange_of_span_eq P.left P.right q c hind hspan with
+    ⟨g, hq, hc⟩
+  exact ⟨P, g, hq, hc⟩
 
 /-- Presentation-free form of the seven exceptional-plane exclusions.  The
 constants and linear parts are pulled back through the inverse basis change;
@@ -298,6 +416,79 @@ theorem exceptionalIndependentPlanePresentation_shadow_not_missingCoset
     changedLowProductQuadraticShadow_inverse,
     changedLowProductQuadraticShadow_inverse] at hexclusion
   exact hexclusion
+
+/-- Two ordered presentations of one common exceptional plane. -/
+def ShareExceptionalIndependentPlane
+    (q c q' c' : TwoForm) : Prop :=
+  ∃ (P : ExceptionalIndependentPlane)
+      (g g' : PlaneBasisChange),
+    q = (g.basisPair P.left P.right).1 ∧
+    c = (g.basisPair P.left P.right).2 ∧
+    q' = (g'.basisPair P.left P.right).1 ∧
+    c' = (g'.basisPair P.left P.right).2
+
+/-- Equal-high comparison for two arbitrary ordered presentations of the
+same exceptional plane. -/
+theorem sharedExceptionalIndependentPlane_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm)
+    (hshared : ShareExceptionalIndependentPlane q c q' c')
+    (hcubic : factorPlaneCubic ell m q c =
+      factorPlaneCubic ell' m' q' c')
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  rcases hshared with ⟨P, g, g', hq, hc, hq', hc'⟩
+  subst q
+  subst c
+  subst q'
+  subst c'
+  let ab := g.inverse.basisPair a b
+  let ab' := g'.inverse.basisPair a' b'
+  let lm := g.inverse.basisPair ell m
+  let lm' := g'.inverse.basisPair ell' m'
+  have hcubicChanged :
+      (changedLowProductHighPart g lm.1 lm.2 P.left P.right).2 =
+        (changedLowProductHighPart g' lm'.1 lm'.2 P.left P.right).2 := by
+    rw [show lm = g.inverse.basisPair ell m by rfl,
+      show lm' = g'.inverse.basisPair ell' m' by rfl,
+      changedLowProductHighPart_inverse,
+      changedLowProductHighPart_inverse]
+    exact hcubic
+  have hexclusion :=
+    exceptionalIndependentPlane_twoBasisChanges_shadow_not_missingCoset
+      P g g' ab.1 ab.2 ab'.1 ab'.2 lm.1 lm.2 lm'.1 lm'.2
+        hcubicChanged u hu
+  rw [show ab = g.inverse.basisPair a b by rfl,
+    show ab' = g'.inverse.basisPair a' b' by rfl,
+    show lm = g.inverse.basisPair ell m by rfl,
+    show lm' = g'.inverse.basisPair ell' m' by rfl,
+    changedLowProductQuadraticShadow_inverse,
+    changedLowProductQuadraticShadow_inverse] at hexclusion
+  exact hexclusion
+
+/-- Final case assembly once an equal-plane comparison has been localized:
+dependent factor planes use the rank-one theorem, while independent localized
+planes use the presentation-free seven-plane theorem. -/
+theorem localizedEnvelope_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm) (q c : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hloc :
+      ¬ LinearIndependent F₂ (quadraticPlaneDirections q c) ∨
+        IsExceptionalIndependentPlanePresentation q c)
+    (hcubic : factorPlaneCubic ell m q c =
+      factorPlaneCubic ell' m' q c)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q c ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  rcases hloc with hdependent | hexceptional
+  · exact rankOneShadow_not_missingCoset
+      a b a' b' ell m ell' m' q c hq hc hdependent hcubic u hu
+  · exact exceptionalIndependentPlanePresentation_shadow_not_missingCoset
+      a b a' b' ell m ell' m' q c hexceptional hcubic u hu
 
 end
 
