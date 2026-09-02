@@ -139,6 +139,71 @@ theorem quadraticLiftSpace_le_pure (W : Submodule F₂ TwoForm) :
   rintro _ ⟨q, _hq, rfl⟩
   exact ⟨q, rfl⟩
 
+/-- Pure quadratic ANFs have degree at most two. -/
+theorem pureQuadraticANFSpace_le_quadraticANFSpace :
+    pureQuadraticANFSpace ≤ N4.quadraticANFSpace 10 := by
+  rintro _ ⟨q, rfl⟩ s hs
+  classical
+  change (quadraticANFOfForm q).coeff s = 0
+  rw [quadraticANFOfForm, MonoidAlgebra.coeff_sum]
+  rw [Finsupp.finsetSum_apply]
+  apply Finset.sum_eq_zero
+  intro t _ht
+  have hne : t.1 ≠ s.vars := by
+    intro h
+    have hcard := congrArg Finset.card h
+    have htcard : t.1.card = 2 := t.2
+    omega
+  have hcoeff : (monomial t.1 : ANF 10).coeff s = 0 := by
+    rw [show s = ⟨s.vars⟩ by cases s; rfl]
+    simp [coeff_monomial, hne]
+  change q t * (monomial t.1 : ANF 10).coeff s = 0
+  rw [hcoeff]
+  simp
+
+/-- Every degree-at-most-two ANF splits as an affine ANF plus its pure
+quadratic part. -/
+theorem quadraticANFSpace_eq_affine_sup_pure :
+    N4.quadraticANFSpace 10 = affine 10 ⊔ pureQuadraticANFSpace := by
+  apply le_antisymm
+  · intro p hp
+    have hreconstruct :
+        p.coeff.sum (fun s c => c • monomial s.vars) = p := by
+      calc
+        p.coeff.sum (fun s c => c • monomial s.vars) =
+            p.coeff.sum MonoidAlgebra.single := by
+          apply Finsupp.sum_congr
+          intro s _hs
+          cases s
+          simp [monomial]
+        _ = p := MonoidAlgebra.sum_coeff_single p
+    rw [← hreconstruct, Finsupp.sum]
+    apply Submodule.sum_mem
+    intro s hs
+    have hcard : s.vars.card ≤ 2 := by
+      by_contra hnot
+      have hzero := hp s (by omega)
+      exact (Finsupp.mem_support_iff.mp hs) hzero
+    interval_cases hsCard : s.vars.card
+    · have hs0 : s.vars = ∅ := Finset.card_eq_zero.mp hsCard
+      rw [hs0]
+      have hone : (monomial ∅ : ANF 10) = 1 := by
+        rw [monomial, MonoidAlgebra.one_def]
+        congr 1
+      rw [hone]
+      exact Submodule.mem_sup_left
+        (Submodule.smul_mem _ _ (one_mem_affine 10))
+    · rcases Finset.card_eq_one.mp hsCard with ⟨i, hi⟩
+      rw [hi]
+      exact Submodule.mem_sup_left
+        (Submodule.smul_mem _ _ (X_mem_affine i))
+    · let t : QuadraticIndex 10 := ⟨s.vars, hsCard⟩
+      have ht : monomial s.vars ∈ pureQuadraticANFSpace := by
+        simpa [t] using quadraticMonomial_mem_pure t
+      exact Submodule.mem_sup_right (Submodule.smul_mem _ _ ht)
+  · exact sup_le N4.affine_le_quadraticANFSpace
+      pureQuadraticANFSpace_le_quadraticANFSpace
+
 theorem quadraticProjection_quadraticLiftSpace
     (W : Submodule F₂ TwoForm) :
     Submodule.map (quadraticProjection 10) (quadraticLiftSpace W) = W := by

@@ -30,6 +30,7 @@ Status meanings:
 | Theorem 7.2, `rho_3(5)=7` | `N5.targetCapacity_rank_three_exact`, `N5/DefectThreeWitness.lean` | universal displacement upper bound and explicit two-rational-plus-degree-two equality witness | checked |
 | Proposition 8.1, capacity obstruction | `N5.capacity_obstruction`, `N5/Capacity.lean` | target--defect exact sequence and geometric capacity span | checked |
 | Lemma 9.1, circuit bookkeeping | `N5.circuit_bookkeeping`, `N5.allQuadraticPrefix_bookkeeping`, `N5.lastQuadraticPrefix_defect_le_two`, `N5/Prefix.lean`, `N5/QuadraticFlattening.lean`, `N5/PrefixState.lean` | generic circuit flags, dimension-polymorphic Reed--Muller flattening, and automatic nonredundancy/defect birth at the first high gate | checked |
+| Exact quadratic-prefix coordinate bridge | `N5.circuitFlag_le_quadraticEnvelopeState_of_allQuadratic`, `N5.quadraticPrefixFlattening_defect_eq_flagDefect`; `N5/QuadraticPrefixExact.lean` | affine-plus-pure-quadratic reconstruction and the quotient-map kernel/range identity | checked |
 | Proposition 10.2, two-defect envelopes | `N5.E2.envelopes_exhaustive`, `N5/E2/Envelopes.lean` | equality classification and symmetries | interface fixed |
 | Theorem 10.4, stable two-defect bound | `N5.E2.suffix_target_le`, `N5/E2/Main.lean` | four envelope modules | planned |
 | Lemma 10.6, suffix-deficit monotonicity | `N5.suffixPostGain_mono_corrected`, `N5.suffixDeficit_mono`, `N5/SuffixBudget.lean` | equal defect two, no length allowance | checked |

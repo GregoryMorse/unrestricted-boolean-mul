@@ -41,6 +41,43 @@ def quadraticEnvelopeState (W : Submodule F₂ TwoForm) :
 theorem affine_le_quadraticEnvelopeState (W : Submodule F₂ TwoForm) :
     affine 10 ≤ quadraticEnvelopeState W := le_sup_left
 
+theorem quadraticEnvelopeState_le_quadraticANFSpace
+    (W : Submodule F₂ TwoForm) :
+    quadraticEnvelopeState W ≤ N4.quadraticANFSpace 10 := by
+  apply sup_le N4.affine_le_quadraticANFSpace
+  exact (quadraticLiftSpace_le_pure W).trans
+    pureQuadraticANFSpace_le_quadraticANFSpace
+
+/-- Coordinate-free membership in a lifted quadratic envelope. -/
+theorem mem_quadraticEnvelopeState_iff
+    (W : Submodule F₂ TwoForm) (p : ANF 10) :
+    p ∈ quadraticEnvelopeState W ↔
+      p ∈ N4.quadraticANFSpace 10 ∧ quadraticProjection 10 p ∈ W := by
+  constructor
+  · intro hp
+    refine ⟨quadraticEnvelopeState_le_quadraticANFSpace W hp, ?_⟩
+    rcases Submodule.mem_sup.mp hp with ⟨a, ha, x, ⟨q, hq, rfl⟩, rfl⟩
+    rw [map_add, quadraticProjection_kills_affine 10 ha, zero_add]
+    change quadraticProjection 10 (quadraticANFOfForm q) ∈ W
+    rw [quadraticProjection_quadraticANFOfForm]
+    exact hq
+  · rintro ⟨hpquad, hprojection⟩
+    rw [quadraticANFSpace_eq_affine_sup_pure] at hpquad
+    rcases Submodule.mem_sup.mp hpquad with ⟨a, ha, x, hx, rfl⟩
+    have hxProjection : quadraticProjection 10 x ∈ W := by
+      rw [map_add, quadraticProjection_kills_affine 10 ha, zero_add] at hprojection
+      exact hprojection
+    have hxEq : x = quadraticANFOfForm (quadraticProjection 10 x) := by
+      apply quadraticProjection_injective_on_pure hx
+        ⟨quadraticProjection 10 x, rfl⟩
+      change quadraticProjection 10 x =
+        quadraticProjection 10 (quadraticANFOfForm (quadraticProjection 10 x))
+      rw [quadraticProjection_quadraticANFOfForm]
+    apply Submodule.add_mem
+    · exact Submodule.mem_sup_left ha
+    · apply Submodule.mem_sup_right
+      exact ⟨quadraticProjection 10 x, hxProjection, hxEq.symm⟩
+
 theorem quadraticEnvelopeState_finrank (W : Submodule F₂ TwoForm) :
     Module.finrank F₂ (quadraticEnvelopeState W) =
       Module.finrank F₂ (affine 10) + Module.finrank F₂ W := by
