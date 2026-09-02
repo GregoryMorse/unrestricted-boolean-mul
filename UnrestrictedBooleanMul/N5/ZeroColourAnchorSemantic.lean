@@ -24,6 +24,69 @@ def IsFirstOrderAnchorPlaneNormalForm
     ∃ v ∈ firstOrderEnvelopeTwoSpace,
       ((q = u ∧ c = v) ∨ (q = u + d ∧ c = v))
 
+/-- Scalar-bit form of the anchored plane normal form.  It replaces the
+disjunction by the coefficient of the unique external anchor direction. -/
+theorem IsFirstOrderAnchorPlaneNormalForm.exists_anchorBit
+    {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c) :
+    ∃ u ∈ firstOrderEnvelopeTwoSpace,
+      ∃ v ∈ firstOrderEnvelopeTwoSpace,
+        ∃ epsilon : F₂, q = u + epsilon • d ∧ c = v := by
+  rcases h with ⟨u, hu, v, hv, hnormal | hnormal⟩
+  · exact ⟨u, hu, v, hv, 0, by simpa using hnormal.1, hnormal.2⟩
+  · exact ⟨u, hu, v, hv, 1, by simpa using hnormal.1, hnormal.2⟩
+
+/-- Conversely, a scalar anchor coefficient over `F₂` is one of the two
+normalized anchored plane types. -/
+theorem isFirstOrderAnchorPlaneNormalForm_of_anchorBit
+    (d u v : TwoForm) (epsilon : F₂)
+    (hu : u ∈ firstOrderEnvelopeTwoSpace)
+    (hv : v ∈ firstOrderEnvelopeTwoSpace) :
+    IsFirstOrderAnchorPlaneNormalForm d (u + epsilon • d) v := by
+  refine ⟨u, hu, v, hv, ?_⟩
+  rcases f2_eq_zero_or_one epsilon with rfl | rfl
+  · left
+    simp
+  · right
+    simp
+
+/-- Exact high-part expansion of one normalized anchored factor plane. -/
+theorem IsFirstOrderAnchorPlaneNormalForm.exists_highExpansion
+    {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
+    (ell m : LinearForm) :
+    ∃ u ∈ firstOrderEnvelopeTwoSpace,
+      ∃ v ∈ firstOrderEnvelopeTwoSpace,
+        ∃ epsilon : F₂,
+          q = u + epsilon • d ∧ c = v ∧
+          lowProductHighClass ell m q c =
+            lowProductHighClass ell m u v +
+              epsilon • lowProductHighClass 0 m d v := by
+  rcases h.exists_anchorBit with ⟨u, hu, v, hv, epsilon, hq, hc⟩
+  refine ⟨u, hu, v, hv, epsilon, hq, hc, ?_⟩
+  rw [hq, hc]
+  simpa using
+    lowProductHighClass_add_smul_anchor ell m u v d epsilon 0
+
+/-- Exact Boolean quadratic-shadow expansion of one normalized anchored
+factor plane.  All dependence on the external anchor is explicit. -/
+theorem IsFirstOrderAnchorPlaneNormalForm.exists_shadowExpansion
+    {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
+    (a b : F₂) (ell m : LinearForm) :
+    ∃ u ∈ firstOrderEnvelopeTwoSpace,
+      ∃ v ∈ firstOrderEnvelopeTwoSpace,
+        ∃ epsilon : F₂,
+          q = u + epsilon • d ∧ c = v ∧
+          lowProductQuadraticShadow a b ell m q c =
+            lowProductQuadraticShadow a b ell m u v +
+              (b * epsilon) • d +
+              epsilon • ambientBooleanContraction m d +
+              epsilon • ambientTwoHadamard d v := by
+  rcases h.exists_anchorBit with ⟨u, hu, v, hv, epsilon, hq, hc⟩
+  refine ⟨u, hu, v, hv, epsilon, hq, hc, ?_⟩
+  rw [hq, hc]
+  simpa using
+    lowProductQuadraticShadow_add_smul_anchor
+      a b ell m u v d epsilon 0
+
 theorem IsFirstOrderAnchorPlaneNormalForm.members_of_anchor_mem
     {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
     (hd : d ∈ firstOrderEnvelopeTwoSpace) :
