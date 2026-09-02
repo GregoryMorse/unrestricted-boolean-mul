@@ -29,7 +29,8 @@ theorem exists_base_lowProduct_of_unique_highClass
     ∃ p q : ANF 10,
       p ∈ A ∧ q ∈ A ∧
       Submodule.mkQ (N4.quadraticANFSpace 10) g =
-        Submodule.mkQ (N4.quadraticANFSpace 10) (p * q) := by
+        Submodule.mkQ (N4.quadraticANFSpace 10) (p * q) ∧
+      p * q ∈ V := by
   induction hreach generalizing g with
   | refl _ =>
       exact (hgHigh (hAquad hgV)).elim
@@ -52,7 +53,10 @@ theorem exists_base_lowProduct_of_unique_highClass
           have hdim := Submodule.finrank_mono himage
           rw [stateHighImage_finrank, stateHighImage_finrank] at hdim
           exact hdim.trans (by simpa [W'] using hhigh)
-        exact ih hquadW hhighW g hgW hgHigh
+        rcases ih hquadW hhighW g hgW hgHigh with
+          ⟨p, q, hpA, hqA, hclass, hpqW⟩
+        exact ⟨p, q, hpA, hqA, hclass,
+          (le_sup_left : W ≤ W') hpqW⟩
       · have hWquad : W ≤ N4.quadraticANFSpace 10 := by
           intro z hzW
           by_contra hzHigh
@@ -101,13 +105,16 @@ theorem exists_base_lowProduct_of_unique_highClass
           apply hgW
           have hzg : z = g := by simpa using hzu
           exact hzg ▸ hzW
-        · refine ⟨x, y, hxA, hyA, ?_⟩
+        · refine ⟨x, y, hxA, hyA, ?_, ?_⟩
           have hzZero : Submodule.mkQ (N4.quadraticANFSpace 10) z = 0 :=
             (Submodule.Quotient.mk_eq_zero _).2 (hWquad hzW)
           have hEq : z + x * y = g := by simpa using hzu
           have hmap := congrArg
             (Submodule.mkQ (N4.quadraticANFSpace 10)) hEq
-          simpa [map_add, hzZero] using hmap.symm
+          · simpa [map_add, hzZero] using hmap.symm
+          · exact (le_sup_right :
+              Submodule.span F₂ ({x * y} : Set (ANF 10)) ≤ W')
+              (Submodule.mem_span_singleton_self (x * y))
 
 end
 end N5
