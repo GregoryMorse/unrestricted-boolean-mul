@@ -375,4 +375,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rankOne_targetClean_absorption_impossible
 #print axioms UnrestrictedBooleanMul.N5.bornThreeHighDirections_linearIndependent
 #print axioms UnrestrictedBooleanMul.N5.quadraticBase_defect_eq_zero_of_bornColours_mem
+#print axioms UnrestrictedBooleanMul.HasCircuit.pad
+#print axioms UnrestrictedBooleanMul.N5.mc_mul_five_of_no_twelve
 #print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
