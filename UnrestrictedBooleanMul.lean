@@ -43,6 +43,7 @@ import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
 import UnrestrictedBooleanMul.N5.E2.ExtremalState
 import UnrestrictedBooleanMul.N5.E2.StableInterface
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
 import UnrestrictedBooleanMul.N5.FirstOrderState
 import UnrestrictedBooleanMul.N5.LowDefectPrefix
 import UnrestrictedBooleanMul.N5.LowDefectAnchor
