@@ -681,6 +681,367 @@ theorem isRationalJetPresentation_of_planeCoeff_eq_local
       (exactFirstOrderTwoMap_localJetCoordinates place).symm hcoordSpan
   exact isRationalJetPresentation_of_span_eq place q c hind hambientSpan
 
+private theorem other_planeCoeff_of_twoLocal_total
+    (x y z w : Fin 8 → F₂) (place other : Fin 3)
+    (hdiff : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+      firstOrderLocalKernelDirections place +
+        firstOrderLocalKernelDirections other)
+    (hfirst : firstOrderPlaneCoeff x y =
+      firstOrderLocalKernelDirections place) :
+    firstOrderPlaneCoeff z w = firstOrderLocalKernelDirections other := by
+  rw [hfirst] at hdiff
+  exact add_left_cancel hdiff
+
+private inductive TwoRotationNormalFormData
+    (q c q' c' : TwoForm) (place other : Fin 3) : Prop where
+  | intro
+      (p v t r s d : TwoForm)
+      (hPlace hOther kFirst kSecond e : PlaneBasisChange)
+      (first_eq : PlaneBasisChange.basisPair kFirst q c = (p, v + t))
+      (second_eq : PlaneBasisChange.basisPair kSecond q' c' = (r, s + d))
+      (place_eq : PlaneBasisChange.basisPair hPlace
+        (ExceptionalIndependentPlane.rationalJet place).left
+        (ExceptionalIndependentPlane.rationalJet place).right = (p, t))
+      (other_eq : PlaneBasisChange.basisPair hOther
+        (ExceptionalIndependentPlane.rationalJet other).left
+        (ExceptionalIndependentPlane.rationalJet other).right = (r, d))
+      (middle_eq : PlaneBasisChange.basisPair e p v = (r, s))
+      (admissible : e = .swap ∨ e = .rotateLeft ∨
+        e = .cycleRight ∨ e = .cycleLeft) :
+      TwoRotationNormalFormData q c q' c' place other
+
+private inductive TwoOneRotationNormalFormData
+    (q c q' c' qMid cMid : TwoForm) (place other : Fin 3) : Prop where
+  | intro
+      (p v t r s d : TwoForm)
+      (gMid gMid' hPlace hOther kFirst kSecond : PlaneBasisChange)
+      (mid_first_eq : gMid.basisPair qMid cMid = (p, v))
+      (mid_second_eq : gMid'.basisPair qMid cMid = (r, s))
+      (place_eq : hPlace.basisPair
+        (ExceptionalIndependentPlane.rationalJet place).left
+        (ExceptionalIndependentPlane.rationalJet place).right = (p, t))
+      (other_eq : hOther.basisPair
+        (ExceptionalIndependentPlane.rationalJet other).left
+        (ExceptionalIndependentPlane.rationalJet other).right = (r, d))
+      (first_eq : kFirst.basisPair q c = (p, v + t))
+      (second_eq : kSecond.basisPair q' c' = (r, s + d)) :
+      TwoOneRotationNormalFormData q c q' c' qMid cMid place other
+
+private inductive ActualOneRotationNormalFormData
+    (q c q' c' : TwoForm) (place : Fin 3) : Prop where
+  | intro
+      (p v t : TwoForm) (g h k : PlaneBasisChange)
+      (first_eq : g.basisPair q c = (p, v))
+      (local_eq : h.basisPair
+        (ExceptionalIndependentPlane.rationalJet place).left
+        (ExceptionalIndependentPlane.rationalJet place).right = (p, t))
+      (second_eq : k.basisPair q' c' = (p, v + t)) :
+      ActualOneRotationNormalFormData q c q' c' place
+
+private theorem oneLocalKernelDifference_normalFormData
+    (q c q' c' : TwoForm) (x y z w : Fin 8 → F₂) (place : Fin 3)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hz : q' = exactFirstOrderTwoMap z)
+    (hw : c' = exactFirstOrderTwoMap w)
+    (hxy : LinearIndependent F₂ ![x, y])
+    (hzw : LinearIndependent F₂ ![z, w])
+    (hdiff : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+      firstOrderLocalKernelDirections place) :
+    ActualOneRotationNormalFormData q c q' c' place := by
+  rcases oneLocalKernelDifference_actualNormalForm
+      q c q' c' x y z w place hx hy hz hw hxy hzw hdiff with
+    ⟨p, v, t, g, h, k, _hp, hg, hh, hk⟩
+  have hh' : h.basisPair
+      (ExceptionalIndependentPlane.rationalJet place).left
+      (ExceptionalIndependentPlane.rationalJet place).right = (p, t) := by
+    simpa only [exactFirstOrderTwoMap_localValueCoordinates,
+      exactFirstOrderTwoMap_localJetCoordinates] using hh
+  exact .intro p v t g h k hg hh' hk
+
+private theorem twoLocalKernelDifference_twoNormalForms
+    (q c q' c' qMid cMid : TwoForm)
+    (x y z w rCoord sCoord : Fin 8 → F₂)
+    (place other : Fin 3)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hz : q' = exactFirstOrderTwoMap z)
+    (hw : c' = exactFirstOrderTwoMap w)
+    (hqMid : qMid = exactFirstOrderTwoMap rCoord)
+    (hcMid : cMid = exactFirstOrderTwoMap sCoord)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hrsCoord : LinearIndependent F₂ ![rCoord, sCoord])
+    (hfirst : firstOrderPlaneCoeff x y +
+      firstOrderPlaneCoeff rCoord sCoord =
+        firstOrderLocalKernelDirections place)
+    (hsecond : firstOrderPlaneCoeff rCoord sCoord +
+      firstOrderPlaneCoeff z w =
+        firstOrderLocalKernelDirections other) :
+    TwoOneRotationNormalFormData
+      q c q' c' qMid cMid place other := by
+  have hxy := exactFirstOrderCoordinates_linearIndependent
+    q c x y hx hy hind
+  have hzw := exactFirstOrderCoordinates_linearIndependent
+    q' c' z w hz hw hind'
+  have hfirstReversed : firstOrderPlaneCoeff rCoord sCoord +
+      firstOrderPlaneCoeff x y = firstOrderLocalKernelDirections place := by
+    simpa only [add_comm] using hfirst
+  rcases oneLocalKernelDifference_normalFormData
+      qMid cMid q c rCoord sCoord x y place
+      hqMid hcMid hx hy hrsCoord hxy hfirstReversed with
+    ⟨p, v, t, gMid, hPlace, kFirst, hgMid, hhPlace, hkFirst⟩
+  rcases oneLocalKernelDifference_normalFormData
+      qMid cMid q' c' rCoord sCoord z w other
+      hqMid hcMid hz hw hrsCoord hzw hsecond with
+    ⟨r, s, d, gMid', hOther, kSecond, hgMid', hhOther, hkSecond⟩
+  exact .intro p v t r s d gMid gMid' hPlace hOther kFirst kSecond
+    hgMid hgMid' hhPlace hhOther hkFirst hkSecond
+
+private theorem twoLocalKernelDifference_chain_normalForms
+    (q c q' c' : TwoForm) (x y z w rCoord sCoord : Fin 8 → F₂)
+    (place other : Fin 3) (hne : place ≠ other)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hz : q' = exactFirstOrderTwoMap z)
+    (hw : c' = exactFirstOrderTwoMap w)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hrsCoord : LinearIndependent F₂ ![rCoord, sCoord])
+    (hfirst : firstOrderPlaneCoeff x y +
+      firstOrderPlaneCoeff rCoord sCoord =
+        firstOrderLocalKernelDirections place)
+    (hsecond : firstOrderPlaneCoeff rCoord sCoord +
+      firstOrderPlaneCoeff z w =
+        firstOrderLocalKernelDirections other) :
+    TwoRotationNormalFormData q c q' c' place other := by
+  let qMid := exactFirstOrderTwoMap rCoord
+  let cMid := exactFirstOrderTwoMap sCoord
+  have hmid : LinearIndependent F₂
+      (quadraticPlaneDirections qMid cMid) :=
+    exactFirstOrderTwoMap_quadraticPlaneDirections_linearIndependent
+      rCoord sCoord hrsCoord
+  rcases twoLocalKernelDifference_twoNormalForms
+      q c q' c' qMid cMid x y z w rCoord sCoord place other
+      hx hy hz hw rfl rfl hind hind' hrsCoord hfirst hsecond with
+    ⟨p, v, t, r, s, d, gMid, gMid', hPlace, hOther, kFirst, kSecond,
+      hgMid, hgMid', hhPlace, hhOther, hkFirst, hkSecond⟩
+  have hmidChanged : LinearIndependent F₂
+      (quadraticPlaneDirections r s) := by
+    have h := gMid'.quadraticPlaneDirections_linearIndependent
+      qMid cMid hmid
+    rw [hgMid'] at h
+    exact h
+  have hspanMid' : Submodule.span F₂ ({r, s} : Set TwoForm) =
+      Submodule.span F₂ ({qMid, cMid} : Set TwoForm) := by
+    have h := gMid'.span_basisPair qMid cMid
+    rw [hgMid'] at h
+    exact h
+  have hspanMid : Submodule.span F₂ ({p, v} : Set TwoForm) =
+      Submodule.span F₂ ({qMid, cMid} : Set TwoForm) := by
+    have h := gMid.span_basisPair qMid cMid
+    rw [hgMid] at h
+    exact h
+  have hspan : Submodule.span F₂ ({r, s} : Set TwoForm) =
+      Submodule.span F₂ ({p, v} : Set TwoForm) :=
+    hspanMid'.trans hspanMid.symm
+  rcases exists_planeBasisChange_of_span_eq p v r s hmidChanged hspan with
+    ⟨e, hr, hs⟩
+  have hmiddle : e.basisPair p v = (r, s) := Prod.ext hr.symm hs.symm
+  have hadmissible := twoRotation_middleBasisChange_admissible
+    place other hne hPlace hOther e p v t r s d hhPlace hhOther hmiddle
+  exact .intro p v t r s d hPlace hOther kFirst kSecond e
+    hkFirst hkSecond hhPlace hhOther hmiddle hadmissible
+
+private inductive TwoRotationChangedShadowData
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) : Prop where
+  | intro (kFirst kSecond : PlaneBasisChange)
+      (excluded :
+        ∀ (u : TargetCoeff), u ∈ firstOrderEnvelopeCoeffSpace →
+          changedLowProductQuadraticShadow kFirst a b ell m q c +
+              changedLowProductQuadraticShadow kSecond a' b' ell' m' q' c' ≠
+            targetTwo (firstOrderMissingCoeff + u)) :
+      TwoRotationChangedShadowData
+        a b a' b' ell m ell' m' q c q' c'
+
+private theorem twoRotationNormalFormData_changedShadow
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) (place other : Fin 3) (hne : place ≠ other)
+    (hdata : TwoRotationNormalFormData q c q' c' place other)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c') :
+    TwoRotationChangedShadowData
+      a b a' b' ell m ell' m' q c q' c' := by
+  rcases hdata with
+    ⟨p, v, t, r, s, d, hPlace, hOther, kFirst, kSecond, e,
+      hkFirst, hkSecond, hhPlace, hhOther, hmiddle, hadmissible⟩
+  let ab := kFirst.basisPair a b
+  let lm := kFirst.basisPair ell m
+  let ab' := kSecond.basisPair a' b'
+  let lm' := kSecond.basisPair ell' m'
+  have hchangedHigh :
+      changedLowProductHighPart kFirst ell m q c =
+        changedLowProductHighPart kSecond ell' m' q' c' := by
+    rw [planeBasisChange_high, planeBasisChange_high]
+    exact hhigh
+  have hnormalizedHigh :
+      lowProductHighPart lm.1 lm.2 p (v + t) =
+        lowProductHighPart lm'.2 lm'.1 (s + d) r := by
+    have hchangedHigh' := hchangedHigh
+    simp only [changedLowProductHighPart] at hchangedHigh'
+    rw [hkFirst, hkSecond] at hchangedHigh'
+    change lowProductHighPart lm.1 lm.2 p (v + t) =
+      lowProductHighPart lm'.1 lm'.2 r (s + d) at hchangedHigh'
+    exact hchangedHigh'.trans
+      (lowProductHighPart_swap lm'.1 lm'.2 r (s + d))
+  have hchangedExcluded : ∀ (u : TargetCoeff),
+      u ∈ firstOrderEnvelopeCoeffSpace →
+        changedLowProductQuadraticShadow kFirst a b ell m q c +
+            changedLowProductQuadraticShadow kSecond a' b' ell' m' q' c' ≠
+          targetTwo (firstOrderMissingCoeff + u) := by
+    intro u hu
+    have hnormalizedExcluded :=
+      rationalTwoRotation_normalForm_shadow_not_missingCoset
+        place other hne hPlace hOther e
+        ab.1 ab.2 ab'.2 ab'.1 lm.1 lm.2 lm'.2 lm'.1
+        p v t r s d hhPlace hhOther hmiddle hadmissible
+        hnormalizedHigh u hu
+    simp only [changedLowProductQuadraticShadow]
+    rw [hkFirst, hkSecond]
+    change
+      lowProductQuadraticShadow ab.1 ab.2 lm.1 lm.2 p (v + t) +
+          lowProductQuadraticShadow ab'.1 ab'.2 lm'.1 lm'.2 r (s + d) ≠
+        targetTwo (firstOrderMissingCoeff + u)
+    rw [lowProductQuadraticShadow_swap ab'.1 ab'.2 lm'.1 lm'.2 r (s + d)]
+    exact hnormalizedExcluded
+  exact .intro kFirst kSecond hchangedExcluded
+
+private theorem twoRotationNormalFormData_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) (place other : Fin 3) (hne : place ≠ other)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hq' : q' ∈ firstOrderEnvelopeTwoSpace)
+    (hc' : c' ∈ firstOrderEnvelopeTwoSpace)
+    (hdata : TwoRotationNormalFormData q c q' c' place other)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c')
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  rcases twoRotationNormalFormData_changedShadow
+      a b a' b' ell m ell' m' q c q' c' place other hne
+      hdata hhigh with
+    ⟨kFirst, kSecond, hchangedExcluded⟩
+  apply missingCoset_exclusion_of_add_mem_firstOrderEnvelope
+    (lowProductQuadraticShadow a b ell m q c +
+      lowProductQuadraticShadow a' b' ell' m' q' c')
+    (changedLowProductQuadraticShadow kFirst a b ell m q c +
+      changedLowProductQuadraticShadow kSecond a' b' ell' m' q' c')
+  · have hcorrection := twoPlaneBasisChanges_shadow_sum_add_original_mem
+      firstOrderEnvelopeTwoSpace kFirst kSecond
+        a b a' b' ell m ell' m' q c q' c' hq hc hq' hc'
+    simpa only [add_comm] using hcorrection
+  · exact hchangedExcluded
+  · exact hu
+
+private theorem twoLocalKernelDifference_chain_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) (x y z w rCoord sCoord : Fin 8 → F₂)
+    (place other : Fin 3) (hne : place ≠ other)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hq' : q' ∈ firstOrderEnvelopeTwoSpace)
+    (hc' : c' ∈ firstOrderEnvelopeTwoSpace)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hz : q' = exactFirstOrderTwoMap z)
+    (hw : c' = exactFirstOrderTwoMap w)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hrsCoord : LinearIndependent F₂ ![rCoord, sCoord])
+    (hfirst : firstOrderPlaneCoeff x y +
+      firstOrderPlaneCoeff rCoord sCoord =
+        firstOrderLocalKernelDirections place)
+    (hsecond : firstOrderPlaneCoeff rCoord sCoord +
+      firstOrderPlaneCoeff z w =
+        firstOrderLocalKernelDirections other)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c')
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  have hdata := twoLocalKernelDifference_chain_normalForms
+      q c q' c' x y z w rCoord sCoord place other hne
+      hx hy hz hw hind hind' hrsCoord hfirst hsecond
+  exact twoRotationNormalFormData_shadow_not_missingCoset
+    a b a' b' ell m ell' m' q c q' c' place other hne
+      hq hc hq' hc' hdata hhigh u hu
+
+/-- Complete weight-two local-difference shadow exclusion.  Both the
+collapsed rational-endpoint cases and the independent-midpoint chain are
+discharged internally. -/
+theorem twoLocalKernelDifference_shadow_not_missingCoset
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm) (x y z w : Fin 8 → F₂)
+    (place other : Fin 3)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hq' : q' ∈ firstOrderEnvelopeTwoSpace)
+    (hc' : c' ∈ firstOrderEnvelopeTwoSpace)
+    (hx : q = exactFirstOrderTwoMap x)
+    (hy : c = exactFirstOrderTwoMap y)
+    (hz : q' = exactFirstOrderTwoMap z)
+    (hw : c' = exactFirstOrderTwoMap w)
+    (hind : LinearIndependent F₂ (quadraticPlaneDirections q c))
+    (hind' : LinearIndependent F₂ (quadraticPlaneDirections q' c'))
+    (hne : place ≠ other)
+    (hdiff : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+      firstOrderLocalKernelDirections place +
+        firstOrderLocalKernelDirections other)
+    (hhigh : lowProductHighPart ell m q c =
+      lowProductHighPart ell' m' q' c')
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  rcases twoLocalKernelDifference_chain x y z w place other hne hdiff with
+    hplace | hother | ⟨rCoord, sCoord, hrs, hchain⟩
+  · have hpresentation := isRationalJetPresentation_of_planeCoeff_eq_local
+      q c x y place hx hy hind hplace
+    have hsecond := other_planeCoeff_of_twoLocal_total
+      x y z w place other hdiff hplace
+    have hpresentation' := isRationalJetPresentation_of_planeCoeff_eq_local
+      q' c' z w other hz hw hind' hsecond
+    exact distinctRationalJetPresentations_shadow_not_missingCoset
+      place other hne a b a' b' ell m ell' m' q c q' c'
+        hpresentation hpresentation' hhigh u hu
+  · have hpresentation := isRationalJetPresentation_of_planeCoeff_eq_local
+      q c x y other hx hy hind hother
+    have hdiff' : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
+        firstOrderLocalKernelDirections other +
+          firstOrderLocalKernelDirections place := by
+      simpa only [add_comm] using hdiff
+    have hsecond := other_planeCoeff_of_twoLocal_total
+      x y z w other place hdiff' hother
+    have hpresentation' := isRationalJetPresentation_of_planeCoeff_eq_local
+      q' c' z w place hz hw hind' hsecond
+    exact distinctRationalJetPresentations_shadow_not_missingCoset
+      other place hne.symm a b a' b' ell m ell' m' q c q' c'
+        hpresentation hpresentation' hhigh u hu
+  · rcases hchain with ⟨hfirst, hsecond⟩ | ⟨hfirst, hsecond⟩
+    · exact twoLocalKernelDifference_chain_shadow_not_missingCoset
+        a b a' b' ell m ell' m' q c q' c' x y z w rCoord sCoord
+        place other hne hq hc hq' hc' hx hy hz hw hind hind' hrs
+        hfirst hsecond hhigh u hu
+    · exact twoLocalKernelDifference_chain_shadow_not_missingCoset
+        a b a' b' ell m ell' m' q c q' c' x y z w rCoord sCoord
+        other place hne.symm hq hc hq' hc' hx hy hz hw hind hind' hrs
+        hfirst hsecond hhigh u hu
+
 end
 
 end N5
