@@ -93,6 +93,17 @@ theorem rationalPlaceLinear_apply (θ : Fin 2) (u : LinearForm) :
       intro i _
       rw [map_smul, rationalPlaceLinear_basis]
 
+/-- Translation and reversal are involutions on the ten input forms. -/
+theorem rationalPlaceLinear_involutive (θ : Fin 2) (u : LinearForm) :
+    rationalPlaceLinear θ (rationalPlaceLinear θ u) = u := by
+  funext i
+  fin_cases θ <;> fin_cases i <;>
+    simp [rationalPlaceLinear_apply, rationalPlaceInputChange,
+      Fin.sum_univ_succ] <;>
+    ring_nf <;>
+    simp [N3Certificate.two_eq_zero_f2,
+      N3Certificate.four_eq_zero_f2]
+
 theorem rationalPlaceLinear_aLinear (θ : Fin 2) (i : Fin 5) :
     rationalPlaceLinear θ (aLinear i) =
       rationalPlaceInputChange θ (aCoord i) := by
@@ -258,6 +269,48 @@ theorem rationalPlaceTwoFormLinear_squarefreeWedge'
         (rationalPlaceLinear θ v) := by
   rw [rationalPlaceLinear_apply, rationalPlaceLinear_apply]
   exact rationalPlaceTwoFormLinear_squarefreeWedge θ u v
+
+/-- The exterior-square action of either rational-place generator is also
+an involution.  The proof is by the squarefree wedge basis, so it never
+expands a general 45-coordinate two-form. -/
+theorem rationalPlaceTwoFormLinear_involutive
+    (θ : Fin 2) (q : TwoForm) :
+    rationalPlaceTwoFormLinear θ
+        (rationalPlaceTwoFormLinear θ q) = q := by
+  have hq : ∑ s : QuadraticIndex 10, q s • twoFormBasis s = q := by
+    simpa [twoFormBasis] using twoFormBasis.sum_repr q
+  have hinvBasis (s : QuadraticIndex 10) :
+      rationalPlaceTwoFormLinear θ
+          (rationalPlaceTwoFormLinear θ (twoFormBasis s)) =
+        twoFormBasis s := by
+    have hbasis :
+        squarefreeWedge
+            (linearFormBasis (quadraticFirst s))
+            (linearFormBasis (quadraticSecond s)) =
+          twoFormBasis s := by
+      rw [squarefreeWedge_linearFormBasis _ _
+        (quadraticFirst_ne_second s)]
+      exact congrArg twoFormBasis (quadraticPair_chosen s).symm
+    rw [← hbasis,
+      rationalPlaceTwoFormLinear_squarefreeWedge',
+      rationalPlaceTwoFormLinear_squarefreeWedge',
+      rationalPlaceLinear_involutive,
+      rationalPlaceLinear_involutive]
+  calc
+    rationalPlaceTwoFormLinear θ
+        (rationalPlaceTwoFormLinear θ q) =
+      rationalPlaceTwoFormLinear θ
+        (rationalPlaceTwoFormLinear θ
+          (∑ s : QuadraticIndex 10, q s • twoFormBasis s)) := by rw [hq]
+    _ = ∑ s : QuadraticIndex 10, q s •
+        rationalPlaceTwoFormLinear θ
+          (rationalPlaceTwoFormLinear θ (twoFormBasis s)) := by
+      simp only [map_sum, map_smul]
+    _ = ∑ s : QuadraticIndex 10, q s • twoFormBasis s := by
+      apply Finset.sum_congr rfl
+      intro s _
+      rw [hinvBasis]
+    _ = q := hq
 
 /-- Permutation of the four closed-place labels induced by translation and
 reversal.  The degree-two place is fixed. -/
@@ -427,6 +480,18 @@ def rationalTargetCoeffChange : Fin 2 → TargetCoeff → TargetCoeff :=
       c 0 + c 8],
     fun c => ![c 8, c 7, c 6, c 5, c 4, c 3, c 2, c 1, c 0]
   ]
+
+/-- Translation and reversal are involutions on target coefficients. -/
+theorem rationalTargetCoeffChange_involutive
+    (θ : Fin 2) (c : TargetCoeff) :
+    rationalTargetCoeffChange θ (rationalTargetCoeffChange θ c) = c := by
+  funext i
+  fin_cases θ <;> fin_cases i <;>
+    simp [rationalTargetCoeffChange] <;>
+    ring_nf <;>
+    simp [N3Certificate.two_eq_zero_f2,
+      N3Certificate.four_eq_zero_f2,
+      N3Certificate.eight_eq_zero_f2]
 
 private theorem rationalPlaceLinear_a_at_b
     (θ : Fin 2) (i j : Fin 5) :

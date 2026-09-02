@@ -29,18 +29,6 @@ def rationalTargetCoeffLinear (θ : Fin 2) :
     fin_cases θ <;> fin_cases i <;>
       simp [rationalTargetCoeffChange, mul_add]
 
-/-- Both rational-place generators are involutions on target coefficients. -/
-theorem rationalTargetCoeffChange_involutive
-    (θ : Fin 2) (c : TargetCoeff) :
-    rationalTargetCoeffChange θ (rationalTargetCoeffChange θ c) = c := by
-  ext i
-  fin_cases θ <;> fin_cases i <;>
-    simp [rationalTargetCoeffChange] <;>
-    ring_nf <;>
-    simp [N3Certificate.two_eq_zero_f2,
-      N3Certificate.four_eq_zero_f2,
-      N3Certificate.eight_eq_zero_f2]
-
 theorem rationalTargetCoeffLinear_injective (θ : Fin 2) :
     Function.Injective (rationalTargetCoeffLinear θ) := by
   intro c d h

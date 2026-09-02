@@ -1,5 +1,4 @@
-import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
-import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+import UnrestrictedBooleanMul.N5.EnvelopeLocalSymmetry
 
 /-!
 # Rational-place symmetry of the first-order envelope
@@ -26,29 +25,6 @@ theorem firstOrderMissingFunctional_rationalTargetCoeffChange
     ring_nf;
     simp [N3Certificate.two_eq_zero_f2,
       show (3 : F₂) = 1 by decide, show (4 : F₂) = 0 by decide]
-
-/-- Coefficient-space form of envelope invariance. -/
-theorem rationalTargetCoeffChange_mem_firstOrderEnvelope_iff
-    (theta : Fin 2) (c : TargetCoeff) :
-    rationalTargetCoeffChange theta c ∈ firstOrderEnvelopeCoeffSpace ↔
-      c ∈ firstOrderEnvelopeCoeffSpace := by
-  rw [mem_firstOrderEnvelopeCoeffSpace,
-    mem_firstOrderEnvelopeCoeffSpace,
-    firstOrderMissingFunctional_rationalTargetCoeffChange]
-
-/-- Each rational-place generator maps the embedded first-order two-form
-envelope into itself. -/
-theorem rationalPlaceTwoFormLinear_mem_firstOrderEnvelope
-    (theta : Fin 2) {q : TwoForm}
-    (hq : q ∈ firstOrderEnvelopeTwoSpace) :
-    rationalPlaceTwoFormLinear theta q ∈ firstOrderEnvelopeTwoSpace := by
-  rcases hq with ⟨c, hc, rfl⟩
-  change rationalPlaceTwoFormLinear theta (targetTwo c) ∈
-    firstOrderEnvelopeTwoSpace
-  rw [rationalPlaceTwoFormLinear_targetTwo]
-  exact ⟨rationalTargetCoeffChange theta c,
-    (rationalTargetCoeffChange_mem_firstOrderEnvelope_iff theta c).2 hc,
-    rfl⟩
 
 /-- The correction which returns the transformed missing representative to
 the chosen representative is an old first-order coefficient. -/

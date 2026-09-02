@@ -14,25 +14,6 @@ namespace N5
 
 noncomputable section
 
-theorem rationalTargetCoeffChange_involutive (theta : Fin 2)
-    (c : TargetCoeff) :
-    rationalTargetCoeffChange theta (rationalTargetCoeffChange theta c) = c := by
-  funext i
-  fin_cases theta <;> fin_cases i <;>
-    simp [rationalTargetCoeffChange] <;>
-    ring_nf <;>
-    simp [N3Certificate.two_eq_zero_f2,
-      N3Certificate.four_eq_zero_f2, N3Certificate.eight_eq_zero_f2]
-
-theorem rationalPlaceLinear_involutive (theta : Fin 2) (u : LinearForm) :
-    rationalPlaceLinear theta (rationalPlaceLinear theta u) = u := by
-  funext i
-  fin_cases theta <;> fin_cases i <;>
-    simp [rationalPlaceLinear_apply, rationalPlaceInputChange,
-      Fin.sum_univ_succ] <;>
-    ring_nf <;>
-    simp [N3Certificate.two_eq_zero_f2, N3Certificate.four_eq_zero_f2]
-
 theorem rationalTargetCoeffChange_mem_firstOrderEnvelope_iff
     (theta : Fin 2) (c : TargetCoeff) :
     rationalTargetCoeffChange theta c ∈ firstOrderEnvelopeCoeffSpace ↔
