@@ -73,15 +73,18 @@ do not yet constitute the final lower bound. This directory must not be
 described as a Lean certificate for the paper until that final theorem has
 also been kernel checked.
 
-In particular, `N5.not_anchoredFirstOrderStability` proves that the canonical
-history-free stable-state interface itself is false: two algebraic AND
-extensions stay within quotient defect three but expose the missing target
-coordinate.  The smaller theorem
+In particular, `N5.not_firstOrderSaturation` proves that even the
+circuit-facing fixed-envelope premise is false: a genuine two-gate
+all-quadratic prefix of defect at most one admits a two-gate defect-legal
+escape exposing the missing target coordinate.  The companion theorem
+`N5.not_anchoredFirstOrderStability` gives the same failure for the canonical
+history-free state, and the smaller theorem
 `N5.not_nonzeroRationalZeroAnchoredEnvelopeFunctionalCase_001` identifies the
 same obstruction in the rational-zero local coordinates.  The final proof
 must replace that route with a circuit-facing invariant that remembers which
 correction products were actually born (or charges their gate cost); assuming
-the three scalar cases or anchored stability would be unsound.
+the three scalar cases, anchored stability, or fixed-envelope saturation
+would be unsound.
 
 ## Formalization handoff
 

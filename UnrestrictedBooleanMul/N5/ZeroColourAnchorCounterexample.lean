@@ -1,13 +1,16 @@
 import UnrestrictedBooleanMul.N5.ZeroColourAnchorSemantic
+import UnrestrictedBooleanMul.N5.RegimeClosure
 
 /-!
 # Counterexample to the history-free anchored zero-colour reduction
 
-The current rational-zero `001` representative obligation forgets which
-quadratic correction wires can coexist in a reachable prefix.  The explicit
-Boolean identity below shows that the resulting history-free proposition is
-false.  Keeping the counterexample kernel checked prevents the final proof
-from silently depending on that over-strong interface.
+The current rational-zero `001` representative obligation asserts a fixed
+target-envelope closure that is stronger than the circuit lower bound needs.
+The explicit Boolean identity below shows that two feedback gates can trade
+one high-defect birth for the missing target coordinate, even from a genuine
+quadratic prefix.  Keeping the counterexample kernel checked prevents the
+final proof from silently depending on that false interface and identifies
+the gate cost that a replacement deficit invariant must retain.
 -/
 
 namespace UnrestrictedBooleanMul
@@ -407,6 +410,198 @@ theorem not_anchoredFirstOrderStability : ¬ AnchoredFirstOrderStability := by
     ceAfterBoth ce_suffix
   exact ce_target_missing_not_mem_envelope
     (hcontain ⟨ce_target_missing_mem_afterBoth,
+      Submodule.mem_sup_right
+        (targetANF_mem_mulTarget firstOrderMissingCoeff)⟩)
+
+/-! ## The obstruction already starts from a genuine quadratic prefix -/
+
+private def cePrefixLeft : Fin 2 → ANF 10 :=
+  ![X (aCoord 0), linearANFTen ceAnchorLeft]
+
+private def cePrefixRight : Fin 2 → ANF 10 :=
+  ![X (bCoord 0), linearANFTen ceAnchorRight]
+
+private theorem cePrefixLeft_affine (i : Fin 2) :
+    cePrefixLeft i ∈ affine 10 := by
+  fin_cases i
+  · exact X_mem_affine (aCoord 0)
+  · exact linearANFTen_mem_affine ceAnchorLeft
+
+private theorem cePrefixRight_affine (i : Fin 2) :
+    cePrefixRight i ∈ affine 10 := by
+  fin_cases i
+  · exact X_mem_affine (bCoord 0)
+  · exact linearANFTen_mem_affine ceAnchorRight
+
+private def cePrefix : Circuit 10 2 :=
+  Circuit.ofAffineProducts cePrefixLeft cePrefixRight
+    cePrefixLeft_affine cePrefixRight_affine
+
+private abbrev cePrefixState : Submodule F₂ (ANF 10) :=
+  N4.circuitFlag cePrefix 2
+
+private theorem cePrefix_gate_zero :
+    cePrefix.gate 0 = quadraticANFOfForm rationalZeroValueTwo := by
+  simp [cePrefix, cePrefixLeft, cePrefixRight, rationalZeroValueTwo,
+    quadraticANFOfForm_targetPairTwo]
+
+private theorem cePrefix_gate_one : cePrefix.gate 1 = ceAnchorWire := by
+  rfl
+
+private theorem cePrefix_allQuadratic : AllQuadraticPrefix cePrefix 2 := by
+  intro i _hi
+  change N4.DegreeLE 2 (cePrefix.gate i)
+  fin_cases i
+  · simpa [cePrefix, cePrefixLeft, cePrefixRight] using
+      ((degreeLE_one_X_ten (aCoord 0)).mul
+        (degreeLE_one_X_ten (bCoord 0)))
+  · simpa [cePrefix, cePrefixLeft, cePrefixRight, ceAnchorWire] using
+      ((linearANFTen_degreeLE_one ceAnchorLeft).mul
+        (linearANFTen_degreeLE_one ceAnchorRight)).mono (by omega)
+
+private theorem cePrefixState_le_anchorState :
+    cePrefixState ≤ firstOrderAnchorState ceAnchor := by
+  change wireSpace cePrefix.gate 2 ≤ firstOrderAnchorState ceAnchor
+  rw [wireSpace]
+  apply sup_le (E2.affine_le_quadraticEnvelopeState _)
+  rw [Submodule.span_le]
+  rintro p ⟨i, _hi, rfl⟩
+  fin_cases i
+  · change cePrefix.gate 0 ∈ firstOrderAnchorState ceAnchor
+    rw [cePrefix_gate_zero]
+    exact (E2.mem_quadraticEnvelopeState_iff
+      (firstOrderAnchorTwoSpace ceAnchor)
+      (quadraticANFOfForm rationalZeroValueTwo)).2
+      ⟨pureQuadraticANFSpace_le_quadraticANFSpace
+          ⟨rationalZeroValueTwo, rfl⟩,
+        by
+          rw [quadraticProjection_quadraticANFOfForm]
+          exact Submodule.mem_sup_left
+            rationalZeroValueTwo_mem_firstOrderEnvelope⟩
+  · change cePrefix.gate 1 ∈ firstOrderAnchorState ceAnchor
+    rw [cePrefix_gate_one]
+    exact ce_anchor_wire_mem_anchor
+
+private theorem cePrefixState_defect_le_one :
+    N4.flagDefectRank cePrefixState (mulTarget 5) ≤ 1 :=
+  (flagDefectRank_mono cePrefixState_le_anchorState).trans
+    ce_anchor_defect_le_one
+
+private theorem ce_affine_mem_prefix : ceAffineCorrection ∈ cePrefixState := by
+  exact affine_le_wireSpace cePrefix.gate
+    (show ceAffineCorrection ∈ affine 10 from by
+      exact (affine 10).add_mem
+        ((affine 10).add_mem
+          ((affine 10).add_mem (one_mem_affine 10)
+            (X_mem_affine (aCoord 2)))
+          (X_mem_affine (bCoord 0)))
+        (X_mem_affine (bCoord 1)))
+
+private theorem ce_anchor_wire_mem_prefix : ceAnchorWire ∈ cePrefixState := by
+  rw [← cePrefix_gate_one]
+  exact gate_mem_wireSpace cePrefix.gate (1 : Fin 2) (by omega)
+
+private theorem ce_rationalZero_wire_mem_prefix :
+    quadraticANFOfForm rationalZeroValueTwo ∈ cePrefixState := by
+  rw [← cePrefix_gate_zero]
+  exact gate_mem_wireSpace cePrefix.gate (0 : Fin 2) (by omega)
+
+private theorem ce_coordinate_mem_prefix_of_zero_or_rationalZero
+    (a : F₂) (ell : LinearForm) (q : TwoForm)
+    (hq : q = 0 ∨ q = rationalZeroValueTwo) :
+    quadraticCoordinateANF a ell q ∈ cePrefixState := by
+  rcases hq with rfl | rfl
+  · simp only [quadraticCoordinateANF, quadraticANFOfForm_zero, add_zero]
+    exact (affine_le_wireSpace cePrefix.gate)
+      ((affine 10).add_mem
+        (Submodule.smul_mem _ _ (one_mem_affine 10))
+        (linearANFTen_mem_affine ell))
+  · exact cePrefixState.add_mem
+      ((affine_le_wireSpace cePrefix.gate)
+        ((affine 10).add_mem
+          (Submodule.smul_mem _ _ (one_mem_affine 10))
+          (linearANFTen_mem_affine ell)))
+      ce_rationalZero_wire_mem_prefix
+
+private abbrev cePrefixAfterRight : Submodule F₂ (ANF 10) :=
+  andExtend cePrefixState ceRightFirst ceRightSecond
+private abbrev cePrefixAfterBoth : Submodule F₂ (ANF 10) :=
+  andExtend cePrefixAfterRight ceLeftFirst ceLeftSecond
+
+private theorem ce_prefix_suffix :
+    DefectLegalSuffix cePrefixState cePrefixAfterBoth := by
+  have hrightFirst : ceRightFirst ∈ cePrefixState :=
+    ce_coordinate_mem_prefix_of_zero_or_rationalZero 1 ceEll' 0 (Or.inl rfl)
+  have hrightSecond : ceRightSecond ∈ cePrefixState :=
+    ce_coordinate_mem_prefix_of_zero_or_rationalZero
+      0 ceM' rationalZeroValueTwo (Or.inr rfl)
+  have hrightDef :
+      N4.flagDefectRank cePrefixAfterRight (mulTarget 5) ≤ 2 :=
+    (flagDefectRank_andExtend_le_succ
+      cePrefixState ceRightFirst ceRightSecond).trans (by
+        have hbase := cePrefixState_defect_le_one
+        omega)
+  have hright : DefectLegalSuffix cePrefixState cePrefixAfterRight :=
+    .step (.refl (cePrefixState_defect_le_one.trans (by omega)))
+      ceRightFirst ceRightSecond hrightFirst hrightSecond
+      (hrightDef.trans (by omega))
+  have hleftFirst : ceLeftFirst ∈ cePrefixAfterRight :=
+    (le_sup_left : cePrefixState ≤ cePrefixAfterRight)
+      (ce_coordinate_mem_prefix_of_zero_or_rationalZero
+        1 ceEll 0 (Or.inl rfl))
+  have hleftSecond : ceLeftSecond ∈ cePrefixAfterRight :=
+    (le_sup_left : cePrefixState ≤ cePrefixAfterRight)
+      (ce_coordinate_mem_prefix_of_zero_or_rationalZero
+        1 ceM rationalZeroValueTwo (Or.inr rfl))
+  exact .step hright ceLeftFirst ceLeftSecond hleftFirst hleftSecond
+    ((flagDefectRank_andExtend_le_succ
+      cePrefixAfterRight ceLeftFirst ceLeftSecond).trans (by omega))
+
+private theorem ce_target_missing_mem_prefixAfterBoth :
+    targetANF firstOrderMissingCoeff ∈ cePrefixAfterBoth := by
+  have hleft : ceLeftFirst * ceLeftSecond ∈ cePrefixAfterBoth :=
+    Submodule.mem_sup_right (Submodule.mem_span_singleton_self _)
+  have hrightBase : ceRightFirst * ceRightSecond ∈ cePrefixAfterRight :=
+    Submodule.mem_sup_right (Submodule.mem_span_singleton_self _)
+  have hright : ceRightFirst * ceRightSecond ∈ cePrefixAfterBoth :=
+    (le_sup_left : cePrefixAfterRight ≤ cePrefixAfterBoth) hrightBase
+  have hanchor : ceAnchorWire ∈ cePrefixAfterBoth :=
+    (le_sup_left : cePrefixAfterRight ≤ cePrefixAfterBoth)
+      ((le_sup_left : cePrefixState ≤ cePrefixAfterRight)
+        ce_anchor_wire_mem_prefix)
+  have haffine : ceAffineCorrection ∈ cePrefixAfterBoth :=
+    (le_sup_left : cePrefixAfterRight ≤ cePrefixAfterBoth)
+      ((le_sup_left : cePrefixState ≤ cePrefixAfterRight)
+        ce_affine_mem_prefix)
+  rw [show targetANF firstOrderMissingCoeff =
+      ceLeftFirst * ceLeftSecond + ceRightFirst * ceRightSecond +
+        ceAnchorWire + ceAffineCorrection by
+    calc
+      targetANF firstOrderMissingCoeff =
+          (targetANF firstOrderMissingCoeff + ceAffineCorrection) +
+            ceAffineCorrection := by
+        symm
+        rw [add_assoc, anf_add_self, add_zero]
+      _ = (ceLeftFirst * ceLeftSecond +
+            ceRightFirst * ceRightSecond + ceAnchorWire) +
+          ceAffineCorrection := by
+        rw [← ce_full_anf_identity]]
+  exact cePrefixAfterBoth.add_mem
+    (cePrefixAfterBoth.add_mem
+      (cePrefixAfterBoth.add_mem hleft hright) hanchor)
+    haffine
+
+/-- The manuscript-level circuit-facing saturation premise is itself false,
+not only its canonical-state sufficient condition.  A genuine two-gate
+all-quadratic prefix of defect at most one admits the same defect-legal
+two-gate escape from the fixed first-order envelope. -/
+theorem not_firstOrderSaturation : ¬ FirstOrderSaturation := by
+  intro hstable
+  have hs := hstable cePrefix (j := 2) (by omega)
+    cePrefix_allQuadratic cePrefixState_defect_le_one
+  have hcontain := hs cePrefixAfterBoth ce_prefix_suffix
+  exact ce_target_missing_not_mem_envelope
+    (hcontain ⟨ce_target_missing_mem_prefixAfterBoth,
       Submodule.mem_sup_right
         (targetANF_mem_mulTarget firstOrderMissingCoeff)⟩)
 

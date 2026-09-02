@@ -431,3 +431,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.rankOne_step_closed_of_zero_quadraticDefect_highRank_le_one
 #print axioms UnrestrictedBooleanMul.N5.not_nonzeroRationalZeroAnchoredEnvelopeFunctionalCase_001
 #print axioms UnrestrictedBooleanMul.N5.not_anchoredFirstOrderStability
+#print axioms UnrestrictedBooleanMul.N5.not_firstOrderSaturation
