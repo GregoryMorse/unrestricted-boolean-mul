@@ -218,7 +218,7 @@ theorem twoForm_eq_sum_basis (q : TwoForm) :
   · intro s hst
     simp [Pi.basisFun, hst]
 
-private theorem quadraticBasisPair_eq_wedge
+theorem quadraticBasisPair_eq_wedge
     (i j : Fin 10) (hij : i ≠ j) :
     (Pi.basisFun F₂ (QuadraticIndex 10)) (quadraticPair i j hij) =
       squarefreeWedge (coordinateLinearTen i) (coordinateLinearTen j) := by

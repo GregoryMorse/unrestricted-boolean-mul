@@ -25,6 +25,7 @@ import UnrestrictedBooleanMul.N5.QuadraticLift
 import UnrestrictedBooleanMul.N5.QuadraticCoordinates
 import UnrestrictedBooleanMul.N5.LowProductSemantic
 import UnrestrictedBooleanMul.N5.CubicSemantic
+import UnrestrictedBooleanMul.N5.QuarticSemantic
 import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.CircuitSuffix
