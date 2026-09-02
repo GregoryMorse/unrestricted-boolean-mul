@@ -73,6 +73,35 @@ theorem rankOne_targetClean_envelopeCorrection_impossible
       (u + uv) (firstOrderEnvelopeCoeffSpace.add_mem hu huv)
       q C hqdec hC hproductF habsorbF
 
+/-- Coordinate-free circuit interface to the corrected rank-one
+contradiction.  The quadratic coordinates of the old factor are reconstructed
+internally from membership in the degree-two space. -/
+theorem rankOne_envelopeCorrected_escape_impossible
+    (U c : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (fConst : F₂) (fLinear : LinearForm)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (q : TwoForm) (hqdec : IsDecomposableTwo q)
+    (hclean : quadraticProjection 10 c ∈
+      targetCleanSecondJetSpace ⊔
+        Submodule.span F₂ ({q} : Set TwoForm))
+    (v : ANF 10) (hv : v ∈ firstOrderEnvelopeState)
+    (hproduct :
+      U * c = quadraticCoordinateANF fConst fLinear
+        (targetTwo (firstOrderMissingCoeff + u)) + v)
+    (habsorb : (U * c) * c = U * c) : False := by
+  rcases exists_quadraticCoordinates hcquad with
+    ⟨cConst, cLinear, C, hcCoordinates⟩
+  have hC : C ∈ targetCleanSecondJetSpace ⊔
+      Submodule.span F₂ ({q} : Set TwoForm) := by
+    rw [hcCoordinates, quadraticProjection_quadraticCoordinateANF] at hclean
+    exact hclean
+  rw [hcCoordinates] at hproduct habsorb
+  apply rankOne_targetClean_envelopeCorrection_impossible
+    U hUhigh fConst cConst fLinear cLinear u hu q C hqdec hC v hv
+  · exact hproduct
+  · exact habsorb
+
 end
 end N5
 end UnrestrictedBooleanMul
