@@ -104,6 +104,30 @@ theorem firstOrderAnchorTwoSpace_finrank_of_mem_target
   rw [firstOrderAnchorTwoSpace, sup_eq_left.mpr hspan,
     firstOrderEnvelopeTwoSpace_finrank]
 
+/-- A decomposable anchor which is itself target-valued already belongs to
+the first-order envelope, so adjoining it changes neither two-form space nor
+ANF state. -/
+theorem firstOrderAnchorTwoSpace_eq_firstOrderEnvelope_of_mem_target
+    (q : TwoForm) (hqdec : IsDecomposableTwo q)
+    (hqT : q ∈ targetTwoSpace) :
+    firstOrderAnchorTwoSpace q = firstOrderEnvelopeTwoSpace := by
+  have hqU : q ∈ firstOrderEnvelopeTwoSpace := by
+    have hqInf : q ∈ targetTwoSpace ⊓ firstOrderAnchorTwoSpace q :=
+      ⟨hqT, Submodule.mem_sup_right
+        (Submodule.mem_span_singleton_self q)⟩
+    rwa [targetTwoSpace_inf_firstOrderAnchorTwoSpace q hqdec] at hqInf
+  apply sup_eq_left.mpr
+  rw [Submodule.span_le]
+  simpa using hqU
+
+theorem firstOrderAnchorState_eq_firstOrderEnvelope_of_mem_target
+    (q : TwoForm) (hqdec : IsDecomposableTwo q)
+    (hqT : q ∈ targetTwoSpace) :
+    firstOrderAnchorState q = firstOrderEnvelopeState := by
+  rw [firstOrderAnchorState, firstOrderEnvelopeState,
+    firstOrderAnchorTwoSpace_eq_firstOrderEnvelope_of_mem_target
+      q hqdec hqT]
+
 theorem firstOrderAnchorTwoSpace_finrank_of_not_mem_target
     (q : TwoForm) (hqT : q ∉ targetTwoSpace) :
     Module.finrank F₂ (firstOrderAnchorTwoSpace q) = 9 := by

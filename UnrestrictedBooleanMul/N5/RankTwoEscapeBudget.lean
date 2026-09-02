@@ -185,6 +185,33 @@ theorem rankTwo_escape_anchor_mem_target_of_localColours
   exact rankTwo_escape_anchor_mem_target_of_product_outside_pair
     q hqdec V X Y hreach hX hY hold hescape hsplit.1 hsplit.2
 
+/-- State-level form of the preceding result: after local colour birth, the
+canonical base itself is exactly the first-order envelope. -/
+theorem rankTwo_escape_anchorState_eq_firstOrder_of_localColours
+    (q : TwoForm) (hqdec : IsDecomposableTwo q)
+    (V : Submodule F₂ (ANF 10)) (X Y : ANF 10)
+    (hreach : DefectLegalSuffix (firstOrderAnchorState q) V)
+    (hX : X ∈ V) (hY : Y ∈ V)
+    (hold : V ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
+      firstOrderEnvelopeState)
+    (hescape : ¬ (andExtend V X Y ⊓
+      N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState))
+    (alpha beta : Fin 4 → F₂)
+    (halpha : alpha ≠ 0) (hbeta : beta ≠ 0) (hab : alpha ≠ beta)
+    (hXcolour : Submodule.mkQ (N4.quadraticANFSpace 10) X =
+      colourHighCombination alpha)
+    (hYcolour : Submodule.mkQ (N4.quadraticANFSpace 10) Y =
+      colourHighCombination beta)
+    (hproductColour :
+      Submodule.mkQ (N4.quadraticANFSpace 10) (X * Y) =
+        Submodule.mkQ (N4.quadraticANFSpace 10)
+          (colourCombination alpha * colourCombination beta)) :
+    firstOrderAnchorState q = firstOrderEnvelopeState := by
+  apply firstOrderAnchorState_eq_firstOrderEnvelope_of_mem_target q hqdec
+  exact rankTwo_escape_anchor_mem_target_of_localColours
+    q hqdec V X Y hreach hX hY hold hescape
+      alpha beta halpha hbeta hab hXcolour hYcolour hproductColour
+
 end
 end N5
 end UnrestrictedBooleanMul
