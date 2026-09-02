@@ -285,6 +285,21 @@ theorem anchoredEnvelopeShadowLocalizedAt_of_mem_envelope
         (firstOrderMissingCoeff + (u + alpha • dCoeff)) := by
       rw [add_assoc]
 
+/-- The only remaining part of the anchored envelope-shadow statement is
+the genuinely external decomposable anchor. -/
+def ExternalAnchoredEnvelopeShadowLocalization : Prop :=
+  ∀ (d : TwoForm), IsDecomposableTwo d →
+    d ∉ firstOrderEnvelopeTwoSpace →
+    AnchoredEnvelopeShadowLocalizedAt d
+
+theorem anchoredEnvelopeShadowLocalization_of_external
+    (hexternal : ExternalAnchoredEnvelopeShadowLocalization) :
+    AnchoredEnvelopeShadowLocalization := by
+  intro d hddec
+  by_cases hd : d ∈ firstOrderEnvelopeTwoSpace
+  · exact anchoredEnvelopeShadowLocalizedAt_of_mem_envelope d hd
+  · exact hexternal d hddec hd
+
 /-- The reduced obstruction is impossible when the anchor was target-valued:
 then both normalized planes and the anchor correction all return to the
 literal first-order envelope theorem. -/
