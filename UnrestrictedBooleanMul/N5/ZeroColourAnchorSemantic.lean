@@ -455,6 +455,31 @@ theorem externalDecomposableAnchor_quotient_ne_zero
   exact externalDecomposableAnchor_not_mem_targetTwoSpace hddec hdU
     ((quadraticQuotientProjection_eq_zero_iff d).1 hzero)
 
+/-- If a second decomposable form is obtained by translating a decomposable
+anchor by an old-envelope direction, then the translating target word is
+either rational or the common quotient fiber is one of the effective fibers
+classified by the closed-place atlas. -/
+theorem decomposableEnvelopeTranslate_rational_or_effective
+    (d p old : TwoForm)
+    (hd : IsDecomposableTwo d) (hp : IsDecomposableTwo p)
+    (hold : old ∈ firstOrderEnvelopeTwoSpace)
+    (htranslate : p = old + d) :
+    ∃ c : TargetCoeff,
+      c ∈ firstOrderEnvelopeCoeffSpace ∧ old = targetTwo c ∧
+      (c ∈ rationalCoeffSpace ∨
+        IsEffectiveFiber (quadraticQuotientProjection d)) := by
+  rcases hold with ⟨c, hc, hold⟩
+  change targetTwo c = old at hold
+  refine ⟨c, hc, hold.symm, ?_⟩
+  by_cases hrat : c ∈ rationalCoeffSpace
+  · exact Or.inl hrat
+  · right
+    apply isEffectiveFiber_of_decomposable_target_translate d p c hd hp hrat
+    calc
+      p = old + d := htranslate
+      _ = targetTwo c + d := by rw [← hold]
+      _ = d + targetTwo c := add_comm _ _
+
 private theorem twoForm_recover_after_duplicate
     (x y : TwoForm) : x = (x + y) + y := by
   funext s
