@@ -21,6 +21,7 @@ import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
 import UnrestrictedBooleanMul.N5.Capacity
 import UnrestrictedBooleanMul.N5.QuadraticFlattening
 import UnrestrictedBooleanMul.N5.PrefixState
+import UnrestrictedBooleanMul.N5.QuadraticLift
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.CircuitSuffix
 import UnrestrictedBooleanMul.N5.CompletionDeficit
@@ -30,6 +31,7 @@ import UnrestrictedBooleanMul.N5.E2.WThreePRank
 import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
 import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
 import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
+import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic

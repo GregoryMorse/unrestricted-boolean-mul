@@ -20,12 +20,16 @@ def coeffTargetTwoSpan {n : Nat} (v : Fin n → TargetCoeff) :
     Submodule F₂ TwoForm :=
   Submodule.span F₂ (Set.range fun i => targetTwo (v i))
 
+theorem coeffTargetTwo_linearIndependent {n : Nat} (v : Fin n → TargetCoeff)
+    (hv : LinearIndependent F₂ v) :
+    LinearIndependent F₂ (fun i => targetTwo (v i)) := by
+  exact hv.map' targetTwoLinear
+    (LinearMap.ker_eq_bot_of_injective targetTwo_injective)
+
 theorem coeffTargetTwoSpan_finrank {n : Nat} (v : Fin n → TargetCoeff)
     (hv : LinearIndependent F₂ v) :
     Module.finrank F₂ (coeffTargetTwoSpan v) = n := by
-  have hmap : LinearIndependent F₂ (fun i => targetTwo (v i)) := by
-    exact hv.map' targetTwoLinear
-      (LinearMap.ker_eq_bot_of_injective targetTwo_injective)
+  have hmap := coeffTargetTwo_linearIndependent v hv
   change Module.finrank F₂
       (Submodule.span F₂ (Set.range fun i => targetTwo (v i))) = n
   exact (finrank_span_eq_card hmap).trans (Fintype.card_fin n)
@@ -62,7 +66,7 @@ def wStarBaseCoeff : Fin 5 → TargetCoeff :=
 def wStarTargetBase : Submodule F₂ TwoForm :=
   coeffTargetTwoSpan wStarBaseCoeff
 
-private theorem wStarBaseCoeff_linearIndependent :
+theorem wStarBaseCoeff_linearIndependent :
     LinearIndependent F₂ wStarBaseCoeff := by
   rw [Fintype.linearIndependent_iff]
   intro f hf i
@@ -163,7 +167,7 @@ def wPQBaseCoeff : Fin 5 → TargetCoeff :=
 def wPQTargetBase : Submodule F₂ TwoForm :=
   coeffTargetTwoSpan wPQBaseCoeff
 
-private theorem wPQBaseCoeff_linearIndependent :
+theorem wPQBaseCoeff_linearIndependent :
     LinearIndependent F₂ wPQBaseCoeff := by
   rw [Fintype.linearIndependent_iff]
   intro f hf i
@@ -226,7 +230,7 @@ def wThreePBaseCoeff : Fin 5 → TargetCoeff :=
 def wThreePTargetBase : Submodule F₂ TwoForm :=
   coeffTargetTwoSpan wThreePBaseCoeff
 
-private theorem wThreePBaseCoeff_linearIndependent :
+theorem wThreePBaseCoeff_linearIndependent :
     LinearIndependent F₂ wThreePBaseCoeff := by
   rw [Fintype.linearIndependent_iff]
   intro f hf i

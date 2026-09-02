@@ -326,3 +326,14 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.E2.wPQ_target_intersection_finrank
 #print axioms UnrestrictedBooleanMul.N5.E2.targetTwoSpace_inf_wThreePTwoSpace
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreeP_target_intersection_finrank
+#print axioms UnrestrictedBooleanMul.N5.quadraticProjection_quadraticANFOfForm
+#print axioms UnrestrictedBooleanMul.N5.quadraticANFOfForm_targetTwo
+#print axioms UnrestrictedBooleanMul.N5.E2.wStarTwoSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQTwoSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreePTwoSpace_finrank
+#print axioms UnrestrictedBooleanMul.N5.E2.wStarState_targetRank
+#print axioms UnrestrictedBooleanMul.N5.E2.wStarState_defectRank
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQState_targetRank
+#print axioms UnrestrictedBooleanMul.N5.E2.wPQState_defectRank
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreePState_targetRank
+#print axioms UnrestrictedBooleanMul.N5.E2.wThreePState_defectRank

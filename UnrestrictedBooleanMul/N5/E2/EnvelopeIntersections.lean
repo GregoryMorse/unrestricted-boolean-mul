@@ -242,6 +242,130 @@ theorem wThreeP_target_intersection_finrank :
     Module.finrank F₂ ↑(targetTwoSpace ⊓ wThreePTwoSpace) = 5 := by
   rw [targetTwoSpace_inf_wThreePTwoSpace, wThreePTargetBase_finrank]
 
+/-! ## Exact envelope dimensions -/
+
+theorem wStarGenerator_linearIndependent :
+    LinearIndependent F₂ wStarGenerator := by
+  rw [Fintype.linearIndependent_iff]
+  intro f hf i
+  have h01 := congrArg (crossDifference 0 1 1 0) hf
+  have h02 := congrArg (crossDifference 0 2 1 1) hf
+  rw [map_sum, map_zero] at h01 h02
+  simp only [map_smul, smul_eq_mul,
+    crossDifference_01_10_wStarGenerator] at h01
+  simp only [map_smul, smul_eq_mul,
+    crossDifference_02_11_wStarGenerator] at h02
+  simp [Fin.sum_univ_succ] at h01 h02
+  have hf2eq : f 2 = f 1 := (CharTwo.add_eq_zero.mp h01).symm
+  have hf3eq : f 3 = f 0 + f 1 := by
+    have h02' : (f 0 + f 1) + f 3 = 0 := by
+      simpa [add_assoc] using h02
+    exact (CharTwo.add_eq_zero.mp h02').symm
+  let g : Fin 5 → F₂ := ![f 4, f 5, f 6, f 0, f 1]
+  have heq :
+      ∑ k, f k • wStarGenerator k =
+        ∑ k, g k • targetTwo (wStarBaseCoeff k) := by
+    simp [g, wStarBaseCoeff, wStarGenerator, Fin.sum_univ_succ,
+      targetTwo_outside8_eq, targetTwo_outside7_eq, hf2eq, hf3eq,
+      smul_add]
+    module
+  have hbase : ∑ k, g k • targetTwo (wStarBaseCoeff k) = 0 := by
+    rw [← heq, hf]
+  have hg := Fintype.linearIndependent_iff.mp
+    (coeffTargetTwo_linearIndependent wStarBaseCoeff
+      wStarBaseCoeff_linearIndependent) g hbase
+  have hf0 : f 0 = 0 := by simpa [g] using hg (3 : Fin 5)
+  have hf1 : f 1 = 0 := by simpa [g] using hg (4 : Fin 5)
+  have hf2 : f 2 = 0 := hf2eq.trans hf1
+  have hf3 : f 3 = 0 := by simpa [hf0, hf1] using hf3eq
+  have hf4 : f 4 = 0 := by simpa [g] using hg (0 : Fin 5)
+  have hf5 : f 5 = 0 := by simpa [g] using hg (1 : Fin 5)
+  have hf6 : f 6 = 0 := by simpa [g] using hg (2 : Fin 5)
+  fin_cases i <;> assumption
+
+theorem wStarTwoSpace_finrank :
+    Module.finrank F₂ wStarTwoSpace = 7 := by
+  rw [wStarTwoSpace, finrank_span_eq_card wStarGenerator_linearIndependent]
+  rfl
+
+theorem wStar_quotient_dimension :
+    Module.finrank F₂ wStarTwoSpace -
+      Module.finrank F₂ wStarTargetBase = 2 := by
+  rw [wStarTwoSpace_finrank, wStarTargetBase_finrank]
+
+theorem wPQGenerator_linearIndependent :
+    LinearIndependent F₂ wPQGenerator := by
+  rw [Fintype.linearIndependent_iff]
+  intro f hf i
+  have h2 := congrArg (crossDifference 1 1 0 2) hf
+  have h6 := congrArg (crossDifference 3 3 2 4) hf
+  rw [map_sum, map_zero] at h2 h6
+  simp only [map_smul, smul_eq_mul,
+    crossDifference_11_02_wPQGenerator] at h2
+  simp only [map_smul, smul_eq_mul,
+    crossDifference_33_24_wPQGenerator] at h6
+  simp [Fin.sum_univ_succ] at h2 h6
+  let g : Fin 5 → F₂ := ![f 0, f 1, f 3, f 4, f 6]
+  have hbase : ∑ k, g k • targetTwo (wPQBaseCoeff k) = 0 := by
+    simpa [g, wPQBaseCoeff, wPQGenerator, h2, h6,
+      Fin.sum_univ_succ] using hf
+  have hg := Fintype.linearIndependent_iff.mp
+    (coeffTargetTwo_linearIndependent wPQBaseCoeff
+      wPQBaseCoeff_linearIndependent) g hbase
+  have hf0 : f 0 = 0 := by simpa [g] using hg (0 : Fin 5)
+  have hf1 : f 1 = 0 := by simpa [g] using hg (1 : Fin 5)
+  have hf3 : f 3 = 0 := by simpa [g] using hg (2 : Fin 5)
+  have hf4 : f 4 = 0 := by simpa [g] using hg (3 : Fin 5)
+  have hf6 : f 6 = 0 := by simpa [g] using hg (4 : Fin 5)
+  fin_cases i <;> assumption
+
+theorem wPQTwoSpace_finrank :
+    Module.finrank F₂ wPQTwoSpace = 7 := by
+  rw [wPQTwoSpace, finrank_span_eq_card wPQGenerator_linearIndependent]
+  rfl
+
+theorem wPQ_quotient_dimension :
+    Module.finrank F₂ wPQTwoSpace -
+      Module.finrank F₂ wPQTargetBase = 2 := by
+  rw [wPQTwoSpace_finrank, wPQTargetBase_finrank]
+
+theorem wThreePGenerator_linearIndependent :
+    LinearIndependent F₂ wThreePGenerator := by
+  rw [Fintype.linearIndependent_iff]
+  intro f hf i
+  have h2 := congrArg (crossDifference 1 1 0 2) hf
+  have h4 := congrArg (crossDifference 2 2 0 4) hf
+  rw [map_sum, map_zero] at h2 h4
+  simp only [map_smul, smul_eq_mul,
+    crossDifference_11_02_wThreePGenerator] at h2
+  simp only [map_smul, smul_eq_mul,
+    crossDifference_22_04_wThreePGenerator] at h4
+  simp [Fin.sum_univ_succ] at h2 h4
+  let g : Fin 5 → F₂ := ![f 0, f 1, f 2, f 5, f 6]
+  have hbase : ∑ k, g k • targetTwo (wThreePBaseCoeff k) = 0 := by
+    simpa [g, wThreePBaseCoeff, wThreePGenerator, wThreePSecondJet,
+      h2, h4, Fin.sum_univ_succ] using hf
+  have hg := Fintype.linearIndependent_iff.mp
+    (coeffTargetTwo_linearIndependent wThreePBaseCoeff
+      wThreePBaseCoeff_linearIndependent) g hbase
+  have hf0 : f 0 = 0 := by simpa [g] using hg (0 : Fin 5)
+  have hf1 : f 1 = 0 := by simpa [g] using hg (1 : Fin 5)
+  have hf2 : f 2 = 0 := by simpa [g] using hg (2 : Fin 5)
+  have hf5 : f 5 = 0 := by simpa [g] using hg (3 : Fin 5)
+  have hf6 : f 6 = 0 := by simpa [g] using hg (4 : Fin 5)
+  fin_cases i <;> assumption
+
+theorem wThreePTwoSpace_finrank :
+    Module.finrank F₂ wThreePTwoSpace = 7 := by
+  rw [wThreePTwoSpace,
+    finrank_span_eq_card wThreePGenerator_linearIndependent]
+  rfl
+
+theorem wThreeP_quotient_dimension :
+    Module.finrank F₂ wThreePTwoSpace -
+      Module.finrank F₂ wThreePTargetBase = 2 := by
+  rw [wThreePTwoSpace_finrank, wThreePTargetBase_finrank]
+
 end
 end E2
 end N5
