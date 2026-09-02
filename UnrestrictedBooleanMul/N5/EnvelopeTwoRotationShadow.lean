@@ -313,7 +313,7 @@ theorem distinctRationalJetPresentations_shadow_not_missingCoset
     changedLowProductQuadraticShadow_inverse] at hexclusion
   exact hexclusion
 
-private theorem isRationalJetPresentation_of_iterated_basisPair
+theorem isRationalJetPresentation_of_iterated_basisPair
     (place : Fin 3) (h f : PlaneBasisChange)
     (p t q c : TwoForm)
     (hloc : h.basisPair
@@ -681,7 +681,7 @@ theorem isRationalJetPresentation_of_planeCoeff_eq_local
       (exactFirstOrderTwoMap_localJetCoordinates place).symm hcoordSpan
   exact isRationalJetPresentation_of_span_eq place q c hind hambientSpan
 
-private theorem other_planeCoeff_of_twoLocal_total
+theorem other_planeCoeff_of_twoLocal_total
     (x y z w : Fin 8 → F₂) (place other : Fin 3)
     (hdiff : firstOrderPlaneCoeff x y + firstOrderPlaneCoeff z w =
       firstOrderLocalKernelDirections place +
@@ -692,7 +692,7 @@ private theorem other_planeCoeff_of_twoLocal_total
   rw [hfirst] at hdiff
   exact add_left_cancel hdiff
 
-private inductive TwoRotationNormalFormData
+inductive TwoRotationNormalFormData
     (q c q' c' : TwoForm) (place other : Fin 3) : Prop where
   | intro
       (p v t r s d : TwoForm)

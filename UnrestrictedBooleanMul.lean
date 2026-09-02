@@ -81,6 +81,7 @@ import UnrestrictedBooleanMul.N5.EnvelopeOneRotationExact
 import UnrestrictedBooleanMul.N5.EnvelopeDistinctRational
 import UnrestrictedBooleanMul.N5.EnvelopeDistinctRationalExact
 import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationExact
 import UnrestrictedBooleanMul.N5.EnvelopeComplete
 import UnrestrictedBooleanMul.N5.EnvelopeIndependentComplete
 import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
