@@ -191,6 +191,65 @@ def RationalZeroAnchoredEnvelopeShadowCore : Prop :=
             lowProductQuadraticShadow a' b' ell' m' q' c' ∈
           targetCleanSecondJetSpace
 
+/-- The genuinely new part of the rational-zero calculation.  The three
+Boolean bits record use of the anchor in the two factor planes and in the
+old quadratic correction.  The all-zero case is already the unanchored
+exact-envelope theorem. -/
+def ActiveRationalZeroAnchoredEnvelopeShadowCore : Prop :=
+  ∀ (p : LocalKleinCoord), SatisfiesKlein p →
+    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+      (q c q' c' : TwoForm) (epsilon epsilon' : F₂),
+      q ∈ firstOrderEnvelopeTwoSpace →
+      c ∈ firstOrderEnvelopeTwoSpace →
+      q' ∈ firstOrderEnvelopeTwoSpace →
+      c' ∈ firstOrderEnvelopeTwoSpace →
+      lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' →
+      ∀ (alpha : F₂) (u : TargetCoeff),
+        u ∈ firstOrderEnvelopeCoeffSpace →
+        (lowProductQuadraticShadow a b ell m q c +
+            rationalZeroAnchorShadowCorrection p b epsilon m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            alpha • localTwoForm 0 p =
+          targetTwo (firstOrderMissingCoeff + u) →
+        (epsilon ≠ 0 ∨ epsilon' ≠ 0 ∨ alpha ≠ 0) →
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+          targetCleanSecondJetSpace
+
+/-- Only the seven active Boolean cases remain: the inactive case collapses
+to `semanticEnvelope_exact_shadow`. -/
+theorem rationalZeroAnchoredEnvelopeShadowCore_of_active
+    (hactive : ActiveRationalZeroAnchoredEnvelopeShadowCore) :
+    RationalZeroAnchoredEnvelopeShadowCore := by
+  intro p hp a b a' b' ell m ell' m' q c q' c' epsilon epsilon'
+    hq hc hq' hc' hhigh alpha u hu heq
+  by_cases hbits : epsilon ≠ 0 ∨ epsilon' ≠ 0 ∨ alpha ≠ 0
+  · exact hactive p hp a b a' b' ell m ell' m' q c q' c'
+      epsilon epsilon' hq hc hq' hc' hhigh alpha u hu heq hbits
+  · have hepsilon : epsilon = 0 := by
+      by_contra hne
+      exact hbits (Or.inl hne)
+    have hepsilon' : epsilon' = 0 := by
+      by_contra hne
+      exact hbits (Or.inr (Or.inl hne))
+    have halpha : alpha = 0 := by
+      by_contra hne
+      exact hbits (Or.inr (Or.inr hne))
+    have hhigh' : lowProductHighClass ell m q c =
+        lowProductHighClass ell' m' q' c' := by
+      simpa [hepsilon, hepsilon'] using hhigh
+    have hforbidden := semanticEnvelope_exact_shadow
+      a b a' b' ell m ell' m' q c q' c'
+        hq hc hq' hc' hhigh' u hu
+    exfalso
+    apply hforbidden
+    simpa [hepsilon, hepsilon', halpha,
+      rationalZeroAnchorShadowCorrection] using heq
+
 theorem IsFirstOrderAnchorPlaneNormalForm.members_of_anchor_mem
     {d q c : TwoForm} (h : IsFirstOrderAnchorPlaneNormalForm d q c)
     (hd : d ∈ firstOrderEnvelopeTwoSpace) :
@@ -427,6 +486,15 @@ theorem anchoredEnvelopeShadowLocalizedAt_rationalZero_of_core
     (targetCleanSecondJetSpace.add_mem hbaseClean hleftCorrection)
     hrightCorrection
   simpa only [add_assoc, add_left_comm, add_comm] using hsum
+
+/-- Public rational-zero chart wrapper with the already-settled inactive
+case removed from its hypothesis. -/
+theorem anchoredEnvelopeShadowLocalizedAt_rationalZero_of_activeCore
+    (hactive : ActiveRationalZeroAnchoredEnvelopeShadowCore)
+    (p : LocalKleinCoord) (hp : SatisfiesKlein p) :
+    AnchoredEnvelopeShadowLocalizedAt (localTwoForm 0 p) :=
+  anchoredEnvelopeShadowLocalizedAt_rationalZero_of_core
+    (rationalZeroAnchoredEnvelopeShadowCore_of_active hactive) p hp
 
 private theorem wireNormalForm_to_planeNormalForm
     (d : TwoForm) (X Y : ANF 10)
