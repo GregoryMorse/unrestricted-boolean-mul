@@ -33,6 +33,8 @@ The repository currently contains:
   displacement/relation-gift formula;
 - exact local and global represented-place profiles for its intrinsic
   displacement space; and
+- the four-dimensional cubic kernel and complete missing-coset shadow
+  exclusion for the unique non-rational degree-two translate; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 

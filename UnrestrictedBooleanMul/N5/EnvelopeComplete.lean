@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+import UnrestrictedBooleanMul.N5.DegreeTwoTranslateShadow
 
 /-!
 # Assembly of distinct independent first-order envelope planes
@@ -783,6 +784,15 @@ theorem rationalValueRegularCompanion_shadowExcluded
   exact rationalValueRegularCompanion_shadow_not_missingCoset
     place c hc hregular a b a' b' ell m ell' m' hcubic u hu
 
+/-- Canonical equal-plane exclusion for the unique non-rational translate
+of the degree-two place. -/
+theorem degreeTwoTranslate_shadowExcluded :
+    CubicEqualPlaneShadowExcluded degreeTwoTranslateLeftTwo
+      degreeTwoTranslateRightTwo := by
+  intro a b a' b' ell m ell' m' hcubic u hu
+  exact degreeTwoTranslate_shadow_not_missingCoset
+    a b a' b' ell m ell' m' hcubic u hu
+
 /-- A shadow exclusion for one ordered basis of a first-order plane
 transports to two independently chosen ordered bases of that plane. -/
 theorem cubicEqualPlaneShadowExcluded_twoBasisChanges
@@ -868,6 +878,41 @@ theorem cubicEqualPlaneShadowExcluded_twoBasisChanges
   exact missingCoset_exclusion_of_add_mem_firstOrderEnvelope
     (actualFirst + actualSecond) (canonicalFirst + canonicalSecond)
       hactualCorrection hcanonicalExcluded u hu
+
+/-- Intrinsic equal-plane wrapper for the non-rational degree-two translate;
+the two products may use independently chosen ordered bases. -/
+theorem sharedDegreeTwoTranslatePlane_shadow_not_missingCoset
+    (g k : PlaneBasisChange)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hhigh :
+      lowProductHighPart ell m
+          (g.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).1
+          (g.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).2 =
+        lowProductHighPart ell' m'
+          (k.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).1
+          (k.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).2)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m
+          (g.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).1
+          (g.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).2 +
+        lowProductQuadraticShadow a' b' ell' m'
+          (k.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).1
+          (k.basisPair degreeTwoTranslateLeftTwo
+            degreeTwoTranslateRightTwo).2 ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  exact cubicEqualPlaneShadowExcluded_twoBasisChanges
+    degreeTwoTranslateLeftTwo degreeTwoTranslateRightTwo
+    degreeTwoTranslateLeftTwo_mem_firstOrderEnvelope
+    degreeTwoTranslateRightTwo_mem_firstOrderEnvelope
+    degreeTwoTranslate_shadowExcluded
+    g k a b a' b' ell m ell' m' hhigh u hu
 
 /-- Intrinsic equal-plane wrapper for a regular rational-value companion.
 Both products may use arbitrary ordered bases of the common plane. -/
