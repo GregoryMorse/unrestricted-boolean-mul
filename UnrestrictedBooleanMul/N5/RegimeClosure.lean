@@ -25,15 +25,16 @@ def StableTwoDefectQuadraticPrefixes : Prop :=
     N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) = 2 →
     1 ≤ suffixDeficit (N4.circuitFlag C j)
 
-/-- The algebraic saturation statement for every quadratic base of defect at
-most one whose old target part is already in the first-order envelope. -/
+/-- The algebraic saturation statement for every all-quadratic circuit prefix
+of defect at most one.  Keeping the prefix in the interface preserves its
+decomposable flattening data, which is essential to the one-defect anchor
+argument. -/
 def FirstOrderSaturation : Prop :=
-  ∀ W : Submodule F₂ (ANF 10),
-    affine 10 ≤ W →
-    W ≤ N4.quadraticANFSpace 10 →
-    N4.flagDefectRank W (mulTarget 5) ≤ 1 →
-    W ⊓ N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState →
-    StableTargetSubspace W firstOrderEnvelopeState
+  ∀ {r j : Nat} (C : Circuit 10 r),
+    j ≤ r →
+    AllQuadraticPrefix C j →
+    N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) ≤ 1 →
+    StableTargetSubspace (N4.circuitFlag C j) firstOrderEnvelopeState
 
 /-- Once the two algebraic suffix obligations are available, the last-prefix
 regime split excludes every twelve-gate circuit. -/
@@ -57,15 +58,9 @@ theorem no_twelve_gate_circuit_of_regime_closure
     exact no_circuit_completion_of_positive_suffixDeficit
       C hC (by omega) hj hpositive
   · have hdefOne : N4.flagDefectRank W (mulTarget 5) ≤ 1 := by omega
-    let hflat := quadraticPrefixFlattening_of_all_quadratic C hj hall
-    have hbase :
-        W ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
-          firstOrderEnvelopeState :=
-      allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
-        C hflat hall hdefOne
     have hstableSubspace :
         StableTargetSubspace W firstOrderEnvelopeState :=
-      hFirst W hWaff hWquad hdefOne hbase
+      hFirst C hj hall hdefOne
     have hstableRank : StableTargetRank W 8 :=
       stableFirstOrder_targetRank hWaff hstableSubspace
     have htarget : stateTargetRank W ≤ 8 :=
