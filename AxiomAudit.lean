@@ -398,3 +398,5 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.no_twelve_gate_circuit_of_regime_closure
 #print axioms UnrestrictedBooleanMul.N5.mc_mul_five_of_regime_closure
 #print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
+#print axioms UnrestrictedBooleanMul.N5.exists_decomposable_anchor_of_presentationDefect_le_one
+#print axioms UnrestrictedBooleanMul.N5.exists_decomposable_anchor_of_quadraticPrefix

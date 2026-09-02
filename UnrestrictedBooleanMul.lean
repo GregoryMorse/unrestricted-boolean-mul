@@ -45,6 +45,7 @@ import UnrestrictedBooleanMul.N5.E2.StableInterface
 import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import UnrestrictedBooleanMul.N5.FirstOrderState
 import UnrestrictedBooleanMul.N5.LowDefectPrefix
+import UnrestrictedBooleanMul.N5.LowDefectAnchor
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
 import UnrestrictedBooleanMul.N5.RankOneTargetClean
