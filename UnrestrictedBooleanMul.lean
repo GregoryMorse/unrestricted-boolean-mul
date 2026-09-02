@@ -23,6 +23,7 @@ import UnrestrictedBooleanMul.N5.QuadraticFlattening
 import UnrestrictedBooleanMul.N5.PrefixState
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.CircuitSuffix
+import UnrestrictedBooleanMul.N5.CompletionDeficit
 import UnrestrictedBooleanMul.N5.E2.WStarRank
 import UnrestrictedBooleanMul.N5.E2.WPQRank
 import UnrestrictedBooleanMul.N5.E2.WThreePRank
