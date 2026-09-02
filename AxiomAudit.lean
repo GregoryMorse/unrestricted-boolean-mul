@@ -331,6 +331,8 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.quadraticANFOfForm_targetTwo
 #print axioms UnrestrictedBooleanMul.N5.exists_quadraticCoordinates
 #print axioms UnrestrictedBooleanMul.N5.quadraticProjection_quadraticCoordinateANF_mul
+#print axioms UnrestrictedBooleanMul.N5.quadraticCoordinateANF_mul_semanticData
+#print axioms UnrestrictedBooleanMul.N5.lowProductHighClass_rotate_right
 #print axioms UnrestrictedBooleanMul.N5.E2.wStarTwoSpace_finrank
 #print axioms UnrestrictedBooleanMul.N5.E2.wPQTwoSpace_finrank
 #print axioms UnrestrictedBooleanMul.N5.E2.wThreePTwoSpace_finrank
