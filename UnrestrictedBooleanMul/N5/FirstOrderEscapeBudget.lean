@@ -76,6 +76,21 @@ theorem stateHighImage_andExtend_eq_of_target_add_old
   rw [heq, map_add, htzero, zero_add]
   exact ⟨v, hv, rfl⟩
 
+/-- Pointwise form: the high class of a target-producing product was already
+present before the target step. -/
+theorem productHighClass_mem_stateHighImage_of_target_add_old
+    (V : Submodule F₂ (ANF 10)) (p q t v : ANF 10)
+    (ht : t ∈ N4.targetAmbient 10 (mulTarget 5))
+    (hv : v ∈ V) (heq : p * q = t + v) :
+    Submodule.mkQ (N4.quadraticANFSpace 10) (p * q) ∈
+      stateHighImage V := by
+  have htquad : t ∈ N4.quadraticANFSpace 10 :=
+    targetAmbient_five_le_quadraticANFSpace ht
+  have htzero : Submodule.mkQ (N4.quadraticANFSpace 10) t = 0 :=
+    (Submodule.Quotient.mk_eq_zero _).2 htquad
+  rw [heq, map_add, htzero, zero_add]
+  exact ⟨v, hv, rfl⟩
+
 /-- Consequently a target-producing step preserves the number of independent
 high directions exactly. -/
 theorem stateHighRank_andExtend_eq_of_target_add_old
