@@ -25,6 +25,29 @@ def andExtend (V : Submodule F₂ (ANF 10)) (p q : ANF 10) :
     Submodule F₂ (ANF 10) :=
   V ⊔ Submodule.span F₂ {p * q}
 
+/-- One AND extension can enlarge the quotient defect by at most one.  This
+is the state-level form of the elementary one-gate defect budget and does
+not require the new product to be nonredundant. -/
+theorem flagDefectRank_andExtend_le_succ
+    (V : Submodule F₂ (ANF 10)) (p q : ANF 10) :
+    N4.flagDefectRank (andExtend V p q) (mulTarget 5) ≤
+      N4.flagDefectRank V (mulTarget 5) + 1 := by
+  let f := Submodule.mkQ (N4.targetAmbient 10 (mulTarget 5))
+  have himage : stateDefectImage (andExtend V p q) =
+      stateDefectImage V ⊔ Submodule.span F₂ ({f (p * q)} : Set _) := by
+    unfold stateDefectImage andExtend
+    rw [Submodule.map_sup, Submodule.map_span]
+    simp [f]
+  rw [← stateDefectImage_finrank, ← stateDefectImage_finrank, himage]
+  by_cases hz : f (p * q) ∈ stateDefectImage V
+  · have hspan : Submodule.span F₂ ({f (p * q)} : Set _) ≤
+        stateDefectImage V := by
+      rw [Submodule.span_le]
+      simpa using hz
+    rw [sup_eq_left.mpr hspan]
+    omega
+  · rw [Submodule.finrank_sup_span_singleton hz]
+
 /-- Arbitrary finite suffix reachability under the sole global condition that
 the quotient defect never exceeds three. -/
 inductive DefectLegalSuffix (W : Submodule F₂ (ANF 10)) :

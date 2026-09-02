@@ -44,9 +44,10 @@ The repository currently contains:
 - the algebraic companion classification at all three rational places into
   the regular Koszul-kernel case or one of the three exceptional planes
   through that rational direction; and
-- a kernel-checked counterexample to the history-free rational-zero `001`
-  anchor-shadow obligation, showing that the suffix reduction must retain an
-  additional reachability or gate-cost invariant; and
+- a kernel-checked two-gate, defect-legal counterexample to the history-free
+  anchored stable-envelope interface (and, in particular, its rational-zero
+  `001` anchor-shadow obligation), showing that the suffix reduction must
+  retain an additional reachability or gate-cost invariant; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
@@ -72,12 +73,15 @@ do not yet constitute the final lower bound. This directory must not be
 described as a Lean certificate for the paper until that final theorem has
 also been kernel checked.
 
-In particular,
-`N5.not_nonzeroRationalZeroAnchoredEnvelopeFunctionalCase_001` proves that
-the current history-free three-case route in `ZeroColourAnchorSemantic.lean`
-cannot close as stated. The final proof must replace that route with a suffix
-invariant that remembers which correction products were actually born (or
-charges their gate cost); assuming the three scalar cases would be unsound.
+In particular, `N5.not_anchoredFirstOrderStability` proves that the canonical
+history-free stable-state interface itself is false: two algebraic AND
+extensions stay within quotient defect three but expose the missing target
+coordinate.  The smaller theorem
+`N5.not_nonzeroRationalZeroAnchoredEnvelopeFunctionalCase_001` identifies the
+same obstruction in the rational-zero local coordinates.  The final proof
+must replace that route with a circuit-facing invariant that remembers which
+correction products were actually born (or charges their gate cost); assuming
+the three scalar cases or anchored stability would be unsound.
 
 ## Formalization handoff
 
