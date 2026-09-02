@@ -2,6 +2,7 @@ import UnrestrictedBooleanMul.N5.LowDefectPrefix
 import UnrestrictedBooleanMul.N5.StableTargetInduction
 import UnrestrictedBooleanMul.N5.CompletionDeficit
 import UnrestrictedBooleanMul.N5.MainInterface
+import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
 
 /-!
 # Final circuit regime closure
@@ -35,6 +36,11 @@ def FirstOrderSaturation : Prop :=
     AllQuadraticPrefix C j →
     N4.flagDefectRank (N4.circuitFlag C j) (mulTarget 5) ≤ 1 →
     StableTargetSubspace (N4.circuitFlag C j) firstOrderEnvelopeState
+
+theorem firstOrderSaturation_of_anchored
+    (hstable : AnchoredFirstOrderStability) : FirstOrderSaturation := by
+  intro r j C hj hall hdef
+  exact stableFirstOrderPrefix_of_anchored hstable C hj hall hdef
 
 /-- Once the two algebraic suffix obligations are available, the last-prefix
 regime split excludes every twelve-gate circuit. -/

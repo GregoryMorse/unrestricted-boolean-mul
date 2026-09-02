@@ -25,11 +25,14 @@ theorem exists_decomposable_anchor_of_presentationDefect_le_one
     ∃ q : TwoForm,
       IsDecomposableTwo q ∧
       q ∈ decomposablePresentationSpan p ∧
+      presentationDefect p = Submodule.span F₂
+        ({quadraticQuotientProjection q} : Set QuadraticQuotient) ∧
       decomposablePresentationSpan p ≤
         targetTwoSpace ⊔ Submodule.span F₂ ({q} : Set TwoForm) := by
   classical
   by_cases hQ : presentationDefect p = ⊥
-  · refine ⟨0, decomposableTwo_zero, Submodule.zero_mem _, ?_⟩
+  · refine ⟨0, decomposableTwo_zero, Submodule.zero_mem _, ?_, ?_⟩
+    · simpa using hQ
     intro x hx
     have hprojection : quadraticQuotientProjection x ∈
         presentationDefect p := by
@@ -75,7 +78,7 @@ theorem exists_decomposable_anchor_of_presentationDefect_le_one
       (Submodule.eq_of_le_of_finrank_eq
         (Submodule.span_le.mpr (by simpa using hqQ))
         (by rw [finrank_span_singleton hi, hdim])).symm
-    refine ⟨q, hdec i, ?_, ?_⟩
+    refine ⟨q, hdec i, ?_, hprincipal, ?_⟩
     · exact Submodule.subset_span ⟨i, rfl⟩
     · intro x hx
       have hxQ : quadraticQuotientProjection x ∈
@@ -105,13 +108,15 @@ theorem exists_decomposable_anchor_of_quadraticPrefix
       (presentationDefect hflat.generator) ≤ 1) :
     ∃ q : TwoForm,
       IsDecomposableTwo q ∧ q ∈ quadraticPrefixImage C j ∧
+      presentationDefect hflat.generator = Submodule.span F₂
+        ({quadraticQuotientProjection q} : Set QuadraticQuotient) ∧
       quadraticPrefixImage C j ≤
         targetTwoSpace ⊔ Submodule.span F₂ ({q} : Set TwoForm) := by
   rcases exists_decomposable_anchor_of_presentationDefect_le_one
       hflat.generator hflat.decomposable hdef with
-    ⟨q, hqdec, hq, hspan⟩
+    ⟨q, hqdec, hq, hprincipal, hspan⟩
   rw [hflat.span_eq] at hq hspan
-  exact ⟨q, hqdec, hq, hspan⟩
+  exact ⟨q, hqdec, hq, hprincipal, hspan⟩
 
 /-- If an anchor covers a quadratic prefix modulo the full target and the
 prefix's actual target wires lie in the first-order envelope, then the full
@@ -181,7 +186,7 @@ theorem exists_firstOrder_decomposable_anchor_of_allQuadraticPrefix
     rw [quadraticPrefixFlattening_defect_eq_flagDefect C hflat hall]
     exact hdef
   rcases exists_decomposable_anchor_of_quadraticPrefix C hflat
-      hpresentation with ⟨q, hqdec, hq, hcover⟩
+      hpresentation with ⟨q, hqdec, hq, _hprincipal, hcover⟩
   have htarget : N4.circuitFlag C j ⊓
       N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState :=
     allQuadraticPrefix_target_le_firstOrder_of_flagDefect_le_one
