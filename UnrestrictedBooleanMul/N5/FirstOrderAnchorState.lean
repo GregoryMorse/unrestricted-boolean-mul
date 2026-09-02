@@ -51,6 +51,33 @@ theorem targetTwoSpace_inf_firstOrderAnchorTwoSpace
     exact ⟨firstOrderEnvelopeTwoSpace_le_targetTwoSpace hp,
       Submodule.mem_sup_left hp⟩
 
+/-- The canonical anchored two-form space lies in the target-clean second
+jet module plus its single decomposable anchor. -/
+theorem firstOrderAnchorTwoSpace_le_targetClean_sup_anchor
+    (q : TwoForm) :
+    firstOrderAnchorTwoSpace q ≤
+      targetCleanSecondJetSpace ⊔
+        Submodule.span F₂ ({q} : Set TwoForm) := by
+  apply sup_le
+  · exact ((le_sup_left : firstOrderEnvelopeTwoSpace ≤
+        firstOrderEnvelopeTwoSpace ⊔ quadraticExterior secondJetCoreSpace).trans
+      (le_sup_left :
+        firstOrderEnvelopeTwoSpace ⊔ quadraticExterior secondJetCoreSpace ≤
+          targetCleanSecondJetSpace)).trans le_sup_left
+  · exact le_sup_right
+
+/-- Every quadratic word in the canonical anchored base has precisely the
+target-clean-plus-anchor quadratic localization used in the rank-one branch. -/
+theorem quadraticProjection_mem_targetClean_sup_anchor_of_mem_anchorState
+    (q : TwoForm) {c : ANF 10} (hc : c ∈ firstOrderAnchorState q) :
+    quadraticProjection 10 c ∈
+      targetCleanSecondJetSpace ⊔
+        Submodule.span F₂ ({q} : Set TwoForm) := by
+  have hcTwo : quadraticProjection 10 c ∈ firstOrderAnchorTwoSpace q :=
+    ((E2.mem_quadraticEnvelopeState_iff
+      (firstOrderAnchorTwoSpace q) c).1 hc).2
+  exact firstOrderAnchorTwoSpace_le_targetClean_sup_anchor q hcTwo
+
 theorem firstOrderAnchorTwoSpace_finrank_of_mem_target
     (q : TwoForm) (hqdec : IsDecomposableTwo q)
     (hqT : q ∈ targetTwoSpace) :
@@ -82,6 +109,25 @@ theorem firstOrderAnchorState_targetRank
   rw [firstOrderAnchorState, E2.quadraticEnvelopeState_targetRank,
     inf_comm, targetTwoSpace_inf_firstOrderAnchorTwoSpace q hqdec,
     firstOrderEnvelopeTwoSpace_finrank]
+
+/-- The target part of a canonical anchored state is exactly contained in the
+first-order target envelope; the adjoined decomposable direction contributes
+only quotient defect. -/
+theorem firstOrderAnchorState_inf_targetAmbient_le_firstOrderEnvelopeState
+    (q : TwoForm) (hqdec : IsDecomposableTwo q) :
+    firstOrderAnchorState q ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
+      firstOrderEnvelopeState := by
+  intro p hp
+  have htwo : quadraticProjection 10 p ∈
+      targetTwoSpace ⊓ firstOrderAnchorTwoSpace q := by
+    refine ⟨quadraticProjection_mem_targetTwoSpace_of_mem_targetAmbient
+        hp.2, ?_⟩
+    exact ((E2.mem_quadraticEnvelopeState_iff
+      (firstOrderAnchorTwoSpace q) p).1 hp.1).2
+  rw [targetTwoSpace_inf_firstOrderAnchorTwoSpace q hqdec] at htwo
+  exact (E2.mem_quadraticEnvelopeState_iff
+    firstOrderEnvelopeTwoSpace p).2
+    ⟨targetAmbient_five_le_quadraticANFSpace hp.2, htwo⟩
 
 theorem firstOrderAnchorState_defectRank_of_mem_target
     (q : TwoForm) (hqdec : IsDecomposableTwo q)

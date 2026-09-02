@@ -139,20 +139,8 @@ theorem stableFirstOrderAnchor_of_colourBranches
     StableTargetSubspace (firstOrderAnchorState q)
       firstOrderEnvelopeState := by
   apply stableTargetSubspace_of_targetStepClosed
-  · intro p hp
-    apply Submodule.mem_sup_right
-    have hp' : p ∈ firstOrderAnchorState q ⊓
-        N4.targetAmbient 10 (mulTarget 5) := hp
-    have htwo : quadraticProjection 10 p ∈
-        targetTwoSpace ⊓ firstOrderAnchorTwoSpace q := by
-      refine ⟨quadraticProjection_mem_targetTwoSpace_of_mem_targetAmbient
-          hp'.2, ?_⟩
-      exact ((E2.mem_quadraticEnvelopeState_iff
-        (firstOrderAnchorTwoSpace q) p).1 hp'.1).2
-    rw [targetTwoSpace_inf_firstOrderAnchorTwoSpace q hqdec] at htwo
-    exact (E2.mem_quadraticEnvelopeState_iff
-      firstOrderEnvelopeTwoSpace p).2
-      ⟨targetAmbient_five_le_quadraticANFSpace hp'.2, htwo⟩
+  · exact (firstOrderAnchorState_inf_targetAmbient_le_firstOrderEnvelopeState
+      q hqdec).trans le_sup_right
   · exact targetStepClosed_firstOrderAnchor_of_colourBranches
       q hzero hone htwo
 
