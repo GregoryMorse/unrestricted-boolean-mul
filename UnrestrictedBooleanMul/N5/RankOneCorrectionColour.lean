@@ -16,6 +16,9 @@ namespace N5
 
 noncomputable section
 
+private abbrev HighQuotient :=
+  (ANF 10) ⧸ N4.quadraticANFSpace 10
+
 /-- Adding an old wire to a proposed new generator does not change the
 one-dimensional extension of the old state. -/
 theorem sup_span_add_old_eq
@@ -111,6 +114,61 @@ theorem one_mem_of_defectLegalSuffix_firstOrderAnchor
   exact hreach.start_le
     (E2.affine_le_quadraticEnvelopeState (firstOrderAnchorTwoSpace q)
       (one_mem_affine 10))
+
+/-- In a state of high rank at most one, every high class lies on the line
+of any fixed nonquadratic member. -/
+theorem highClass_mem_span_of_stateHighRank_le_one
+    (V : Submodule F₂ (ANF 10)) (U v : ANF 10)
+    (hU : U ∈ V) (hv : v ∈ V)
+    (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hhigh : stateHighRank V ≤ 1) :
+    Submodule.mkQ (N4.quadraticANFSpace 10) v ∈
+      Submodule.span F₂
+        ({Submodule.mkQ (N4.quadraticANFSpace 10) U} :
+          Set ((ANF 10) ⧸ N4.quadraticANFSpace 10)) := by
+  let uQ := Submodule.mkQ (N4.quadraticANFSpace 10) U
+  have huQ : uQ ∈ stateHighImage V := ⟨U, hU, rfl⟩
+  have hvQ : Submodule.mkQ (N4.quadraticANFSpace 10) v ∈
+      stateHighImage V := ⟨v, hv, rfl⟩
+  have huQne : uQ ≠ 0 := by
+    intro hzero
+    exact hUhigh ((Submodule.Quotient.mk_eq_zero _).1 hzero)
+  have hlineLe : Submodule.span F₂ ({uQ} : Set HighQuotient) ≤
+      stateHighImage V := by
+    rw [Submodule.span_le]
+    simpa using huQ
+  have hlower := Submodule.finrank_mono hlineLe
+  rw [finrank_span_singleton huQne, stateHighImage_finrank] at hlower
+  have himageRank : Module.finrank F₂ (stateHighImage V) = 1 := by
+    rw [stateHighImage_finrank]
+    omega
+  have himageEq : stateHighImage V =
+      Submodule.span F₂ ({uQ} : Set HighQuotient) :=
+    eq_span_singleton_of_mem_of_finrank_eq_one himageRank huQ huQne
+  rw [← himageEq]
+  exact hvQ
+
+/-- Therefore the quadratic-correction rewiring is automatic in every state
+of high rank at most one that contains the affine inputs. -/
+theorem exists_rankOne_rewiring_of_stateHighRank_le_one
+    (V : Submodule F₂ (ANF 10)) (U c t v : ANF 10)
+    (hAff : affine 10 ≤ V)
+    (hU : U ∈ V) (hc : c ∈ V)
+    (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (heq : U * c = t + v) (hv : v ∈ V)
+    (hhigh : stateHighRank V ≤ 1) :
+    ∃ c' v' : ANF 10,
+      c' ∈ V ∧ c' ∈ N4.quadraticANFSpace 10 ∧
+      v' ∈ V ∧ v' ∈ N4.quadraticANFSpace 10 ∧
+      andExtend V U c' = andExtend V U c ∧
+      U * c' = t + v' ∧
+      U * (U * c') = U * c' ∧
+      (U * c') * c' = U * c' := by
+  apply exists_rankOne_rewiring_with_quadratic_correction
+    V U c t v hU hc (hAff (one_mem_affine 10)) hcquad heq hv
+  exact highClass_mem_span_of_stateHighRank_le_one
+    V U v hU hv hUhigh hhigh
 
 end
 end N5
