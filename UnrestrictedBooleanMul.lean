@@ -76,6 +76,7 @@ import UnrestrictedBooleanMul.N5.ColourNormalization
 import UnrestrictedBooleanMul.N5.ThreeColour
 import UnrestrictedBooleanMul.N5.StableTargetInduction
 import UnrestrictedBooleanMul.N5.FirstOrderEscape
+import UnrestrictedBooleanMul.N5.RankOneEscape
 
 /-!
 # Unrestricted Boolean multiplicative complexity

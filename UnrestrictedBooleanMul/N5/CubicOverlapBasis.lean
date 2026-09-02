@@ -22,6 +22,18 @@ theorem quadraticOverlapCubic_swap (q c : TwoForm) :
     quadraticOverlapCubic c q = quadraticOverlapCubic q c := by
   simp only [quadraticOverlapCubic, mul_comm]
 
+@[simp] theorem quadraticOverlapCubic_zero_right (q : TwoForm) :
+    quadraticOverlapCubic q 0 = 0 := by
+  rw [quadraticOverlapCubic,
+    show quadraticANFOfForm (0 : TwoForm) = 0 by
+      exact map_zero quadraticANFOfFormLinear,
+    mul_zero, map_zero]
+
+@[simp] theorem quadraticOverlapCubic_zero_left (q : TwoForm) :
+    quadraticOverlapCubic 0 q = 0 := by
+  rw [quadraticOverlapCubic_swap]
+  exact quadraticOverlapCubic_zero_right q
+
 theorem quadraticOverlapCubic_rotate_right (q c : TwoForm) :
     quadraticOverlapCubic q (q + c) = quadraticOverlapCubic q c := by
   have hadd : quadraticANFOfForm (q + c) =
