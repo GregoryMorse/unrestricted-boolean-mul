@@ -684,6 +684,220 @@ theorem independentClassifiedFirstOrderPlanes_shadow_not_missingCoset
       a b a' b' ell m ell' m' q c q' c'
         hq hc hq' hc' hind hind' hlocalized hhigh u hu
 
+/-! ## Equal planes containing a rational value direction -/
+
+/-- The generic cubic-kernel condition for a companion to a rational value
+direction.  It says that every syzygy is the unavoidable two-dimensional
+Koszul kernel on the rational value factors. -/
+def RationalValueRegularCompanion (place : Fin 3) (c : TwoForm) : Prop :=
+  ∀ x y : LinearForm,
+    factorPlaneCubic x y (targetTwo (rationalValueCoeff place)) c = 0 →
+      x = 0 ∧ ∃ p s : F₂,
+        y = p • rationalValueA place + s • rationalValueB place
+
+/-- Equal complete high parts on a regular rational-value plane cannot have
+quadratic-shadow difference in the missing target coset.  The proof is
+purely algebraic: the generic cubic kernel leaves one decomposable exterior
+product modulo the old envelope. -/
+theorem rationalValueRegularCompanion_shadow_not_missingCoset
+    (place : Fin 3) (c : TwoForm)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hregular : RationalValueRegularCompanion place c)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hcubic :
+      factorPlaneCubic ell m (targetTwo (rationalValueCoeff place)) c =
+        factorPlaneCubic ell' m' (targetTwo (rationalValueCoeff place)) c)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m
+          (targetTwo (rationalValueCoeff place)) c +
+        lowProductQuadraticShadow a' b' ell' m'
+          (targetTwo (rationalValueCoeff place)) c ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  intro hmissing
+  let x : LinearForm := ell + ell'
+  let y : LinearForm := m + m'
+  have hx : ell + x = ell' := by
+    change ell + (ell + ell') = ell'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hy : m + y = m' := by
+    change m + (m + m') = m'
+    funext i
+    simp only [Pi.add_apply]
+    rw [← add_assoc, CharTwo.add_self_eq_zero, zero_add]
+  have hcubicZero :
+      factorPlaneCubic x y (targetTwo (rationalValueCoeff place)) c = 0 :=
+    factorPlaneCubic_difference_eq_zero ell m ell' m'
+      (targetTwo (rationalValueCoeff place)) c hcubic
+  rcases hregular x y hcubicZero with ⟨hx0, p, s, hyspan⟩
+  have hcorrection :
+      squarefreeWedge x y + ambientBooleanContraction x c +
+          ambientBooleanContraction y
+            (targetTwo (rationalValueCoeff place)) =
+        (p + s) • targetTwo (rationalValueCoeff place) +
+          squarefreeWedge x 0 := by
+    rw [hx0, hyspan, targetTwo_rationalValueCoeff,
+      ambientBooleanContraction_factorSpan_of_disjoint
+        (rationalValueA place) (rationalValueB place)
+        (rationalValue_factors_disjoint place) p s]
+    simp
+  rcases lowProductShadow_decomposition_of_correction
+      firstOrderEnvelopeTwoSpace a b a' b' ell m x y
+      (targetTwo (rationalValueCoeff place)) c
+      (rationalValueTwo_mem_firstOrderEnvelope place) hc
+      ((p + s) • targetTwo (rationalValueCoeff place))
+      (firstOrderEnvelopeTwoSpace.smul_mem _
+        (rationalValueTwo_mem_firstOrderEnvelope place))
+      0 hcorrection with
+    ⟨r, hr, v, w, v', w', hdecomp⟩
+  apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
+    r hr v w v' w' u hu
+  have hdecomp' :
+      lowProductQuadraticShadow a b ell m
+            (targetTwo (rationalValueCoeff place)) c +
+          lowProductQuadraticShadow a' b' ell' m'
+            (targetTwo (rationalValueCoeff place)) c =
+        r + squarefreeWedge v w + squarefreeWedge v' w' := by
+    simpa only [hx, hy] using hdecomp
+  exact hdecomp'.symm.trans hmissing
+
+/-- Presentation-independent interface for a single quadratic plane: equal
+cubic parts on the displayed ordered basis have shadow difference outside
+the missing target coset. -/
+def CubicEqualPlaneShadowExcluded (q c : TwoForm) : Prop :=
+  ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm),
+    factorPlaneCubic ell m q c = factorPlaneCubic ell' m' q c →
+      ∀ (u : TargetCoeff), u ∈ firstOrderEnvelopeCoeffSpace →
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q c ≠
+          targetTwo (firstOrderMissingCoeff + u)
+
+theorem rationalValueRegularCompanion_shadowExcluded
+    (place : Fin 3) (c : TwoForm)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hregular : RationalValueRegularCompanion place c) :
+    CubicEqualPlaneShadowExcluded
+      (targetTwo (rationalValueCoeff place)) c := by
+  intro a b a' b' ell m ell' m' hcubic u hu
+  exact rationalValueRegularCompanion_shadow_not_missingCoset
+    place c hc hregular a b a' b' ell m ell' m' hcubic u hu
+
+/-- A shadow exclusion for one ordered basis of a first-order plane
+transports to two independently chosen ordered bases of that plane. -/
+theorem cubicEqualPlaneShadowExcluded_twoBasisChanges
+    (q c : TwoForm) (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hshadow : CubicEqualPlaneShadowExcluded q c)
+    (g k : PlaneBasisChange)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hhigh :
+      lowProductHighPart ell m
+          (g.basisPair q c).1 (g.basisPair q c).2 =
+        lowProductHighPart ell' m'
+          (k.basisPair q c).1 (k.basisPair q c).2)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m
+          (g.basisPair q c).1 (g.basisPair q c).2 +
+        lowProductQuadraticShadow a' b' ell' m'
+          (k.basisPair q c).1 (k.basisPair q c).2 ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  let ab := g.inverse.basisPair a b
+  let lm := g.inverse.basisPair ell m
+  let ab' := k.inverse.basisPair a' b'
+  let lm' := k.inverse.basisPair ell' m'
+  let actualFirst := lowProductQuadraticShadow a b ell m
+    (g.basisPair q c).1 (g.basisPair q c).2
+  let actualSecond := lowProductQuadraticShadow a' b' ell' m'
+    (k.basisPair q c).1 (k.basisPair q c).2
+  let changedFirst := changedLowProductQuadraticShadow
+    g ab.1 ab.2 lm.1 lm.2 q c
+  let changedSecond := changedLowProductQuadraticShadow
+    k ab'.1 ab'.2 lm'.1 lm'.2 q c
+  let canonicalFirst := lowProductQuadraticShadow
+    ab.1 ab.2 lm.1 lm.2 q c
+  let canonicalSecond := lowProductQuadraticShadow
+    ab'.1 ab'.2 lm'.1 lm'.2 q c
+  have hchangedFirst : changedFirst = actualFirst := by
+    simpa [changedFirst, actualFirst, ab, lm] using
+      changedLowProductQuadraticShadow_inverse g a b ell m q c
+  have hchangedSecond : changedSecond = actualSecond := by
+    simpa [changedSecond, actualSecond, ab', lm'] using
+      changedLowProductQuadraticShadow_inverse k a' b' ell' m' q c
+  have hcanonicalHigh :
+      lowProductHighPart lm.1 lm.2 q c =
+        lowProductHighPart lm'.1 lm'.2 q c := by
+    calc
+      _ = changedLowProductHighPart g lm.1 lm.2 q c :=
+        (planeBasisChange_high g lm.1 lm.2 q c).symm
+      _ = lowProductHighPart ell m
+          (g.basisPair q c).1 (g.basisPair q c).2 := by
+        simpa [lm] using changedLowProductHighPart_inverse g ell m q c
+      _ = lowProductHighPart ell' m'
+          (k.basisPair q c).1 (k.basisPair q c).2 := hhigh
+      _ = changedLowProductHighPart k lm'.1 lm'.2 q c := by
+        simpa [lm'] using
+          (changedLowProductHighPart_inverse k ell' m' q c).symm
+      _ = lowProductHighPart lm'.1 lm'.2 q c :=
+        planeBasisChange_high k lm'.1 lm'.2 q c
+  have hcanonicalCubic :
+      factorPlaneCubic lm.1 lm.2 q c =
+        factorPlaneCubic lm'.1 lm'.2 q c :=
+    congrArg Prod.snd hcanonicalHigh
+  have hcanonicalExcluded : ∀ (v : TargetCoeff),
+      v ∈ firstOrderEnvelopeCoeffSpace →
+      canonicalFirst + canonicalSecond ≠
+        targetTwo (firstOrderMissingCoeff + v) := by
+    intro v hv
+    exact hshadow ab.1 ab.2 ab'.1 ab'.2 lm.1 lm.2 lm'.1 lm'.2
+      hcanonicalCubic v hv
+  have hchangedCorrection :
+      (changedFirst + changedSecond) +
+          (canonicalFirst + canonicalSecond) ∈
+        firstOrderEnvelopeTwoSpace := by
+    exact twoPlaneBasisChanges_shadow_sum_add_original_mem
+      firstOrderEnvelopeTwoSpace g k
+      ab.1 ab.2 ab'.1 ab'.2 lm.1 lm.2 lm'.1 lm'.2
+      q c q c hq hc hq hc
+  have hactualCorrection :
+      (actualFirst + actualSecond) +
+          (canonicalFirst + canonicalSecond) ∈
+        firstOrderEnvelopeTwoSpace := by
+    rw [← hchangedFirst, ← hchangedSecond]
+    exact hchangedCorrection
+  exact missingCoset_exclusion_of_add_mem_firstOrderEnvelope
+    (actualFirst + actualSecond) (canonicalFirst + canonicalSecond)
+      hactualCorrection hcanonicalExcluded u hu
+
+/-- Intrinsic equal-plane wrapper for a regular rational-value companion.
+Both products may use arbitrary ordered bases of the common plane. -/
+theorem sharedRationalValueRegularPlane_shadow_not_missingCoset
+    (place : Fin 3) (c : TwoForm)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace)
+    (hregular : RationalValueRegularCompanion place c)
+    (g k : PlaneBasisChange)
+    (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (hhigh :
+      lowProductHighPart ell m
+          (g.basisPair (targetTwo (rationalValueCoeff place)) c).1
+          (g.basisPair (targetTwo (rationalValueCoeff place)) c).2 =
+        lowProductHighPart ell' m'
+          (k.basisPair (targetTwo (rationalValueCoeff place)) c).1
+          (k.basisPair (targetTwo (rationalValueCoeff place)) c).2)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    lowProductQuadraticShadow a b ell m
+          (g.basisPair (targetTwo (rationalValueCoeff place)) c).1
+          (g.basisPair (targetTwo (rationalValueCoeff place)) c).2 +
+        lowProductQuadraticShadow a' b' ell' m'
+          (k.basisPair (targetTwo (rationalValueCoeff place)) c).1
+          (k.basisPair (targetTwo (rationalValueCoeff place)) c).2 ≠
+      targetTwo (firstOrderMissingCoeff + u) := by
+  exact cubicEqualPlaneShadowExcluded_twoBasisChanges
+    (targetTwo (rationalValueCoeff place)) c
+    (rationalValueTwo_mem_firstOrderEnvelope place) hc
+    (rationalValueRegularCompanion_shadowExcluded place c hc hregular)
+    g k a b a' b' ell m ell' m' hhigh u hu
+
 end
 
 end N5
