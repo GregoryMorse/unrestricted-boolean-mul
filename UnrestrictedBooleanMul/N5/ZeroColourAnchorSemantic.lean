@@ -323,6 +323,58 @@ theorem rationalZeroAnchoredShadow_toggle_secondConst
     rationalZeroAnchorShadowCorrection_toggle_secondConst]
   module
 
+private theorem sum_quadraticPair (f : Fin 10 → F₂)
+    (i j : Fin 10) (hij : i ≠ j) :
+    ∑ k ∈ (quadraticPair i j hij).1, f k = f i + f j := by
+  simp [quadraticPair, hij]
+
+/-- Contribution of one retained Hankel cross coordinate to the clean
+functional of a low--low product. -/
+def targetLowProductCleanTerm
+    (a b : F₂) (ell m : LinearForm) (q c : TargetCoeff)
+    (i j : Fin 5) : F₂ :=
+  a * c (hankelIndex i j) + b * q (hankelIndex i j) +
+    ell (aCoord i) * m (bCoord j) +
+    ell (bCoord j) * m (aCoord i) +
+    (ell (aCoord i) + ell (bCoord j)) * c (hankelIndex i j) +
+    (m (aCoord i) + m (bCoord j)) * q (hankelIndex i j) +
+    q (hankelIndex i j) * c (hankelIndex i j)
+
+/-- Exact four-coordinate formula for the target clean functional of a
+product whose quadratic factors are Hankel target forms. -/
+theorem secondJetCleanFunctional_lowProductQuadraticShadow_targetTwo
+    (a b : F₂) (ell m : LinearForm) (q c : TargetCoeff) :
+    secondJetCleanFunctional
+        (lowProductQuadraticShadow a b ell m (targetTwo q) (targetTwo c)) =
+      targetLowProductCleanTerm a b ell m q c 0 2 +
+      targetLowProductCleanTerm a b ell m q c 0 3 +
+      targetLowProductCleanTerm a b ell m q c 2 3 +
+      targetLowProductCleanTerm a b ell m q c 2 4 := by
+  simp [secondJetCleanFunctional, lowProductQuadraticShadow,
+    targetLowProductCleanTerm, squarefreeWedge_pair,
+    ambientBooleanContraction, ambientTwoHadamard, hankelIndex,
+    sum_quadraticPair]
+  ring
+
+/-- For first-order-envelope quadratic factors the clean functional of the
+shadow is independent of both affine constants. -/
+theorem secondJetCleanFunctional_lowProductQuadraticShadow_const_independent
+    (a b : F₂) (ell m : LinearForm) (q c : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace)
+    (hc : c ∈ firstOrderEnvelopeTwoSpace) :
+    secondJetCleanFunctional
+        (lowProductQuadraticShadow a b ell m q c) =
+      secondJetCleanFunctional
+        (lowProductQuadraticShadow 0 0 ell m q c) := by
+  have hqzero : secondJetCleanFunctional q = 0 :=
+    LinearMap.mem_ker.mp
+      (firstOrderEnvelopeTwoSpace_le_secondJetCleanKernel hq)
+  have hczero : secondJetCleanFunctional c = 0 :=
+    LinearMap.mem_ker.mp
+      (firstOrderEnvelopeTwoSpace_le_secondJetCleanKernel hc)
+  simp only [lowProductQuadraticShadow, map_add, map_smul,
+    hqzero, hczero, smul_eq_mul, mul_zero, add_zero]
+
 /-- Reduced rational-zero shadow calculation.  All circuit and arbitrary
 anchor data have been removed: the inputs are two literal first-order
 planes and their displayed local-anchor corrections. -/
