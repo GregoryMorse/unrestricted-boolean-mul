@@ -433,6 +433,81 @@ def NonzeroRationalZeroAnchoredEnvelopeShadowCase
             lowProductQuadraticShadow a' b' ell' m' q' c' ∈
           targetCleanSecondJetSpace
 
+/-- Scalar form of a nondegenerate fixed-bit representative calculation.
+It asks only that the clean functional vanish on the two unanchored base
+shadows; the target equation then contradicts the missing coefficient. -/
+def NonzeroRationalZeroAnchoredEnvelopeFunctionalCase
+    (epsilon epsilon' alpha : F₂) : Prop :=
+  ∀ (p : LocalKleinCoord), p ≠ 0 → SatisfiesKlein p →
+    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+      (q c q' c' : TwoForm),
+      q ∈ firstOrderEnvelopeTwoSpace →
+      c ∈ firstOrderEnvelopeTwoSpace →
+      q' ∈ firstOrderEnvelopeTwoSpace →
+      c' ∈ firstOrderEnvelopeTwoSpace →
+      lowProductHighClass ell m q c +
+          epsilon • rationalZeroAnchorHighCorrection p m c =
+        lowProductHighClass ell' m' q' c' +
+          epsilon' • rationalZeroAnchorHighCorrection p m' c' →
+      ∀ (u : TargetCoeff),
+        u ∈ firstOrderEnvelopeCoeffSpace →
+        (lowProductQuadraticShadow a b ell m q c +
+            rationalZeroAnchorShadowCorrection p b epsilon m c) +
+            (lowProductQuadraticShadow a' b' ell' m' q' c' +
+              rationalZeroAnchorShadowCorrection p b' epsilon' m' c') +
+            alpha • localTwoForm 0 p =
+          targetTwo (firstOrderMissingCoeff + u) →
+        secondJetCleanFunctional
+          (lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c') = 0
+
+/-- The scalar functional calculation already makes the fixed-bit collision
+impossible, because every displayed anchor correction is target-clean while
+the missing target has clean functional one. -/
+theorem nonzeroRationalZeroAnchoredEnvelopeShadowCase_of_functional
+    (epsilon epsilon' alpha : F₂)
+    (hfunctional :
+      NonzeroRationalZeroAnchoredEnvelopeFunctionalCase
+        epsilon epsilon' alpha) :
+    NonzeroRationalZeroAnchoredEnvelopeShadowCase epsilon epsilon' alpha := by
+  intro p hpzero hp a b a' b' ell m ell' m' q c q' c'
+    hq hc hq' hc' hhigh u hu heq
+  have hbase := hfunctional p hpzero hp a b a' b' ell m ell' m'
+    q c q' c' hq hc hq' hc' hhigh u hu heq
+  have hleftCorrection :
+      secondJetCleanFunctional
+        (rationalZeroAnchorShadowCorrection p b epsilon m c) = 0 :=
+    (LinearMap.mem_ker.mp (targetCleanSecondJetSpace_le_kernel
+      (rationalZeroAnchorShadowCorrection_mem_targetClean
+        p b epsilon m c)))
+  have hrightCorrection :
+      secondJetCleanFunctional
+        (rationalZeroAnchorShadowCorrection p b' epsilon' m' c') = 0 :=
+    (LinearMap.mem_ker.mp (targetCleanSecondJetSpace_le_kernel
+      (rationalZeroAnchorShadowCorrection_mem_targetClean
+        p b' epsilon' m' c')))
+  have hanchor :
+      secondJetCleanFunctional (localTwoForm 0 p) = 0 :=
+    (LinearMap.mem_ker.mp (targetCleanSecondJetSpace_le_kernel
+      (rationalZero_localTwoForm_mem_targetClean p)))
+  have huFunctional : firstOrderMissingFunctional u = 0 :=
+    (mem_firstOrderEnvelopeCoeffSpace u).1 hu
+  have hevaluated := congrArg secondJetCleanFunctional heq
+  simp only [map_add, map_smul, secondJetCleanFunctional_targetTwo]
+    at hevaluated
+  rw [hleftCorrection, hrightCorrection, hanchor,
+    firstOrderMissingFunctional_missing, huFunctional] at hevaluated
+  simp only [add_zero, smul_zero] at hevaluated
+  have hbaseExpanded :
+      secondJetCleanFunctional
+          (lowProductQuadraticShadow a b ell m q c) +
+        secondJetCleanFunctional
+          (lowProductQuadraticShadow a' b' ell' m' q' c') = 0 := by
+    simpa only [map_add] using hbase
+  have hfalse : (0 : F₂) = 1 := by
+    exact hbaseExpanded.symm.trans hevaluated
+  norm_num at hfalse
+
 @[simp] theorem localTwoForm_zero (place : Fin 4) :
     localTwoForm place (0 : LocalKleinCoord) = 0 :=
   map_zero (localTwoFormLinear place)
@@ -612,6 +687,18 @@ theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_nonzeroThreeCases
     (rationalZeroAnchoredEnvelopeShadowCase_of_nonzero 0 0 1 h001)
     (rationalZeroAnchoredEnvelopeShadowCase_of_nonzero 1 0 0 h100)
     (rationalZeroAnchoredEnvelopeShadowCase_of_nonzero 1 1 0 h110)
+
+/-- Smallest current representative interface: three nonzero local cases,
+each with the scalar clean-functional conclusion. -/
+theorem activeRationalZeroAnchoredEnvelopeShadowCore_of_functionalCases
+    (h001 : NonzeroRationalZeroAnchoredEnvelopeFunctionalCase 0 0 1)
+    (h100 : NonzeroRationalZeroAnchoredEnvelopeFunctionalCase 1 0 0)
+    (h110 : NonzeroRationalZeroAnchoredEnvelopeFunctionalCase 1 1 0) :
+    ActiveRationalZeroAnchoredEnvelopeShadowCore :=
+  activeRationalZeroAnchoredEnvelopeShadowCore_of_nonzeroThreeCases
+    (nonzeroRationalZeroAnchoredEnvelopeShadowCase_of_functional 0 0 1 h001)
+    (nonzeroRationalZeroAnchoredEnvelopeShadowCase_of_functional 1 0 0 h100)
+    (nonzeroRationalZeroAnchoredEnvelopeShadowCase_of_functional 1 1 0 h110)
 
 /-- Only the seven active Boolean cases remain: the inactive case collapses
 to `semanticEnvelope_exact_shadow`. -/
