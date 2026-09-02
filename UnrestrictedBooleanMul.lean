@@ -80,6 +80,7 @@ import UnrestrictedBooleanMul.N5.ColourCases
 import UnrestrictedBooleanMul.N5.ThreeColour
 import UnrestrictedBooleanMul.N5.StableTargetInduction
 import UnrestrictedBooleanMul.N5.FirstOrderEscape
+import UnrestrictedBooleanMul.N5.FirstOrderEscapeBudget
 import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
 import UnrestrictedBooleanMul.N5.RankOneEscape
 import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
