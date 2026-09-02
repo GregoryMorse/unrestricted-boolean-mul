@@ -293,11 +293,12 @@ theorem no_all_quadratic_circuit_le_twelve {r : Nat}
     (presentationDefect hflat.generator) hQ3
   omega
 
-/-- In the relevant nonredundant circuit, the last quadratic prefix has
-defect `0`, `1`, or `2`. -/
+/-- In any circuit of length at most twelve computing `Mul 5`, the last
+quadratic prefix has defect `0`, `1`, or `2`.  Nonredundancy of the first high
+gate is automatic: otherwise that gate would belong to the preceding entirely
+quadratic wire space. -/
 theorem lastQuadraticPrefix_defect_le_two {r : Nat}
-    (C : Circuit 10 r) (hC : C.Computes (Mul 5)) (hr : r ≤ 12)
-    (hnr : ∀ i : Fin r, N4.NonredundantAt C i) :
+    (C : Circuit 10 r) (hC : C.Computes (Mul 5)) (hr : r ≤ 12) :
     N4.flagDefectRank
       (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) ≤ 2 := by
   have hproper : lastQuadraticPrefix C < r := by
@@ -308,9 +309,15 @@ theorem lastQuadraticPrefix_defect_le_two {r : Nat}
     intro i
     exact allQuadraticPrefix_last C i (by simpa [heq] using i.isLt)
   let i : Fin r := ⟨lastQuadraticPrefix C, hproper⟩
+  have hnri : N4.NonredundantAt C i := by
+    intro hred
+    apply gate_lastQuadraticPrefix_not_quadratic C hproper
+    apply N4.wireSpace_le_quadratic_of_prefix C.gate
+      (fun k hk => allQuadraticPrefix_last C k hk)
+    simpa [N4.NonredundantAt, N4.circuitFlag] using hred
   have hbirth := firstHighGate_defect_succ C i
     (fun k hk => allQuadraticPrefix_last C k hk)
-    (gate_lastQuadraticPrefix_not_quadratic C hproper) (hnr i)
+    (gate_lastQuadraticPrefix_not_quadratic C hproper) hnri
   have hmono : N4.flagDefectRank
       (N4.circuitFlag C (i.val + 1)) (mulTarget 5) ≤
       N4.flagDefectRank C.finalWire (mulTarget 5) := by
