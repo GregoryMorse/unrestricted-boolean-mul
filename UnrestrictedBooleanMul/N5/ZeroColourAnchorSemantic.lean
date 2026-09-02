@@ -72,24 +72,27 @@ structure NormalizedAnchorShadowEquation (d : TwoForm) where
 manuscript's envelope-shadow lemma.  It states that equal complete high
 parts over the two normalized anchored plane types have total Boolean
 quadratic shadow in the target-clean second jet plus the anchor line. -/
+def AnchoredEnvelopeShadowLocalizedAt (d : TwoForm) : Prop :=
+  ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
+    (q c q' c' : TwoForm),
+    IsFirstOrderAnchorPlaneNormalForm d q c →
+    IsFirstOrderAnchorPlaneNormalForm d q' c' →
+    lowProductHighClass ell m q c =
+      lowProductHighClass ell' m' q' c' →
+    ∀ (alpha : F₂) (u : TargetCoeff),
+      u ∈ firstOrderEnvelopeCoeffSpace →
+      lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' +
+            alpha • d =
+          targetTwo (firstOrderMissingCoeff + u) →
+        lowProductQuadraticShadow a b ell m q c +
+            lowProductQuadraticShadow a' b' ell' m' q' c' ∈
+          targetCleanSecondJetSpace ⊔
+            Submodule.span F₂ ({d} : Set TwoForm)
+
 def AnchoredEnvelopeShadowLocalization : Prop :=
   ∀ (d : TwoForm), IsDecomposableTwo d →
-    ∀ (a b a' b' : F₂) (ell m ell' m' : LinearForm)
-      (q c q' c' : TwoForm),
-      IsFirstOrderAnchorPlaneNormalForm d q c →
-      IsFirstOrderAnchorPlaneNormalForm d q' c' →
-      lowProductHighClass ell m q c =
-        lowProductHighClass ell' m' q' c' →
-      ∀ (alpha : F₂) (u : TargetCoeff),
-        u ∈ firstOrderEnvelopeCoeffSpace →
-        lowProductQuadraticShadow a b ell m q c +
-              lowProductQuadraticShadow a' b' ell' m' q' c' +
-              alpha • d =
-            targetTwo (firstOrderMissingCoeff + u) →
-          lowProductQuadraticShadow a b ell m q c +
-              lowProductQuadraticShadow a' b' ell' m' q' c' ∈
-            targetCleanSecondJetSpace ⊔
-              Submodule.span F₂ ({d} : Set TwoForm)
+    AnchoredEnvelopeShadowLocalizedAt d
 
 private theorem wireNormalForm_to_planeNormalForm
     (d : TwoForm) (X Y : ANF 10)
@@ -234,6 +237,53 @@ private theorem twoForm_recover_after_duplicate
   funext s
   change x s = (x s + y s) + y s
   rw [add_assoc, CharTwo.add_self_eq_zero, add_zero]
+
+/-- If the optional anchor was already in the first-order envelope, the
+localized statement is vacuous: the exact envelope-shadow theorem excludes
+the target-capable comparison itself.  This removes the zero-defect anchor
+case before the genuinely external decomposable-anchor calculation. -/
+theorem anchoredEnvelopeShadowLocalizedAt_of_mem_envelope
+    (d : TwoForm) (hd : d ∈ firstOrderEnvelopeTwoSpace) :
+    AnchoredEnvelopeShadowLocalizedAt d := by
+  intro a b a' b' ell m ell' m' q c q' c'
+    hleft hright hhigh alpha u hu heq
+  have hleftMem := hleft.members_of_anchor_mem hd
+  have hrightMem := hright.members_of_anchor_mem hd
+  rcases hd with ⟨dCoeff, hdCoeff, hdEq⟩
+  have hu' : u + alpha • dCoeff ∈ firstOrderEnvelopeCoeffSpace :=
+    firstOrderEnvelopeCoeffSpace.add_mem hu
+      (firstOrderEnvelopeCoeffSpace.smul_mem alpha hdCoeff)
+  have hforbidden := semanticEnvelope_exact_shadow
+    a b a' b' ell m ell' m' q c q' c'
+    hleftMem.1 hleftMem.2 hrightMem.1 hrightMem.2 hhigh
+    (u + alpha • dCoeff) hu'
+  exfalso
+  apply hforbidden
+  calc
+    lowProductQuadraticShadow a b ell m q c +
+        lowProductQuadraticShadow a' b' ell' m' q' c' =
+      (lowProductQuadraticShadow a b ell m q c +
+          lowProductQuadraticShadow a' b' ell' m' q' c' +
+          alpha • d) + alpha • d :=
+      twoForm_recover_after_duplicate _ _
+    _ = targetTwo (firstOrderMissingCoeff + u) + alpha • d := by
+      rw [heq]
+    _ = targetTwo (firstOrderMissingCoeff + u) +
+        alpha • targetTwo dCoeff := by
+      exact congrArg
+        (fun z : TwoForm => targetTwo (firstOrderMissingCoeff + u) + alpha • z)
+        hdEq.symm
+    _ = targetTwo (firstOrderMissingCoeff + u) +
+        targetTwo (alpha • dCoeff) := by
+      exact congrArg
+        (fun z : TwoForm => targetTwo (firstOrderMissingCoeff + u) + z)
+        (targetTwoLinear.map_smul alpha dCoeff).symm
+    _ = targetTwo
+        ((firstOrderMissingCoeff + u) + alpha • dCoeff) := by
+      exact (targetTwoLinear.map_add _ _).symm
+    _ = targetTwo
+        (firstOrderMissingCoeff + (u + alpha • dCoeff)) := by
+      rw [add_assoc]
 
 /-- The reduced obstruction is impossible when the anchor was target-valued:
 then both normalized planes and the anchor correction all return to the
