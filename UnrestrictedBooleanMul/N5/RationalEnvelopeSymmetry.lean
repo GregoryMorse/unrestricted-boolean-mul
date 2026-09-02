@@ -215,6 +215,66 @@ theorem firstOrderMissing_add_rationalTargetClean_not_decomposable
     exact rationalPlaceTwoFormLinear_decomposable theta hdec
   exact firstOrderMissing_add_targetClean_not_decomposable z' hz' htransDec
 
+/-- Equation (11.7) transported to either of the other rational second-jet
+normalizations.  The optional defect is transported along with the clean
+space and remains decomposable. -/
+theorem targetTwoSpace_inf_rationalTargetClean_sup_decomposable
+    (theta : Fin 2) (q : TwoForm) (hqdec : IsDecomposableTwo q) :
+    targetTwoSpace ⊓
+        (rationalTargetCleanSecondJetSpace theta ⊔
+          Submodule.span F₂ ({q} : Set TwoForm)) =
+      firstOrderEnvelopeTwoSpace := by
+  apply le_antisymm
+  · rintro p ⟨hpTarget, hpSup⟩
+    rcases Submodule.mem_sup.mp hpSup with ⟨z, hz, r, hr, hzr⟩
+    rcases Submodule.mem_span_singleton.mp hr with ⟨alpha, rfl⟩
+    subst p
+    have htransTarget : rationalPlaceTwoFormLinear theta
+        (z + alpha • q) ∈ targetTwoSpace := by
+      rcases hpTarget with ⟨c, hc⟩
+      rw [← hc]
+      change rationalPlaceTwoFormLinear theta (targetTwo c) ∈ targetTwoSpace
+      rw [rationalPlaceTwoFormLinear_targetTwo]
+      exact ⟨rationalTargetCoeffChange theta c, rfl⟩
+    have htransZ : rationalPlaceTwoFormLinear theta z ∈
+        targetCleanSecondJetSpace :=
+      (mem_rationalTargetCleanSecondJetSpace_iff theta z).1 hz
+    have htransQ : rationalPlaceTwoFormLinear theta q ∈
+        Submodule.span F₂
+          ({rationalPlaceTwoFormLinear theta q} : Set TwoForm) :=
+      Submodule.mem_span_singleton_self _
+    have htransSup : rationalPlaceTwoFormLinear theta
+        (z + alpha • q) ∈
+        targetCleanSecondJetSpace ⊔
+          Submodule.span F₂
+            ({rationalPlaceTwoFormLinear theta q} : Set TwoForm) := by
+      rw [map_add, map_smul]
+      exact Submodule.add_mem _
+        (Submodule.mem_sup_left htransZ)
+        (Submodule.mem_sup_right (Submodule.smul_mem _ _ htransQ))
+    have htransFirst : rationalPlaceTwoFormLinear theta
+        (z + alpha • q) ∈ firstOrderEnvelopeTwoSpace := by
+      have hinter : rationalPlaceTwoFormLinear theta
+          (z + alpha • q) ∈
+          targetTwoSpace ⊓
+            (targetCleanSecondJetSpace ⊔
+              Submodule.span F₂
+                ({rationalPlaceTwoFormLinear theta q} : Set TwoForm)) :=
+        ⟨htransTarget, htransSup⟩
+      rw [targetTwoSpace_inf_targetClean_sup_decomposable
+        (rationalPlaceTwoFormLinear theta q)
+        (rationalPlaceTwoFormLinear_decomposable theta hqdec)] at hinter
+      exact hinter
+    have hback := rationalPlaceTwoFormLinear_mem_firstOrderEnvelope
+      theta (rationalPlaceTwoFormLinear theta (z + alpha • q)) htransFirst
+    simpa only [rationalPlaceTwoFormLinear_involutive] using hback
+  · intro p hpFirst
+    have hpInf : p ∈
+        targetTwoSpace ⊓ rationalTargetCleanSecondJetSpace theta := by
+      rw [targetTwoSpace_inf_rationalTargetCleanSecondJetSpace]
+      exact hpFirst
+    exact ⟨hpInf.1, Submodule.mem_sup_left hpInf.2⟩
+
 end
 end N5
 end UnrestrictedBooleanMul
