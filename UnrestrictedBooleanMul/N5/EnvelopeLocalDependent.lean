@@ -552,6 +552,173 @@ private theorem linearForm_eq_oneSpan
     | simpa [bCoord] using hB3
     | simpa [bCoord] using hB4
 
+/-- A nonzero cubic syzygy for a plane containing the rational value at zero
+forces the companion into one of the three exceptional directions through
+that value.  The proof reuses the Hankel tail pivot above and adds only the
+three boundary coordinates omitted by the local/dependent calculation. -/
+theorem rationalZero_nonregular_companion_classification
+    (x y : LinearForm) (c : TargetCoeff)
+    (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalZeroValueTwo (targetTwo c)))
+    (hx : x ≠ 0)
+    (hcubic : factorPlaneCubic x y rationalZeroValueTwo (targetTwo c) = 0) :
+    (∃ α : F₂, c = α • rZeroCoeff + jZeroCoeff) ∨
+      (∃ α : F₂, c = α • rZeroCoeff + rOneCoeff) ∨
+        ∃ α : F₂, c = α • rZeroCoeff + rInfinityCoeff := by
+  have hlocalDependent :
+      factorPlaneCubic 0 y rationalZeroValueTwo rationalZeroJetTwo =
+        factorPlaneCubic x 0 0 (targetTwo c) := by
+    funext i j k
+    have h := congrFun (congrFun (congrFun hcubic i) j) k
+    simp only [factorPlaneCubic, ambientVectorWedgeTwo,
+      N4.vectorWedgeTwoN, Pi.add_apply] at h ⊢
+    simpa [ambientTwoCoeff_zero, add_comm] using
+      (CharTwo.add_eq_zero.mp h).symm
+  have hU : c 2 + c 3 + c 5 + c 6 = 0 :=
+    (mem_firstOrderEnvelopeCoeffSpace c).1 hc
+  let zA : Fin 5 → F₂ := fun i => x (aCoord i)
+  let zB : Fin 5 → F₂ := fun i => x (bCoord i)
+  have hA : RationalZeroHankelBlockRelations zA c :=
+    rationalZeroHankelBlockRelations_a_of_cubic
+      0 y x 0 c hlocalDependent
+  have hB : RationalZeroHankelBlockRelations zB c :=
+    rationalZeroHankelBlockRelations_b_of_cubic
+      0 y x 0 c hlocalDependent
+  have hnonzero : zA ≠ 0 ∨ zB ≠ 0 := by
+    by_contra h
+    push Not at h
+    exact hx (linearForm_eq_zero_of_halves_eq_zero x h.1 h.2)
+  have htail : c 3 = c 2 ∧ c 4 = c 2 ∧ c 5 = c 2 ∧
+      c 6 = c 2 ∧ c 7 = c 2 := by
+    rcases hnonzero with hAz | hBz
+    · exact rationalZeroHankelBlock_tail zA c hA hU hAz
+    · exact rationalZeroHankelBlock_tail zB c hB hU hBz
+  rcases htail with ⟨h3, h4, h5, h6, h7⟩
+  rcases f2_eq_zero_or_one (c 2) with h2 | h2
+  · rcases f2_eq_zero_or_one (c 8) with h8 | h8
+    · have h1 : c 1 = 1 := by
+        rcases f2_eq_zero_or_one (c 1) with h1 | h1
+        · have hcform : c = c 0 • rZeroCoeff := by
+            funext s
+            fin_cases s <;>
+              simp [rZeroCoeff, h1, h2, h3, h4, h5, h6, h7, h8]
+          have htarget : targetTwo c = c 0 • rationalZeroValueTwo := by
+            calc
+              targetTwo c = targetTwo (c 0 • rZeroCoeff) :=
+                congrArg targetTwo hcform
+              _ = c 0 • targetTwo rZeroCoeff := by
+                change targetTwoLinear (c 0 • rZeroCoeff) = _
+                rw [map_smul]
+                simp only [targetTwo]
+              _ = c 0 • rationalZeroValueTwo := by
+                rw [rationalZeroValueTwo_eq_target]
+          rcases quadraticPlaneDirections_independent_nonzero_ne
+              rationalZeroValueTwo (targetTwo c) hind with
+            ⟨_, hcne, hne⟩
+          rcases f2_eq_zero_or_one (c 0) with h0 | h0
+          · exact (hcne (by simp [htarget, h0])).elim
+          · exact (hne (by simp [htarget, h0])).elim
+        · exact h1
+      left
+      refine ⟨c 0, ?_⟩
+      funext s
+      fin_cases s <;>
+        simp [rZeroCoeff, jZeroCoeff, h1, h2, h3, h4, h5, h6, h7, h8]
+    · have hAsupport := rationalZeroHankelBlock_infinity_support
+          zA c hA h2 h8 h4 h5 h6 h7
+      have hBsupport := rationalZeroHankelBlock_infinity_support
+          zB c hB h2 h8 h4 h5 h6 h7
+      rcases hAsupport with ⟨hA0, hA1, hA2, hA3⟩
+      rcases hBsupport with ⟨hB0, hB1, hB2, hB3⟩
+      have h1 : c 1 = 0 := by
+        by_cases hA4 : x (aCoord 4) = 0
+        · have hB4 : x (bCoord 4) ≠ 0 := by
+            intro hB4
+            apply hx
+            apply linearForm_eq_zero_of_halves_eq_zero
+            · funext i
+              fin_cases i <;> simp_all [zA]
+            · funext i
+              fin_cases i <;> simp_all [zB]
+          have hB4one : x (bCoord 4) = 1 :=
+            (f2_eq_zero_or_one _).resolve_left hB4
+          have hcoord := congrFun (congrFun (congrFun hcubic
+            (aCoord 1)) (bCoord 0)) (bCoord 4)
+          simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+            N4.vectorWedgeTwoN, ambientTwoCoeff_targetTwo_cross,
+            ambientTwoCoeff, targetTwo_sameB, aCoord_ne_bCoord,
+            bCoord_ne_aCoord, rationalZeroValueTwo, targetPairTwo,
+            aLinear, bLinear, Pi.basisFun, h2, h5, hB4one,
+            show x (bCoord 0) = 0 by simpa [zB] using hB0] using hcoord
+        · have hA4one : x (aCoord 4) = 1 :=
+            (f2_eq_zero_or_one _).resolve_left hA4
+          have hcoord := congrFun (congrFun (congrFun hcubic
+            (aCoord 0)) (aCoord 4)) (bCoord 1)
+          simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+            N4.vectorWedgeTwoN, ambientTwoCoeff_targetTwo_cross,
+            ambientTwoCoeff, targetTwo_sameA, aCoord_ne_bCoord,
+            bCoord_ne_aCoord, rationalZeroValueTwo, targetPairTwo,
+            aLinear, bLinear, Pi.basisFun, h2, h5, hA4one,
+            show x (aCoord 0) = 0 by simpa [zA] using hA0] using hcoord
+      right; right
+      refine ⟨c 0, ?_⟩
+      funext s
+      fin_cases s <;>
+        simp [rZeroCoeff, rInfinityCoeff, h1, h2, h3, h4, h5, h6, h7, h8]
+  · have h8 : c 8 = 1 := by
+      rcases hnonzero with hAz | hBz
+      · exact rationalZeroHankelBlock_eight_eq_one
+          zA c hA h2 h3 h4 h5 h6 hAz
+      · exact rationalZeroHankelBlock_eight_eq_one
+          zB c hB h2 h3 h4 h5 h6 hBz
+    rcases rationalZeroHankelBlock_constant_of_two_eq_one
+        zA c hA h2 h3 h4 h5 h6 with ⟨hA1, hA2, hA3, hA4⟩
+    rcases rationalZeroHankelBlock_constant_of_two_eq_one
+        zB c hB h2 h3 h4 h5 h6 with ⟨hB1, hB2, hB3, hB4⟩
+    have h1 : c 1 = 1 := by
+      by_cases hA0 : x (aCoord 0) = 0
+      · have hB0 : x (bCoord 0) ≠ 0 := by
+          intro hB0
+          apply hx
+          apply linearForm_eq_zero_of_halves_eq_zero
+          · funext i
+            fin_cases i <;> simp [zA, hA0, hA1, hA2, hA3, hA4]
+          · funext i
+            fin_cases i <;> simp [zB, hB0, hB1, hB2, hB3, hB4]
+        have hB0one : x (bCoord 0) = 1 :=
+          (f2_eq_zero_or_one _).resolve_left hB0
+        have hcoord := congrFun (congrFun (congrFun hcubic
+          (aCoord 0)) (bCoord 1)) (bCoord 2)
+        have hB1one : x (bCoord 1) = 1 := by simpa [zB, hB0one] using hB1
+        have hB2one : x (bCoord 2) = 1 := by simpa [zB, hB0one] using hB2
+        have hsum : 1 + c 1 = 0 := by
+          simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+            N4.vectorWedgeTwoN, ambientTwoCoeff_targetTwo_cross,
+            ambientTwoCoeff, targetTwo_sameB, aCoord_ne_bCoord,
+            bCoord_ne_aCoord, rationalZeroValueTwo, targetPairTwo,
+            aLinear, bLinear, Pi.basisFun, h2, hB1one, hB2one] using hcoord
+        exact (CharTwo.add_eq_zero.mp hsum).symm
+      · have hA0one : x (aCoord 0) = 1 :=
+          (f2_eq_zero_or_one _).resolve_left hA0
+        have hcoord := congrFun (congrFun (congrFun hcubic
+          (aCoord 1)) (aCoord 2)) (bCoord 0)
+        have hA1one : x (aCoord 1) = 1 := by simpa [zA, hA0one] using hA1
+        have hA2one : x (aCoord 2) = 1 := by simpa [zA, hA0one] using hA2
+        have hsum : 1 + c 1 = 0 := by
+          simpa [factorPlaneCubic, ambientVectorWedgeTwo,
+            N4.vectorWedgeTwoN, ambientTwoCoeff_targetTwo_cross,
+            ambientTwoCoeff, targetTwo_sameA, aCoord_ne_bCoord,
+            bCoord_ne_aCoord, rationalZeroValueTwo, targetPairTwo,
+            aLinear, bLinear, Pi.basisFun, h2, hA1one, hA2one] using hcoord
+        exact (CharTwo.add_eq_zero.mp hsum).symm
+    right; left
+    refine ⟨c 0 + 1, ?_⟩
+    funext s
+    fin_cases s <;>
+      simp [rZeroCoeff, rOneCoeff, h1, h2, h3, h4, h5, h6, h7, h8,
+        add_assoc, CharTwo.add_self_eq_zero]
+
 /-- Structural classification for the local-versus-dependent cubic
 equation.  A nonzero dependent factor leaves only the value direction at
 one or infinity after the zero-place value and jet have been removed. -/

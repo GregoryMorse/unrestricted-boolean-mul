@@ -696,6 +696,227 @@ def RationalValueRegularCompanion (place : Fin 3) (c : TwoForm) : Prop :=
       x = 0 ∧ ∃ p s : F₂,
         y = p • rationalValueA place + s • rationalValueB place
 
+/-- The kernel of exterior multiplication by the rational-zero value form is
+exactly the span of its two factors. -/
+private theorem rationalZero_vectorWedge_eq_zero_factorSpan
+    (y : LinearForm)
+    (hzero : ambientVectorWedgeTwo y rationalZeroValueTwo = 0) :
+    ∃ p s : F₂, y = p • aLinear 0 + s • bLinear 0 := by
+  have hA1 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (aCoord 1)) (bCoord 0)
+  have hA2 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (aCoord 2)) (bCoord 0)
+  have hA3 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (aCoord 3)) (bCoord 0)
+  have hA4 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (aCoord 4)) (bCoord 0)
+  have hB1 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (bCoord 0)) (bCoord 1)
+  have hB2 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (bCoord 0)) (bCoord 2)
+  have hB3 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (bCoord 0)) (bCoord 3)
+  have hB4 := congrFun (congrFun (congrFun hzero
+    (aCoord 0)) (bCoord 0)) (bCoord 4)
+  simp [ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    rationalZeroValueTwo, targetPairTwo, aLinear, bLinear,
+    Pi.basisFun, ambientTwoCoeff_squarefreeWedge] at hA1 hA2 hA3 hA4
+  simp [ambientVectorWedgeTwo, N4.vectorWedgeTwoN,
+    rationalZeroValueTwo, targetPairTwo, aLinear, bLinear,
+    Pi.basisFun, ambientTwoCoeff_squarefreeWedge] at hB1 hB2 hB3 hB4
+  change y 1 = 0 at hA1
+  change y 2 = 0 at hA2
+  change y 3 = 0 at hA3
+  change y 4 = 0 at hA4
+  change y 6 = 0 at hB1
+  change y 7 = 0 at hB2
+  change y 8 = 0 at hB3
+  change y 9 = 0 at hB4
+  refine ⟨y (aCoord 0), y (bCoord 0), ?_⟩
+  funext i
+  fin_cases i
+  · simp [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hA1
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hA2
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hA3
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hA4
+  · simp [aLinear, bLinear, Pi.basisFun, aCoord, bCoord]
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hB1
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hB2
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hB3
+  · simpa [aLinear, bLinear, Pi.basisFun, aCoord, bCoord] using hB4
+
+private theorem rationalZeroJet_exceptional_of_coeff_eq
+    (c : TargetCoeff) (α : F₂)
+    (hcform : c = α • rZeroCoeff + jZeroCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalZeroValueTwo (targetTwo c) := by
+  have hcTwo : targetTwo c =
+      α • rationalZeroValueTwo + rationalZeroJetTwo := by
+    calc
+      targetTwo c = targetTwo (α • rZeroCoeff + jZeroCoeff) :=
+        congrArg targetTwo hcform
+      _ = α • targetTwo rZeroCoeff + targetTwo jZeroCoeff := by
+        change targetTwoLinear (α • rZeroCoeff + jZeroCoeff) = _
+        rw [map_add, map_smul]
+        simp only [targetTwo]
+      _ = α • rationalZeroValueTwo + rationalZeroJetTwo := by
+        rw [rationalZeroValueTwo_eq_target, rationalZeroJetTwo_eq_target]
+  rcases f2_eq_zero_or_one α with rfl | rfl
+  · refine ⟨.rationalJet 0, .identity, rfl, ?_⟩
+    change targetTwo c = rationalZeroJetTwo
+    simpa using hcTwo
+  · refine ⟨.rationalJet 0, .rotateRight, rfl, ?_⟩
+    change targetTwo c = rationalZeroValueTwo + rationalZeroJetTwo
+    simpa using hcTwo
+
+private theorem rationalPairZero_left_eq :
+    ExceptionalIndependentPlane.left (.rationalPair 0) =
+      rationalZeroValueTwo := by
+  change rationalPairLeftValueTwo 0 = rationalZeroValueTwo
+  rw [rationalPairLeftValueTwo, rationalPairLeft, rationalValueCoeff]
+  exact rationalZeroValueTwo_eq_target.symm
+
+private theorem rationalPairZero_right_eq :
+    ExceptionalIndependentPlane.right (.rationalPair 0) =
+      targetTwo rOneCoeff := by
+  change rationalPairRightValueTwo 0 = targetTwo rOneCoeff
+  simp [rationalPairRightValueTwo, rationalPairRight, rationalValueCoeff]
+
+private theorem rationalPairOne_left_eq :
+    ExceptionalIndependentPlane.left (.rationalPair 1) =
+      rationalZeroValueTwo := by
+  change rationalPairLeftValueTwo 1 = rationalZeroValueTwo
+  rw [rationalPairLeftValueTwo, rationalPairLeft, rationalValueCoeff]
+  exact rationalZeroValueTwo_eq_target.symm
+
+private theorem rationalPairOne_right_eq :
+    ExceptionalIndependentPlane.right (.rationalPair 1) =
+      targetTwo rInfinityCoeff := by
+  change rationalPairRightValueTwo 1 = targetTwo rInfinityCoeff
+  simp [rationalPairRightValueTwo, rationalPairRight, rationalValueCoeff]
+
+private theorem rationalZeroOnePair_exceptional_of_coeff_eq
+    (c : TargetCoeff) (α : F₂)
+    (hcform : c = α • rZeroCoeff + rOneCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalZeroValueTwo (targetTwo c) := by
+  have hcTwo : targetTwo c =
+      α • rationalZeroValueTwo + targetTwo rOneCoeff := by
+    calc
+      targetTwo c = targetTwo (α • rZeroCoeff + rOneCoeff) :=
+        congrArg targetTwo hcform
+      _ = α • targetTwo rZeroCoeff + targetTwo rOneCoeff := by
+        change targetTwoLinear (α • rZeroCoeff + rOneCoeff) = _
+        rw [map_add, map_smul]
+        simp only [targetTwo]
+      _ = α • rationalZeroValueTwo + targetTwo rOneCoeff := by
+        rw [rationalZeroValueTwo_eq_target]
+  rcases f2_eq_zero_or_one α with rfl | rfl
+  · have hc0 : targetTwo c = targetTwo rOneCoeff := by simpa using hcTwo
+    refine ⟨.rationalPair 0, .identity, ?_, ?_⟩
+    · change rationalZeroValueTwo =
+        ExceptionalIndependentPlane.left (.rationalPair 0)
+      exact rationalPairZero_left_eq.symm
+    · change targetTwo c =
+        ExceptionalIndependentPlane.right (.rationalPair 0)
+      exact hc0.trans rationalPairZero_right_eq.symm
+  · have hc1 : targetTwo c =
+        rationalZeroValueTwo + targetTwo rOneCoeff := by simpa using hcTwo
+    refine ⟨.rationalPair 0, .rotateRight, ?_, ?_⟩
+    · change rationalZeroValueTwo =
+        ExceptionalIndependentPlane.left (.rationalPair 0)
+      exact rationalPairZero_left_eq.symm
+    · change targetTwo c =
+        ExceptionalIndependentPlane.left (.rationalPair 0) +
+          ExceptionalIndependentPlane.right (.rationalPair 0)
+      rw [rationalPairZero_left_eq, rationalPairZero_right_eq]
+      exact hc1
+
+private theorem rationalZeroInfinityPair_exceptional_of_coeff_eq
+    (c : TargetCoeff) (α : F₂)
+    (hcform : c = α • rZeroCoeff + rInfinityCoeff) :
+    IsExceptionalIndependentPlanePresentation
+      rationalZeroValueTwo (targetTwo c) := by
+  have hcTwo : targetTwo c =
+      α • rationalZeroValueTwo + targetTwo rInfinityCoeff := by
+    calc
+      targetTwo c = targetTwo (α • rZeroCoeff + rInfinityCoeff) :=
+        congrArg targetTwo hcform
+      _ = α • targetTwo rZeroCoeff + targetTwo rInfinityCoeff := by
+        change targetTwoLinear (α • rZeroCoeff + rInfinityCoeff) = _
+        rw [map_add, map_smul]
+        simp only [targetTwo]
+      _ = α • rationalZeroValueTwo + targetTwo rInfinityCoeff := by
+        rw [rationalZeroValueTwo_eq_target]
+  rcases f2_eq_zero_or_one α with rfl | rfl
+  · have hc0 : targetTwo c = targetTwo rInfinityCoeff := by simpa using hcTwo
+    refine ⟨.rationalPair 1, .identity, ?_, ?_⟩
+    · change rationalZeroValueTwo =
+        ExceptionalIndependentPlane.left (.rationalPair 1)
+      exact rationalPairOne_left_eq.symm
+    · change targetTwo c =
+        ExceptionalIndependentPlane.right (.rationalPair 1)
+      exact hc0.trans rationalPairOne_right_eq.symm
+  · have hc1 : targetTwo c =
+        rationalZeroValueTwo + targetTwo rInfinityCoeff := by simpa using hcTwo
+    refine ⟨.rationalPair 1, .rotateRight, ?_, ?_⟩
+    · change rationalZeroValueTwo =
+        ExceptionalIndependentPlane.left (.rationalPair 1)
+      exact rationalPairOne_left_eq.symm
+    · change targetTwo c =
+        ExceptionalIndependentPlane.left (.rationalPair 1) +
+          ExceptionalIndependentPlane.right (.rationalPair 1)
+      rw [rationalPairOne_left_eq, rationalPairOne_right_eq]
+      exact hc1
+
+private theorem rationalZero_regular_of_no_nonzero_syzygy
+    (c : TargetCoeff)
+    (hex : ¬ ∃ x y : LinearForm,
+      factorPlaneCubic x y rationalZeroValueTwo (targetTwo c) = 0 ∧ x ≠ 0) :
+    RationalValueRegularCompanion 0 (targetTwo c) := by
+  intro x y hcubic
+  have hvalue : targetTwo (rationalValueCoeff 0) =
+      rationalZeroValueTwo := by
+    change targetTwo rZeroCoeff = rationalZeroValueTwo
+    exact rationalZeroValueTwo_eq_target.symm
+  rw [hvalue] at hcubic
+  have hx0 : x = 0 := by
+    by_contra hx
+    exact hex ⟨x, y, hcubic, hx⟩
+  subst x
+  have hyzero : ambientVectorWedgeTwo y rationalZeroValueTwo = 0 := by
+    have hleft : ambientVectorWedgeTwo (0 : LinearForm) (targetTwo c) = 0 := by
+      funext i j k
+      simp [ambientVectorWedgeTwo, N4.vectorWedgeTwoN]
+    simpa [factorPlaneCubic, hleft] using hcubic
+  rcases rationalZero_vectorWedge_eq_zero_factorSpan y hyzero with
+    ⟨p, s, hy⟩
+  refine ⟨rfl, p, s, ?_⟩
+  simpa [rationalValueA, rationalValueB] using hy
+
+/-- Algebraic rational-direction classification at zero.  An independent
+companion is either regular after quotienting the unavoidable two-dimensional
+Koszul kernel, or the plane is one of the three exceptional planes through
+the rational-zero value. -/
+theorem rationalZero_companion_regular_or_exceptional
+    (c : TargetCoeff) (hc : c ∈ firstOrderEnvelopeCoeffSpace)
+    (hind : LinearIndependent F₂
+      (quadraticPlaneDirections rationalZeroValueTwo (targetTwo c))) :
+    RationalValueRegularCompanion 0 (targetTwo c) ∨
+      IsExceptionalIndependentPlanePresentation
+        rationalZeroValueTwo (targetTwo c) := by
+  by_cases hex : ∃ x y : LinearForm,
+      factorPlaneCubic x y rationalZeroValueTwo (targetTwo c) = 0 ∧ x ≠ 0
+  · rcases hex with ⟨x, y, hcubic, hx⟩
+    rcases rationalZero_nonregular_companion_classification
+        x y c hc hind hx hcubic with
+      ⟨α, hcform⟩ | ⟨α, hcform⟩ | ⟨α, hcform⟩
+    · exact Or.inr (rationalZeroJet_exceptional_of_coeff_eq c α hcform)
+    · exact Or.inr (rationalZeroOnePair_exceptional_of_coeff_eq c α hcform)
+    · exact Or.inr (rationalZeroInfinityPair_exceptional_of_coeff_eq c α hcform)
+  · exact Or.inl (rationalZero_regular_of_no_nonzero_syzygy c hex)
+
 /-- Equal complete high parts on a regular rational-value plane cannot have
 quadratic-shadow difference in the missing target coset.  The proof is
 purely algebraic: the generic cubic kernel leaves one decomposable exterior
