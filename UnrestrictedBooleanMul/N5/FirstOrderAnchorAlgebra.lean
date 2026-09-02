@@ -101,6 +101,86 @@ theorem anchored_basisChange_shadow_not_missingCoset
   exact (planeBasisChange_high_and_shadow_mod_submodule
     (firstOrderAnchorTwoSpace d) g a b ell m q c hq hc).2
 
+/-- Boolean idempotence makes the product difference under any ordered
+basis change an old factor (or zero). -/
+theorem PlaneBasisChange.product_add_product_mem
+    (g : PlaneBasisChange) (V : Submodule F₂ (ANF 10))
+    (X Y : ANF 10) (hX : X ∈ V) (hY : Y ∈ V) :
+    (g.basisPair X Y).1 * (g.basisPair X Y).2 + X * Y ∈ V := by
+  cases g with
+  | identity =>
+      change X * Y + X * Y ∈ V
+      rw [anf_add_self]
+      exact V.zero_mem
+  | swap =>
+      change Y * X + X * Y ∈ V
+      rw [mul_comm Y X, anf_add_self]
+      exact V.zero_mem
+  | rotateRight =>
+      have heq : X * (X + Y) + X * Y = X := by
+        rw [mul_add, N4.anf_mul_self, add_assoc, anf_add_self, add_zero]
+      change X * (X + Y) + X * Y ∈ V
+      rw [heq]
+      exact hX
+  | rotateLeft =>
+      have heq : (X + Y) * Y + X * Y = Y := by
+        rw [add_mul, N4.anf_mul_self]
+        calc
+          (X * Y + Y) + X * Y = Y + (X * Y + X * Y) := by ac_rfl
+          _ = Y := by rw [anf_add_self, add_zero]
+      change (X + Y) * Y + X * Y ∈ V
+      rw [heq]
+      exact hY
+  | cycleRight =>
+      have heq : Y * (X + Y) + X * Y = Y := by
+        rw [mul_add, N4.anf_mul_self, mul_comm Y X]
+        calc
+          (X * Y + Y) + X * Y = Y + (X * Y + X * Y) := by ac_rfl
+          _ = Y := by rw [anf_add_self, add_zero]
+      change Y * (X + Y) + X * Y ∈ V
+      rw [heq]
+      exact hY
+  | cycleLeft =>
+      have heq : (X + Y) * X + X * Y = X := by
+        rw [add_mul, N4.anf_mul_self, mul_comm Y X]
+        rw [add_assoc, anf_add_self, add_zero]
+      change (X + Y) * X + X * Y ∈ V
+      rw [heq]
+      exact hX
+
+/-- Circuit-facing anchored basis-change exclusion.  This includes affine
+and linear lower parts automatically because it is an identity of Boolean
+ANFs, not only of homogeneous shadows. -/
+theorem firstOrderAnchor_basisChange_products_ne_missingTargetANF
+    (d : TwoForm) (hddec : IsDecomposableTwo d)
+    (g : PlaneBasisChange) (X Y : ANF 10)
+    (hX : X ∈ firstOrderAnchorState d)
+    (hY : Y ∈ firstOrderAnchorState d)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace) :
+    (g.basisPair X Y).1 * (g.basisPair X Y).2 + X * Y ≠
+      targetANF (firstOrderMissingCoeff + u) := by
+  intro heq
+  have hstate : targetANF (firstOrderMissingCoeff + u) ∈
+      firstOrderAnchorState d := by
+    rw [← heq]
+    exact g.product_add_product_mem
+      (firstOrderAnchorState d) X Y hX hY
+  have htarget : targetANF (firstOrderMissingCoeff + u) ∈
+      N4.targetAmbient 10 (mulTarget 5) :=
+    Submodule.mem_sup_right (targetANF_mem_mulTarget
+      (firstOrderMissingCoeff + u))
+  have henvelope :=
+    firstOrderAnchorState_inf_targetAmbient_le_firstOrderEnvelopeState
+      d hddec ⟨hstate, htarget⟩
+  have hprojection : targetTwo (firstOrderMissingCoeff + u) ∈
+      firstOrderEnvelopeTwoSpace := by
+    have hdata := (E2.mem_quadraticEnvelopeState_iff
+      firstOrderEnvelopeTwoSpace
+      (targetANF (firstOrderMissingCoeff + u))).1 henvelope
+    simpa only [quadraticProjection_targetANF] using hdata.2
+  exact missingCoset_targetTwo_not_mem_firstOrderAnchor
+    d hddec u hu (Submodule.mem_sup_left hprojection)
+
 /-- Literal high classes are additive in the complete linear/quadratic data
 of the right factor. -/
 theorem lowProductHighClass_add_right
