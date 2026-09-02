@@ -47,6 +47,7 @@ import UnrestrictedBooleanMul.N5.FirstOrderState
 import UnrestrictedBooleanMul.N5.LowDefectPrefix
 import UnrestrictedBooleanMul.N5.LowDefectAnchor
 import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
 import UnrestrictedBooleanMul.N5.RankOneTargetClean

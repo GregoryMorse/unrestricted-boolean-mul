@@ -3,6 +3,7 @@ import UnrestrictedBooleanMul.N5.StableTargetInduction
 import UnrestrictedBooleanMul.N5.CompletionDeficit
 import UnrestrictedBooleanMul.N5.MainInterface
 import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
 
 /-!
 # Final circuit regime closure
@@ -41,6 +42,20 @@ theorem firstOrderSaturation_of_anchored
     (hstable : AnchoredFirstOrderStability) : FirstOrderSaturation := by
   intro r j C hj hall hdef
   exact stableFirstOrderPrefix_of_anchored hstable C hj hall hdef
+
+/-- Circuit-facing saturation follows once all decomposable anchors satisfy
+the zero- and rank-two branches and the rank-one localization theorem. -/
+theorem firstOrderSaturation_of_colourBranches
+    (hzero : ∀ q, IsDecomposableTwo q → ZeroColourStepClosed q)
+    (hloc : ∀ q, IsDecomposableTwo q → RankOneEscapeLocalized q)
+    (htwo : ∀ q, IsDecomposableTwo q → RankTwoColourStepClosed q) :
+    FirstOrderSaturation := by
+  apply firstOrderSaturation_of_anchored
+  intro q hqdec
+  exact stableFirstOrderAnchor_of_colourBranches q hqdec
+    (hzero q hqdec)
+    (rankOneColourStepClosed_of_localized q hqdec (hloc q hqdec))
+    (htwo q hqdec)
 
 /-- Once the two algebraic suffix obligations are available, the last-prefix
 regime split excludes every twelve-gate circuit. -/

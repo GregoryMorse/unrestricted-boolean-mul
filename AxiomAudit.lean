@@ -410,3 +410,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.stableFirstOrderPrefix_of_anchored
 #print axioms UnrestrictedBooleanMul.N5.firstOrderSaturation_of_anchored
 #print axioms UnrestrictedBooleanMul.N5.targetStep_escape_preserves_quotient_budgets
+#print axioms UnrestrictedBooleanMul.N5.rankOneColourStepClosed_of_localized
+#print axioms UnrestrictedBooleanMul.N5.stableFirstOrderAnchor_of_colourBranches
+#print axioms UnrestrictedBooleanMul.N5.firstOrderSaturation_of_colourBranches
