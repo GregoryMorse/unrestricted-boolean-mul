@@ -316,6 +316,68 @@ theorem ambientDiagonalProduct_mem_linearCoordinateSubspace
   intro i hi
   simp [ambientDiagonalProduct, hu i hi]
 
+/-- Hadamard multiplication of a coordinate exterior basis vector merely
+rescales that same basis vector. -/
+theorem ambientTwoHadamard_squarefreeWedge_basis
+    (i j : Fin 10) (hij : i ≠ j) (q : TwoForm) :
+    ambientTwoHadamard
+        (squarefreeWedge
+          ((Pi.basisFun F₂ (Fin 10)) i)
+          ((Pi.basisFun F₂ (Fin 10)) j)) q =
+      q (quadraticPair i j hij) •
+        squarefreeWedge
+          ((Pi.basisFun F₂ (Fin 10)) i)
+          ((Pi.basisFun F₂ (Fin 10)) j) := by
+  funext s
+  rcases QuadraticIndex.exists_pair s with ⟨k, l, hkl, rfl⟩
+  by_cases hik : i = k
+  · subst k
+    by_cases hjl : j = l
+    · subst l
+      simp [ambientTwoHadamard, squarefreeWedge_pair, Pi.basisFun, hij]
+    · simp [ambientTwoHadamard, squarefreeWedge_pair, Pi.basisFun,
+        hij, hjl, hkl]
+  · by_cases hil : i = l
+    · subst l
+      by_cases hjk : j = k
+      · subst k
+        rw [quadraticPair_swap]
+        simp [ambientTwoHadamard, squarefreeWedge_pair, Pi.basisFun, hij]
+      · simp [ambientTwoHadamard, squarefreeWedge_pair, Pi.basisFun,
+          hij, hjk, hkl]
+    · simp [ambientTwoHadamard, squarefreeWedge_pair, Pi.basisFun,
+        hik, hil]
+
+private theorem ambientTwoHadamard_smul_left
+    (a : F₂) (p q : TwoForm) :
+    ambientTwoHadamard (a • p) q = a • ambientTwoHadamard p q := by
+  funext s
+  simp only [ambientTwoHadamard, Pi.smul_apply, smul_eq_mul]
+  ring
+
+private def ambientTwoHadamardLeftLinear (q : TwoForm) :
+    TwoForm →ₗ[F₂] TwoForm where
+  toFun p := ambientTwoHadamard p q
+  map_add' p r := ambientTwoHadamard_add_left p r q
+  map_smul' a p := ambientTwoHadamard_smul_left a p q
+
+/-- Ambient coordinate occupied by each rational-zero local basis vector. -/
+def rationalZeroLocalAmbientIndex : Fin 4 → Fin 10 :=
+  ![aCoord 0, aCoord 1, bCoord 0, bCoord 1]
+
+theorem rationalZeroLocalBasis_eq_ambientBasis (i : Fin 4) :
+    closedPlaceLocalBasis 0 i =
+      (Pi.basisFun F₂ (Fin 10)) (rationalZeroLocalAmbientIndex i) := by
+  fin_cases i <;>
+    simp [closedPlaceLocalBasis, rationalZeroLocalAmbientIndex,
+      aLinear, bLinear]
+
+theorem rationalZeroLocalAmbientIndex_pair_ne (s : Fin 6) :
+    rationalZeroLocalAmbientIndex (localKleinPair s).1 ≠
+      rationalZeroLocalAmbientIndex (localKleinPair s).2 := by
+  fin_cases s <;>
+    decide
+
 private theorem ambientBooleanContraction_smul_right
     (a : F₂) (ell : LinearForm) (q : TwoForm) :
     ambientBooleanContraction ell (a • q) =
@@ -399,6 +461,48 @@ theorem rationalZero_localTwoForm_mem_quadraticExterior
     (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).1)
     (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).2)
 
+/-- Hadamard multiplication of a rational-zero local two-form by an
+arbitrary ambient two-form remains in the local core exterior square. -/
+theorem rationalZero_ambientTwoHadamard_mem_quadraticExterior
+    (p : LocalKleinCoord) (q : TwoForm) :
+    ambientTwoHadamard (localTwoForm 0 p) q ∈
+      quadraticExterior secondJetCoreSpace := by
+  change ambientTwoHadamardLeftLinear q
+      (∑ s : Fin 6, p s •
+        squarefreeWedge
+          (closedPlaceLocalBasis 0 (localKleinPair s).1)
+          (closedPlaceLocalBasis 0 (localKleinPair s).2)) ∈ _
+  rw [map_sum]
+  apply Submodule.sum_mem
+  intro s _
+  rw [map_smul]
+  have hbasis :
+      ambientTwoHadamard
+          (squarefreeWedge
+            (closedPlaceLocalBasis 0 (localKleinPair s).1)
+            (closedPlaceLocalBasis 0 (localKleinPair s).2)) q =
+        q (quadraticPair
+            (rationalZeroLocalAmbientIndex (localKleinPair s).1)
+            (rationalZeroLocalAmbientIndex (localKleinPair s).2)
+            (rationalZeroLocalAmbientIndex_pair_ne s)) •
+          squarefreeWedge
+            (closedPlaceLocalBasis 0 (localKleinPair s).1)
+            (closedPlaceLocalBasis 0 (localKleinPair s).2) := by
+    rw [rationalZeroLocalBasis_eq_ambientBasis,
+      rationalZeroLocalBasis_eq_ambientBasis]
+    exact ambientTwoHadamard_squarefreeWedge_basis _ _
+      (rationalZeroLocalAmbientIndex_pair_ne s) q
+  change p s • ambientTwoHadamard
+      (squarefreeWedge
+        (closedPlaceLocalBasis 0 (localKleinPair s).1)
+        (closedPlaceLocalBasis 0 (localKleinPair s).2)) q ∈ _
+  rw [hbasis]
+  apply Submodule.smul_mem
+  apply Submodule.smul_mem
+  exact squarefreeWedge_mem_quadraticExterior secondJetCoreSpace
+    (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).1)
+    (rationalZeroLocalBasis_mem_secondJetCoreSpace (localKleinPair s).2)
+
 /-- Every exterior two-form on the rational-zero local four-space belongs
 to the target-clean second-jet space. -/
 theorem rationalZero_localTwoForm_mem_targetClean
@@ -419,6 +523,14 @@ theorem rationalZero_ambientBooleanContraction_mem_targetClean
       secondJetCoreSet ell (localTwoForm 0 p)
         (rationalZero_localTwoForm_mem_quadraticExterior p)
   exact Submodule.mem_sup_left (Submodule.mem_sup_right hlocal)
+
+/-- The rational-zero local Hadamard term is likewise target-clean. -/
+theorem rationalZero_ambientTwoHadamard_mem_targetClean
+    (p : LocalKleinCoord) (q : TwoForm) :
+    ambientTwoHadamard (localTwoForm 0 p) q ∈
+      targetCleanSecondJetSpace := by
+  exact Submodule.mem_sup_left (Submodule.mem_sup_right
+    (rationalZero_ambientTwoHadamard_mem_quadraticExterior p q))
 
 /-- Uniform rational-place version: the exterior square of each rational
 local four-space is contained in its transported target-clean second-jet
