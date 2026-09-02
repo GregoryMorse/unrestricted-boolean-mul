@@ -48,6 +48,11 @@ The repository currently contains:
   anchored stable-envelope interface (and, in particular, its rational-zero
   `001` anchor-shadow obligation), showing that the suffix reduction must
   retain an additional reachability or gate-cost invariant; and
+- an exact-length defect-legal suffix relation, its target-plus-defect gain
+  ledger, and a circuit-tail bridge that charges every remaining AND gate;
+- a corrected cost-preserving final regime split reducing the twelve-gate
+  exclusion to two circuit-facing algebraic obligations, without assuming
+  the refuted fixed-envelope saturation theorem; and
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
@@ -85,6 +90,14 @@ must replace that route with a circuit-facing invariant that remembers which
 correction products were actually born (or charges their gate cost); assuming
 the three scalar cases, anchored stability, or fixed-envelope saturation
 would be unsound.
+
+The replacement interface is now checked in `N5/CostedSuffix.lean` and
+`N5/CostedRegimeClosure.lean`. It retains the exact suffix length and proves
+that target-rank gain plus quotient-defect gain is at most that length. The
+final circuit bookkeeping is complete; the two predicates
+`CostedTwoDefectQuadraticPrefixes` and
+`CostedFirstOrderQuadraticPrefixes` remain the honest algebraic completion
+obligations.
 
 ## Formalization handoff
 

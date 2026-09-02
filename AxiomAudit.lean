@@ -432,3 +432,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.not_nonzeroRationalZeroAnchoredEnvelopeFunctionalCase_001
 #print axioms UnrestrictedBooleanMul.N5.not_anchoredFirstOrderStability
 #print axioms UnrestrictedBooleanMul.N5.not_firstOrderSaturation
+#print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.totalGain_le
+#print axioms UnrestrictedBooleanMul.N5.circuitTail_totalGain_le_remaining
+#print axioms UnrestrictedBooleanMul.N5.no_twelve_gate_circuit_of_costed_regime_closure
+#print axioms UnrestrictedBooleanMul.N5.mc_mul_five_of_costed_regime_closure
