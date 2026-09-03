@@ -30,6 +30,7 @@ import UnrestrictedBooleanMul.N5.CubicSemantic
 import UnrestrictedBooleanMul.N5.QuarticSemantic
 import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
 import UnrestrictedBooleanMul.N5.CapacityReplay
+import UnrestrictedBooleanMul.N5.CostedReplay
 import UnrestrictedBooleanMul.N5.CapacityRegimeClosure
 import UnrestrictedBooleanMul.N5.LowDefectCapacityClosure
 import UnrestrictedBooleanMul.N5.SuffixBudget

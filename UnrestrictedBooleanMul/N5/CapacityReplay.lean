@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N5.CircuitSuffix
+import UnrestrictedBooleanMul.N5.CostedReplay
 import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
 
 /-!
@@ -218,6 +219,29 @@ theorem DefectLegalSuffix.replay_from_intrinsicCapacityState
   rw [← circuitFlag_intrinsicCapacityState_equal_defect C hflat hall]
   exact (flagDefectRank_mono hreach.start_le).trans
     hreach.final_defect_le_three
+
+/-- Cost-preserving form of intrinsic-capacity replay.  Gates made redundant
+by the capacity enlargement are deleted, and the retained gate count is
+certified by exact dimension growth. -/
+theorem CostedDefectLegalSuffix.prune_replay_from_intrinsicCapacityState
+    {r j k : Nat} (C : Circuit 10 r)
+    (hflat : QuadraticPrefixFlattening C j)
+    (hall : ∀ i : Fin r, i.val < j →
+      C.gate i ∈ N4.quadraticANFSpace 10)
+    {V : Submodule F₂ (ANF 10)}
+    (hreach : CostedDefectLegalSuffix (N4.circuitFlag C j) k V)
+    (hbaseDef : N4.flagDefectRank (N4.circuitFlag C j)
+      (mulTarget 5) ≤ 3) :
+    ∃ k' ≤ k,
+      CostedDefectLegalSuffix (intrinsicCapacityState hflat.generator) k'
+        (intrinsicCapacityState hflat.generator ⊔ V) ∧
+      Module.finrank F₂ (intrinsicCapacityState hflat.generator ⊔ V) =
+        Module.finrank F₂ (intrinsicCapacityState hflat.generator) + k' := by
+  apply hreach.prune_simulate_from_equal_defect
+    (circuitFlag_le_intrinsicCapacityState_of_allQuadratic C hflat hall)
+    (circuitFlag_intrinsicCapacityState_equal_defect C hflat hall)
+  rw [← circuitFlag_intrinsicCapacityState_equal_defect C hflat hall]
+  exact hbaseDef
 
 end
 end N5

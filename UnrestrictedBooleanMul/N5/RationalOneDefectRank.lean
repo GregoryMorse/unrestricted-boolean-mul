@@ -324,7 +324,7 @@ theorem rationalOne_high_sum_not_high
     rcases hy with rfl | rfl | rfl <;>
       simp_all [RationalOneHighClass, rationalWord]
 
-/-- A translated family of shadows attached to one fixed high colour. -/
+/-- A rooted family of unshifted shadows attached to one fixed high colour. -/
 def IsRationalOneHighShadowFamily (A : Set RationalTargetClass) : Prop :=
   0 ∈ A ∧
     (∀ x ∈ A, x ≠ 0 → RationalOneHighClass x) ∧
@@ -349,9 +349,9 @@ private theorem rationalHighLine_finrank_le_one (v : RationalTargetClass) :
   letI : Fintype ({v} : Set RationalTargetClass) := Fintype.ofFinite _
   exact (finrank_span_le_card ({v} : Set RationalTargetClass)).trans (by simp)
 
-/-- The admissible shadows of one fixed high colour have affine dimension at
-most one.  This is the precise linear-algebra consequence of the absence of
-a projective line. -/
+/-- The linear span of the admissible, unshifted shadows of one fixed high
+colour has dimension at most one.  This is the precise consequence of the
+absence of a projective line together with the literal zero increment. -/
 theorem rationalOne_highShadowFamily_span_finrank_le_one
     (A : Set RationalTargetClass) (hA : IsRationalOneHighShadowFamily A) :
     Module.finrank F₂ (Submodule.span F₂ A) ≤ 1 := by
