@@ -84,7 +84,8 @@ theorem isEmpty_populatedPoint_bot :
     IsEmpty (PopulatedPoint (⊥ : Submodule F₂ QuadraticQuotient)) := by
   constructor
   intro q
-  have hq : q.1.1 = 0 := Submodule.mem_bot.mp q.1.2
+  have hq := q.1.2
+  change q.1.1 = 0 at hq
   exact q.2.1 hq
 
 /-- At quadratic defect zero the intrinsic capacity is exactly the three
@@ -235,8 +236,8 @@ theorem CostedDefectLegalSuffix.prune_replay_from_intrinsicCapacityState
     ∃ k' ≤ k,
       CostedDefectLegalSuffix (intrinsicCapacityState hflat.generator) k'
         (intrinsicCapacityState hflat.generator ⊔ V) ∧
-      Module.finrank F₂ (intrinsicCapacityState hflat.generator ⊔ V) =
-        Module.finrank F₂ (intrinsicCapacityState hflat.generator) + k' := by
+      Module.finrank F₂ ↥(intrinsicCapacityState hflat.generator ⊔ V) =
+        Module.finrank F₂ ↥(intrinsicCapacityState hflat.generator) + k' := by
   let hsub :=
     circuitFlag_le_intrinsicCapacityState_of_allQuadratic C hflat hall
   let heq :=
