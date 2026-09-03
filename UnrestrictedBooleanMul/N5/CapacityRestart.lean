@@ -28,8 +28,9 @@ theorem presentationDefect_snoc {j : Nat} (p : Fin j → TwoForm)
         Submodule.span F₂ ({quadraticQuotientProjection q} :
           Set QuadraticQuotient) := by
   have hfun :
-      (fun i => quadraticQuotientProjection (Fin.snoc p q i)) =
-        Fin.snoc (fun i => quadraticQuotientProjection (p i))
+      (fun i : Fin (j + 1) =>
+        quadraticQuotientProjection ((Fin.snoc p q) i)) =
+        Fin.snoc (fun i : Fin j => quadraticQuotientProjection (p i))
           (quadraticQuotientProjection q) := by
     funext i
     refine Fin.lastCases ?_ (fun k => ?_) i <;> simp
@@ -115,8 +116,15 @@ theorem retainedQuadraticProduct_projection_not_mem
   have hg₂Old : g₂ ∈ defectCapacitySpan (presentationDefect p) := by
     rw [defectCapacitySpan_eq_geometricCapacitySpan]
     by_cases hg₂zero : quadraticQuotientProjection g₂ = 0
-    · exact le_sup_left (zeroFiber_le_rationalTwoSpace hg₂dec hg₂zero)
-    · apply le_sup_right
+    · exact (le_sup_left : rationalTwoSpace ≤
+        rationalTwoSpace ⊔
+          Submodule.span F₂ (populatedFiberUnion (presentationDefect p)))
+        (zeroFiber_le_rationalTwoSpace hg₂dec hg₂zero)
+    · apply (le_sup_right :
+        Submodule.span F₂ (populatedFiberUnion (presentationDefect p)) ≤
+          rationalTwoSpace ⊔
+            Submodule.span F₂
+              (populatedFiberUnion (presentationDefect p)))
       apply Submodule.subset_span
       let q : PopulatedPoint (presentationDefect p) :=
         ⟨⟨quadraticQuotientProjection g₂, hg₂Q⟩,
@@ -152,7 +160,8 @@ theorem retainedQuadraticProduct_defectBirth
   by_contra hnotBirth
   have hdefEq : N4.flagDefectRank B (mulTarget 5) =
       N4.flagDefectRank (andExtend B u v) (mulTarget 5) := by
-    omega
+    apply Nat.le_antisymm hmono
+    exact Nat.lt_succ_iff.mp (lt_of_le_of_ne hstep hnotBirth)
   have himageEq : stateDefectImage B =
       stateDefectImage (andExtend B u v) :=
     stateDefectImage_eq_of_le_of_flagDefectRank_eq le_sup_left hdefEq
@@ -217,7 +226,7 @@ theorem quadraticDefectBirth_intrinsicCapacityRestart
           (andExtend (intrinsicCapacityState p) u v) (mulTarget 5) =
         N4.flagDefectRank (intrinsicCapacityState p') (mulTarget 5) := by
   let g₂ := quadraticProjection 10 (u * v)
-  let p' := Fin.snoc p g₂
+  let p' : Fin (j + 1) → TwoForm := Fin.snoc p g₂
   have hg₂dec : IsDecomposableTwo g₂ := by
     exact retainedQuadraticProduct_decomposable p hu hv hquadratic hretained
   have hp'dec : ∀ i, IsDecomposableTwo (p' i) := by
@@ -245,8 +254,9 @@ theorem quadraticDefectBirth_intrinsicCapacityRestart
     apply sup_le hbaseLe
     rw [Submodule.span_le]
     intro z hz
-    simpa only [Set.mem_singleton_iff] at hz
-    simpa [hz] using hproductNew
+    rw [Set.mem_singleton_iff] at hz
+    subst z
+    exact hproductNew
   have hg₂notQ : quadraticQuotientProjection g₂ ∉
       presentationDefect p := by
     exact retainedQuadraticProduct_projection_not_mem p hu hv
@@ -284,7 +294,8 @@ theorem CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
         (intrinsicCapacityState p' ⊔ V) ∧
       Module.finrank F₂ (intrinsicCapacityState p' ⊔ V) =
         Module.finrank F₂ (intrinsicCapacityState p') + k' := by
-  let p' := Fin.snoc p (quadraticProjection 10 (u * v))
+  let p' : Fin (j + 1) → TwoForm :=
+    Fin.snoc p (quadraticProjection 10 (u * v))
   have hrestart := quadraticDefectBirth_intrinsicCapacityRestart
     p hdec hu hv hquadratic hretained
   have hpostDef : N4.flagDefectRank
