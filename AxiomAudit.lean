@@ -444,3 +444,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.stateHighRank_mono
 #print axioms UnrestrictedBooleanMul.N5.oneHigh_defectOne_targetSubspace_closed
 #print axioms UnrestrictedBooleanMul.N5.no_circuit_of_final_defect_le_one
+#print axioms UnrestrictedBooleanMul.Circuit.Computes.all_nonredundant_of_minimal
+#print axioms UnrestrictedBooleanMul.exists_minimalCircuit_all_nonredundant
+#print axioms UnrestrictedBooleanMul.N5.circuitTail_totalGain_eq_remaining_of_nonredundant
+#print axioms UnrestrictedBooleanMul.N5.exists_tight_minimal_mul_five

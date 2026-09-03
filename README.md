@@ -108,7 +108,10 @@ first independent layer of the `n = 5` proof:
   at most one.  Monotonicity pins the unique high image to rank one, the
   zero-colour and rank-one branches are absorbed, and the rank-two branch is
   excluded by dimension, closing that complete circuit regime without replay
-  or enumeration.
+  or enumeration; and
+- a redundant-gate deletion theorem and exact tight-tail ledger for a
+  gate-minimal circuit.  The minimum is thereby restricted to eleven, twelve,
+  or thirteen gates, with final defect exactly the gate count minus nine.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient

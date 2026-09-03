@@ -58,7 +58,10 @@ The repository currently contains:
   only `j <= 9`, `j <= 8`, and `j <= 6` in defects two, one, and zero; and
 - an algebraic closure theorem for actual circuit tails whose final total
   defect is at most one, excluding that entire circuit regime from a
-  twelve-gate computation by the unique-high-image invariant;
+  twelve-gate computation by the unique-high-image invariant; and
+- a general redundant-gate deletion construction and a tight-ledger theorem
+  for minimum circuits, reducing the unresolved minimum sizes to exactly
+  eleven and twelve (with thirteen supplied by the checked upper circuit);
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
@@ -111,6 +114,13 @@ in `N5/OneHighDefectOneClosure.lean`.  The theorem
 the first high gate, and only defect-legal tail reachability; it does not assume
 the refuted history-free fixed-envelope statement.  Thus any remaining
 twelve-gate counterexample must finish with total defect two or three.
+
+`N5/TightCircuit.lean` now passes to a genuinely gate-minimal circuit rather
+than a padded twelve-gate presentation.  Every gate is nonredundant, every
+prefix satisfies `j = t(V_j) + e(V_j)`, and every completing tail attains
+equality in the exact cost ledger.  The checked alternative is therefore
+`r = 11`, `r = 12`, or `r = 13`; the remaining structural work is precisely
+to exclude the tight defect-two and defect-three alternatives.
 
 ## Formalization handoff
 

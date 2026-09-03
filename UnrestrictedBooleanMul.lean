@@ -1,4 +1,5 @@
 import UnrestrictedBooleanMul.N3TruthTable
+import UnrestrictedBooleanMul.CircuitPruning
 import UnrestrictedBooleanMul.N4.Main
 import UnrestrictedBooleanMul.N5.Statement
 import UnrestrictedBooleanMul.N5.DisplacementBound
@@ -63,6 +64,7 @@ import UnrestrictedBooleanMul.N5.RankTwoEscapeBudget
 import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
 import UnrestrictedBooleanMul.N5.RankOneZeroQuadraticDefect
 import UnrestrictedBooleanMul.N5.OneHighDefectOneClosure
+import UnrestrictedBooleanMul.N5.TightCircuit
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
 import UnrestrictedBooleanMul.N5.RankOneTargetClean
