@@ -119,6 +119,19 @@ theorem stateHighImage_eq_bot_iff
       simp [hzero]
     · exact bot_le
 
+/-- A genuinely nonquadratic wire forces a nonzero high quotient. -/
+theorem one_le_stateHighRank_of_mem_not_quadratic
+    {V : Submodule F₂ (ANF 10)} {g : ANF 10}
+    (hgV : g ∈ V) (hghigh : g ∉ N4.quadraticANFSpace 10) :
+    1 ≤ stateHighRank V := by
+  by_contra hnot
+  have hzero : stateHighRank V = 0 := by omega
+  have himageRank : Module.finrank F₂ (stateHighImage V) = 0 := by
+    rw [stateHighImage_finrank, hzero]
+  have himageBot : stateHighImage V = ⊥ :=
+    Submodule.finrank_eq_zero.mp himageRank
+  exact hghigh ((stateHighImage_eq_bot_iff V).mp himageBot hgV)
+
 /-- A quadratic base contributes its full old defect to every containing
 state's quadratic defect. -/
 theorem quadraticBase_defect_le_quadraticDefect

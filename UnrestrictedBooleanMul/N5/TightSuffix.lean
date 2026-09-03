@@ -57,6 +57,32 @@ theorem TargetTightSuffix.defectRank_eq
   | step hreach p q hp hq htarget hdefect ih =>
       exact hdefect.trans ih
 
+/-- Above a quadratic base of defect `e`, a target-tight suffix starting after
+one genuinely high birth at total defect `e+1` has exactly one high direction
+and retains quadratic defect exactly `e` at every endpoint. -/
+theorem TargetTightSuffix.oneHigh_and_quadraticDefect_eq_base
+    {Q B V : Submodule F₂ (ANF 10)} {k : Nat}
+    (hQB : Q ≤ B) (hQquad : Q ≤ N4.quadraticANFSpace 10)
+    (hBhigh : 1 ≤ stateHighRank B)
+    (hBdefect : N4.flagDefectRank B (mulTarget 5) =
+      N4.flagDefectRank Q (mulTarget 5) + 1)
+    (h : TargetTightSuffix B k V) :
+    stateHighRank V = 1 ∧
+      stateQuadraticDefectRank V =
+        N4.flagDefectRank Q (mulTarget 5) := by
+  have hBV : B ≤ V := h.start_le
+  have hQV : Q ≤ V := hQB.trans hBV
+  have hhighLower : 1 ≤ stateHighRank V :=
+    hBhigh.trans (stateHighRank_mono hBV)
+  have hquadLower : N4.flagDefectRank Q (mulTarget 5) ≤
+      stateQuadraticDefectRank V :=
+    quadraticBase_defect_le_quadraticDefect hQV hQquad
+  have htotal : N4.flagDefectRank V (mulTarget 5) =
+      N4.flagDefectRank Q (mulTarget 5) + 1 := by
+    rw [h.defectRank_eq, hBdefect]
+  have hsplit := flagDefectRank_eq_quadratic_add_high V
+  omega
+
 /-- A tight suffix of defect at most three is, in particular, an exact-cost
 defect-legal suffix. -/
 theorem TargetTightSuffix.toCostedDefectLegal
@@ -168,6 +194,85 @@ theorem circuitTail_targetTightSuffix_after_lastQuadratic {r : Nat}
   simpa only [Circuit.finalWire, N4.circuitFlag] using
     circuitFlag_targetTightSuffix C hnr
       (Nat.succ_le_of_lt hproper) (le_refl r) hdefect
+
+/-- When the first high gate spends the last available defect unit, the final
+state has exactly one high direction and its quadratic defect is exactly that
+of the last quadratic prefix. -/
+theorem circuitFinal_oneHigh_of_lastQuadratic_defect_spent {r : Nat}
+    (C : Circuit 10 r) (hC : C.Computes (Mul 5)) (hr : r ≤ 12)
+    (hnr : ∀ i : Fin r, N4.NonredundantAt C i)
+    (hspent : N4.flagDefectRank C.finalWire (mulTarget 5) =
+      N4.flagDefectRank
+        (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) + 1) :
+    stateHighRank C.finalWire = 1 ∧
+      stateQuadraticDefectRank C.finalWire =
+        N4.flagDefectRank
+          (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) := by
+  have hproper : lastQuadraticPrefix C < r := by
+    by_contra hnot
+    have heq : lastQuadraticPrefix C = r :=
+      Nat.le_antisymm (lastQuadraticPrefix_le C) (Nat.le_of_not_gt hnot)
+    apply no_all_quadratic_circuit_le_twelve C hC hr
+    intro i
+    exact allQuadraticPrefix_last C i (by omega)
+  let i : Fin r := ⟨lastQuadraticPrefix C, hproper⟩
+  let Q := N4.circuitFlag C (lastQuadraticPrefix C)
+  let B := N4.circuitFlag C (lastQuadraticPrefix C + 1)
+  have hQB : Q ≤ B := by
+    exact N4.wireSpace_mono (by omega)
+  have hQquad : Q ≤ N4.quadraticANFSpace 10 :=
+    N4.wireSpace_le_quadratic_of_prefix C.gate
+      (fun k hk => allQuadraticPrefix_last C k hk)
+  have hgateB : C.gate i ∈ B := by
+    change C.gate i ∈ wireSpace C.gate (lastQuadraticPrefix C + 1)
+    exact gate_mem_wireSpace C.gate i (by simp only [i]; omega)
+  have hBhigh : 1 ≤ stateHighRank B :=
+    one_le_stateHighRank_of_mem_not_quadratic hgateB
+      (gate_lastQuadraticPrefix_not_quadratic C hproper)
+  have hbirth := firstHighGate_defect_succ C i
+    (fun k hk => allQuadraticPrefix_last C k hk)
+    (gate_lastQuadraticPrefix_not_quadratic C hproper) (hnr i)
+  have hBdefect : N4.flagDefectRank B (mulTarget 5) =
+      N4.flagDefectRank Q (mulTarget 5) + 1 := by
+    simpa only [B, Q, i] using hbirth
+  have htail := circuitTail_targetTightSuffix_after_lastQuadratic
+    C hC hr hnr hspent
+  exact htail.oneHigh_and_quadraticDefect_eq_base
+    hQB hQquad hBhigh hBdefect
+
+/-- In the top last-prefix regime of an eleven-gate minimum, the final state
+has one high direction and one quadratic defect direction. -/
+theorem elevenGate_final_oneHigh_of_lastQuadratic_defect_one
+    (C : Circuit 10 11) (hC : C.Computes (Mul 5))
+    (hnr : ∀ i : Fin 11, N4.NonredundantAt C i)
+    (hprefix : N4.flagDefectRank
+      (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) = 1) :
+    stateHighRank C.finalWire = 1 ∧
+      stateQuadraticDefectRank C.finalWire = 1 := by
+  have hfinal := final_defect_eq_sub_nine_of_nonredundant C hC hnr
+  have hspent : N4.flagDefectRank C.finalWire (mulTarget 5) =
+      N4.flagDefectRank
+        (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) + 1 := by
+    omega
+  simpa only [hprefix] using
+    circuitFinal_oneHigh_of_lastQuadratic_defect_spent C hC (by omega) hnr hspent
+
+/-- In the top last-prefix regime of a twelve-gate minimum, the final state
+has one high direction and retains the two quadratic defect directions. -/
+theorem twelveGate_final_oneHigh_of_lastQuadratic_defect_two
+    (C : Circuit 10 12) (hC : C.Computes (Mul 5))
+    (hnr : ∀ i : Fin 12, N4.NonredundantAt C i)
+    (hprefix : N4.flagDefectRank
+      (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) = 2) :
+    stateHighRank C.finalWire = 1 ∧
+      stateQuadraticDefectRank C.finalWire = 2 := by
+  have hfinal := final_defect_eq_sub_nine_of_nonredundant C hC hnr
+  have hspent : N4.flagDefectRank C.finalWire (mulTarget 5) =
+      N4.flagDefectRank
+        (N4.circuitFlag C (lastQuadraticPrefix C)) (mulTarget 5) + 1 := by
+    omega
+  simpa only [hprefix] using
+    circuitFinal_oneHigh_of_lastQuadratic_defect_spent C hC (by omega) hnr hspent
 
 end
 end N5

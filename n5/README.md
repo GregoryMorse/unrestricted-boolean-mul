@@ -128,6 +128,12 @@ exactly one while defect stays constant.  This target-tight relation is much
 narrower than the refuted history-free suffix relation and retains the literal
 factor membership needed by the remaining envelope calculations.
 
+In the two top boundary rows this chronology also forces a single common high
+direction throughout: an eleven-gate minimum over a defect-one quadratic
+prefix ends with quadratic/high split `1 + 1`, while the twelve-gate
+defect-two row ends with split `2 + 1`.  Thus those fixed-block proofs no
+longer need to quantify over spurious extra high colours.
+
 ## Formalization handoff
 
 - [`FORMALIZATION_HANDOFF.md`](FORMALIZATION_HANDOFF.md) fixes the module

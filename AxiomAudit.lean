@@ -451,3 +451,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.gate_target_or_defect_of_nonredundant
 #print axioms UnrestrictedBooleanMul.N5.circuitFlag_targetTightSuffix
 #print axioms UnrestrictedBooleanMul.N5.circuitTail_targetTightSuffix_after_lastQuadratic
+#print axioms UnrestrictedBooleanMul.N5.TargetTightSuffix.oneHigh_and_quadraticDefect_eq_base
+#print axioms UnrestrictedBooleanMul.N5.elevenGate_final_oneHigh_of_lastQuadratic_defect_one
+#print axioms UnrestrictedBooleanMul.N5.twelveGate_final_oneHigh_of_lastQuadratic_defect_two
