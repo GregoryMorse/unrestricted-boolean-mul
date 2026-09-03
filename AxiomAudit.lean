@@ -474,3 +474,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.TargetTightSuffix.oneHigh_and_quadraticDefect_eq_base
 #print axioms UnrestrictedBooleanMul.N5.elevenGate_final_oneHigh_of_lastQuadratic_defect_one
 #print axioms UnrestrictedBooleanMul.N5.twelveGate_final_oneHigh_of_lastQuadratic_defect_two
+#print axioms UnrestrictedBooleanMul.N5.retainedQuadraticProduct_decomposable
+#print axioms UnrestrictedBooleanMul.N5.retainedQuadraticProduct_defectBirth
+#print axioms UnrestrictedBooleanMul.N5.quadraticDefectBirth_intrinsicCapacityRestart
