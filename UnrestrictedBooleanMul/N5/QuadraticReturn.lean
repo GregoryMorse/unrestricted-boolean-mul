@@ -86,6 +86,46 @@ private theorem sup_span_add_old_eq
     change g ∈ U
     simpa only [add_assoc, anf_add_self, add_zero] using hsum
 
+/-- Representative-specific form of a quadratic return.  If the new product
+has the same literal high quotient class as an old wire `g`, then their sum
+is the returned quadratic section.  Replacing the gate output by that sum
+does not change the generated wire state.
+
+This is the circuit-facing form needed for the rank-four secant analysis: it
+retains the actual old high representative instead of choosing an arbitrary
+preimage from the high quotient. -/
+theorem quadraticReturn_of_highClass_eq
+    (V : Submodule F₂ (ANF 10)) (p q g : ANF 10)
+    (hgV : g ∈ V) (hretained : p * q ∉ V)
+    (hclass :
+      Submodule.mkQ (N4.quadraticANFSpace 10) (p * q) =
+        Submodule.mkQ (N4.quadraticANFSpace 10) g) :
+    let z := p * q + g
+    z ∈ N4.quadraticANFSpace 10 ∧
+      z ∉ V ∧
+      andExtend V p q =
+        V ⊔ Submodule.span F₂ ({z} : Set (ANF 10)) := by
+  let z := p * q + g
+  have hzquad : z ∈ N4.quadraticANFSpace 10 := by
+    apply (Submodule.Quotient.mk_eq_zero
+      (N4.quadraticANFSpace 10)).mp
+    change Submodule.mkQ (N4.quadraticANFSpace 10) (p * q + g) = 0
+    rw [map_add, hclass]
+    calc
+      Submodule.mkQ (N4.quadraticANFSpace 10) g +
+          Submodule.mkQ (N4.quadraticANFSpace 10) g =
+        Submodule.mkQ (N4.quadraticANFSpace 10) (g + g) := by
+          rw [map_add]
+      _ = 0 := by rw [anf_add_self, map_zero]
+  have hznew : z ∉ V := by
+    intro hzV
+    apply hretained
+    have hsum := V.add_mem hzV hgV
+    simpa only [z, add_assoc, anf_add_self, add_zero] using hsum
+  refine ⟨hzquad, hznew, ?_⟩
+  unfold andExtend
+  exact (sup_span_add_old_eq V (p * q) g hgV).symm
+
 /-- A retained gate whose high rank does not grow has a literal quadratic
 correction: subtracting an old representative of the same high class gives a
 new quadratic wire, and adjoining that correction gives exactly the same

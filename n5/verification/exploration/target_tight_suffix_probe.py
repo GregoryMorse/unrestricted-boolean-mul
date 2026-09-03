@@ -48,6 +48,31 @@ TARGETS = [
     for degree in range(9)
 ]
 
+# Exact eight target directions spanning the first-order envelope used by
+# TargetCleanMatrix.lean.  These are coefficient masks in the TARGETS basis.
+FIRST_ORDER_TARGET_MASKS = [
+    1 << 0,
+    (1 << 9) - 1,
+    1 << 8,
+    1 << 1,
+    (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7),
+    1 << 7,
+    (1 << 2) | (1 << 5),
+    (1 << 3) | (1 << 6),
+]
+
+
+def target_from_mask(mask: int) -> int:
+    return xor_all(
+        target for index, target in enumerate(TARGETS)
+        if (mask >> index) & 1
+    )
+
+
+FIRST_ORDER_TARGETS = [
+    target_from_mask(mask) for mask in FIRST_ORDER_TARGET_MASKS
+]
+
 
 def reduce_vector(vector: int, basis: dict[int, int]) -> int:
     for pivot in sorted(basis, reverse=True):
@@ -258,6 +283,13 @@ def unpopulated_quadratic_return_state(orbit: str = "01") -> tuple[int, ...]:
     raise ValueError(f"unknown return orbit {orbit}")
 
 
+def saturated_first_order_return_state(orbit: str = "01") -> tuple[int, ...]:
+    """The same return block after granting the full first-order target base."""
+    return basis_key([
+        *unpopulated_quadratic_return_state(orbit), *FIRST_ORDER_TARGETS,
+    ])
+
+
 def one_defect_quadratic_return_state(kind: str) -> tuple[int, ...]:
     """Canonical doubly-unpopulated return over a one-defect capacity base."""
     r0 = TARGETS[0]
@@ -327,7 +359,8 @@ if __name__ == "__main__":
         choices=(
             "literal", "capacity", "unpopulated-return", "return-01",
             "return-11", "return-12", "return-13", "all",
-            "return-pstar", "return-e1r0",
+            "return-pstar", "return-e1r0", "return-u01", "return-u11",
+            "return-u12", "return-u13",
         ),
         default="all",
     )
@@ -354,6 +387,12 @@ if __name__ == "__main__":
             run_frontier(
                 unpopulated_quadratic_return_state(orbit),
                 f"unpopulated-return-orbit-{orbit}",
+                args.max_levels,
+            )
+        if args.state == f"return-u{orbit}":
+            run_frontier(
+                saturated_first_order_return_state(orbit),
+                f"first-order-saturated-return-orbit-{orbit}",
                 args.max_levels,
             )
     if args.state == "return-pstar":

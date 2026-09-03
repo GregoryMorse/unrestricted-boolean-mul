@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
 
       - name: Build the active n5 replay bridge first
-        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn
+        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn UnrestrictedBooleanMul.N5.QuadraticReturnSecant
 
       - name: Build all Lean modules
         run: lake build

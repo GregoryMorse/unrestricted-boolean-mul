@@ -79,6 +79,12 @@ The first counterexample in each of the four rational-plane S3 orbit types
 The exact multiplication-map probe finds no target-tight extension from any
 of those four states before the last defect birth.
 
+For the hardest `(0,1)` representative, granting all eight target directions
+of the first-order envelope still leaves target rank eight and produces no
+target-tight one-gate extension.  This is the fixed-state diagnostic behind
+the algebraic two-wedge-section target-intersection lemma; it is not a
+substitute for the remaining universal feedback-sterility argument.
+
 After one last defect birth, the (1,2) and (1,3) representatives have six
 possible first target rows:
 
