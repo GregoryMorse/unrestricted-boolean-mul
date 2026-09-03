@@ -29,6 +29,9 @@ import UnrestrictedBooleanMul.N5.LowProductSemantic
 import UnrestrictedBooleanMul.N5.CubicSemantic
 import UnrestrictedBooleanMul.N5.QuarticSemantic
 import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+import UnrestrictedBooleanMul.N5.CapacityReplay
+import UnrestrictedBooleanMul.N5.CapacityRegimeClosure
+import UnrestrictedBooleanMul.N5.LowDefectCapacityClosure
 import UnrestrictedBooleanMul.N5.SuffixBudget
 import UnrestrictedBooleanMul.N5.CircuitSuffix
 import UnrestrictedBooleanMul.N5.CompletionDeficit
@@ -39,6 +42,7 @@ import UnrestrictedBooleanMul.N5.E2.WStarRank
 import UnrestrictedBooleanMul.N5.E2.WPQRank
 import UnrestrictedBooleanMul.N5.E2.WThreePRank
 import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
+import UnrestrictedBooleanMul.N5.RationalOneDefectRank
 import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
 import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
 import UnrestrictedBooleanMul.N5.E2.EnvelopeStates

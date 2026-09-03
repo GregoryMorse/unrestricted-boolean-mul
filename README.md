@@ -8,8 +8,8 @@ The repository is organized by input length so that later results can be added
 without renaming or replacing the existing artifact:
 
 - [`n4/`](n4/) -- four-term multiplication, with exact value 9.
-- [`n5/`](n5/) -- five-term multiplication, with hand proof of exact value 13
-  and Lean formalization in progress.
+- [`n5/`](n5/) -- five-term multiplication, with the lower-bound manuscript
+  under algebraic repair and Lean formalization in progress.
 - Future results will use parallel directories such as `n6/` or `general/`.
 
 The accompanying `n4` paper makes the current unrestricted small-instance
@@ -22,7 +22,7 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
-| 5 | 13 | algebraic hand proof; Lean target/upper circuit, quadratic quotient, relation map, rank-two/secant support, local Klein counts, and the injective 43-point atlas kernel-checked; full lower-bound formalization in progress |
+| 5 | 13 (candidate) | checked thirteen-gate upper circuit; lower-bound manuscript and full Lean proof in progress |
 
 The manuscripts contain the mathematical exposition and literature citations.
 The Lean development checks the five rows `n = 0` through `n = 4`. For `n = 5`,
@@ -111,7 +111,13 @@ first independent layer of the `n = 5` proof:
   or enumeration; and
 - a redundant-gate deletion theorem and exact tight-tail ledger for a
   gate-minimal circuit.  The minimum is thereby restricted to eleven, twelve,
-  or thirteen gates, with final defect exactly the gate count minus nine.
+  or thirteen gates, with final defect exactly the gate count minus nine; and
+- a cost-preserving intrinsic-capacity replay theorem, the exact canonical
+  zero-defect state `Aff + R`, kernel-reduced fixed-block certificates for the
+  rational and degree-two one-defect shadow sets, and the corrected rooted
+  colour-family rank bound.  These isolate the remaining load-bearing work as
+  the semantic rooted-shadow assignment in defects zero and one and the
+  stable two-defect envelope theorem.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient

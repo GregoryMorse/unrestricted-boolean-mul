@@ -8,6 +8,7 @@
 *.tex
 __pycache__/
 *.py[cod]
+/.local-z3*/
 
 .lake
 

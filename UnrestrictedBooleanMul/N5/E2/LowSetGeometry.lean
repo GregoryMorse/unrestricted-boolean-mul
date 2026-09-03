@@ -43,6 +43,12 @@ private theorem star_distinct_low_sum_not_low
     rcases star_low_cases hy with rfl | rfl | rfl <;>
       simp_all [WStarLowClass, star0, star1, star2, word]
 
+/-- The three nonzero `W_*` low-rank classes contain no projective line. -/
+theorem wStar_distinct_low_sum_not_low
+    {x y : TargetClass} (hx : WStarLowClass x) (hy : WStarLowClass y)
+    (hne : x ≠ y) : ¬ WStarLowClass (x + y) :=
+  star_distinct_low_sum_not_low hx hy hne
+
 private theorem starLine_finrank_le_one (v : TargetClass) :
     Module.finrank F₂ (starLine v) ≤ 1 := by
   letI : Fintype ({v} : Set TargetClass) := Fintype.ofFinite _
