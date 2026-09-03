@@ -478,3 +478,4 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.retainedQuadraticProduct_defectBirth
 #print axioms UnrestrictedBooleanMul.N5.quadraticDefectBirth_intrinsicCapacityRestart
 #print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
+#print axioms UnrestrictedBooleanMul.N5.defectBirth_high_or_exists_quadraticReturn

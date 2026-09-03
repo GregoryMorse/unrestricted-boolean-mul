@@ -27,8 +27,17 @@ jobs:
       - name: Restore Mathlib binary cache
         run: lake exe cache --cache-from=legacy get
 
+      - name: Restore project object cache
+        id: project-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+
       - name: Build the active n5 replay bridge first
-        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart
+        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn
 
       - name: Build all Lean modules
         run: lake build
@@ -44,6 +53,13 @@ jobs:
 
       - name: Replay declarations with leanchecker
         run: lake env leanchecker UnrestrictedBooleanMul
+
+      - name: Save project object cache
+        if: success() && steps.project-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
 
       - name: Replay from source on the weekly schedule
         if: github.event_name == 'schedule'

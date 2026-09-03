@@ -39,6 +39,8 @@ theorem CostedDefectLegalSuffix.length_eq_totalGain_of_finrank_eq
   have hdefect : N4.flagDefectRank W (mulTarget 5) ≤
       N4.flagDefectRank V (mulTarget 5) :=
     flagDefectRank_mono hreach.start_le
+  have hAffDim : Module.finrank F₂ (affine 10) ≤ Module.finrank F₂ W :=
+    Submodule.finrank_mono hAff
   unfold suffixTargetGain
   omega
 
@@ -56,7 +58,7 @@ theorem CostedDefectLegalSuffix.prune_simulate_from_equal_defect
     (hreach : CostedDefectLegalSuffix W' k V) :
     ∃ k' ≤ k,
       CostedDefectLegalSuffix W k' (W ⊔ V) ∧
-      Module.finrank F₂ (W ⊔ V) = Module.finrank F₂ W + k' := by
+      Module.finrank F₂ ↥(W ⊔ V) = Module.finrank F₂ W + k' := by
   induction hreach with
   | refl hdef =>
       refine ⟨0, Nat.zero_le _, ?_, ?_⟩
