@@ -222,22 +222,81 @@ def ce_capacity_after_first_high() -> tuple[int, ...]:
     return basis_key([*capacity, first_high])
 
 
-def unpopulated_quadratic_return_state() -> tuple[int, ...]:
-    """The exact rank-four return found by the population probe."""
+def quadratic_return_state(
+    q: int, c: int, ell: int, m: int, x: int, y: int
+) -> tuple[int, ...]:
+    """Rational capacity plus two equal-high low products."""
     r0 = TARGETS[0]
     r1 = xor_all(TARGETS)
     rinf = TARGETS[-1]
-    first = (A[2] ^ B[2]) & (A[2] ^ r0)
-    second = (A[2] ^ B[2] ^ B[0]) & (A[2] ^ A[0] ^ r0)
+    first = (ell ^ q) & (m ^ c)
+    second = (ell ^ x ^ q) & (m ^ y ^ c)
     return basis_key([ALL_ONES, *X, r0, r1, rinf, first, second])
 
 
-def run_frontier(initial: tuple[int, ...], label: str) -> None:
+def unpopulated_quadratic_return_state(orbit: str = "01") -> tuple[int, ...]:
+    """One exact rank-four return for each rational-plane S3 orbit."""
+    r0 = TARGETS[0]
+    r1 = xor_all(TARGETS)
+    if orbit == "01":
+        return quadratic_return_state(
+            0, r0, A[2] ^ B[2], A[2], B[0], A[0]
+        )
+    if orbit == "11":
+        return quadratic_return_state(
+            r0, r0, A[2] ^ B[2], A[2], B[0], A[0]
+        )
+    if orbit == "12":
+        return quadratic_return_state(
+            r0, r1, A[1] ^ A[2], A[1], xor_all(A), A[0]
+        )
+    if orbit == "13":
+        return quadratic_return_state(
+            r0, r0 ^ r1, A[1] ^ A[2], A[1], xor_all(A),
+            A[1] ^ A[2] ^ A[3] ^ A[4]
+        )
+    raise ValueError(f"unknown return orbit {orbit}")
+
+
+def one_defect_quadratic_return_state(kind: str) -> tuple[int, ...]:
+    """Canonical doubly-unpopulated return over a one-defect capacity base."""
+    r0 = TARGETS[0]
+    r1 = xor_all(TARGETS)
+    rinf = TARGETS[-1]
+    if kind == "pstar":
+        u = A[0] ^ A[2] ^ A[3]
+        v = A[1] ^ A[2] ^ A[4]
+        upper_u = B[0] ^ B[2] ^ B[3]
+        upper_v = B[1] ^ B[2] ^ B[4]
+        x00 = u & upper_u
+        x11 = v & upper_v
+        xsum = (u ^ v) & (upper_u ^ upper_v)
+        ell, m, x, y = A[1] ^ A[2], A[1], u, A[0]
+        first = ell & (m ^ x00)
+        second = (ell ^ x) & (m ^ y ^ x00)
+        return basis_key([
+            ALL_ONES, *X, x00, x11, xsum, r0, r1, rinf, first, second,
+        ])
+    if kind == "rational":
+        j0 = TARGETS[1]
+        d0 = A[1] & B[1]
+        ell, m, x, y = B[3], A[3], B[0], A[0]
+        first = ell & (m ^ r0)
+        second = (ell ^ x) & (m ^ y ^ r0)
+        return basis_key([
+            ALL_ONES, *X, r0, j0, d0, r1, rinf, first, second,
+        ])
+    raise ValueError(f"unknown one-defect return block {kind}")
+
+
+def run_frontier(
+    initial: tuple[int, ...], label: str, max_levels: int = 8
+) -> None:
     frontier = {initial}
     seen = set(frontier)
     print(f"state={label} level=0 states=1 target_rank={target_rank(initial)}")
 
-    for level in range(1, 9):
+    for level in range(1, max_levels + 1):
         next_frontier: set[tuple[int, ...]] = set()
         transition_count = 0
         ranks = set()
@@ -265,16 +324,45 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--state",
-        choices=("literal", "capacity", "unpopulated-return", "all"),
+        choices=(
+            "literal", "capacity", "unpopulated-return", "return-01",
+            "return-11", "return-12", "return-13", "all",
+            "return-pstar", "return-e1r0",
+        ),
         default="all",
     )
+    parser.add_argument("--max-levels", type=int, default=8)
     args = parser.parse_args()
     if args.state in ("literal", "all"):
-        run_frontier(ce_prefix_after_first_high(), "literal-prefix-after-birth")
+        run_frontier(
+            ce_prefix_after_first_high(), "literal-prefix-after-birth",
+            args.max_levels,
+        )
     if args.state in ("capacity", "all"):
-        run_frontier(ce_capacity_after_first_high(), "capacity-after-birth")
-    if args.state in ("unpopulated-return", "all"):
+        run_frontier(
+            ce_capacity_after_first_high(), "capacity-after-birth",
+            args.max_levels,
+        )
+    if args.state == "unpopulated-return":
         run_frontier(
             unpopulated_quadratic_return_state(),
             "unpopulated-quadratic-return",
+            args.max_levels,
+        )
+    for orbit in ("01", "11", "12", "13"):
+        if args.state in (f"return-{orbit}", "all"):
+            run_frontier(
+                unpopulated_quadratic_return_state(orbit),
+                f"unpopulated-return-orbit-{orbit}",
+                args.max_levels,
+            )
+    if args.state == "return-pstar":
+        run_frontier(
+            one_defect_quadratic_return_state("pstar"),
+            "one-defect-degree-two-return", args.max_levels,
+        )
+    if args.state == "return-e1r0":
+        run_frontier(
+            one_defect_quadratic_return_state("rational"),
+            "one-defect-rational-return", args.max_levels,
         )

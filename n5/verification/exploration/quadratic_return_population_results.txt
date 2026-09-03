@@ -70,3 +70,48 @@ Consequently this one fixed block admits at most two target rows after the
 last defect birth.  The statement is exact for the displayed state, but the
 universal manuscript repair still requires an algebraic orbit/fixed-block
 classification; this transcript must not be cited as that proof.
+
+Additional orbit representatives
+--------------------------------
+
+The first counterexample in each of the four rational-plane S3 orbit types
+(0,1), (1,1), (1,2), and (1,3) gives a dimension-16 state of target rank 3.
+The exact multiplication-map probe finds no target-tight extension from any
+of those four states before the last defect birth.
+
+After one last defect birth, the (1,2) and (1,3) representatives have six
+possible first target rows:
+
+  1, 18, 36, 42, 54, 63.
+
+For the (1,2) representative, only (18,36), (36,18), and (54,18) survive as
+ordered two-row flags, and all 45 canonical third-row extensions are UNSAT.
+The four cases that exceeded the initial ten-second bound were rerun in
+isolation and returned UNSAT.  The (1,3) two-row census is identical; its
+third-row census was not rerun because this remains discovery evidence.
+
+One-defect return representatives
+---------------------------------
+
+The population probe also has `--base pstar` and `--base e1r0` modes.  They
+test the stronger restart obstruction appropriate above an old populated
+defect line: a new return is reported only when neither its quotient class
+nor its translate by the old defect point is populated.
+
+Both canonical one-defect capacities admit such returns.  For the first
+reported degree-two-place and rational-place witnesses, the resulting states
+have respectively
+
+  target rank 5, dimension 19; and
+  target rank 4, dimension 18.
+
+In each state the total defect is already 3.  The exact multiplication-map
+probe finds no target-tight one-gate extension from either state.  A separate
+normalized-flag SAT check also excludes four independent target gates from
+the degree-two-place witness.  The corresponding five-target SAT run for the
+rational witness reached its three-minute diagnostic limit; the exact
+one-step multiplication-map result is the useful observation here.
+
+These are fixed representatives only.  They motivate a saturated quadratic-
+section lemma and do not establish its required universal orbit
+classification.

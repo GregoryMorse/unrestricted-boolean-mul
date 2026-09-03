@@ -125,17 +125,44 @@ def concrete_base(n: int, name: str) -> tuple[list[int], list[int]]:
     x00, x01, x10, x11 = u & U, u & V, v & U, v & V
     xsum = x00 ^ x01 ^ x10 ^ x11
 
-    if name == "pstar":
+    if name == "rational":
+        quadratics = [r0, r1, rinf]
+    elif name in ("pstar", "qreturnpstar"):
         quadratics = [x00, x11, xsum, r0, r1, rinf]
-    elif name == "e1r0":
+        if name == "qreturnpstar":
+            ell, m, x, y = a[1] ^ a[2], a[1], u, a[0]
+            first = ell & (m ^ x00)
+            second = (ell ^ x) & (m ^ y ^ x00)
+            quadratics.extend([first, second])
+    elif name in ("e1r0", "qreturne1r0"):
         quadratics = [r0, targets[1], a[1] & b[1], r1, rinf]
-    elif name == "qreturnce":
+        if name == "qreturne1r0":
+            ell, m, x, y = b[3], a[3], b[0], a[0]
+            first = ell & (m ^ r0)
+            second = (ell ^ x) & (m ^ y ^ r0)
+            quadratics.extend([first, second])
+    elif name in ("qreturnce", "qreturn01", "qreturn11", "qreturn12", "qreturn13"):
         # Exact unpopulated quadratic-return witness discovered by
         # quadratic_return_population_probe.py.  Both products have the same
         # nonzero high part; together they add one high and one quadratic
         # defect direction above Aff + <r0,r1,rinf>.
-        first = (a[2] ^ b[2]) & (a[2] ^ r0)
-        second = (a[2] ^ b[2] ^ b[0]) & (a[2] ^ a[0] ^ r0)
+        if name in ("qreturnce", "qreturn01"):
+            q, c = 0, r0
+            ell, m, x, y = a[2] ^ b[2], a[2], b[0], a[0]
+        elif name == "qreturn11":
+            q, c = r0, r0
+            ell, m, x, y = a[2] ^ b[2], a[2], b[0], a[0]
+        elif name == "qreturn12":
+            q, c = r0, r1
+            ell, m, x, y = a[1] ^ a[2], a[1], xor_selected(a, range(5)), a[0]
+        else:
+            q, c = r0, r0 ^ r1
+            ell, m, x, y = (
+                a[1] ^ a[2], a[1], xor_selected(a, range(5)),
+                a[1] ^ a[2] ^ a[3] ^ a[4],
+            )
+        first = (ell ^ q) & (m ^ c)
+        second = (ell ^ x ^ q) & (m ^ y ^ c)
         quadratics = [r0, r1, rinf, first, second]
     elif name in ("wstar", "wstar0"):
         quadratics = [x00, x01, x10, x11, r0, r1, rinf]
@@ -177,6 +204,7 @@ class Encoding:
         base_name: str,
         fixed_target_rows: list[int] | None,
         high_defect_positions: set[int],
+        quadratic_defect_positions: set[int],
     ) -> None:
         self.n = n
         self.gates = gates
@@ -215,6 +243,7 @@ class Encoding:
         ]
         self.fixed_target_rows = fixed_target_rows
         self.high_defect_positions = high_defect_positions
+        self.quadratic_defect_positions = quadratic_defect_positions
 
         self.left_selectors: list[list[int]] = []
         self.right_selectors: list[list[int]] = []
@@ -367,9 +396,11 @@ class Encoding:
                     self.add_xor([product, target_value, *correction_terms])
                     target_values.append(target_value)
 
-            if gate_index in self.high_defect_positions:
+            if gate_index in (
+                self.high_defect_positions | self.quadratic_defect_positions
+            ):
                 if is_target:
-                    raise ValueError("a forced-high position must be a defect gate")
+                    raise ValueError("a degree-constrained position must be a defect gate")
                 high_coefficients: list[int] = []
                 for monomial in range(self.width):
                     if monomial.bit_count() < 3:
@@ -384,7 +415,11 @@ class Encoding:
                         assignment = (assignment - 1) & monomial
                     self.add_xor([coefficient, *subassignments])
                     high_coefficients.append(coefficient)
-                self.add_clause(high_coefficients)
+                if gate_index in self.high_defect_positions:
+                    self.add_clause(high_coefficients)
+                else:
+                    for coefficient in high_coefficients:
+                        self.add_clause([-coefficient])
 
             self.left_selectors.append(left_selectors)
             self.right_selectors.append(right_selectors)
@@ -555,13 +590,21 @@ def main() -> None:
         help="comma-separated defect positions required to have ANF degree at least three",
     )
     parser.add_argument(
+        "--quadratic-defect-positions",
+        default="",
+        help="comma-separated defect positions required to have ANF degree at most two",
+    )
+    parser.add_argument(
         "--enumerate-flags",
         action="store_true",
         help="enumerate reachable ordered target flags, quotienting row additions",
     )
     parser.add_argument(
         "--base",
-        choices=("affine", "pstar", "e1r0", "qreturnce", "wstar", "wpq", "w3p", "wstar0"),
+        choices=("affine", "rational", "pstar", "e1r0", "qreturnce",
+                 "qreturn01", "qreturn11", "qreturn12", "qreturn13",
+                 "qreturnpstar", "qreturne1r0",
+                 "wstar", "wpq", "w3p", "wstar0"),
         default="affine",
     )
     parser.add_argument(
@@ -572,8 +615,13 @@ def main() -> None:
 
     positions = parse_positions(args.defect_positions)
     high_defect_positions = parse_positions(args.high_defect_positions)
+    quadratic_defect_positions = parse_positions(args.quadratic_defect_positions)
     if not high_defect_positions <= positions:
         raise ValueError("forced-high positions must be defect positions")
+    if not quadratic_defect_positions <= positions:
+        raise ValueError("forced-quadratic positions must be defect positions")
+    if high_defect_positions & quadratic_defect_positions:
+        raise ValueError("a defect position cannot be both high and quadratic")
     fixed_target_rows = (
         [int(value, 0) for value in args.target_rows.split(",")]
         if args.target_rows
@@ -588,6 +636,7 @@ def main() -> None:
         args.base,
         fixed_target_rows,
         high_defect_positions,
+        quadratic_defect_positions,
     )
     encoding.build()
     built = time.monotonic()

@@ -37,6 +37,7 @@ from w_pq_analysis import (
     r1,
     rinf,
     span_vector,
+    wedge,
 )
 
 
@@ -106,6 +107,11 @@ def minimum_target_coset_rank(form: int) -> int:
     )
 
 
+def target_wedge_kernel(form: int) -> list[int]:
+    """Coefficient basis of {t in T | form wedge t = 0}."""
+    return nullspace_columns([wedge(form, 2, target, 2) for target in T])
+
+
 def populated_quotient_classes() -> set[int]:
     result: set[int] = set()
     for left in range(1 << 10):
@@ -163,6 +169,15 @@ def reduced_span_with_tags(generators: list[int]) -> list[tuple[int, int]]:
 
 
 def scan_plane(q: int, c: int, populated: set[int]) -> dict[str, object] | None:
+    return scan_plane_over_defect(q, c, populated, {0})
+
+
+def scan_plane_over_defect(
+    q: int,
+    c: int,
+    populated: set[int],
+    old_defect: set[int],
+) -> dict[str, object] | None:
     kernel = cubic_kernel(q, c)
     for delta_mask in range(1, 1 << len(kernel)):
         delta = span_vector(kernel, delta_mask)
@@ -177,7 +192,9 @@ def scan_plane(q: int, c: int, populated: set[int]) -> dict[str, object] | None:
         tags = [tag for _row, tag in tagged_directions]
         for coefficients in range(1 << len(directions)):
             quotient = base ^ span_vector(directions, coefficients)
-            if quotient not in populated:
+            if quotient not in old_defect and not any(
+                quotient ^ old in populated for old in old_defect
+            ):
                 factor_tag = span_vector(tags, coefficients)
                 ell = span_vector(LINEAR_BASIS, factor_tag & ((1 << 10) - 1))
                 m = span_vector(LINEAR_BASIS, factor_tag >> 10)
@@ -204,11 +221,16 @@ def scan_plane(q: int, c: int, populated: set[int]) -> dict[str, object] | None:
                 assert first_three != 0 or first_four != 0
                 assert minimum_rank > 2
                 return {
+                    "alternate_minimum_target_coset_ranks": {
+                        str(old): minimum_target_coset_rank(quotient ^ old)
+                        for old in sorted(old_defect)
+                    },
                     "c": c,
                     "coefficients": coefficients,
                     "direction_dimension": len(directions),
                     "difference_degree_three": difference_three,
                     "difference_degree_four": difference_four,
+                    "difference_degree_two": difference_two,
                     "ell": ell,
                     "first_high_degree_four": first_four,
                     "first_high_degree_three": first_three,
@@ -219,6 +241,16 @@ def scan_plane(q: int, c: int, populated: set[int]) -> dict[str, object] | None:
                     "quotient": quotient,
                     "second_high_degree_four": second_four,
                     "second_high_degree_three": second_three,
+                    "target_wedge_kernels": [
+                        target_wedge_kernel(difference_two ^ rational)
+                        for rational in (
+                            0,
+                            *(
+                                span_vector(RATIONAL_BASIS, mask)
+                                for mask in range(1, 1 << len(RATIONAL_BASIS))
+                            ),
+                        )
+                    ],
                     "x": x,
                     "y": y,
                 }
@@ -228,23 +260,58 @@ def scan_plane(q: int, c: int, populated: set[int]) -> dict[str, object] | None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--all-planes", action="store_true")
+    parser.add_argument(
+        "--base",
+        choices=("rational", "pstar", "e1r0"),
+        default="rational",
+    )
     args = parser.parse_args()
     populated = populated_quotient_classes()
     print(json.dumps({"populated_classes": len(populated)}), flush=True)
+    u = A[0] ^ A[2] ^ A[3]
+    v = A[1] ^ A[2] ^ A[4]
+    upper_u = B[0] ^ B[2] ^ B[3]
+    upper_v = B[1] ^ B[2] ^ B[4]
+    x00 = decomposable_2(u, upper_u)
+    x11 = decomposable_2(v, upper_v)
+    xsum = decomposable_2(u ^ v, upper_u ^ upper_v)
+    if args.base == "rational":
+        quadratic_basis = RATIONAL_BASIS
+        old_defect = {0}
+    elif args.base == "pstar":
+        quadratic_basis = [x00, x11, xsum, *RATIONAL_BASIS]
+        old_generator = REDUCE_TARGET(x00)
+        old_defect = {0, old_generator}
+        assert old_generator != 0
+        assert REDUCE_TARGET(x11) == old_generator
+        assert REDUCE_TARGET(xsum) == old_generator
+    else:
+        j0 = T[1]
+        d0 = decomposable_2(A[1], B[1])
+        quadratic_basis = [r0, j0, d0, r1, rinf]
+        old_generator = REDUCE_TARGET(d0)
+        old_defect = {0, old_generator}
+        assert old_generator != 0
     checked = 0
     counterexamples: list[dict[str, object]] = []
-    for q_mask in range(1 << len(RATIONAL_BASIS)):
-        q = span_vector(RATIONAL_BASIS, q_mask)
-        for c_mask in range(q_mask, 1 << len(RATIONAL_BASIS)):
-            c = span_vector(RATIONAL_BASIS, c_mask)
+    for q_mask in range(1 << len(quadratic_basis)):
+        q = span_vector(quadratic_basis, q_mask)
+        for c_mask in range(q_mask, 1 << len(quadratic_basis)):
+            c = span_vector(quadratic_basis, c_mask)
             # The zero plane has no genuinely high product.
             if q == 0 and c == 0:
                 continue
-            counterexample = scan_plane(q, c, populated)
+            counterexample = scan_plane_over_defect(
+                q, c, populated, old_defect
+            )
             checked += 1
             if counterexample is not None:
-                orbit_key = plane_orbit_key(q_mask, c_mask)
+                orbit_key = (
+                    plane_orbit_key(q_mask, c_mask)
+                    if args.base == "rational" else None
+                )
                 report = {
+                    "base": args.base,
                     "c_mask": c_mask,
                     "checked_planes": checked,
                     "counterexample": counterexample,
@@ -259,10 +326,12 @@ def main() -> None:
     print(json.dumps({
         "checked_planes": checked,
         "counterexample_planes": len(counterexamples),
-        "counterexample_plane_orbits": sorted({
-            tuple(report["plane_orbit_key"])
-            for report in counterexamples
-        }),
+        "counterexample_plane_orbits": (
+            sorted({
+                tuple(report["plane_orbit_key"])
+                for report in counterexamples
+            }) if args.base == "rational" else []
+        ),
         "result": (
             "some_unpopulated_returns" if counterexamples
             else "all_same_plane_returns_populated"

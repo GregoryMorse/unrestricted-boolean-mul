@@ -84,7 +84,9 @@ def row_assumptions(encoding: Encoding, rows: tuple[int, ...]) -> list[int]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base", required=True,
-        choices=("pstar", "e1r0", "qreturnce", "wstar", "wpq", "w3p", "wstar0"))
+        choices=("rational", "pstar", "e1r0", "qreturnce", "qreturn01",
+                 "qreturn11", "qreturn12", "qreturn13", "wstar", "wpq",
+                 "w3p", "wstar0", "qreturnpstar", "qreturne1r0"))
     parser.add_argument("--gates", type=int, required=True)
     parser.add_argument("--defect-positions", required=True)
     parser.add_argument("--high-defect-positions", default="")
@@ -111,6 +113,7 @@ def main() -> None:
         args.base,
         None,
         high_positions,
+        set(),
     )
     encoding.build()
     built = time.monotonic()
@@ -174,6 +177,7 @@ def main() -> None:
             print(json.dumps({
                 "checked": index - args.start + 1,
                 "elapsed_seconds": round(time.monotonic() - built, 3),
+                "last_flag": flag,
                 "last_flag_seconds": round(elapsed, 3),
                 "unknown": len(unknown),
                 "unsat": unsat,
