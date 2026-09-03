@@ -84,7 +84,7 @@ theorem isEmpty_populatedPoint_bot :
     IsEmpty (PopulatedPoint (⊥ : Submodule F₂ QuadraticQuotient)) := by
   constructor
   intro q
-  have hq : q.1.1 = 0 := by simpa using q.1.2
+  have hq : q.1.1 = 0 := Submodule.mem_bot.mp q.1.2
   exact q.2.1 hq
 
 /-- At quadratic defect zero the intrinsic capacity is exactly the three
@@ -237,11 +237,14 @@ theorem CostedDefectLegalSuffix.prune_replay_from_intrinsicCapacityState
         (intrinsicCapacityState hflat.generator ⊔ V) ∧
       Module.finrank F₂ (intrinsicCapacityState hflat.generator ⊔ V) =
         Module.finrank F₂ (intrinsicCapacityState hflat.generator) + k' := by
-  apply hreach.prune_simulate_from_equal_defect
-    (circuitFlag_le_intrinsicCapacityState_of_allQuadratic C hflat hall)
-    (circuitFlag_intrinsicCapacityState_equal_defect C hflat hall)
-  rw [← circuitFlag_intrinsicCapacityState_equal_defect C hflat hall]
-  exact hbaseDef
+  let hsub :=
+    circuitFlag_le_intrinsicCapacityState_of_allQuadratic C hflat hall
+  let heq :=
+    circuitFlag_intrinsicCapacityState_equal_defect C hflat hall
+  exact CostedDefectLegalSuffix.prune_simulate_from_equal_defect
+    (W' := N4.circuitFlag C j)
+    (W := intrinsicCapacityState hflat.generator)
+    (V := V) (k := k) hsub heq (heq ▸ hbaseDef) hreach
 
 end
 end N5
