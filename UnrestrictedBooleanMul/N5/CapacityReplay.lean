@@ -84,7 +84,7 @@ theorem isEmpty_populatedPoint_bot :
     IsEmpty (PopulatedPoint (⊥ : Submodule F₂ QuadraticQuotient)) := by
   constructor
   intro q
-  have hq : q.1.1 = 0 := Submodule.mem_bot.mp q.1.2
+  have hq : q.1.1 = 0 := by simpa using q.1.2
   exact q.2.1 hq
 
 /-- At quadratic defect zero the intrinsic capacity is exactly the three
@@ -100,7 +100,7 @@ theorem defectCapacitySpan_bot :
     rw [Submodule.span_le]
     intro p hp
     rcases hp with ⟨q, _hq⟩
-    exact isEmpty_populatedPoint_bot.false q
+    exact False.elim (isEmpty_populatedPoint_bot.false q)
   · exact le_sup_left
 
 /-- A presentation with zero quotient defect therefore has the canonical

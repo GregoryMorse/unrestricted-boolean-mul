@@ -8,8 +8,8 @@ The repository is organized by input length so that later results can be added
 without renaming or replacing the existing artifact:
 
 - [`n4/`](n4/) -- four-term multiplication, with exact value 9.
-- [`n5/`](n5/) -- five-term multiplication, with the repaired algebraic
-  lower-bound manuscript and Lean formalization in progress.
+- [`n5/`](n5/) -- five-term multiplication, with the lower-bound manuscript
+  under algebraic repair and Lean formalization in progress.
 - Future results will use parallel directories such as `n6/` or `general/`.
 
 The accompanying `n4` paper makes the current unrestricted small-instance
@@ -22,7 +22,7 @@ frontier explicit:
 | 2 | 3 | elementary dimension bound and Karatsuba's three products |
 | 3 | 6 | assumption-free Lean proof and explicit six-product circuit |
 | 4 | 9 | kernel-checked Lean proof and explicit nine-product circuit |
-| 5 | 13 | repaired algebraic hand proof and checked thirteen-gate upper circuit; full Lean lower bound in progress |
+| 5 | 13 (candidate) | checked thirteen-gate upper circuit; lower-bound manuscript and full Lean proof in progress |
 
 The manuscripts contain the mathematical exposition and literature citations.
 The Lean development checks the five rows `n = 0` through `n = 4`. For `n = 5`,
