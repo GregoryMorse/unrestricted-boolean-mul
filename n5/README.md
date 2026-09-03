@@ -55,7 +55,10 @@ The repository currently contains:
   the refuted fixed-envelope saturation theorem; and
 - the sharp first-order capacity bounds `rho_1(5) <= 5` and `rho_0(5) <= 3`,
   which close all late quadratic prefixes by exact gate counting and leave
-  only `j <= 9`, `j <= 8`, and `j <= 6` in defects two, one, and zero;
+  only `j <= 9`, `j <= 8`, and `j <= 6` in defects two, one, and zero; and
+- an algebraic closure theorem for actual circuit tails whose final total
+  defect is at most one, excluding that entire circuit regime from a
+  twelve-gate computation by the unique-high-image invariant;
 - a dependency-ordered handoff for the closed-place and nonlinear-feedback
   proof needed to strengthen nine to thirteen.
 
@@ -101,6 +104,13 @@ final circuit bookkeeping is complete; the two predicates
 `CostedTwoDefectQuadraticPrefixes` and
 `CostedFirstOrderQuadraticPrefixes` remain the honest algebraic completion
 obligations.
+
+The first of the resulting circuit-wide regimes is now closed independently
+in `N5/OneHighDefectOneClosure.lean`.  The theorem
+`N5.no_circuit_of_final_defect_le_one` uses the actual last quadratic prefix,
+the first high gate, and only defect-legal tail reachability; it does not assume
+the refuted history-free fixed-envelope statement.  Thus any remaining
+twelve-gate counterexample must finish with total defect two or three.
 
 ## Formalization handoff
 

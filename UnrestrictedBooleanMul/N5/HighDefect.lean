@@ -94,6 +94,12 @@ theorem stateHighImage_finrank (V : Submodule F₂ (ANF 10)) :
   unfold stateHighRank
   exact Nat.eq_sub_of_add_eq hrank
 
+/-- High rank is monotone under inclusion of wire states. -/
+theorem stateHighRank_mono {V W : Submodule F₂ (ANF 10)}
+    (hVW : V ≤ W) : stateHighRank V ≤ stateHighRank W := by
+  rw [← stateHighImage_finrank, ← stateHighImage_finrank]
+  exact Submodule.finrank_mono (Submodule.map_mono hVW)
+
 theorem stateHighImage_eq_bot_iff
     (V : Submodule F₂ (ANF 10)) :
     stateHighImage V = ⊥ ↔ V ≤ N4.quadraticANFSpace 10 := by
@@ -110,7 +116,7 @@ theorem stateHighImage_eq_bot_iff
     · rintro _ ⟨p, hp, rfl⟩
       have hzero : Submodule.mkQ (N4.quadraticANFSpace 10) p = 0 :=
         (Submodule.Quotient.mk_eq_zero _).mpr (h hp)
-      simpa [hzero]
+      simp [hzero]
     · exact bot_le
 
 /-- A quadratic base contributes its full old defect to every containing

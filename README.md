@@ -103,7 +103,12 @@ first independent layer of the `n = 5` proof:
   syzygies expose a rational direction.  Combined with the existing shadow
   lemmas and a symmetric Koszul normal form for dependent planes, this gives
   the unconditional first-order-envelope missing-coset exclusion for every
-  pair of low products.
+  pair of low products; and
+- an algebraic closure theorem for actual circuit tails of final total defect
+  at most one.  Monotonicity pins the unique high image to rank one, the
+  zero-colour and rank-one branches are absorbed, and the rank-two branch is
+  excluded by dimension, closing that complete circuit regime without replay
+  or enumeration.
 
 The five-gate exclusion for `Mul 3` is proved internally. Its finite
 rational-place classification is reduced to seven quadratic coefficient

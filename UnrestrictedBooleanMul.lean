@@ -62,6 +62,7 @@ import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
 import UnrestrictedBooleanMul.N5.RankTwoEscapeBudget
 import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
 import UnrestrictedBooleanMul.N5.RankOneZeroQuadraticDefect
+import UnrestrictedBooleanMul.N5.OneHighDefectOneClosure
 import UnrestrictedBooleanMul.N5.MissingCoset
 import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
 import UnrestrictedBooleanMul.N5.RankOneTargetClean

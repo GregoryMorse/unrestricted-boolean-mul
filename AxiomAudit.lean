@@ -440,3 +440,7 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.allQuadraticPrefix_targetRank_le_five_of_flagDefect_le_one
 #print axioms UnrestrictedBooleanMul.N5.costedTwoDefectQuadraticPrefixes_of_early
 #print axioms UnrestrictedBooleanMul.N5.costedFirstOrderQuadraticPrefixes_of_early
+#print axioms UnrestrictedBooleanMul.N5.DefectLegalSuffix.trans
+#print axioms UnrestrictedBooleanMul.N5.stateHighRank_mono
+#print axioms UnrestrictedBooleanMul.N5.oneHigh_defectOne_targetSubspace_closed
+#print axioms UnrestrictedBooleanMul.N5.no_circuit_of_final_defect_le_one

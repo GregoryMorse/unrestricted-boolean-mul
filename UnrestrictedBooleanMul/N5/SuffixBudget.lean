@@ -78,6 +78,16 @@ theorem DefectLegalSuffix.affine_le {W V : Submodule F₂ (ANF 10)}
     (hAff : affine 10 ≤ W) (h : DefectLegalSuffix W V) :
     affine 10 ≤ V := hAff.trans h.start_le
 
+/-- Defect-legal reachability is transitive. -/
+theorem DefectLegalSuffix.trans
+    {U V W : Submodule F₂ (ANF 10)}
+    (hUV : DefectLegalSuffix U V) (hVW : DefectLegalSuffix V W) :
+    DefectLegalSuffix U W := by
+  induction hVW with
+  | refl => exact hUV
+  | step hreach p q hp hq hdef ih =>
+      exact .step ih p q hp hq hdef
+
 /-- Target rank is monotone for wire-state inclusions containing the affine
 space. -/
 theorem stateTargetRank_mono {V W : Submodule F₂ (ANF 10)}
