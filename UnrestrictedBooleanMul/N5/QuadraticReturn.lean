@@ -76,16 +76,15 @@ private theorem sup_span_add_old_eq
     intro z hz
     rw [Set.mem_singleton_iff] at hz
     subst z
-    have hsum : (g + v) + v ∈
-        V ⊔ Submodule.span F₂ ({g + v} : Set (ANF 10)) :=
+    let U : Submodule F₂ (ANF 10) :=
+      V ⊔ Submodule.span F₂ ({g + v} : Set (ANF 10))
+    have hsum : (g + v) + v ∈ U :=
       Submodule.add_mem _
         ((le_sup_right : Submodule.span F₂ ({g + v} : Set (ANF 10)) ≤ _)
           (Submodule.mem_span_singleton_self (g + v)))
         ((le_sup_left : V ≤ _) hv)
-    change g ∈ V ⊔ Submodule.span F₂ ({g + v} : Set (ANF 10))
-    rw [show g = (g + v) + v by
-      simp only [add_assoc, anf_add_self, add_zero]]
-    exact hsum
+    change g ∈ U
+    simpa only [add_assoc, anf_add_self, add_zero] using hsum
 
 /-- A retained gate whose high rank does not grow has a literal quadratic
 correction: subtracting an old representative of the same high class gives a

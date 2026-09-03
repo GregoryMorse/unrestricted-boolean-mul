@@ -64,7 +64,9 @@ theorem CostedDefectLegalSuffix.prune_simulate_from_equal_defect
       refine ⟨0, Nat.zero_le _, ?_, ?_⟩
       · simpa [sup_eq_left.mpr hsub] using
           (CostedDefectLegalSuffix.refl (W := W) hWdef)
-      · simp [sup_eq_left.mpr hsub]
+      · exact congrArg
+          (fun U : Submodule F₂ (ANF 10) => Module.finrank F₂ U)
+          (sup_eq_left.mpr hsub)
   | @step k V hreach p q hp hq hdef ih =>
       rcases ih with ⟨k', hk', hsim, hdim⟩
       let B := W ⊔ V
@@ -139,12 +141,15 @@ theorem CostedDefectLegalSuffix.prune_simulate_below_defect_ambient
   induction hreach with
   | refl hdef =>
       have hWdef : N4.flagDefectRank W (mulTarget 5) ≤ 3 := by
-        rw [← stateDefectImage_finrank, ← stateDefectImage_finrank] at hZdef ⊢
-        exact (Submodule.finrank_mono hWZ).trans hZdef
+        rw [← stateDefectImage_finrank]
+        exact (Submodule.finrank_mono hWZ).trans (by
+          rwa [stateDefectImage_finrank])
       refine ⟨0, Nat.zero_le _, ?_, ?_⟩
       · simpa [sup_eq_left.mpr hsub] using
           (CostedDefectLegalSuffix.refl (W := W) hWdef)
-      · simp [sup_eq_left.mpr hsub]
+      · exact congrArg
+          (fun U : Submodule F₂ (ANF 10) => Module.finrank F₂ U)
+          (sup_eq_left.mpr hsub)
   | @step k V hreach p q hp hq hdef ih =>
       have hVZ' : V ≤ Z := le_sup_left.trans hVZ
       rcases ih hVZ' with ⟨k', hk', hsim, hdim⟩
