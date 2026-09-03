@@ -82,7 +82,10 @@ private theorem sup_span_add_old_eq
         ((le_sup_right : Submodule.span F₂ ({g + v} : Set (ANF 10)) ≤ _)
           (Submodule.mem_span_singleton_self (g + v)))
         ((le_sup_left : V ≤ _) hv)
-    simpa only [add_assoc, anf_add_self, add_zero] using hsum
+    change g ∈ V ⊔ Submodule.span F₂ ({g + v} : Set (ANF 10))
+    rw [show g = (g + v) + v by
+      simp only [add_assoc, anf_add_self, add_zero]]
+    exact hsum
 
 /-- A retained gate whose high rank does not grow has a literal quadratic
 correction: subtracting an old representative of the same high class gives a
@@ -116,7 +119,16 @@ theorem exists_quadraticReturn_of_stateHighRank_eq
     apply (Submodule.Quotient.mk_eq_zero
       (N4.quadraticANFSpace 10)).mp
     change Submodule.mkQ (N4.quadraticANFSpace 10) (p * q + v) = 0
-    rw [map_add, ← hvq, CharTwo.add_self_eq_zero]
+    calc
+      Submodule.mkQ (N4.quadraticANFSpace 10) (p * q + v) =
+          Submodule.mkQ (N4.quadraticANFSpace 10) (p * q) +
+            Submodule.mkQ (N4.quadraticANFSpace 10) v := by
+              rw [map_add]
+      _ = Submodule.mkQ (N4.quadraticANFSpace 10) v +
+            Submodule.mkQ (N4.quadraticANFSpace 10) v := by rw [← hvq]
+      _ = Submodule.mkQ (N4.quadraticANFSpace 10) (v + v) := by
+            rw [map_add]
+      _ = 0 := by rw [anf_add_self, map_zero]
   have hznew : z ∉ V := by
     intro hzV
     apply hretained

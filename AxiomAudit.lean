@@ -153,6 +153,9 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.intrinsicCapacityState_defectRank
 #print axioms UnrestrictedBooleanMul.N5.DefectLegalSuffix.replay_from_intrinsicCapacityState
 #print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.prune_simulate_from_equal_defect
+#print axioms UnrestrictedBooleanMul.N5.flagDefectRank_sup_le_of_defectImage_le
+#print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.prune_simulate_below_defect_ambient
+#print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.prune_simulate_from_contained_defectImage
 #print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.length_eq_totalGain_of_finrank_eq
 #print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.prune_replay_from_intrinsicCapacityState
 #print axioms UnrestrictedBooleanMul.N5.no_twelve_gate_circuit_of_intrinsic_capacity_stability
@@ -478,4 +481,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.N5.retainedQuadraticProduct_defectBirth
 #print axioms UnrestrictedBooleanMul.N5.quadraticDefectBirth_intrinsicCapacityRestart
 #print axioms UnrestrictedBooleanMul.N5.CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
+#print axioms UnrestrictedBooleanMul.N5.defectBirth_high_or_quadratic
+#print axioms UnrestrictedBooleanMul.N5.exists_quadraticReturn_of_stateHighRank_eq
 #print axioms UnrestrictedBooleanMul.N5.defectBirth_high_or_exists_quadraticReturn

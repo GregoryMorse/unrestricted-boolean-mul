@@ -64,7 +64,7 @@ theorem CostedDefectLegalSuffix.prune_simulate_from_equal_defect
       refine ⟨0, Nat.zero_le _, ?_, ?_⟩
       · simpa [sup_eq_left.mpr hsub] using
           (CostedDefectLegalSuffix.refl (W := W) hWdef)
-      · rw [sup_eq_left.mpr hsub]
+      · simp [sup_eq_left.mpr hsub]
   | @step k V hreach p q hp hq hdef ih =>
       rcases ih with ⟨k', hk', hsim, hdim⟩
       let B := W ⊔ V
@@ -100,6 +100,98 @@ theorem CostedDefectLegalSuffix.prune_simulate_from_equal_defect
         · rwa [hstate]
         · rw [hstate, andExtend,
             Submodule.finrank_sup_span_singleton hproduct, hdim]
+          omega
+
+/-- If the defect image of a proposed replay base is already contained in a
+fixed ambient endpoint, adjoining any intermediate substate cannot exceed the
+ambient endpoint's defect.  This is the rank statement needed when a
+quadratic return is promoted into the replay base: equality with the old
+base's defect is neither available nor required. -/
+theorem flagDefectRank_sup_le_of_defectImage_le
+    {W V Z : Submodule F₂ (ANF 10)}
+    (hWZ : stateDefectImage W ≤ stateDefectImage Z)
+    (hVZ : V ≤ Z) :
+    N4.flagDefectRank (W ⊔ V) (mulTarget 5) ≤
+      N4.flagDefectRank Z (mulTarget 5) := by
+  rw [← stateDefectImage_finrank, ← stateDefectImage_finrank,
+    stateDefectImage_sup]
+  exact Submodule.finrank_mono
+    (sup_le hWZ (Submodule.map_mono hVZ))
+
+/-- Replay and prune below a fixed ambient defect image.  Unlike
+`prune_simulate_from_equal_defect`, the new base may have larger defect than
+the old one.  Soundness comes from requiring its defect image to lie in the
+ambient endpoint and every simulated state to lie below that endpoint.
+
+This is the cost-preserving linear-algebra layer for post-high quadratic
+returns.  The separate geometric obligation is to construct an enlarged
+quadratic base whose defect image satisfies `hWZ`. -/
+theorem CostedDefectLegalSuffix.prune_simulate_below_defect_ambient
+    {W' W V Z : Submodule F₂ (ANF 10)} {k : Nat}
+    (hsub : W' ≤ W)
+    (hreach : CostedDefectLegalSuffix W' k V)
+    (hVZ : V ≤ Z)
+    (hWZ : stateDefectImage W ≤ stateDefectImage Z)
+    (hZdef : N4.flagDefectRank Z (mulTarget 5) ≤ 3) :
+    ∃ k' ≤ k,
+      CostedDefectLegalSuffix W k' (W ⊔ V) ∧
+      Module.finrank F₂ ↥(W ⊔ V) = Module.finrank F₂ W + k' := by
+  induction hreach with
+  | refl hdef =>
+      have hWdef : N4.flagDefectRank W (mulTarget 5) ≤ 3 := by
+        rw [← stateDefectImage_finrank, ← stateDefectImage_finrank] at hZdef ⊢
+        exact (Submodule.finrank_mono hWZ).trans hZdef
+      refine ⟨0, Nat.zero_le _, ?_, ?_⟩
+      · simpa [sup_eq_left.mpr hsub] using
+          (CostedDefectLegalSuffix.refl (W := W) hWdef)
+      · simp [sup_eq_left.mpr hsub]
+  | @step k V hreach p q hp hq hdef ih =>
+      have hVZ' : V ≤ Z := le_sup_left.trans hVZ
+      rcases ih hVZ' with ⟨k', hk', hsim, hdim⟩
+      let B := W ⊔ V
+      have hpB : p ∈ B := (le_sup_right : V ≤ W ⊔ V) hp
+      have hqB : q ∈ B := (le_sup_right : V ≤ W ⊔ V) hq
+      have hlargeDef : N4.flagDefectRank
+          (W ⊔ andExtend V p q) (mulTarget 5) ≤ 3 :=
+        (flagDefectRank_sup_le_of_defectImage_le hWZ hVZ).trans hZdef
+      have hstate : W ⊔ andExtend V p q = andExtend B p q := by
+        simp only [B, andExtend, sup_assoc]
+      have hnextDef : N4.flagDefectRank (andExtend B p q)
+          (mulTarget 5) ≤ 3 := by
+        rw [← hstate]
+        exact hlargeDef
+      by_cases hproduct : p * q ∈ B
+      · have hspan : Submodule.span F₂ ({p * q} : Set (ANF 10)) ≤ B := by
+          rw [Submodule.span_le]
+          simpa using hproduct
+        have hrefl : andExtend B p q = B := sup_eq_left.mpr hspan
+        have hendpoint : W ⊔ andExtend V p q = B := by
+          rw [hstate, hrefl]
+        refine ⟨k', hk'.trans (Nat.le_succ k), ?_, ?_⟩
+        · rwa [hendpoint]
+        · rwa [hendpoint]
+      · have hstep : CostedDefectLegalSuffix W (k' + 1)
+            (andExtend B p q) :=
+          CostedDefectLegalSuffix.step hsim p q hpB hqB hnextDef
+        refine ⟨k' + 1, by omega, ?_, ?_⟩
+        · rwa [hstate]
+        · rw [hstate, andExtend,
+            Submodule.finrank_sup_span_singleton hproduct, hdim]
+          omega
+
+/-- Endpoint-specialized form of the ambient replay theorem.  It is enough
+that the enlarged base's defect image is contained in the original endpoint;
+the replay never needs an equal-defect hypothesis at the starting state. -/
+theorem CostedDefectLegalSuffix.prune_simulate_from_contained_defectImage
+    {W' W V : Submodule F₂ (ANF 10)} {k : Nat}
+    (hsub : W' ≤ W)
+    (hWimage : stateDefectImage W ≤ stateDefectImage V)
+    (hreach : CostedDefectLegalSuffix W' k V) :
+    ∃ k' ≤ k,
+      CostedDefectLegalSuffix W k' (W ⊔ V) ∧
+      Module.finrank F₂ ↥(W ⊔ V) = Module.finrank F₂ W + k' := by
+  exact hreach.prune_simulate_below_defect_ambient hsub le_rfl hWimage
+    hreach.final_defect_le_three
 
 end
 end N5
