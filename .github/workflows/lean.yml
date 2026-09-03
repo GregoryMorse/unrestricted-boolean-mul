@@ -12,6 +12,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -25,6 +26,9 @@ jobs:
 
       - name: Restore Mathlib binary cache
         run: lake exe cache --cache-from=legacy get
+
+      - name: Build the active n5 replay bridge first
+        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart
 
       - name: Build all Lean modules
         run: lake build

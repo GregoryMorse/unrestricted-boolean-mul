@@ -247,7 +247,8 @@ theorem quadraticDefectBirth_intrinsicCapacityRestart
     intro z hz
     simpa only [Set.mem_singleton_iff] at hz
     simpa [hz] using hproductNew
-  have hg₂notQ : g₂ ∉ presentationDefect p := by
+  have hg₂notQ : quadraticQuotientProjection g₂ ∉
+      presentationDefect p := by
     exact retainedQuadraticProduct_projection_not_mem p hu hv
       hquadratic hretained
   have hQrank : Module.finrank F₂ (presentationDefect p') =
@@ -261,6 +262,43 @@ theorem quadraticDefectBirth_intrinsicCapacityRestart
   refine ⟨hp'dec, hextendLe, ?_⟩
   rw [hnewRank, hQrank, ← holdRank]
   exact hbirth
+
+/-- Operational cost-preserving restart.  After the retained quadratic birth
+has been replaced by its appended intrinsic capacity state, the remaining
+suffix can again be replayed gate by gate, deleting every newly redundant
+product and retaining the exact dimension growth of the surviving gates. -/
+theorem CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
+    {j k : Nat} (p : Fin j → TwoForm)
+    (hdec : ∀ i, IsDecomposableTwo (p i))
+    {u v : ANF 10}
+    (hu : u ∈ intrinsicCapacityState p)
+    (hv : v ∈ intrinsicCapacityState p)
+    (hquadratic : u * v ∈ N4.quadraticANFSpace 10)
+    (hretained : u * v ∉ intrinsicCapacityState p)
+    {V : Submodule F₂ (ANF 10)}
+    (hreach : CostedDefectLegalSuffix
+      (andExtend (intrinsicCapacityState p) u v) k V) :
+    let p' := Fin.snoc p (quadraticProjection 10 (u * v))
+    ∃ k' ≤ k,
+      CostedDefectLegalSuffix (intrinsicCapacityState p') k'
+        (intrinsicCapacityState p' ⊔ V) ∧
+      Module.finrank F₂ (intrinsicCapacityState p' ⊔ V) =
+        Module.finrank F₂ (intrinsicCapacityState p') + k' := by
+  let p' := Fin.snoc p (quadraticProjection 10 (u * v))
+  have hrestart := quadraticDefectBirth_intrinsicCapacityRestart
+    p hdec hu hv hquadratic hretained
+  have hpostDef : N4.flagDefectRank
+      (andExtend (intrinsicCapacityState p) u v) (mulTarget 5) ≤ 3 :=
+    (flagDefectRank_mono hreach.start_le).trans
+      hreach.final_defect_le_three
+  have hnewDef : N4.flagDefectRank (intrinsicCapacityState p')
+      (mulTarget 5) ≤ 3 := by
+    rw [← hrestart.2.2]
+    exact hpostDef
+  rcases hreach.prune_simulate_from_equal_defect
+      hrestart.2.1 hrestart.2.2 hnewDef with
+    ⟨k', hk', hreplay, hdim⟩
+  exact ⟨k', hk', hreplay, hdim⟩
 
 end
 end N5
