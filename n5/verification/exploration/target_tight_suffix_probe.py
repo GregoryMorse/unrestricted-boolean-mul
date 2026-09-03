@@ -14,6 +14,7 @@ suffix theorem.
 
 from __future__ import annotations
 
+import argparse
 from dataclasses import dataclass
 
 
@@ -221,6 +222,16 @@ def ce_capacity_after_first_high() -> tuple[int, ...]:
     return basis_key([*capacity, first_high])
 
 
+def unpopulated_quadratic_return_state() -> tuple[int, ...]:
+    """The exact rank-four return found by the population probe."""
+    r0 = TARGETS[0]
+    r1 = xor_all(TARGETS)
+    rinf = TARGETS[-1]
+    first = (A[2] ^ B[2]) & (A[2] ^ r0)
+    second = (A[2] ^ B[2] ^ B[0]) & (A[2] ^ A[0] ^ r0)
+    return basis_key([ALL_ONES, *X, r0, r1, rinf, first, second])
+
+
 def run_frontier(initial: tuple[int, ...], label: str) -> None:
     frontier = {initial}
     seen = set(frontier)
@@ -251,5 +262,19 @@ def run_frontier(initial: tuple[int, ...], label: str) -> None:
 
 
 if __name__ == "__main__":
-    run_frontier(ce_prefix_after_first_high(), "literal-prefix-after-birth")
-    run_frontier(ce_capacity_after_first_high(), "capacity-after-birth")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--state",
+        choices=("literal", "capacity", "unpopulated-return", "all"),
+        default="all",
+    )
+    args = parser.parse_args()
+    if args.state in ("literal", "all"):
+        run_frontier(ce_prefix_after_first_high(), "literal-prefix-after-birth")
+    if args.state in ("capacity", "all"):
+        run_frontier(ce_capacity_after_first_high(), "capacity-after-birth")
+    if args.state in ("unpopulated-return", "all"):
+        run_frontier(
+            unpopulated_quadratic_return_state(),
+            "unpopulated-quadratic-return",
+        )

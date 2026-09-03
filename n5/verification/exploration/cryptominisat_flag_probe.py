@@ -129,6 +129,14 @@ def concrete_base(n: int, name: str) -> tuple[list[int], list[int]]:
         quadratics = [x00, x11, xsum, r0, r1, rinf]
     elif name == "e1r0":
         quadratics = [r0, targets[1], a[1] & b[1], r1, rinf]
+    elif name == "qreturnce":
+        # Exact unpopulated quadratic-return witness discovered by
+        # quadratic_return_population_probe.py.  Both products have the same
+        # nonzero high part; together they add one high and one quadratic
+        # defect direction above Aff + <r0,r1,rinf>.
+        first = (a[2] ^ b[2]) & (a[2] ^ r0)
+        second = (a[2] ^ b[2] ^ b[0]) & (a[2] ^ a[0] ^ r0)
+        quadratics = [r0, r1, rinf, first, second]
     elif name in ("wstar", "wstar0"):
         quadratics = [x00, x01, x10, x11, r0, r1, rinf]
         if name == "wstar0":
@@ -553,7 +561,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--base",
-        choices=("affine", "pstar", "e1r0", "wstar", "wpq", "w3p", "wstar0"),
+        choices=("affine", "pstar", "e1r0", "qreturnce", "wstar", "wpq", "w3p", "wstar0"),
         default="affine",
     )
     parser.add_argument(

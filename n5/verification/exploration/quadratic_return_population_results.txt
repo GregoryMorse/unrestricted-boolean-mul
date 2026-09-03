@@ -1,0 +1,72 @@
+POST-HIGH QUADRATIC-RETURN DISCOVERY SNAPSHOT
+============================================
+
+Status
+------
+
+This is a deterministic discovery/regression record, not a premise of the
+manuscript or Lean development.  It records the counterexample that forced
+the repeated capacity-restart argument to be withdrawn and the exact
+fixed-state checks used to design its replacement.
+
+Population scan
+---------------
+
+Command:
+
+  python3 n5/verification/exploration/quadratic_return_population_probe.py --all-planes
+
+Summary:
+
+  populated quotient classes modulo the 9-dimensional Hankel target: 171901
+  rational same-plane choices checked:                              35
+  choices admitting an unpopulated return:                          15
+  simultaneous S3 orbit keys:                                      (0,1),
+                                                                    (1,1),
+                                                                    (1,2),
+                                                                    (1,3)
+
+For every reported witness the program asserts, rather than merely prints,
+that the two products have identical nonzero cubic/quartic high part, their
+difference has zero cubic and quartic parts, and the returned quotient class
+has minimum alternating rank 4 over all Hankel-target translates.  Thus no
+translate of that returned class is decomposable.
+
+Canonical witness
+-----------------
+
+Let r0 = a0*b0 and start from Aff + <r0,r1,rinf>.  The products
+
+  g = (a2 + b2) * (a2 + r0)
+  h = (a2 + b2 + b0) * (a2 + a0 + r0)
+
+have the same nonzero cubic part.  Their sum z = g + h is quadratic.  The
+canonical quotient bitset printed by the coordinate reducer is 8194, and
+the minimum alternating rank of z+t over all t in the Hankel target is 4.
+
+Exact fixed-state checks for this witness
+-----------------------------------------
+
+The state Aff + <r0,r1,rinf,g,h> has dimension 16, target rank 3, and total
+defect 2.  The multiplication-map probe finds no target-tight gate from this
+state before the final defect birth.
+
+After fixing the next gate as the final defect birth, the shared-solver flag
+scan gives exactly the following possibilities in its canonical missing-
+target quotient coordinates:
+
+  one target row:  1, 2, 3, 18, 36, 42, 54, 63
+
+  two target rows: (1,2), (2,1), (3,1),
+                   (18,36), (36,18), (54,18)
+
+All 90 canonical third-row extensions of those six two-row flags are UNSAT.
+Five cases that exceeded the initial ten-second per-flag limit were rerun
+individually and also returned UNSAT:
+
+  (18,36,2), (18,36,3), (36,18,2), (36,18,3), (54,18,2)
+
+Consequently this one fixed block admits at most two target rows after the
+last defect birth.  The statement is exact for the displayed state, but the
+universal manuscript repair still requires an algebraic orbit/fixed-block
+classification; this transcript must not be cited as that proof.
