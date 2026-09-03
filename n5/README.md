@@ -122,6 +122,12 @@ equality in the exact cost ledger.  The checked alternative is therefore
 `r = 11`, `r = 12`, or `r = 13`; the remaining structural work is precisely
 to exclude the tight defect-two and defect-three alternatives.
 
+The chronology after the final defect birth is isolated in
+`N5/TightSuffix.lean`: each subsequent nonredundant gate raises target rank by
+exactly one while defect stays constant.  This target-tight relation is much
+narrower than the refuted history-free suffix relation and retains the literal
+factor membership needed by the remaining envelope calculations.
+
 ## Formalization handoff
 
 - [`FORMALIZATION_HANDOFF.md`](FORMALIZATION_HANDOFF.md) fixes the module

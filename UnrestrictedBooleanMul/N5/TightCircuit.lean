@@ -41,6 +41,33 @@ theorem prefix_target_add_defect_eq_of_nonredundant {r j : Nat}
     (fun i _ => hnr i)
   simpa only [stateTargetRank, add_comm] using hcount.symm
 
+/-- At every nonredundant gate, exactly one side of the flag ledger grows:
+either the gate buys one target direction or it births one defect direction. -/
+theorem gate_target_or_defect_of_nonredundant {r : Nat}
+    (C : Circuit 10 r) (hnr : ∀ i : Fin r, N4.NonredundantAt C i)
+    (i : Fin r) :
+    (stateTargetRank (N4.circuitFlag C (i.val + 1)) =
+        stateTargetRank (N4.circuitFlag C i.val) + 1 ∧
+      N4.flagDefectRank (N4.circuitFlag C (i.val + 1)) (mulTarget 5) =
+        N4.flagDefectRank (N4.circuitFlag C i.val) (mulTarget 5)) ∨
+    (stateTargetRank (N4.circuitFlag C (i.val + 1)) =
+        stateTargetRank (N4.circuitFlag C i.val) ∧
+      N4.flagDefectRank (N4.circuitFlag C (i.val + 1)) (mulTarget 5) =
+        N4.flagDefectRank (N4.circuitFlag C i.val) (mulTarget 5) + 1) := by
+  have hi : i.val ≤ r := i.isLt.le
+  have his : i.val + 1 ≤ r := by omega
+  have hprev := prefix_target_add_defect_eq_of_nonredundant C hi hnr
+  have hnext := prefix_target_add_defect_eq_of_nonredundant C his hnr
+  have htargetMono : stateTargetRank (N4.circuitFlag C i.val) ≤
+      stateTargetRank (N4.circuitFlag C (i.val + 1)) := by
+    apply stateTargetRank_mono (affine_le_wireSpace C.gate)
+    exact N4.wireSpace_mono (by omega)
+  have hdefectMono : N4.flagDefectRank
+      (N4.circuitFlag C i.val) (mulTarget 5) ≤
+      N4.flagDefectRank (N4.circuitFlag C (i.val + 1)) (mulTarget 5) := by
+    exact flagDefectRank_mono (N4.wireSpace_mono (by omega))
+  omega
+
 /-- In a nonredundant completing circuit of at most twelve gates, the actual
 tail uses every available unit of joint target/defect dimension. -/
 theorem circuitTail_totalGain_eq_remaining_of_nonredundant {r j : Nat}

@@ -448,3 +448,6 @@ multiplicative-complexity result are printed in one stable, reviewable place.
 #print axioms UnrestrictedBooleanMul.exists_minimalCircuit_all_nonredundant
 #print axioms UnrestrictedBooleanMul.N5.circuitTail_totalGain_eq_remaining_of_nonredundant
 #print axioms UnrestrictedBooleanMul.N5.exists_tight_minimal_mul_five
+#print axioms UnrestrictedBooleanMul.N5.gate_target_or_defect_of_nonredundant
+#print axioms UnrestrictedBooleanMul.N5.circuitFlag_targetTightSuffix
+#print axioms UnrestrictedBooleanMul.N5.circuitTail_targetTightSuffix_after_lastQuadratic
