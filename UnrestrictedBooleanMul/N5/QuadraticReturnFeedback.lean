@@ -22,6 +22,13 @@ private theorem twoForm_add_self (p : TwoForm) : p + p = 0 := by
   funext s
   exact CharTwo.add_self_eq_zero (p s)
 
+private theorem ambientWedgeTwo_add_left_local (p q r : TwoForm) :
+    ambientWedgeTwo (p + q) r =
+      ambientWedgeTwo p r + ambientWedgeTwo q r := by
+  funext i j k l
+  simp only [ambientWedgeTwo, ambientTwoCoeff_add, Pi.add_apply]
+  ring
+
 /-- A quadratic space whose target intersection is exactly the first-order
 envelope cannot contain a member of the missing target coset. -/
 theorem section_ne_missingCoset_of_targetIntersection
@@ -317,6 +324,169 @@ theorem rankOne_section_absorption_impossible
       rw [hcConstant, hc0, zero_smul, mul_zero] at h
       exact h.symm
     apply hFtwoNotZero
+    have hprojection := congrArg (quadraticProjection 10) hFzero
+    simpa [F] using hprojection
+  · apply hUhigh
+    have h := hproduct
+    rw [hcConstant, hc1, one_smul, mul_one] at h
+    rw [h]
+    exact hFquad
+
+/-- If both the quadratic factor and the old correction use the returned
+section, their section coefficients cancel.  The quartic absorption equation
+then lies in the original missing Hankel coset, whose exterior kernel is one
+dimensional.  Unpopulatedness excludes the zero quadratic product needed by
+the nonzero kernel branch.  Thus this part of returned-section rank-one
+feedback is algebraically impossible without a finite circuit search. -/
+theorem rankOne_unpopulatedSection_bothUseSection_impossible
+    (z : TwoForm) (hunpopulated : UnpopulatedQuadraticSection z)
+    (U : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (fConst cConst : F₂) (fLinear cLinear : LinearForm)
+    (u cCoeff vCoeff : TargetCoeff)
+    (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcCoeff : cCoeff ∈ firstOrderEnvelopeCoeffSpace)
+    (hvCoeff : vCoeff ∈ firstOrderEnvelopeCoeffSpace)
+    (C Vtwo : TwoForm)
+    (hC : C = targetTwo cCoeff + z)
+    (hV : Vtwo = targetTwo vCoeff + z)
+    (hproduct :
+      U * quadraticCoordinateANF cConst cLinear C =
+        quadraticCoordinateANF fConst fLinear
+          (targetTwo (firstOrderMissingCoeff + u) + Vtwo))
+    (habsorb :
+      (U * quadraticCoordinateANF cConst cLinear C) *
+          quadraticCoordinateANF cConst cLinear C =
+        U * quadraticCoordinateANF cConst cLinear C) : False := by
+  let Ftwo := targetTwo (firstOrderMissingCoeff + u) + Vtwo
+  let F := quadraticCoordinateANF fConst fLinear Ftwo
+  let c := quadraticCoordinateANF cConst cLinear C
+  change U * c = F at hproduct
+  change (U * c) * c = U * c at habsorb
+  have habsorbF : F * c = F := by
+    calc
+      F * c = (U * c) * c := by rw [hproduct]
+      _ = U * c := habsorb
+      _ = F := hproduct
+  have hFquad : F ∈ N4.quadraticANFSpace 10 :=
+    quadraticCoordinateANF_mem_quadraticANFSpace fConst fLinear Ftwo
+  have hFtwoAddZ : Ftwo + z =
+      targetTwo (firstOrderMissingCoeff + (u + vCoeff)) := by
+    dsimp only [Ftwo]
+    rw [hV]
+    calc
+      (targetTwo (firstOrderMissingCoeff + u) +
+          (targetTwo vCoeff + z)) + z =
+          (targetTwo (firstOrderMissingCoeff + u) +
+            targetTwo vCoeff) + (z + z) := by abel
+      _ = targetTwo (firstOrderMissingCoeff + u) +
+          targetTwo vCoeff := by rw [twoForm_add_self, add_zero]
+      _ = targetTwo (firstOrderMissingCoeff + (u + vCoeff)) := by
+        change targetTwoLinear (firstOrderMissingCoeff + u) +
+            targetTwoLinear vCoeff =
+          targetTwoLinear (firstOrderMissingCoeff + (u + vCoeff))
+        rw [← targetTwoLinear.map_add]
+        congr 1
+        ac_rfl
+  have hFtwoNotDecomposable : ¬ IsDecomposableTwo Ftwo := by
+    intro hdec
+    apply hunpopulated Ftwo hdec
+    rw [hFtwoAddZ]
+    exact targetTwo_mem_targetTwoSpace _
+  have hmissingForm : Ftwo + C =
+      targetTwo (firstOrderMissingCoeff + (u + vCoeff + cCoeff)) := by
+    dsimp only [Ftwo]
+    rw [hV, hC]
+    calc
+      (targetTwo (firstOrderMissingCoeff + u) +
+          (targetTwo vCoeff + z)) + (targetTwo cCoeff + z) =
+          ((targetTwo (firstOrderMissingCoeff + u) +
+            targetTwo vCoeff) + targetTwo cCoeff) + (z + z) := by abel
+      _ = (targetTwo (firstOrderMissingCoeff + u) +
+          targetTwo vCoeff) + targetTwo cCoeff := by
+            rw [twoForm_add_self, add_zero]
+      _ = targetTwo
+          (firstOrderMissingCoeff + (u + vCoeff + cCoeff)) := by
+        change (targetTwoLinear (firstOrderMissingCoeff + u) +
+            targetTwoLinear vCoeff) + targetTwoLinear cCoeff =
+          targetTwoLinear
+            (firstOrderMissingCoeff + (u + vCoeff + cCoeff))
+        rw [← targetTwoLinear.map_add, ← targetTwoLinear.map_add]
+        congr 1
+        ac_rfl
+  have hfour : ambientWedgeTwo Ftwo C = 0 := by
+    calc
+      ambientWedgeTwo Ftwo C = anfFourProjectionTen (F * c) := by
+        symm
+        exact anfFourProjectionTen_quadraticCoordinateANF_mul
+          fConst cConst fLinear cLinear Ftwo C
+      _ = anfFourProjectionTen F := congrArg anfFourProjectionTen habsorbF
+      _ = 0 := anfFourProjectionTen_eq_zero_of_degreeLE_three
+        (hFquad.mono (by omega))
+  have hmissingWedge : ambientWedgeTwo
+      (targetTwo
+        (firstOrderMissingCoeff + (u + vCoeff + cCoeff))) C = 0 := by
+    rw [← hmissingForm, ambientWedgeTwo_add_left_local, hfour,
+      ambientWedgeTwo_self, add_zero]
+  have hcombinedCoeff : u + vCoeff + cCoeff ∈
+      firstOrderEnvelopeCoeffSpace :=
+    firstOrderEnvelopeCoeffSpace.add_mem
+      (firstOrderEnvelopeCoeffSpace.add_mem hu hvCoeff) hcCoeff
+  have hCzero : C = 0 := by
+    rcases (missingCoset_wedge_eq_zero_iff
+        (u + vCoeff + cCoeff) hcombinedCoeff C).1 hmissingWedge with
+      ⟨a, ha⟩
+    have ha' : C = a • (Ftwo + C) := by
+      rw [hmissingForm]
+      exact ha
+    rcases f2_eq_zero_or_one a with ha0 | ha1
+    · simpa [ha0] using ha'
+    · exfalso
+      apply hFtwoNotDecomposable
+      have hFtwoZero : Ftwo = 0 := by
+        rw [ha1, one_smul] at ha'
+        have hcancel : Ftwo + C = 0 + C := by simpa using ha'.symm
+        exact add_right_cancel hcancel
+      rw [hFtwoZero]
+      exact decomposableTwo_zero
+  have hthree : ambientVectorWedgeTwo cLinear Ftwo = 0 := by
+    calc
+      ambientVectorWedgeTwo cLinear Ftwo =
+          factorPlaneCubic fLinear cLinear Ftwo 0 := by
+            symm
+            exact factorPlaneCubic_zero_right fLinear cLinear Ftwo
+      _ = exactLowProductCubic fLinear cLinear Ftwo 0 := by
+        simp [exactLowProductCubic]
+      _ = anfThreeProjectionTen (F * c) := by
+        change exactLowProductCubic fLinear cLinear Ftwo 0 =
+          anfThreeProjectionTen
+            (quadraticCoordinateANF fConst fLinear Ftwo *
+              quadraticCoordinateANF cConst cLinear C)
+        rw [hCzero]
+        symm
+        exact anfThreeProjectionTen_quadraticCoordinateANF_mul
+          fConst cConst fLinear cLinear Ftwo 0
+      _ = anfThreeProjectionTen F := congrArg anfThreeProjectionTen habsorbF
+      _ = 0 := anfThreeProjectionTen_eq_zero_of_quadratic hFquad
+  have hcLinearZero : cLinear = 0 := by
+    by_contra hcLinearNe
+    rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+        Ftwo cLinear hcLinearNe hthree with ⟨v, hv⟩
+    exact hFtwoNotDecomposable ⟨cLinear, v, hv⟩
+  have hcConstant : c = cConst • (1 : ANF 10) := by
+    simp [c, quadraticCoordinateANF, hCzero, hcLinearZero,
+      show quadraticANFOfForm (0 : TwoForm) = 0 by
+        exact map_zero quadraticANFOfFormLinear]
+  have hFtwoNeZero : Ftwo ≠ 0 := by
+    intro hzero
+    apply hFtwoNotDecomposable
+    rw [hzero]
+    exact decomposableTwo_zero
+  rcases f2_eq_zero_or_one cConst with hc0 | hc1
+  · have hFzero : F = 0 := by
+      have h := habsorbF
+      rw [hcConstant, hc0, zero_smul, mul_zero] at h
+      exact h.symm
+    apply hFtwoNeZero
     have hprojection := congrArg (quadraticProjection 10) hFzero
     simpa [F] using hprojection
   · apply hUhigh
