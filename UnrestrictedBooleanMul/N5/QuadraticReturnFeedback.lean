@@ -202,7 +202,7 @@ theorem quadraticSection_correctedProduct_ne_missingTarget
     rw [targetTwoSpace_inf_firstOrderEnvelope_sup_of_missingCoset_exclusion
       z (fun c hc => by
         intro hz
-        apply hunpopulated z ⟨0, 0, by simp⟩
+        apply hunpopulated 0 ⟨0, 0, by simp⟩
         rw [zero_add, hz]
         exact ⟨firstOrderMissingCoeff + c, rfl⟩)] at hinf
     exact missingCoset_targetTwo_not_mem_firstOrderEnvelope u hu hinf
