@@ -283,6 +283,20 @@ def unpopulated_quadratic_return_state(orbit: str = "01") -> tuple[int, ...]:
     raise ValueError(f"unknown return orbit {orbit}")
 
 
+def rational_kernel_counterexample_state() -> tuple[int, ...]:
+    """The later exact `(0,r0)` return with rational annihilator `r0`."""
+    r0 = TARGETS[0]
+    r1 = xor_all(TARGETS)
+    rinf = TARGETS[-1]
+    ell = A[0] ^ A[1] ^ B[0]
+    x = A[0] ^ B[0]
+    y = A[0] ^ B[1]
+    m = A[1] ^ A[3] ^ A[4] ^ B[0] ^ B[1] ^ B[2] ^ B[3]
+    first = ell & (m ^ r0)
+    second = (ell ^ x) & (m ^ y ^ r0)
+    return basis_key([ALL_ONES, *X, r0, r1, rinf, first, second])
+
+
 def saturated_first_order_return_state(orbit: str = "01") -> tuple[int, ...]:
     """The same return block after granting the full first-order target base."""
     return basis_key([
@@ -360,7 +374,7 @@ if __name__ == "__main__":
             "literal", "capacity", "unpopulated-return", "return-01",
             "return-11", "return-12", "return-13", "all",
             "return-pstar", "return-e1r0", "return-u01", "return-u11",
-            "return-u12", "return-u13",
+            "return-u12", "return-u13", "return-kernel-ce",
         ),
         default="all",
     )
@@ -381,6 +395,11 @@ if __name__ == "__main__":
             unpopulated_quadratic_return_state(),
             "unpopulated-quadratic-return",
             args.max_levels,
+        )
+    if args.state == "return-kernel-ce":
+        run_frontier(
+            rational_kernel_counterexample_state(),
+            "rational-kernel-counterexample-return", args.max_levels,
         )
     for orbit in ("01", "11", "12", "13"):
         if args.state in (f"return-{orbit}", "all"):

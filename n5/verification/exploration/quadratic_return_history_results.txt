@@ -1,0 +1,71 @@
+Parameterized rational-return history certificate (2026-09-04)
+================================================================
+
+Scope
+-----
+The calculation retains the first high product.  It allows an arbitrary
+affine correction, every first-order target correction, and the returned
+quadratic section itself.  It then multiplies by an arbitrary affine factor
+whose quadratic part is one of r0, r1, or rInfinity.  The return and feedback
+product are required to be quadratic, and their difference is required to
+be the missing first-order target class.  Unpopulatedness and nonzero-high
+are not used by the contradiction.
+
+Exact algebraic ledger
+----------------------
+There are four simultaneous factor-pair types:
+
+  zero_one, one_one, one_two, one_three.
+
+For one_two and one_three, all three rational feedback directions have a
+degree-one polynomial certificate (64--122 generator multiples).
+
+For zero_one and one_one, rational-place symmetry leaves an aligned and an
+off-axis direction.  The off-axis residual has eight bilinear terms.  Of its
+96 residual-one Boolean branches, all 96 have degree-one certificates.
+
+For the aligned direction the residual is
+
+  e1*y6 + e2*y6 + e4*y6 + e4*y7
+    + e6*y1 + e6*y2 + e6*y4 + e7*y4,
+
+where e=ell in the zero_one case and e=mDifference in the one_one case.
+Of its 480 residual-one branches, 474 have degree-one certificates.  The six
+remaining branches are exactly GL(2,F2) on the (1,6) coordinates.  They are
+one symmetry orbit.  Splitting the single returned-section correction bit
+leaves two ideals.  Singular `liftstd` gives the unit ideal in both cases.
+
+The zero_one certificates use 16 semantic generators; the one_one
+difference-coordinate certificates use 13.  The multipliers are stored in
+`quadratic_return_history_polynomial.py`.  The command
+
+  python n5/verification/exploration/quadratic_return_history_polynomial.py \
+    --case zero_one --direction r0 --verify-exceptional-certificate
+
+independently reconstructs all four lift identities in a second sparse
+Boolean-polynomial engine.  Every report ends with
+
+  combination_is_one_in_boolean_quotient: True
+  combination_remainder: 1
+
+SAT cross-check
+---------------
+The direct ANF SAT encoding returned UNSAT for ten of the twelve named
+factor-pair/direction cases without the unpopulatedness restriction.  The
+two 300/600-second timeouts were zero_one/r1 and one_one/r1 in the original
+coordinate ordering; in each case the fixed factor pair has a stabilizer
+interchanging r1 and rInfinity, and the rInfinity branch returned UNSAT.
+The polynomial calculation above also closes the off-axis orbit directly.
+
+For the displayed kernel counterexample, the return-only positive control is
+SAT and independently replays with minimum target-coset alternating rank 4.
+Adding rational feedback makes both correction-bit branches UNSAT in 2.35 s
+and 4.10 s on the local CryptoMiniSat run.
+
+Trust boundary
+--------------
+This file records exact theorem-discovery certificates, not the final Lean
+theorem.  Singular was used only to discover sparse multipliers.  The stored
+multipliers are replayed by independent Python polynomial arithmetic.  The
+remaining trusted step is to express these identities in Lean and connect
+the factor-pair and rational-place normalizations to the circuit suffix.

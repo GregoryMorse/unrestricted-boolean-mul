@@ -71,6 +71,22 @@ The following distinctions are now explicit in Lean.
    to zero or one of the three rational rank-one directions.  This is the
    sharp section-only statement: the rational alternatives cannot be
    removed from unpopulatedness alone.
+8. `quadratic_return_history_polynomial.py` now closes the previously open
+   rational branch at the parameterized Boolean-algebra level while retaining
+   the old high representative.  The `(1,2)` and `(1,3)` factor pairs have
+   direct degree-one identities in all rational directions.  Rational-place
+   symmetry reduces `(0,1)` and `(1,1)` to aligned and off-axis directions;
+   every off-axis branch is degree one, and only the six-element
+   `GL(2,F₂)` aligned orbit needs a second step.  Splitting the single
+   returned-section correction bit there gives four sparse `liftstd` unit
+   certificates (16, 16, 13, and 13 semantic terms), all independently
+   replayed by the Python Boolean-polynomial engine.  No unpopulatedness or
+   nonzero-high premise is used in these identities.  The exact ledger is in
+   `quadratic_return_history_results.txt`.  The raw, non-eliminated off-axis
+   `(0,1)` leaf is now a kernel-checked explicit identity in
+   `N5/QuadraticReturnHistoryRaw.lean`.  The remaining factor-pair leaves and
+   the semantic circuit bridge still have to be translated and connected
+   before this closes the circuit-facing branch.
 
 The exact counterexample has also been retested with its history restored.
 Keeping its already-born high representative and allowing every correction
@@ -99,14 +115,12 @@ connected to the exact-cost circuit suffix.
 
 - Split returned sections into populated and unpopulated quotient cases and
   account for the populated case without granting an uncharged target row.
-- Classify the *factor pair* `(q,c)` of a rational return into the four
+- Formalize the *factor pair* `(q,c)` classification into the four
   simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
-  Keep the returned quadratic section and its old high representative
-  parameterized.  The quartic equation reduces every target annihilator to
-  a rational direction, but the rational branch must then use the exact
-  cubic/quadratic idempotence equations together with that retained high
-  representative, or be charged as a bounded one-colour target gain.  A
-  section-only injectivity theorem is false.
+  Then finish translating and connect the checked history-sensitive
+  polynomial certificates described above.  They retain the returned section
+  and old high representative and close all rational directions.  The
+  section-only injectivity theorem remains false and must not be restored.
 - Connect the independent/rank-two high-colour normal form to the generic
   positive-quadratic-defect contradiction.
 - Prove the corresponding one-defect return statement (both the rational and
