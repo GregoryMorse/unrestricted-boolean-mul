@@ -86,11 +86,16 @@ The following distinctions are now explicit in Lean.
    `(0,1)` leaf is now a kernel-checked explicit identity in
    `N5/QuadraticReturnHistoryRaw.lean`, with its 71 coordinates named by the
    checked interface in `N5/QuadraticReturnHistoryModel.lean`.
-   `N5/QuadraticReturnHistorySemantic.lean` now identifies the literal
-   equal-high return product and proves that a quadratic return supplies all
-   four return-high equations used by that certificate.  The remaining
-   product-high and quotient equations, factor-pair leaves, and circuit-facing
-   normalization still have to be connected before this closes the branch.
+   `N5/QuadraticReturnHistorySemantic.lean` identifies every raw equation
+   with its literal return, feedback, or genuine quadratic-quotient
+   coordinate and exposes the canonical off-axis `(0,1)` missing-coset
+   exclusion.  The six direct `(1,2)` and `(1,3)` leaves are likewise fully
+   connected in `N5/QuadraticReturnHistory*Semantic.lean`: all 198 selected
+   equations are discharged from the literal quadratic-history hypotheses,
+   and each generated certificate now ends in a circuit-facing
+   first-order-missing-functional theorem.  The remaining history work is
+   the symmetry/aligned treatment of `(0,1)` and `(1,1)`, followed by the
+   factor-pair normalization that selects these leaves.
 
 The exact counterexample has also been retested with its history restored.
 Keeping its already-born high representative and allowing every correction
@@ -121,10 +126,12 @@ connected to the exact-cost circuit suffix.
   account for the populated case without granting an uncharged target row.
 - Formalize the *factor pair* `(q,c)` classification into the four
   simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
-  Then finish translating and connect the checked history-sensitive
-  polynomial certificates described above.  They retain the returned section
-  and old high representative and close all rational directions.  The
-  section-only injectivity theorem remains false and must not be restored.
+  The direct `(1,2)` and `(1,3)` history-sensitive certificates are now
+  kernel-connected for all three rational directions.  Finish the
+  symmetry/aligned `(0,1)` and `(1,1)` leaves and connect the resulting case
+  split to the factor-pair normalization.  These arguments retain the
+  returned section and old high representative; the section-only injectivity
+  theorem remains false and must not be restored.
 - Connect the independent/rank-two high-colour normal form to the generic
   positive-quadratic-defect contradiction.
 - Prove the corresponding one-defect return statement (both the rational and
