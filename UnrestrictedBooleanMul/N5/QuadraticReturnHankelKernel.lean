@@ -59,7 +59,9 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
         RankFourHankelPivotCertificate i := by
   letI : DecidableEq TwoForm := Fintype.decidablePiFintype
   letI : DecidablePred RankFourHankelPivotCertificate :=
-    fun _ => inferInstance
+    fun _ => by
+      unfold RankFourHankelPivotCertificate
+      infer_instance
   exact @of_decide_eq_true _ Fintype.decidableForallFintype rfl
 
 /-- Every target annihilator of the affine missing coset translated by an
