@@ -68,7 +68,9 @@ private theorem balancedFourVector_decomposable
     simp only [squarefreeWedge_pair, Pi.add_apply, Pi.smul_apply,
       smul_eq_mul, delta]
     ring_nf
-    simp [N3Certificate.pow_two_f2, N3Certificate.two_eq_zero_f2]
+    simp only [N3Certificate.pow_two_f2]
+    ring_nf
+    rw [N3Certificate.two_eq_zero_f2]
     ring
 
 /-- Rank-four pivot kernel lemma.  The returned form `dform` is decomposable
@@ -138,7 +140,12 @@ theorem exists_decomposable_translate_of_pivotResidual
       delta • squarefreeWedge (ambientPivotRow p i)
           (ambientPivotRow p j) +
         delta • squarefreeWedge u v := by
-    rw [hp, smul_add]
+    calc
+      delta • p = delta •
+          (squarefreeWedge (ambientPivotRow p i) (ambientPivotRow p j) +
+            squarefreeWedge u v) := congrArg (fun form : TwoForm =>
+              delta • form) hp
+      _ = _ := smul_add delta _ _
   have hdform : dform =
       delta • squarefreeWedge (ambientPivotRow p i)
           (ambientPivotRow p j) +
