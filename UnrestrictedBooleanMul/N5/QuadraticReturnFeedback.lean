@@ -385,7 +385,7 @@ theorem rankOne_unpopulatedSection_bothUseSection_impossible
             targetTwoLinear vCoeff =
           targetTwoLinear (firstOrderMissingCoeff + (u + vCoeff))
         rw [← targetTwoLinear.map_add]
-        congr 1
+        apply congrArg targetTwoLinear
         ac_rfl
   have hFtwoNotDecomposable : ¬ IsDecomposableTwo Ftwo := by
     intro hdec
@@ -411,7 +411,7 @@ theorem rankOne_unpopulatedSection_bothUseSection_impossible
           targetTwoLinear
             (firstOrderMissingCoeff + (u + vCoeff + cCoeff))
         rw [← targetTwoLinear.map_add, ← targetTwoLinear.map_add]
-        congr 1
+        apply congrArg targetTwoLinear
         ac_rfl
   have hfour : ambientWedgeTwo Ftwo C = 0 := by
     calc
