@@ -75,11 +75,23 @@ private theorem returnSymmetryTwoBasis_eq_wedge
     _ = squarefreeWedge
         (returnSymmetryLinearBasis (quadraticFirst s))
         (returnSymmetryLinearBasis (quadraticSecond s)) := by
-      congr 1 <;> funext i <;>
-        simp [returnSymmetryLinearBasis, coordinateLinearTen,
-          Pi.basisFun]
+      congr 1
+      · funext i
+        by_cases hi : i = quadraticFirst s
+        · simp [returnSymmetryLinearBasis, coordinateLinearTen,
+            Pi.basisFun, Pi.single_apply, hi, hi.symm]
+        · simp [returnSymmetryLinearBasis, coordinateLinearTen,
+            Pi.basisFun, Pi.single_apply, hi,
+            fun h => hi h.symm]
+      · funext i
+        by_cases hi : i = quadraticSecond s
+        · simp [returnSymmetryLinearBasis, coordinateLinearTen,
+            Pi.basisFun, Pi.single_apply, hi, hi.symm]
+        · simp [returnSymmetryLinearBasis, coordinateLinearTen,
+            Pi.basisFun, Pi.single_apply, hi,
+            fun h => hi h.symm]
 
-set_option maxHeartbeats 1000000 in
+set_option maxHeartbeats 3000000 in
 private theorem rationalPlaceFourFormLinear_wedge_basis
     (theta : Fin 2) (s t : QuadraticIndex 10) :
     rationalPlaceFourFormLinear theta
@@ -152,13 +164,14 @@ theorem rationalPlaceFourFormLinear_ambientWedgeTwo
             (rationalPlaceTwoFormLinear theta (returnSymmetryTwoBasis s))
             (rationalPlaceTwoFormLinear theta
               (returnSymmetryTwoBasis t)) := by
-      rw [map_sum]
+      rw [(rationalPlaceFourFormLinear theta).map_sum]
       apply Finset.sum_congr rfl
       intro t _
-      rw [map_sum]
+      rw [(rationalPlaceFourFormLinear theta).map_sum]
       apply Finset.sum_congr rfl
       intro s _
-      rw [map_smul, rationalPlaceFourFormLinear_wedge_basis]
+      rw [(rationalPlaceFourFormLinear theta).map_smul,
+        rationalPlaceFourFormLinear_wedge_basis]
     _ = ambientWedgeTwo
           (∑ s : QuadraticIndex 10,
             p s • rationalPlaceTwoFormLinear theta
