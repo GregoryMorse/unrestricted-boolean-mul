@@ -80,7 +80,7 @@ theorem exists_decomposable_translate_of_pivotResidual
     (hpivot : ambientTwoCoeff p i j = 1)
     (u v : LinearForm)
     (hresidual : ambientPivotResidual p i j = squarefreeWedge u v)
-    (hresidualNe : ambientPivotResidual p i j ≠ 0)
+    (hwedgeNe : squarefreeWedge u v ≠ 0)
     (hwedge : ambientWedgeTwo p q = 0) :
     ∃ dform : TwoForm, IsDecomposableTwo dform ∧
       ∃ scalar : F₂, q + dform = scalar • p := by
@@ -88,14 +88,14 @@ theorem exists_decomposable_translate_of_pivotResidual
     rw [linearIndependent_fin2]
     refine ⟨?_, ?_⟩
     · intro hv
-      apply hresidualNe
+      apply hwedgeNe
       have hvZero : v = 0 := by simpa using hv
-      rw [hresidual, hvZero]
+      rw [hvZero]
       simp
     · intro scalar hscalar
-      apply hresidualNe
+      apply hwedgeNe
       have hscalar' : scalar • v = u := by simpa using hscalar
-      rw [hresidual, ← hscalar', squarefreeWedge_smul_left,
+      rw [← hscalar', squarefreeWedge_smul_left,
         squarefreeWedge_self_f2, smul_zero]
   have hXzero := ambientPivotX_vectorWedge_residual_zero
     p q i j hpivot hwedge
