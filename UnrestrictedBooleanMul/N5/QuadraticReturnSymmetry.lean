@@ -1,4 +1,4 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnOrbit
+import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
 import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
 
 /-!
@@ -284,6 +284,35 @@ theorem rationalReturnOrbitWord_kernelCertificate
     FirstOrderReturnKernelCertificate
       (word.twoForm (rationalReturnOrbitSection orbit)) :=
   (rationalReturnOrbit_kernelCertificate orbit).rationalPlaceWord word
+
+/-- Normalized rank-one feedback is sterile for every rational-place
+transport of every canonical return representative. -/
+theorem rankOne_rationalReturnOrbitWord_escape_impossible
+    (orbit : RationalReturnOrbit) (word : RationalPlaceWord)
+    (hunpopulated : UnpopulatedQuadraticSection
+      (word.twoForm (rationalReturnOrbitSection orbit)))
+    (U c v : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (hvquad : v ∈ N4.quadraticANFSpace 10)
+    (fConst : F₂) (fLinear : LinearForm)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcSection : quadraticProjection 10 c ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂
+          ({word.twoForm (rationalReturnOrbitSection orbit)} : Set TwoForm))
+    (hvSection : quadraticProjection 10 v ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂
+          ({word.twoForm (rationalReturnOrbitSection orbit)} : Set TwoForm))
+    (hproduct :
+      U * c = quadraticCoordinateANF fConst fLinear
+        (targetTwo (firstOrderMissingCoeff + u)) + v)
+    (habsorb : (U * c) * c = U * c) : False :=
+  rankOne_unpopulatedSection_escape_impossible_of_kernel
+    (word.twoForm (rationalReturnOrbitSection orbit)) hunpopulated
+      (rationalReturnOrbitWord_kernelCertificate orbit word)
+      U c v hUhigh hcquad hvquad fConst fLinear u hu hcSection hvSection
+      hproduct habsorb
 
 end
 end N5
