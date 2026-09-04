@@ -58,7 +58,7 @@ private theorem balancedFourVector_decomposable
       simp only [squarefreeWedge_pair, Pi.add_apply, Pi.smul_apply,
         smul_eq_mul]
       ring_nf
-      simp [N3Certificate.pow_two_f2]
+      simp [N3Certificate.pow_two_f2, N3Certificate.two_eq_zero_f2]
   · let delta : F₂ := d + b * c
     refine ⟨delta • f + u + b • v,
       e + c • f + delta • v, ?_⟩
@@ -67,7 +67,7 @@ private theorem balancedFourVector_decomposable
     simp only [squarefreeWedge_pair, Pi.add_apply, Pi.smul_apply,
       smul_eq_mul, delta]
     ring_nf
-    simp [N3Certificate.pow_two_f2]
+    simp [N3Certificate.pow_two_f2, N3Certificate.two_eq_zero_f2]
 
 /-- Rank-four pivot kernel lemma.  The returned form `dform` is decomposable
 and differs from the annihilator `q` by a scalar multiple of `p`. -/
@@ -85,11 +85,13 @@ theorem exists_decomposable_translate_of_pivotResidual
     refine ⟨?_, ?_⟩
     · intro hv
       apply hresidualNe
-      rw [hresidual, hv]
+      have hvZero : v = 0 := by simpa using hv
+      rw [hresidual, hvZero]
       simp
     · intro scalar hscalar
       apply hresidualNe
-      rw [hresidual, ← hscalar, squarefreeWedge_smul_left,
+      have hscalar' : scalar • v = u := by simpa using hscalar
+      rw [hresidual, ← hscalar', squarefreeWedge_smul_left,
         squarefreeWedge_self_f2, smul_zero]
   have hXzero := ambientPivotX_vectorWedge_residual_zero
     p q i j hpivot hwedge
@@ -114,24 +116,33 @@ theorem exists_decomposable_translate_of_pivotResidual
   have hp : p =
       squarefreeWedge (ambientPivotRow p i) (ambientPivotRow p j) +
         squarefreeWedge u v := by
-    rw [← hresidual, ← ambientPivotPlane_add_residual p i j]
-    rfl
+    calc
+      p = ambientPivotPlane p i j + ambientPivotResidual p i j :=
+        (ambientPivotPlane_add_residual p i j).symm
+      _ = _ := by rw [hresidual]; rfl
   have hdform : dform =
       delta • squarefreeWedge (ambientPivotRow p i)
           (ambientPivotRow p j) +
         squarefreeWedge (ambientPivotRow p i) (a • u + b • v) +
         squarefreeWedge (ambientPivotRow p j) (c • u + d • v) +
         delta • squarefreeWedge u v := by
-    rw [dform, ambientPivot_decomposition_of_wedge_zero
+    dsimp only [dform]
+    rw [ambientPivot_decomposition_of_wedge_zero
       p q i j hpivot hwedge, hX, hY, hp]
     simp only [alpha, delta, smul_add]
-    module
+    funext s
+    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
   refine ⟨dform, ?_, alpha + delta, ?_⟩
   · rw [hdform]
     exact balancedFourVector_decomposable
       (ambientPivotRow p i) (ambientPivotRow p j) u v a b c d
-  · simp only [dform]
-    module
+  · dsimp only [dform]
+    funext s
+    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
 
 end
 end N5
