@@ -37,6 +37,7 @@ import UnrestrictedBooleanMul.N5.QuadraticReturnSecant
 import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
 import UnrestrictedBooleanMul.N5.QuadraticReturnRankTwo
 import UnrestrictedBooleanMul.N5.QuadraticReturnSymmetry
+import UnrestrictedBooleanMul.N5.QuadraticReturnKernel
 import UnrestrictedBooleanMul.N5.CapacityRegimeClosure
 import UnrestrictedBooleanMul.N5.LowDefectCapacityClosure
 import UnrestrictedBooleanMul.N5.SuffixBudget

@@ -29,6 +29,26 @@ private theorem ambientWedgeTwo_add_left_local (p q r : TwoForm) :
   simp only [ambientWedgeTwo, ambientTwoCoeff_add, Pi.add_apply]
   ring
 
+private theorem ambientWedgeTwo_comm_local (p q : TwoForm) :
+    ambientWedgeTwo p q = ambientWedgeTwo q p := by
+  funext i j k l
+  simp only [ambientWedgeTwo]
+  ring
+
+private theorem exists_unit_pivot_of_twoForm_ne_zero
+    {p : TwoForm} (hp : p ≠ 0) :
+    ∃ i j : Fin 10, ambientTwoCoeff p i j = 1 := by
+  have hex : ∃ s : QuadraticIndex 10, p s ≠ 0 := by
+    by_contra hnone
+    push_neg at hnone
+    exact hp (funext hnone)
+  rcases hex with ⟨s, hs⟩
+  rcases QuadraticIndex.exists_pair s with ⟨i, j, hij, rfl⟩
+  have hsOne : p (quadraticPair i j hij) = 1 :=
+    (f2_eq_zero_or_one (p (quadraticPair i j hij))).resolve_left hs
+  refine ⟨i, j, ?_⟩
+  simpa [ambientTwoCoeff, hij] using hsOne
+
 /-- A quadratic space whose target intersection is exactly the first-order
 envelope cannot contain a member of the missing target coset. -/
 theorem section_ne_missingCoset_of_targetIntersection
@@ -95,6 +115,79 @@ its target translate.  This is the algebraic condition detected by the
 rank-four return branch, stated without any finite classification. -/
 def UnpopulatedQuadraticSection (z : TwoForm) : Prop :=
   ∀ d : TwoForm, IsDecomposableTwo d → d + z ∉ targetTwoSpace
+
+/-- Intrinsic quotient formulation of an unpopulated section.  This removes
+the representative from subsequent case splits: a section is unpopulated
+exactly when its quotient point has no decomposable lift. -/
+theorem unpopulatedQuadraticSection_iff_not_populatedFiber
+    (z : TwoForm) :
+    UnpopulatedQuadraticSection z ↔
+      ¬ IsPopulatedFiber (quadraticQuotientProjection z) := by
+  constructor
+  · intro hunpopulated hpopulated
+    rcases hpopulated with ⟨d, hd, hprojection⟩
+    apply hunpopulated d hd
+    apply (quadraticQuotientProjection_eq_zero_iff (d + z)).1
+    rw [map_add, hprojection, CharTwo.add_self_eq_zero]
+  · intro hnotPopulated d hd htarget
+    apply hnotPopulated
+    refine ⟨d, hd, ?_⟩
+    have hzero : quadraticQuotientProjection (d + z) = 0 :=
+      (quadraticQuotientProjection_eq_zero_iff (d + z)).2 htarget
+    rw [map_add] at hzero
+    exact CharTwo.add_eq_zero.mp hzero
+
+/-- A target annihilating a member of the affine missing coset translated by
+an unpopulated section must have Hankel rank at most two.  Above rank two the
+target form is not a two-wedge secant, so the pivot kernel theorem makes its
+exterior kernel its own target line; that would put the section back in the
+zero quotient fiber, contradicting unpopulatedness. -/
+theorem unpopulatedSection_annihilator_hankelRankLETwo
+    (z : TwoForm) (hunpopulated : UnpopulatedQuadraticSection z)
+    (u c : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hzero : ambientWedgeTwo
+      (targetTwo (firstOrderMissingCoeff + u) + z)
+      (targetTwo c) = 0) :
+    HankelRankLETwo c := by
+  by_cases hc : c = 0
+  · subst c
+    intro i k m j l n
+    simp [hankelMinorThree, hankelMatrix]
+  · by_contra hnotRankTwo
+    have htargetNe : targetTwo c ≠ 0 := by
+      intro htargetZero
+      apply hc
+      apply targetTwo_injective
+      exact htargetZero.trans (map_zero targetTwoLinear).symm
+    rcases exists_unit_pivot_of_twoForm_ne_zero htargetNe with
+      ⟨i, j, hpivot⟩
+    have hnotSecant : ¬ ∃ x y v w : LinearForm,
+        targetTwo c = squarefreeWedge x y + squarefreeWedge v w := by
+      rintro ⟨x, y, v, w, hsecant⟩
+      exact hnotRankTwo (target_sum_two_decomposable_rankTwo hsecant)
+    have hcommuted : ambientWedgeTwo (targetTwo c)
+        (targetTwo (firstOrderMissingCoeff + u) + z) = 0 := by
+      rw [ambientWedgeTwo_comm_local]
+      exact hzero
+    rcases (ambientWedgeTwo_eq_zero_iff_smul_of_not_sum_two_decomposable
+        (targetTwo c)
+        (targetTwo (firstOrderMissingCoeff + u) + z)
+        i j hpivot hnotSecant).1 hcommuted with ⟨a, ha⟩
+    have hkernelTarget :
+        targetTwo (firstOrderMissingCoeff + u) + z ∈ targetTwoSpace := by
+      rw [ha]
+      exact targetTwoSpace.smul_mem a (targetTwo_mem_targetTwoSpace c)
+    have hmissingTarget :
+        targetTwo (firstOrderMissingCoeff + u) ∈ targetTwoSpace :=
+      targetTwo_mem_targetTwoSpace _
+    have hzTarget : z ∈ targetTwoSpace := by
+      have hadd := targetTwoSpace.add_mem hkernelTarget hmissingTarget
+      convert hadd using 1
+      funext s
+      simp only [Pi.add_apply]
+      ring_nf
+      simp [N3Certificate.two_eq_zero_f2]
+    exact (hunpopulated 0 decomposableTwo_zero) (by simpa using hzTarget)
 
 /-- Every member of the first-order envelope enlarged by one section either
 stays in the old envelope or uses that section with coefficient one. -/
