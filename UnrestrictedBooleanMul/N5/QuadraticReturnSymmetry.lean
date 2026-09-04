@@ -132,6 +132,16 @@ private theorem ambientWedgeTwo_double_sum
   congr 1
   exact mul_comm (b j) (a i)
 
+private theorem rationalPlaceFourFormLinear_finset_sum
+    {I : Type*} [DecidableEq I]
+    (theta : Fin 2) (s : Finset I) (f : I → AmbientFourForm) :
+    rationalPlaceFourFormLinear theta (∑ i in s, f i) =
+      ∑ i in s, rationalPlaceFourFormLinear theta (f i) := by
+  induction s using Finset.induction_on with
+  | empty => simp
+  | @insert i s hi ih =>
+      rw [Finset.sum_insert hi, Finset.sum_insert hi, map_add, ih]
+
 /-- Exterior multiplication of two quadratic forms is natural under either
 rational-place generator. -/
 theorem rationalPlaceFourFormLinear_ambientWedgeTwo
@@ -164,8 +174,13 @@ theorem rationalPlaceFourFormLinear_ambientWedgeTwo
             (rationalPlaceTwoFormLinear theta (returnSymmetryTwoBasis s))
             (rationalPlaceTwoFormLinear theta
               (returnSymmetryTwoBasis t)) := by
-      simp_rw [map_sum, map_smul,
-        rationalPlaceFourFormLinear_wedge_basis]
+      rw [rationalPlaceFourFormLinear_finset_sum]
+      apply Finset.sum_congr rfl
+      intro t _
+      rw [rationalPlaceFourFormLinear_finset_sum]
+      apply Finset.sum_congr rfl
+      intro s _
+      rw [map_smul, rationalPlaceFourFormLinear_wedge_basis]
     _ = ambientWedgeTwo
           (∑ s : QuadraticIndex 10,
             p s • rationalPlaceTwoFormLinear theta
