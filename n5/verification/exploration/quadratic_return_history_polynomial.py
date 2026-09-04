@@ -1393,7 +1393,7 @@ def main() -> None:
                 print("  all_goals simp [f2_two_eq_zero]")
                 print()
             print("set_option maxHeartbeats 3000000 in")
-            print("set_option maxRecDepth 4096 in")
+            print("set_option maxRecDepth 8192 in")
             print(f"private theorem {stem}_certificate (v : Fin {coordinate_count} → F₂) :")
             print(f"    {stem}Target v = {stem}Combination v := by")
             product_lemmas = ", ".join(
@@ -1406,7 +1406,7 @@ def main() -> None:
             print("    simp [CharTwo.ofNat_eq_mod] <;>")
             print("    ring")
             print()
-            print("set_option maxRecDepth 4096 in")
+            print("set_option maxRecDepth 8192 in")
             print(f"theorem {theorem_name}")
             print(f"    (v : Fin {coordinate_count} → F₂)")
             print(

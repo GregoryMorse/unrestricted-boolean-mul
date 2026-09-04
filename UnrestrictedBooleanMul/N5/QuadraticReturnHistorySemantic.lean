@@ -2,6 +2,7 @@ import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryModel
 import UnrestrictedBooleanMul.N5.QuadraticReturnHistorySymbolic
 import UnrestrictedBooleanMul.N5.CubicSemantic
 import UnrestrictedBooleanMul.N5.ClosedPlaces
+import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
 import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
 
 /-!
@@ -820,6 +821,697 @@ theorem ZeroOneOffAxisHistoryParameters.constraint_five_eq_feedback_coeff
   simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one,
     add_zero]
 
+macro "simp_zero_one_feedback_coeff" : tactic =>
+  `(tactic|
+    simp (config := { decide := true }) [zeroOneRawConstraint,
+      ZeroOneOffAxisHistoryParameters.vector,
+      ZeroOneOffAxisHistoryParameters.feedbackProduct,
+      ZeroOneOffAxisHistoryParameters.correctedHighFactor,
+      ZeroOneOffAxisHistoryParameters.feedbackFactor,
+      ZeroOneOffAxisHistoryParameters.correction,
+      ZeroOneOffAxisHistoryParameters.returned,
+      ZeroOneOffAxisHistoryParameters.firstProduct,
+      ZeroOneOffAxisHistoryParameters.shiftedProduct,
+      quadraticCoordinateANF,
+      ZeroOneOffAxisHistoryParameters.quadraticANFOfForm_correctionTwo_eq_targetANF,
+      ZeroOneOffAxisHistoryParameters.correctionCoeff,
+      returnHistoryCorrectionDirections, historyJOneCoeff,
+      historyJInfinityCoeff,
+      rZeroCoeff, rOneCoeff, rInfinityCoeff, jZeroCoeff,
+      dStarZeroCoeff, dStarOneCoeff,
+      quadraticANFOfForm_targetTwo, quadraticANFOfForm_zero,
+      linearANFTen, aCoord, bCoord, hankelIndex,
+      eval_eq_evalHom, supportAssignmentTen, Fin.sum_univ_succ])
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_six_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 6 =
+      p.feedbackProduct.coeff
+        ⟨({0, 1, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 1, 6} : Finset (Fin 10)).powerset =
+      {∅, {0}, {1}, {0, 1}, {6}, {0, 6}, {1, 6}, {0, 1, 6}} := by
+    decide
+  rw [hpowerset]
+  simp +decide [zeroOneRawConstraint,
+    ZeroOneOffAxisHistoryParameters.vector,
+    ZeroOneOffAxisHistoryParameters.feedbackProduct,
+    ZeroOneOffAxisHistoryParameters.correctedHighFactor,
+    ZeroOneOffAxisHistoryParameters.feedbackFactor,
+    ZeroOneOffAxisHistoryParameters.correction,
+    ZeroOneOffAxisHistoryParameters.returned,
+    ZeroOneOffAxisHistoryParameters.firstProduct,
+    ZeroOneOffAxisHistoryParameters.shiftedProduct,
+    quadraticCoordinateANF,
+    p.quadraticANFOfForm_correctionTwo_eq_targetANF,
+    ZeroOneOffAxisHistoryParameters.correctionCoeff,
+    returnHistoryCorrectionDirections, historyJOneCoeff,
+    historyJInfinityCoeff,
+    rZeroCoeff, rOneCoeff, rInfinityCoeff, jZeroCoeff,
+    dStarZeroCoeff, dStarOneCoeff,
+    quadraticANFOfForm_targetTwo, quadraticANFOfForm_zero,
+    linearANFTen, aCoord, bCoord, hankelIndex,
+    eval_eq_evalHom, supportAssignmentTen, Fin.sum_univ_succ]
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one,
+    add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_seven_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 7 =
+      p.feedbackProduct.coeff
+        ⟨({0, 4, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 4, 6} : Finset (Fin 10)).powerset =
+      {∅, {0}, {4}, {0, 4}, {6}, {0, 6}, {4, 6}, {0, 4, 6}} := by
+    decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one,
+    add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_eight_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 8 =
+      p.feedbackProduct.coeff ⟨({0, 5, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 5, 6} : Finset (Fin 10)).powerset =
+      {∅, {0}, {5}, {0, 5}, {6}, {0, 6}, {5, 6}, {0, 5, 6}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_nine_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 9 =
+      p.feedbackProduct.coeff ⟨({1, 5, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({1, 5, 6} : Finset (Fin 10)).powerset =
+      {∅, {1}, {5}, {1, 5}, {6}, {1, 6}, {5, 6}, {1, 5, 6}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 1200000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_ten_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 10 =
+      p.feedbackProduct.coeff ⟨({0, 1, 5, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 1, 5, 6} : Finset (Fin 10)).powerset =
+      {∅, {0}, {1}, {0, 1}, {5}, {0, 5}, {1, 5}, {0, 1, 5},
+       {6}, {0, 6}, {1, 6}, {0, 1, 6}, {5, 6}, {0, 5, 6},
+       {1, 5, 6}, {0, 1, 5, 6}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  have hten : (10 : F₂) = 0 := by decide
+  have htwelve : (12 : F₂) = 0 := by decide
+  have hsixteen : (16 : F₂) = 0 := by decide
+  have hnine : (9 : F₂) = 1 := by decide
+  have heighteen : (18 : F₂) = 0 := by decide
+  have htwentyfour : (24 : F₂) = 0 := by decide
+  have hthirtysix : (36 : F₂) = 0 := by decide
+  simp only [htwo, hfour, hsix, height, htwelve,
+    hsixteen, hnine, heighteen, htwentyfour, hthirtysix,
+    mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_eleven_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 11 =
+      p.feedbackProduct.coeff ⟨({4, 5, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({4, 5, 6} : Finset (Fin 10)).powerset =
+      {∅, {4}, {5}, {4, 5}, {6}, {4, 6}, {5, 6}, {4, 5, 6}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 1200000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twelve_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 12 =
+      p.feedbackProduct.coeff ⟨({0, 4, 5, 6} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 4, 5, 6} : Finset (Fin 10)).powerset =
+      {∅, {0}, {4}, {0, 4}, {5}, {0, 5}, {4, 5}, {0, 4, 5},
+       {6}, {0, 6}, {4, 6}, {0, 4, 6}, {5, 6}, {0, 5, 6},
+       {4, 5, 6}, {0, 4, 5, 6}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  have hten : (10 : F₂) = 0 := by decide
+  have htwelve : (12 : F₂) = 0 := by decide
+  have hsixteen : (16 : F₂) = 0 := by decide
+  have hnine : (9 : F₂) = 1 := by decide
+  have heighteen : (18 : F₂) = 0 := by decide
+  have htwentyfour : (24 : F₂) = 0 := by decide
+  have hthirtysix : (36 : F₂) = 0 := by decide
+  simp only [htwo, hfour, hsix, height, htwelve,
+    hsixteen, hnine, heighteen, htwentyfour, hthirtysix,
+    mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_thirteen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 13 =
+      p.feedbackProduct.coeff ⟨({0, 1, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 1, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {1}, {0, 1}, {7}, {0, 7}, {1, 7}, {0, 1, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_fourteen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 14 =
+      p.feedbackProduct.coeff ⟨({0, 4, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 4, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {4}, {0, 4}, {7}, {0, 7}, {4, 7}, {0, 4, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_fifteen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 15 =
+      p.feedbackProduct.coeff ⟨({0, 5, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 5, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {5}, {0, 5}, {7}, {0, 7}, {5, 7}, {0, 5, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_sixteen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 16 =
+      p.feedbackProduct.coeff ⟨({1, 5, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({1, 5, 7} : Finset (Fin 10)).powerset =
+      {∅, {1}, {5}, {1, 5}, {7}, {1, 7}, {5, 7}, {1, 5, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 1200000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_seventeen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 17 =
+      p.feedbackProduct.coeff ⟨({0, 1, 5, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 1, 5, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {1}, {0, 1}, {5}, {0, 5}, {1, 5}, {0, 1, 5},
+       {7}, {0, 7}, {1, 7}, {0, 1, 7}, {5, 7}, {0, 5, 7},
+       {1, 5, 7}, {0, 1, 5, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  have hten : (10 : F₂) = 0 := by decide
+  have htwelve : (12 : F₂) = 0 := by decide
+  have hsixteen : (16 : F₂) = 0 := by decide
+  have hnine : (9 : F₂) = 1 := by decide
+  have heighteen : (18 : F₂) = 0 := by decide
+  have htwentyfour : (24 : F₂) = 0 := by decide
+  have hthirtysix : (36 : F₂) = 0 := by decide
+  simp only [htwo, hfour, hsix, height, htwelve,
+    hsixteen, hnine, heighteen, htwentyfour, hthirtysix,
+    mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 600000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_eighteen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 18 =
+      p.feedbackProduct.coeff ⟨({4, 5, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({4, 5, 7} : Finset (Fin 10)).powerset =
+      {∅, {4}, {5}, {4, 5}, {7}, {4, 7}, {5, 7}, {4, 5, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  simp only [htwo, hthree, hfour, hsix, height, mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 1200000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_nineteen_eq_feedback_coeff
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 19 =
+      p.feedbackProduct.coeff ⟨({0, 4, 5, 7} : Finset (Fin 10))⟩ := by
+  rw [coeff_eq_cube_eval_sum]
+  have hpowerset : ({0, 4, 5, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {4}, {0, 4}, {5}, {0, 5}, {4, 5}, {0, 4, 5},
+       {7}, {0, 7}, {4, 7}, {0, 4, 7}, {5, 7}, {0, 5, 7},
+       {4, 5, 7}, {0, 4, 5, 7}} := by decide
+  rw [hpowerset]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  have htwo : (2 : F₂) = 0 := by decide
+  have hthree : (3 : F₂) = 1 := by decide
+  have hfour : (4 : F₂) = 0 := by decide
+  have hsix : (6 : F₂) = 0 := by decide
+  have height : (8 : F₂) = 0 := by decide
+  have hten : (10 : F₂) = 0 := by decide
+  have htwelve : (12 : F₂) = 0 := by decide
+  have hsixteen : (16 : F₂) = 0 := by decide
+  have hnine : (9 : F₂) = 1 := by decide
+  have heighteen : (18 : F₂) = 0 := by decide
+  have htwentyfour : (24 : F₂) = 0 := by decide
+  have hthirtysix : (36 : F₂) = 0 := by decide
+  simp only [htwo, hfour, hsix, height, htwelve,
+    hsixteen, hnine, heighteen, htwentyfour, hthirtysix,
+    mul_zero, mul_one, add_zero]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 800000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twenty_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 20 =
+      p.returned.coeff ⟨({0, 7} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({2, 5} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({0, 7} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({2, 5} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetZeroSeven : ({0, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {7}, {0, 7}} := by decide
+  have hpowersetTwoFive : ({2, 5} : Finset (Fin 10)).powerset =
+      {∅, {2}, {5}, {2, 5}} := by decide
+  rw [hpowersetZeroSeven, hpowersetTwoFive]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 800000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twenty_one_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 21 =
+      p.returned.coeff ⟨({0, 8} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({3, 5} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({0, 8} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({3, 5} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetZeroEight : ({0, 8} : Finset (Fin 10)).powerset =
+      {∅, {0}, {8}, {0, 8}} := by decide
+  have hpowersetThreeFive : ({3, 5} : Finset (Fin 10)).powerset =
+      {∅, {3}, {5}, {3, 5}} := by decide
+  rw [hpowersetZeroEight, hpowersetThreeFive]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 800000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twenty_two_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 22 =
+      p.returned.coeff ⟨({1, 6} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({2, 5} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({1, 6} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({2, 5} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetOneSix : ({1, 6} : Finset (Fin 10)).powerset =
+      {∅, {1}, {6}, {1, 6}} := by decide
+  have hpowersetTwoFive : ({2, 5} : Finset (Fin 10)).powerset =
+      {∅, {2}, {5}, {2, 5}} := by decide
+  rw [hpowersetOneSix, hpowersetTwoFive]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 800000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twenty_three_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 23 =
+      p.returned.coeff ⟨({1, 7} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({3, 5} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({1, 7} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({3, 5} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetOneSeven : ({1, 7} : Finset (Fin 10)).powerset =
+      {∅, {1}, {7}, {1, 7}} := by decide
+  have hpowersetThreeFive : ({3, 5} : Finset (Fin 10)).powerset =
+      {∅, {3}, {5}, {3, 5}} := by decide
+  rw [hpowersetOneSeven, hpowersetThreeFive]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 800000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twenty_four_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 24 =
+      p.returned.coeff ⟨({1, 9} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({4, 6} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({1, 9} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({4, 6} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetOneNine : ({1, 9} : Finset (Fin 10)).powerset =
+      {∅, {1}, {9}, {1, 9}} := by decide
+  have hpowersetFourSix : ({4, 6} : Finset (Fin 10)).powerset =
+      {∅, {4}, {6}, {4, 6}} := by decide
+  rw [hpowersetOneNine, hpowersetFourSix]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 800000 in
+theorem ZeroOneOffAxisHistoryParameters.constraint_twenty_five_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    zeroOneRawConstraint p.vector 25 =
+      p.returned.coeff ⟨({2, 9} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({4, 7} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({2, 9} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({4, 7} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetTwoNine : ({2, 9} : Finset (Fin 10)).powerset =
+      {∅, {2}, {9}, {2, 9}} := by decide
+  have hpowersetFourSeven : ({4, 7} : Finset (Fin 10)).powerset =
+      {∅, {4}, {7}, {4, 7}} := by decide
+  rw [hpowersetTwoNine, hpowersetFourSeven]
+  simp_zero_one_feedback_coeff
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+/-- First quadratic coordinate in each of the six target-annihilating
+quotient rows selected by the raw certificate. -/
+def returnHistoryQuotientFirstPair : Fin 6 → QuadraticIndex 10 :=
+  ![
+    quadraticPair (aCoord 0) (bCoord 2) (aCoord_ne_bCoord 0 2),
+    quadraticPair (aCoord 0) (bCoord 3) (aCoord_ne_bCoord 0 3),
+    quadraticPair (aCoord 1) (bCoord 1) (aCoord_ne_bCoord 1 1),
+    quadraticPair (aCoord 1) (bCoord 2) (aCoord_ne_bCoord 1 2),
+    quadraticPair (aCoord 1) (bCoord 4) (aCoord_ne_bCoord 1 4),
+    quadraticPair (aCoord 2) (bCoord 4) (aCoord_ne_bCoord 2 4)
+  ]
+
+/-- Second quadratic coordinate in each target-annihilating quotient row. -/
+def returnHistoryQuotientSecondPair : Fin 6 → QuadraticIndex 10 :=
+  ![
+    quadraticPair (aCoord 2) (bCoord 0) (aCoord_ne_bCoord 2 0),
+    quadraticPair (aCoord 3) (bCoord 0) (aCoord_ne_bCoord 3 0),
+    quadraticPair (aCoord 2) (bCoord 0) (aCoord_ne_bCoord 2 0),
+    quadraticPair (aCoord 3) (bCoord 0) (aCoord_ne_bCoord 3 0),
+    quadraticPair (aCoord 4) (bCoord 1) (aCoord_ne_bCoord 4 1),
+    quadraticPair (aCoord 4) (bCoord 2) (aCoord_ne_bCoord 4 2)
+  ]
+
+/-- A sparse coordinate functional on the quadratic quotient: the two
+monomials in each row belong to the same Hankel anti-diagonal. -/
+def returnHistoryQuotientCoordinate (i : Fin 6) : TwoForm →ₗ[F₂] F₂ where
+  toFun q := q (returnHistoryQuotientFirstPair i) +
+    q (returnHistoryQuotientSecondPair i)
+  map_add' q r := by
+    simp only [Pi.add_apply]
+    ac_rfl
+  map_smul' a q := by simp [mul_add]
+
+@[simp] theorem returnHistoryQuotientCoordinate_targetTwo
+    (i : Fin 6) (c : TargetCoeff) :
+    returnHistoryQuotientCoordinate i (targetTwo c) = 0 := by
+  fin_cases i <;>
+    simp [returnHistoryQuotientCoordinate,
+      returnHistoryQuotientFirstPair, returnHistoryQuotientSecondPair,
+      hankelIndex, CharTwo.add_self_eq_zero]
+
+/-- The four sparse Hankel coordinates selected by the certificate's
+missing-target row. -/
+def returnHistoryMissingCoordinate : TwoForm →ₗ[F₂] F₂ where
+  toFun q :=
+    q (quadraticPair (aCoord 0) (bCoord 2) (aCoord_ne_bCoord 0 2)) +
+    q (quadraticPair (aCoord 0) (bCoord 3) (aCoord_ne_bCoord 0 3)) +
+    q (quadraticPair (aCoord 1) (bCoord 4) (aCoord_ne_bCoord 1 4)) +
+    q (quadraticPair (aCoord 2) (bCoord 4) (aCoord_ne_bCoord 2 4))
+  map_add' q r := by
+    simp only [Pi.add_apply]
+    ac_rfl
+  map_smul' a q := by
+    simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]
+    ring
+
+/-- On target quadratics, the sparse certificate row is exactly the unique
+coordinate omitted by the first-order envelope. -/
+@[simp] theorem returnHistoryMissingCoordinate_targetTwo (c : TargetCoeff) :
+    returnHistoryMissingCoordinate (targetTwo c) =
+      firstOrderMissingFunctional c := by
+  simp [returnHistoryMissingCoordinate, firstOrderMissingFunctional,
+    hankelIndex]
+
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 1200000 in
+/-- The large generated target polynomial is the literal sum of the four
+selected quadratic coefficients of the return and feedback product. -/
+theorem ZeroOneOffAxisHistoryParameters.missingCoefficient_eq_quadratic_coeffs
+    (p : ZeroOneOffAxisHistoryParameters) :
+    p.missingCoefficient =
+      p.returned.coeff ⟨({0, 7} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({0, 8} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({1, 9} : Finset (Fin 10))⟩ +
+      p.returned.coeff ⟨({2, 9} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({0, 7} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({0, 8} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({1, 9} : Finset (Fin 10))⟩ +
+      p.feedbackProduct.coeff ⟨({2, 9} : Finset (Fin 10))⟩ := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetZeroSeven : ({0, 7} : Finset (Fin 10)).powerset =
+      {∅, {0}, {7}, {0, 7}} := by decide
+  have hpowersetZeroEight : ({0, 8} : Finset (Fin 10)).powerset =
+      {∅, {0}, {8}, {0, 8}} := by decide
+  have hpowersetOneNine : ({1, 9} : Finset (Fin 10)).powerset =
+      {∅, {1}, {9}, {1, 9}} := by decide
+  have hpowersetTwoNine : ({2, 9} : Finset (Fin 10)).powerset =
+      {∅, {2}, {9}, {2, 9}} := by decide
+  rw [hpowersetZeroSeven, hpowersetZeroEight, hpowersetOneNine,
+    hpowersetTwoNine]
+  simp (config := { decide := true }) [
+    ZeroOneOffAxisHistoryParameters.missingCoefficient, zeroOneRawTarget,
+    ZeroOneOffAxisHistoryParameters.vector,
+    ZeroOneOffAxisHistoryParameters.feedbackProduct,
+    ZeroOneOffAxisHistoryParameters.correctedHighFactor,
+    ZeroOneOffAxisHistoryParameters.feedbackFactor,
+    ZeroOneOffAxisHistoryParameters.correction,
+    ZeroOneOffAxisHistoryParameters.returned,
+    ZeroOneOffAxisHistoryParameters.firstProduct,
+    ZeroOneOffAxisHistoryParameters.shiftedProduct,
+    quadraticCoordinateANF,
+    ZeroOneOffAxisHistoryParameters.quadraticANFOfForm_correctionTwo_eq_targetANF,
+    ZeroOneOffAxisHistoryParameters.correctionCoeff,
+    returnHistoryCorrectionDirections, historyJOneCoeff,
+    historyJInfinityCoeff,
+    rZeroCoeff, rOneCoeff, rInfinityCoeff, jZeroCoeff,
+    dStarZeroCoeff, dStarOneCoeff,
+    quadraticANFOfForm_targetTwo, quadraticANFOfForm_zero,
+    linearANFTen, aCoord, bCoord, hankelIndex,
+    eval_eq_evalHom, supportAssignmentTen, Fin.sum_univ_succ]
+  ring_nf
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+
+/-- Coordinate-free form of the semantic target bridge. -/
+theorem ZeroOneOffAxisHistoryParameters.missingCoefficient_eq_missingCoordinate
+    (p : ZeroOneOffAxisHistoryParameters) :
+    p.missingCoefficient =
+      returnHistoryMissingCoordinate (quadraticProjection 10 p.returned) +
+      returnHistoryMissingCoordinate
+        (quadraticProjection 10 p.feedbackProduct) := by
+  rw [p.missingCoefficient_eq_quadratic_coeffs]
+  simp [returnHistoryMissingCoordinate, quadraticProjection, quadraticPair,
+    aCoord, bCoord]
+  ring
+
+/-- Equality in the genuine quotient by the multiplication target supplies
+all six quotient equations selected by the raw certificate. -/
+theorem ZeroOneOffAxisHistoryParameters.quadraticQuotientConstraints_eq_zero
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hprojection :
+      quadraticQuotientProjection (quadraticProjection 10 p.returned) =
+        quadraticQuotientProjection
+          (quadraticProjection 10 p.feedbackProduct)) :
+    zeroOneRawConstraint p.vector 20 = 0 ∧
+    zeroOneRawConstraint p.vector 21 = 0 ∧
+    zeroOneRawConstraint p.vector 22 = 0 ∧
+    zeroOneRawConstraint p.vector 23 = 0 ∧
+    zeroOneRawConstraint p.vector 24 = 0 ∧
+    zeroOneRawConstraint p.vector 25 = 0 := by
+  have hquotientZero :
+      quadraticQuotientProjection
+          (quadraticProjection 10 p.returned +
+            quadraticProjection 10 p.feedbackProduct) = 0 := by
+    rw [map_add, hprojection]
+    rw [← two_smul F₂, show (2 : F₂) = 0 by decide, zero_smul]
+  have htarget :
+      quadraticProjection 10 p.returned +
+          quadraticProjection 10 p.feedbackProduct ∈ targetTwoSpace :=
+    (quadraticQuotientProjection_eq_zero_iff _).1 hquotientZero
+  rcases htarget with ⟨c, hc⟩
+  have hrow (i : Fin 6) :
+      returnHistoryQuotientCoordinate i (quadraticProjection 10 p.returned) +
+        returnHistoryQuotientCoordinate i
+          (quadraticProjection 10 p.feedbackProduct) = 0 := by
+    calc
+      _ = returnHistoryQuotientCoordinate i
+          (quadraticProjection 10 p.returned +
+            quadraticProjection 10 p.feedbackProduct) :=
+        ((returnHistoryQuotientCoordinate i).map_add _ _).symm
+      _ = returnHistoryQuotientCoordinate i (targetTwo c) := by
+        apply congrArg (returnHistoryQuotientCoordinate i)
+        exact hc.symm
+      _ = 0 := returnHistoryQuotientCoordinate_targetTwo i c
+  have hrowZero := hrow 0
+  have hrowOne := hrow 1
+  have hrowTwo := hrow 2
+  have hrowThree := hrow 3
+  have hrowFour := hrow 4
+  have hrowFive := hrow 5
+  change p.returned.coeff ⟨{0, 7}⟩ +
+      p.returned.coeff ⟨{2, 5}⟩ +
+      (p.feedbackProduct.coeff ⟨{0, 7}⟩ +
+        p.feedbackProduct.coeff ⟨{2, 5}⟩) = 0 at hrowZero
+  change p.returned.coeff ⟨{0, 8}⟩ +
+      p.returned.coeff ⟨{3, 5}⟩ +
+      (p.feedbackProduct.coeff ⟨{0, 8}⟩ +
+        p.feedbackProduct.coeff ⟨{3, 5}⟩) = 0 at hrowOne
+  change p.returned.coeff ⟨{1, 6}⟩ +
+      p.returned.coeff ⟨{2, 5}⟩ +
+      (p.feedbackProduct.coeff ⟨{1, 6}⟩ +
+        p.feedbackProduct.coeff ⟨{2, 5}⟩) = 0 at hrowTwo
+  change p.returned.coeff ⟨{1, 7}⟩ +
+      p.returned.coeff ⟨{3, 5}⟩ +
+      (p.feedbackProduct.coeff ⟨{1, 7}⟩ +
+        p.feedbackProduct.coeff ⟨{3, 5}⟩) = 0 at hrowThree
+  change p.returned.coeff ⟨{1, 9}⟩ +
+      p.returned.coeff ⟨{4, 6}⟩ +
+      (p.feedbackProduct.coeff ⟨{1, 9}⟩ +
+        p.feedbackProduct.coeff ⟨{4, 6}⟩) = 0 at hrowFour
+  change p.returned.coeff ⟨{2, 9}⟩ +
+      p.returned.coeff ⟨{4, 7}⟩ +
+      (p.feedbackProduct.coeff ⟨{2, 9}⟩ +
+        p.feedbackProduct.coeff ⟨{4, 7}⟩) = 0 at hrowFive
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [p.constraint_twenty_eq_quadratic_coeffs]
+    simpa [add_assoc] using hrowZero
+  · rw [p.constraint_twenty_one_eq_quadratic_coeffs]
+    simpa [add_assoc] using hrowOne
+  · rw [p.constraint_twenty_two_eq_quadratic_coeffs]
+    simpa [add_assoc] using hrowTwo
+  · rw [p.constraint_twenty_three_eq_quadratic_coeffs]
+    simpa [add_assoc] using hrowThree
+  · rw [p.constraint_twenty_four_eq_quadratic_coeffs]
+    simpa [add_assoc] using hrowFour
+  · rw [p.constraint_twenty_five_eq_quadratic_coeffs]
+    simpa [add_assoc] using hrowFive
+
 /-- The complete cubic projection of the returned product depends only on
 the left linear shift: the original linear part occurs twice and cancels. -/
 theorem ZeroOneOffAxisHistoryParameters.returned_cubic_eq
@@ -971,6 +1663,197 @@ theorem ZeroOneOffAxisHistoryParameters.returnHighConstraints_eq_zero
     exact congrFun (congrFun (congrFun hcubic 0) 5) 6
   · rw [p.constraint_three_eq_returned_cubic]
     exact congrFun (congrFun (congrFun hcubic 0) 5) 7
+
+/-- The semantic equal-high return hypotheses discharge every equation used
+by the canonical off-axis `(0,1)` history certificate. -/
+theorem ZeroOneOffAxisHistoryParameters.equations_of_quadratic_history
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hreturned : p.returned ∈ N4.quadraticANFSpace 10)
+    (hfeedback : p.feedbackProduct ∈ N4.quadraticANFSpace 10)
+    (hprojection :
+      quadraticQuotientProjection (quadraticProjection 10 p.returned) =
+        quadraticQuotientProjection
+          (quadraticProjection 10 p.feedbackProduct)) :
+    p.Equations := by
+  rcases p.returnHighConstraints_eq_zero hreturned with
+    ⟨hzero, hone, htwo, hthree⟩
+  rcases p.quadraticQuotientConstraints_eq_zero hprojection with
+    ⟨htwenty, htwentyOne, htwentyTwo, htwentyThree, htwentyFour,
+      htwentyFive⟩
+  rcases p.degreeFiveFeedbackConstraints_eq_zero hfeedback with
+    ⟨htwentySix, htwentySeven⟩
+  intro i
+  fin_cases i
+  · exact hzero
+  · exact hone
+  · exact htwo
+  · exact hthree
+  · change zeroOneRawConstraint p.vector (4 : Fin 28) = 0
+    rw [p.constraint_four_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 1, 5} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (5 : Fin 28) = 0
+    rw [p.constraint_five_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 4, 5} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (6 : Fin 28) = 0
+    rw [p.constraint_six_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 1, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (7 : Fin 28) = 0
+    rw [p.constraint_seven_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 4, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (8 : Fin 28) = 0
+    rw [p.constraint_eight_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 5, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (9 : Fin 28) = 0
+    rw [p.constraint_nine_eq_feedback_coeff]
+    exact hfeedback ⟨({1, 5, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (10 : Fin 28) = 0
+    rw [p.constraint_ten_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 1, 5, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (11 : Fin 28) = 0
+    rw [p.constraint_eleven_eq_feedback_coeff]
+    exact hfeedback ⟨({4, 5, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (12 : Fin 28) = 0
+    rw [p.constraint_twelve_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 4, 5, 6} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (13 : Fin 28) = 0
+    rw [p.constraint_thirteen_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 1, 7} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (14 : Fin 28) = 0
+    rw [p.constraint_fourteen_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 4, 7} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (15 : Fin 28) = 0
+    rw [p.constraint_fifteen_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 5, 7} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (16 : Fin 28) = 0
+    rw [p.constraint_sixteen_eq_feedback_coeff]
+    exact hfeedback ⟨({1, 5, 7} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (17 : Fin 28) = 0
+    rw [p.constraint_seventeen_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 1, 5, 7} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (18 : Fin 28) = 0
+    rw [p.constraint_eighteen_eq_feedback_coeff]
+    exact hfeedback ⟨({4, 5, 7} : Finset (Fin 10))⟩ (by decide)
+  · change zeroOneRawConstraint p.vector (19 : Fin 28) = 0
+    rw [p.constraint_nineteen_eq_feedback_coeff]
+    exact hfeedback ⟨({0, 4, 5, 7} : Finset (Fin 10))⟩ (by decide)
+  · exact htwenty
+  · exact htwentyOne
+  · exact htwentyTwo
+  · exact htwentyThree
+  · exact htwentyFour
+  · exact htwentyFive
+  · exact htwentySix
+  · exact htwentySeven
+
+/-- The checked raw certificate, now exposed entirely through literal ANF
+semantics, forces its missing-target coordinate to vanish. -/
+theorem ZeroOneOffAxisHistoryParameters.missingCoefficient_eq_zero_of_quadratic_history
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hreturned : p.returned ∈ N4.quadraticANFSpace 10)
+    (hfeedback : p.feedbackProduct ∈ N4.quadraticANFSpace 10)
+    (hprojection :
+      quadraticQuotientProjection (quadraticProjection 10 p.returned) =
+        quadraticQuotientProjection
+          (quadraticProjection 10 p.feedbackProduct)) :
+    p.missingCoefficient = 0 :=
+  p.missingCoefficient_eq_zero
+    (p.equations_of_quadratic_history hreturned hfeedback hprojection)
+
+/-- The literal sparse missing-target coordinate vanishes under the complete
+quadratic-history hypotheses. -/
+theorem ZeroOneOffAxisHistoryParameters.missingCoordinate_eq_zero_of_quadratic_history
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hreturned : p.returned ∈ N4.quadraticANFSpace 10)
+    (hfeedback : p.feedbackProduct ∈ N4.quadraticANFSpace 10)
+    (hprojection :
+      quadraticQuotientProjection (quadraticProjection 10 p.returned) =
+        quadraticQuotientProjection
+          (quadraticProjection 10 p.feedbackProduct)) :
+    returnHistoryMissingCoordinate (quadraticProjection 10 p.returned) +
+        returnHistoryMissingCoordinate
+          (quadraticProjection 10 p.feedbackProduct) = 0 := by
+  rw [← p.missingCoefficient_eq_missingCoordinate]
+  exact p.missingCoefficient_eq_zero_of_quadratic_history
+    hreturned hfeedback hprojection
+
+/-- The normalized off-axis `(0,1)` history cannot return the missing
+first-order target coset.  This is the circuit-facing semantic conclusion of
+the raw polynomial certificate. -/
+theorem ZeroOneOffAxisHistoryParameters.firstOrderMissingFunctional_eq_zero_of_history
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hreturned : p.returned ∈ N4.quadraticANFSpace 10)
+    (hfeedback : p.feedbackProduct ∈ N4.quadraticANFSpace 10)
+    (c : TargetCoeff)
+    (hquadratic :
+      quadraticProjection 10 p.returned +
+          quadraticProjection 10 p.feedbackProduct = targetTwo c) :
+    firstOrderMissingFunctional c = 0 := by
+  have hsum :
+      quadraticQuotientProjection (quadraticProjection 10 p.returned) +
+          quadraticQuotientProjection
+            (quadraticProjection 10 p.feedbackProduct) = 0 := by
+    calc
+      _ = quadraticQuotientProjection
+          (quadraticProjection 10 p.returned +
+            quadraticProjection 10 p.feedbackProduct) :=
+        (quadraticQuotientProjection.map_add _ _).symm
+      _ = quadraticQuotientProjection (targetTwo c) :=
+        congrArg quadraticQuotientProjection hquadratic
+      _ = 0 := quadraticQuotientProjection_targetTwo c
+  have hfeedbackSelf :
+      quadraticQuotientProjection
+            (quadraticProjection 10 p.feedbackProduct) +
+          quadraticQuotientProjection
+            (quadraticProjection 10 p.feedbackProduct) = 0 := by
+    rw [← two_smul F₂, show (2 : F₂) = 0 by decide, zero_smul]
+  have hprojection :
+      quadraticQuotientProjection (quadraticProjection 10 p.returned) =
+        quadraticQuotientProjection
+          (quadraticProjection 10 p.feedbackProduct) := by
+    calc
+      _ = quadraticQuotientProjection (quadraticProjection 10 p.returned) +
+          0 := (add_zero _).symm
+      _ = quadraticQuotientProjection (quadraticProjection 10 p.returned) +
+          (quadraticQuotientProjection
+              (quadraticProjection 10 p.feedbackProduct) +
+            quadraticQuotientProjection
+              (quadraticProjection 10 p.feedbackProduct)) := by
+        rw [hfeedbackSelf]
+      _ = (quadraticQuotientProjection (quadraticProjection 10 p.returned) +
+            quadraticQuotientProjection
+              (quadraticProjection 10 p.feedbackProduct)) +
+          quadraticQuotientProjection
+            (quadraticProjection 10 p.feedbackProduct) := by ac_rfl
+      _ = quadraticQuotientProjection
+          (quadraticProjection 10 p.feedbackProduct) := by rw [hsum, zero_add]
+  calc
+    firstOrderMissingFunctional c =
+        returnHistoryMissingCoordinate (targetTwo c) :=
+      (returnHistoryMissingCoordinate_targetTwo c).symm
+    _ = returnHistoryMissingCoordinate
+        (quadraticProjection 10 p.returned +
+          quadraticProjection 10 p.feedbackProduct) :=
+      congrArg returnHistoryMissingCoordinate hquadratic.symm
+    _ = returnHistoryMissingCoordinate (quadraticProjection 10 p.returned) +
+        returnHistoryMissingCoordinate
+          (quadraticProjection 10 p.feedbackProduct) :=
+      returnHistoryMissingCoordinate.map_add _ _
+    _ = 0 := p.missingCoordinate_eq_zero_of_quadratic_history
+      hreturned hfeedback hprojection
+
+/-- Contradiction form used by the missing-coset exclusion. -/
+theorem ZeroOneOffAxisHistoryParameters.no_firstOrderMissing_history_escape
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hreturned : p.returned ∈ N4.quadraticANFSpace 10)
+    (hfeedback : p.feedbackProduct ∈ N4.quadraticANFSpace 10)
+    (c : TargetCoeff)
+    (hquadratic :
+      quadraticProjection 10 p.returned +
+          quadraticProjection 10 p.feedbackProduct = targetTwo c)
+    (hmissing : firstOrderMissingFunctional c = 1) : False := by
+  rw [p.firstOrderMissingFunctional_eq_zero_of_history
+    hreturned hfeedback c hquadratic] at hmissing
+  exact zero_ne_one hmissing
 
 end
 end N5
