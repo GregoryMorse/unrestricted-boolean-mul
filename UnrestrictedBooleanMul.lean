@@ -41,6 +41,7 @@ import UnrestrictedBooleanMul.N5.QuadraticReturnKernel
 import UnrestrictedBooleanMul.N5.QuadraticReturnHankelKernel
 import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryRaw
 import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryModel
+import UnrestrictedBooleanMul.N5.QuadraticReturnHistorySemantic
 import UnrestrictedBooleanMul.N5.CapacityRegimeClosure
 import UnrestrictedBooleanMul.N5.LowDefectCapacityClosure
 import UnrestrictedBooleanMul.N5.SuffixBudget

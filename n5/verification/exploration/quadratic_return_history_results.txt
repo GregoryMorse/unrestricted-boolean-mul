@@ -61,6 +61,19 @@ identities are retained as an independent audit, not emitted as Lean source;
 the smaller reduced identities plus a semantic normalization bridge are the
 intended formal interface.
 
+Exceptional-orbit rediscovery
+-----------------------------
+The optional `--exceptional-singular PATH` mode does not rely on the four
+stored canonical multiplier tables.  It sends each of the six exceptional
+aligned assignments and both returned-section correction bits to Singular,
+lifts every resulting unit certificate through the affine substitutions, and
+independently replays the lifted combination in the squarefree Python engine.
+The 12 `zero_one` and 12 difference-coordinate `one_one` leaves all replay to
+`1`.  The largest lifted certificates contain respectively 20,797 and
+155,691 multiplier monomials (maximum degrees nine and ten).  These large raw
+forms are audit evidence; the reduced certificates and semantic Lean bridge
+remain the intended formalization route.
+
 SAT cross-check
 ---------------
 The direct ANF SAT encoding returned UNSAT for ten of the twelve named

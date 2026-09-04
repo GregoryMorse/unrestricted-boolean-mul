@@ -14,6 +14,7 @@ import argparse
 from collections.abc import Iterable
 import json
 from itertools import combinations, product
+import subprocess
 
 from quadratic_return_class_sample import FIRST_ORDER_MASKS, target_from_mask
 from quadratic_return_history_sat import PAIR_MASKS
@@ -439,10 +440,12 @@ def generated_label_parts(
         raise ValueError(f"unrecognized generated label: {label}")
     multiplier_name = raw_multiplier[1:]
     generator_name = raw_generator[:-1]
-    multiplier = (
-        ONE if multiplier_name == "1"
-        else pvar(variable_names.index(multiplier_name))
-    )
+    multiplier = ONE
+    if multiplier_name != "1":
+        for variable_name in multiplier_name.split("*"):
+            multiplier = pmul(
+                multiplier, pvar(variable_names.index(variable_name))
+            )
     return generator_name, multiplier
 
 
@@ -488,6 +491,170 @@ def parse_singular_squarefree(
                 name = raw_factor.partition("^")[0]
                 monomial |= 1 << indices[name]
         result = padd(result, frozenset({monomial}))
+    return result
+
+
+def singular_unit_certificate(
+    constraints: list[tuple[str, Polynomial]], variable_names: list[str],
+    executable: str, active_polynomial: Polynomial = ZERO,
+) -> dict[str, Polynomial]:
+    """Discover and independently replay a unit certificate with Singular.
+
+    Singular works in an ordinary polynomial ring, so Boolean field equations
+    are appended during discovery.  Their rows are discarded afterwards:
+    they are identically zero in this script's squarefree Boolean quotient.
+    """
+    active_indices = sorted({
+        index
+        for _name, polynomial in constraints
+        for monomial in polynomial
+        for index in range(len(variable_names))
+        if (monomial >> index) & 1
+    } | {
+        index
+        for monomial in active_polynomial
+        for index in range(len(variable_names))
+        if (monomial >> index) & 1
+    })
+    active_names = [variable_names[index] for index in active_indices]
+    if not active_names:
+        raise ValueError("unit certificate has no active variables")
+    generator_strings = [
+        singular_polynomial(polynomial, variable_names)
+        for _name, polynomial in constraints
+    ]
+    generator_strings.extend(
+        f"{variable_names[index]}^2+{variable_names[index]}"
+        for index in active_indices
+    )
+    source = "\n".join([
+        f"ring coefficientRing=2,({','.join(active_names)}),dp;",
+        "ideal historyIdeal=",
+        ",\n".join(generator_strings) + ";",
+        "matrix historyLift;",
+        "ideal historyBasis=liftstd(historyIdeal,historyLift);",
+        'print("BASIS");',
+        "print(historyBasis[1]);",
+        'print("ROWS");',
+        "int historyRow;",
+        "for (historyRow=1; historyRow<=nrows(historyLift); historyRow=historyRow+1)",
+        "{",
+        "  if (historyLift[historyRow,1] != 0)",
+        "  {",
+        "    print(historyRow);",
+        "    print(historyLift[historyRow,1]);",
+        "  }",
+        "}",
+        "quit;",
+    ])
+    completed = subprocess.run(
+        [executable, "-q"], input=source, text=True,
+        capture_output=True, check=True,
+    )
+    lines = [
+        line.strip() for line in completed.stdout.splitlines() if line.strip()
+    ]
+    try:
+        basis_marker = lines.index("BASIS")
+        rows_marker = lines.index("ROWS")
+    except ValueError as error:
+        raise RuntimeError(
+            "Singular certificate output is missing its markers:\n" +
+            completed.stdout
+        ) from error
+    if lines[basis_marker + 1] != "1":
+        raise RuntimeError("exceptional constraint ideal is not the unit ideal")
+    row_lines = lines[rows_marker + 1:]
+    if len(row_lines) % 2:
+        raise RuntimeError("malformed Singular certificate row output")
+    result: dict[str, Polynomial] = {}
+    for raw_row, expression in zip(
+        row_lines[::2], row_lines[1::2], strict=True
+    ):
+        row = int(raw_row)
+        if row <= len(constraints):
+            label = constraints[row - 1][0]
+            result[label] = parse_singular_squarefree(
+                expression, variable_names
+            )
+    combination = ZERO
+    constraint_by_name = dict(constraints)
+    for label, multiplier in result.items():
+        combination = padd(
+            combination, pmul(multiplier, constraint_by_name[label])
+        )
+    if combination != ONE:
+        raise RuntimeError("Singular unit certificate failed Boolean replay")
+    return result
+
+
+def exceptional_branch_certificate(
+    constraints: list[tuple[str, Polynomial]], target: Polynomial,
+    variable_names: list[str], assignment: dict[int, bool],
+    correction_return: int, executable: str,
+) -> dict[str, Polynomial]:
+    """Lift one aligned exceptional branch back to semantic generators.
+
+    After the supplied assignments, the returned semantic-generator
+    combination is one.  Fixed-coordinate generator terms disappear under
+    that specialization and therefore are omitted from the result.
+    """
+    correction_index = variable_names.index("correctionReturn0")
+    fixed = {**assignment, correction_index: bool(correction_return)}
+    print(
+        "exceptional-singular-start " +
+        " ".join(
+            f"{variable_names[index]}={int(value)}"
+            for index, value in sorted(fixed.items())
+        ),
+        flush=True,
+    )
+    extended = [*constraints]
+    for index, value in fixed.items():
+        extended.append((
+            f"fix-{variable_names[index]}-{int(value)}",
+            padd(pvar(index), ONE) if value else pvar(index),
+        ))
+    lifted, reduced_target, _eliminated = affine_eliminate_with_certificate(
+        extended, target
+    )
+    print(
+        f"exceptional-affine-lift-done rows={len(lifted)}",
+        flush=True,
+    )
+    reduced_constraints = [
+        (label, polynomial) for label, polynomial, _certificate in lifted
+    ]
+    reduced_multipliers = singular_unit_certificate(
+        reduced_constraints, variable_names, executable, reduced_target
+    )
+    print(
+        f"exceptional-singular-done terms={len(reduced_multipliers)}",
+        flush=True,
+    )
+    raw: Certificate = {}
+    lifted_by_name = {
+        label: certificate for label, _polynomial, certificate in lifted
+    }
+    for label, multiplier in reduced_multipliers.items():
+        raw = certificate_add(
+            raw,
+            certificate_scale(multiplier, lifted_by_name[label]),
+        )
+    semantic_names = {name for name, _polynomial in constraints}
+    result = {
+        label: multiplier
+        for label, multiplier in raw.items()
+        if label in semantic_names
+    }
+    combination = ZERO
+    constraint_by_name = dict(constraints)
+    for label, multiplier in result.items():
+        combination = padd(
+            combination, pmul(multiplier, constraint_by_name[label])
+        )
+    if substitute(combination, fixed) != ONE:
+        raise RuntimeError("lifted exceptional branch identity failed replay")
     return result
 
 
@@ -830,6 +997,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--exceptional-singular", metavar="PATH",
+        help=(
+            "use the named Singular executable to discover, lift, and replay "
+            "unit certificates for residual branches not closed by the "
+            "sparse span search"
+        ),
+    )
+    parser.add_argument(
         "--print-aggregate-certificate", action="store_true",
         help="include the interpolated multiplier dictionary in JSON output",
     )
@@ -968,6 +1143,8 @@ def main() -> None:
         degree_zero_certificates = 0
         degree_one_certificates = 0
         targeted_degree_two_certificates = 0
+        exceptional_singular_certificates = 0
+        exceptional_singular_reports: list[dict[str, object]] = []
         unresolved: list[dict[str, int]] = []
         aggregate: dict[str, Polynomial] = {}
         for label in target_certificate:
@@ -1017,10 +1194,39 @@ def main() -> None:
                         specialized, branch_remainder, names
                     ),
                 ]
-                targeted_remainder, _ = reduce_with_certificate(targeted, ONE)
+                targeted_remainder, targeted_certificate = (
+                    reduce_with_certificate(targeted, ONE)
+                )
                 if not targeted_remainder:
                     targeted_degree_two_certificates += 1
+                    for label in targeted_certificate:
+                        add_certificate_term(aggregate, label, delta, names)
                     continue
+                if args.exceptional_singular:
+                    for correction_return in (0, 1):
+                        exceptional = exceptional_branch_certificate(
+                            constraints, target, names, assignment,
+                            correction_return, args.exceptional_singular,
+                        )
+                        exceptional_singular_reports.append({
+                            "assignment": {
+                                names[index]: int(value)
+                                for index, value in assignment.items()
+                            },
+                            "correction_return": correction_return,
+                            "raw_generator_count": len(exceptional),
+                            "raw_multiplier_monomials": sum(
+                                len(multiplier)
+                                for multiplier in exceptional.values()
+                            ),
+                            "raw_max_multiplier_degree": max(
+                                (monomial.bit_count()
+                                 for multiplier in exceptional.values()
+                                 for monomial in multiplier),
+                                default=0,
+                            ),
+                        })
+                        exceptional_singular_certificates += 1
                 branch_summary: dict[str, int | list[int]] = {
                     names[index]: int(assignment[index]) for index in split_indices
                 }
@@ -1045,6 +1251,8 @@ def main() -> None:
             "degree_zero_certificates": degree_zero_certificates,
             "degree_one_certificates": degree_one_certificates,
             "targeted_degree_two_certificates": targeted_degree_two_certificates,
+            "exceptional_singular_certificates": exceptional_singular_certificates,
+            "exceptional_singular_reports": exceptional_singular_reports,
             "unresolved_count": len(unresolved),
             "first_unresolved": unresolved[:8],
             "aggregate_generator_count": sum(bool(value) for value in aggregate.values()),
