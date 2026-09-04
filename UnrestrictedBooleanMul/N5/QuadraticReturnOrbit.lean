@@ -155,6 +155,106 @@ theorem rationalOneOneReturn_wedge_firstOrder_injective
   rw [hfirst]
   exact hzero
 
+/-- Quadratic shadow of the canonical `(1,2)` equal-high return.  Its
+same-side part has alternating rank four; the remaining summand is an old
+rational target translate. -/
+def rationalOneTwoReturnSection : TwoForm :=
+  squarefreeWedge (aLinear 0) (aLinear 1 + aLinear 3 + aLinear 4) +
+    squarefreeWedge (aLinear 1) (aLinear 2 + aLinear 3 + aLinear 4) +
+      targetTwo (rZeroCoeff + rOneCoeff)
+
+/-- Exterior multiplication by the `(1,2)` return is injective on the full
+Hankel target.  Nine `AAA B` coordinates see only its rank-four same-side
+part and kill all nine Hankel coefficients. -/
+theorem rationalOneTwoReturn_wedge_target_injective
+    (d c : TargetCoeff)
+    (hzero : ambientWedgeTwo
+      (targetTwo d + rationalOneTwoReturnSection)
+      (targetTwo c) = 0) :
+    c = 0 := by
+  have hcrossReverse (e : TargetCoeff) (i j : Fin 5) :
+      ambientTwoCoeff (targetTwo e) (bCoord j) (aCoord i) =
+        e (hankelIndex i j) := by
+    rw [ambientTwoCoeff_comm]
+    exact ambientTwoCoeff_targetTwo_cross e i j
+  have hsameA (e : TargetCoeff) (i j : Fin 5) :
+      ambientTwoCoeff (targetTwo e) (aCoord i) (aCoord j) = 0 := by
+    by_cases hij : i = j
+    · subst j
+      exact ambientTwoCoeff_same _ _
+    · simp [ambientTwoCoeff, hij]
+  have hcoord (i j k l : Fin 10) :
+      ambientWedgeTwo
+          (targetTwo d + rationalOneTwoReturnSection)
+          (targetTwo c) i j k l = 0 :=
+    congrFun (congrFun (congrFun (congrFun hzero i) j) k) l
+  have h2 := hcoord (aCoord 0) (aCoord 2) (aCoord 3) (bCoord 0)
+  have h0 := hcoord (aCoord 0) (aCoord 1) (aCoord 2) (bCoord 0)
+  have h3 := hcoord (aCoord 1) (aCoord 2) (aCoord 3) (bCoord 0)
+  have h1 := hcoord (aCoord 0) (aCoord 1) (aCoord 3) (bCoord 0)
+  have h4 := hcoord (aCoord 0) (aCoord 1) (aCoord 4) (bCoord 0)
+  have h6 := hcoord (aCoord 0) (aCoord 2) (aCoord 3) (bCoord 4)
+  have h7 := hcoord (aCoord 1) (aCoord 2) (aCoord 3) (bCoord 4)
+  have h5 := hcoord (aCoord 0) (aCoord 1) (aCoord 3) (bCoord 4)
+  have h8 := hcoord (aCoord 0) (aCoord 1) (aCoord 4) (bCoord 4)
+  simp [ambientWedgeTwo, rationalOneTwoReturnSection,
+    ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+    ambientTwoCoeff_targetTwo_cross,
+    aLinear, Pi.basisFun, hankelIndex,
+    aCoord_ne_bCoord, bCoord_ne_aCoord, hcrossReverse,
+    hsameA] at h0 h1 h2 h3 h4 h5 h6 h7 h8
+  funext i
+  fin_cases i <;> module
+
+/-- Quadratic shadow of the canonical `(1,3)` equal-high return.  Again the
+same-side part has alternating rank four. -/
+def rationalOneThreeReturnSection : TwoForm :=
+  squarefreeWedge (aLinear 0 + aLinear 1) (aLinear 2) +
+    squarefreeWedge (aLinear 0 + aLinear 2) (aLinear 3 + aLinear 4) +
+      targetTwo (rZeroCoeff + rOneCoeff)
+
+/-- Exterior multiplication by the `(1,3)` return is injective on the full
+Hankel target, by a second nine-coordinate rank-four pivot. -/
+theorem rationalOneThreeReturn_wedge_target_injective
+    (d c : TargetCoeff)
+    (hzero : ambientWedgeTwo
+      (targetTwo d + rationalOneThreeReturnSection)
+      (targetTwo c) = 0) :
+    c = 0 := by
+  have hcrossReverse (e : TargetCoeff) (i j : Fin 5) :
+      ambientTwoCoeff (targetTwo e) (bCoord j) (aCoord i) =
+        e (hankelIndex i j) := by
+    rw [ambientTwoCoeff_comm]
+    exact ambientTwoCoeff_targetTwo_cross e i j
+  have hsameA (e : TargetCoeff) (i j : Fin 5) :
+      ambientTwoCoeff (targetTwo e) (aCoord i) (aCoord j) = 0 := by
+    by_cases hij : i = j
+    · subst j
+      exact ambientTwoCoeff_same _ _
+    · simp [ambientTwoCoeff, hij]
+  have hcoord (i j k l : Fin 10) :
+      ambientWedgeTwo
+          (targetTwo d + rationalOneThreeReturnSection)
+          (targetTwo c) i j k l = 0 :=
+    congrFun (congrFun (congrFun (congrFun hzero i) j) k) l
+  have h1 := hcoord (aCoord 0) (aCoord 1) (aCoord 3) (bCoord 0)
+  have h0 := hcoord (aCoord 0) (aCoord 1) (aCoord 2) (bCoord 0)
+  have h3 := hcoord (aCoord 1) (aCoord 2) (aCoord 3) (bCoord 0)
+  have h4 := hcoord (aCoord 0) (aCoord 3) (aCoord 4) (bCoord 0)
+  have h2 := hcoord (aCoord 0) (aCoord 2) (aCoord 3) (bCoord 0)
+  have h5 := hcoord (aCoord 0) (aCoord 1) (aCoord 3) (bCoord 4)
+  have h7 := hcoord (aCoord 1) (aCoord 2) (aCoord 3) (bCoord 4)
+  have h8 := hcoord (aCoord 0) (aCoord 3) (aCoord 4) (bCoord 4)
+  have h6 := hcoord (aCoord 0) (aCoord 2) (aCoord 3) (bCoord 4)
+  simp [ambientWedgeTwo, rationalOneThreeReturnSection,
+    ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
+    ambientTwoCoeff_targetTwo_cross,
+    aLinear, Pi.basisFun, hankelIndex,
+    aCoord_ne_bCoord, bCoord_ne_aCoord, hcrossReverse,
+    hsameA] at h0 h1 h2 h3 h4 h5 h6 h7 h8
+  funext i
+  fin_cases i <;> module
+
 end
 end N5
 end UnrestrictedBooleanMul
