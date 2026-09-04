@@ -43,6 +43,13 @@ jobs:
       - name: Build the active n5 replay bridge first
         run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn UnrestrictedBooleanMul.N5.QuadraticReturnSecant UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
 
+      - name: Preserve focused build objects for repair iterations
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}-focused
+
       - name: Build all Lean modules
         run: lake build
 
