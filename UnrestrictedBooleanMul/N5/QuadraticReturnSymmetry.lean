@@ -75,21 +75,13 @@ private theorem returnSymmetryTwoBasis_eq_wedge
     _ = squarefreeWedge
         (returnSymmetryLinearBasis (quadraticFirst s))
         (returnSymmetryLinearBasis (quadraticSecond s)) := by
-      congr 1
-      · funext i
-        change (if i = quadraticFirst s then 1 else 0) =
-          Pi.single (quadraticFirst s) 1 i
-        rw [Pi.single_apply]
-        by_cases hi : i = quadraticFirst s
-        · rw [if_pos hi, if_pos hi.symm]
-        · rw [if_neg hi, if_neg hi.symm]
-      · funext i
-        change (if i = quadraticSecond s then 1 else 0) =
-          Pi.single (quadraticSecond s) 1 i
-        rw [Pi.single_apply]
-        by_cases hi : i = quadraticSecond s
-        · rw [if_pos hi, if_pos hi.symm]
-        · rw [if_neg hi, if_neg hi.symm]
+      have hcoordinate (r : Fin 10) :
+          coordinateLinearTen r = returnSymmetryLinearBasis r := by
+        funext i
+        simp only [coordinateLinearTen, returnSymmetryLinearBasis,
+          Pi.basisFun, Pi.single_apply]
+        exact if_congr (eq_comm) rfl rfl
+      rw [hcoordinate, hcoordinate]
 
 set_option maxHeartbeats 3000000 in
 private theorem rationalPlaceFourFormLinear_wedge_basis
@@ -103,7 +95,9 @@ private theorem rationalPlaceFourFormLinear_wedge_basis
   rw [returnSymmetryTwoBasis_eq_wedge,
     returnSymmetryTwoBasis_eq_wedge,
     rationalPlaceTwoFormLinear_squarefreeWedge',
-    rationalPlaceTwoFormLinear_squarefreeWedge']
+    rationalPlaceTwoFormLinear_squarefreeWedge',
+    rationalPlaceLinear_basis, rationalPlaceLinear_basis,
+    rationalPlaceLinear_basis, rationalPlaceLinear_basis]
   funext i j k l
   simp only [rationalPlaceFourFormLinear, ambientWedgeTwo,
     ambientTwoCoeff_squarefreeWedge, rationalPlaceLinear_basis,
@@ -164,8 +158,13 @@ theorem rationalPlaceFourFormLinear_ambientWedgeTwo
             (rationalPlaceTwoFormLinear theta (returnSymmetryTwoBasis s))
             (rationalPlaceTwoFormLinear theta
               (returnSymmetryTwoBasis t)) := by
-      simp_rw [map_sum, map_smul,
-        rationalPlaceFourFormLinear_wedge_basis]
+      rw [map_sum]
+      apply Finset.sum_congr rfl
+      intro t _
+      rw [map_sum]
+      apply Finset.sum_congr rfl
+      intro s _
+      rw [map_smul, rationalPlaceFourFormLinear_wedge_basis]
     _ = ambientWedgeTwo
           (∑ s : QuadraticIndex 10,
             p s • rationalPlaceTwoFormLinear theta
