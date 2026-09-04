@@ -1,4 +1,4 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnSecant
+import UnrestrictedBooleanMul.N5.QuadraticReturnOrbit
 import UnrestrictedBooleanMul.N5.QuadraticFlattening
 import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
 
