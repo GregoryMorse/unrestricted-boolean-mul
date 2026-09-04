@@ -135,8 +135,8 @@ private theorem ambientWedgeTwo_double_sum
 private theorem rationalPlaceFourFormLinear_finset_sum
     {I : Type*} [DecidableEq I]
     (theta : Fin 2) (s : Finset I) (f : I → AmbientFourForm) :
-    rationalPlaceFourFormLinear theta (∑ i in s, f i) =
-      ∑ i in s, rationalPlaceFourFormLinear theta (f i) := by
+    rationalPlaceFourFormLinear theta (∑ i ∈ s, f i) =
+      ∑ i ∈ s, rationalPlaceFourFormLinear theta (f i) := by
   induction s using Finset.induction_on with
   | empty => simp
   | @insert i s hi ih =>
