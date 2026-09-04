@@ -35,6 +35,21 @@ def dStarZeroCoeff : TargetCoeff :=
 def dStarOneCoeff : TargetCoeff :=
   ![0, 0, 0, 1, 0, 0, 1, 0, 0]
 
+/- The generated return-history certificate predates the row reduction used
+for `jOneCoeff` and `jInfinityCoeff` above.  Its parameter coordinates use
+these two original jet representatives. -/
+def historyJOneCoeff : TargetCoeff :=
+  ![0, 1, 0, 1, 0, 1, 0, 1, 0]
+
+def historyJInfinityCoeff : TargetCoeff :=
+  ![0, 0, 0, 0, 0, 0, 0, 1, 0]
+
+/-- Target words in the exact coordinate order used by the raw history
+certificate. -/
+def returnHistoryCorrectionDirections : Fin 8 → TargetCoeff :=
+  ![rZeroCoeff, rOneCoeff, rInfinityCoeff, jZeroCoeff, historyJOneCoeff,
+    historyJInfinityCoeff, dStarZeroCoeff, dStarOneCoeff]
+
 def jZeroSpace : Submodule F₂ TargetCoeff :=
   Submodule.span F₂ {jZeroCoeff}
 
