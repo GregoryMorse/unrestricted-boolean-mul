@@ -37,6 +37,11 @@ theorem rationalZeroOneReturn_wedge_firstOrder_injective
         rationalZeroOneReturnSection)
       (targetTwo c) = 0) :
     c = 0 := by
+  have hcrossReverse (d : TargetCoeff) (i j : Fin 5) :
+      ambientTwoCoeff (targetTwo d) (bCoord j) (aCoord i) =
+        d (hankelIndex i j) := by
+    rw [ambientTwoCoeff_comm]
+    exact ambientTwoCoeff_targetTwo_cross d i j
   have hcoord (i j k l : Fin 10) :
       ambientWedgeTwo
           (targetTwo (firstOrderMissingCoeff + u) +
@@ -53,7 +58,8 @@ theorem rationalZeroOneReturn_wedge_firstOrder_injective
   have hc8 := hcoord (aCoord 0) (aCoord 2) (aCoord 4) (bCoord 4)
   simp [ambientWedgeTwo, rationalZeroOneReturnSection,
     ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
-    aLinear, bLinear, Pi.basisFun, hankelIndex, ambientTwoCoeff] at hc1 hc2 hc3 hc4 hc5 hc6 hc7 hc8
+    aLinear, bLinear, Pi.basisFun, hankelIndex, ambientTwoCoeff,
+    aCoord_ne_bCoord, bCoord_ne_aCoord, hcrossReverse] at hc1 hc2 hc3 hc4 hc5 hc6 hc7 hc8
   have hd2 := hcoord (aCoord 0) (bCoord 0) (aCoord 1) (bCoord 1)
   have hd3 := hcoord (aCoord 0) (bCoord 0) (aCoord 1) (bCoord 2)
   have hd5 := hcoord (aCoord 0) (bCoord 0) (aCoord 1) (bCoord 4)
@@ -61,6 +67,7 @@ theorem rationalZeroOneReturn_wedge_firstOrder_injective
   simp [ambientWedgeTwo, rationalZeroOneReturnSection,
     ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
     aLinear, bLinear, Pi.basisFun, hankelIndex, ambientTwoCoeff,
+    aCoord_ne_bCoord, bCoord_ne_aCoord, hcrossReverse,
     hc1, hc2, hc3, hc4, hc5, hc6, hc7, hc8] at hd2 hd3 hd5 hd6
   have hu0 : firstOrderMissingFunctional u = 0 :=
     (mem_firstOrderEnvelopeCoeffSpace u).1 hu
