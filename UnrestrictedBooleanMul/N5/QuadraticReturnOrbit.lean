@@ -97,15 +97,17 @@ theorem rationalZeroOneReturn_wedge_firstOrder_injective
       rw [map_add, firstOrderMissingFunctional_missing, hu0, add_zero]
     exact hfunctional
   have hc0 : c 0 = 0 := by
-    calc
-      c 0 = c 0 * 1 := by ring
-      _ = c 0 * ((firstOrderMissingCoeff + u) 2 +
-          (firstOrderMissingCoeff + u) 3 +
-          (firstOrderMissingCoeff + u) 5 +
-          (firstOrderMissingCoeff + u) 6) := by rw [hmissing]
-      _ = 0 := by
-        rw [mul_add, mul_add, mul_add, hd2, hd3, hd5, hd6]
-        simp
+    by_contra hc0ne
+    have h2 := hd2.resolve_left hc0ne
+    have h3 := hd3.resolve_left hc0ne
+    have h5 := hd5.resolve_left hc0ne
+    have h6 := hd6.resolve_left hc0ne
+    have hz2 : (firstOrderMissingCoeff + u) 2 = 0 := by simp [h2]
+    have hz3 : (firstOrderMissingCoeff + u) 3 = 0 := by simp [h3]
+    have hz5 : (firstOrderMissingCoeff + u) 5 = 0 := by simp [h5]
+    have hz6 : (firstOrderMissingCoeff + u) 6 = 0 := by simp [h6]
+    rw [hz2, hz3, hz5, hz6] at hmissing
+    simp at hmissing
   funext i
   fin_cases i <;> assumption
 
