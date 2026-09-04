@@ -118,7 +118,9 @@ theorem mem_firstOrderEnvelope_sup_section_cases
     refine ⟨u, hu, ?_⟩
     calc
       q = w + z := hsum.symm
-      _ = targetTwo u + z := by rw [huw]
+      _ = targetTwo u + z := by
+        rw [← huw]
+        rfl
 
 /-- The decomposable alternative remains excluded after adding an arbitrary
 old vector from an unpopulated first-order section. -/
