@@ -66,7 +66,10 @@ theorem targetTwoSpace_inf_firstOrderEnvelope_sup_of_missingCoset_exclusion
             _ = firstOrderMissingCoeff i +
                 (c i + firstOrderMissingCoeff i) := by ac_rfl
         have hcancel : (w + z) + z = w := by
-          rw [add_assoc, CharTwo.add_self_eq_zero, add_zero]
+          have hzz : z + z = 0 := by
+            funext s
+            exact CharTwo.add_self_eq_zero (z s)
+          rw [add_assoc, hzz, add_zero]
         have hsumExcluded :
             w + z ≠ targetTwo (firstOrderMissingCoeff + c₀) := by
           apply missingCoset_exclusion_of_add_mem_firstOrderEnvelope
