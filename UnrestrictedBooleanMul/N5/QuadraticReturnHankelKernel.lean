@@ -77,7 +77,7 @@ private abbrev RankFourHankelPivotCertificate (i : Fin 16) : Prop :=
 
 /- The twelve nonzero, non-rank-one words use the displayed pivot and
 residual factors.  This is a bounded target-geometry certificate. -/
-set_option maxRecDepth 100000 in
+set_option maxHeartbeats 3000000 maxRecDepth 100000 in
 private theorem rankTwoHankelWord_pivotResidual_cases :
     ∀ i : Fin 16,
       i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 4 ∨
@@ -146,16 +146,20 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
         first
         | have hcoefficient := congrFun hzero
             (quadraticPair 1 5 (by decide))
-          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+          norm_num [squarefreeWedge_pair, binaryLinearFormTen,
+            Nat.testBit] at hcoefficient
         | have hcoefficient := congrFun hzero
             (quadraticPair 4 9 (by decide))
-          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+          norm_num [squarefreeWedge_pair, binaryLinearFormTen,
+            Nat.testBit] at hcoefficient
         | have hcoefficient := congrFun hzero
             (quadraticPair 1 6 (by decide))
-          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+          norm_num [squarefreeWedge_pair, binaryLinearFormTen,
+            Nat.testBit] at hcoefficient
         | have hcoefficient := congrFun hzero
             (quadraticPair 4 8 (by decide))
-          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+          norm_num [squarefreeWedge_pair, binaryLinearFormTen,
+            Nat.testBit] at hcoefficient
 
 /-- Every target annihilator of the affine missing coset translated by an
 unpopulated section is zero or one of the three rational directions. -/
