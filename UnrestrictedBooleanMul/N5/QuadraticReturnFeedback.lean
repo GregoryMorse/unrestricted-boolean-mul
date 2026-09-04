@@ -35,6 +35,12 @@ private theorem ambientWedgeTwo_comm_local (p q : TwoForm) :
   simp only [ambientWedgeTwo]
   ring
 
+private theorem quadraticQuotient_add_self (q : QuadraticQuotient) :
+    q + q = 0 := by
+  calc
+    q + q = ((1 : F₂) + 1) • q := by rw [add_smul, one_smul]
+    _ = 0 := by rw [CharTwo.add_self_eq_zero, zero_smul]
+
 private theorem exists_unit_pivot_of_twoForm_ne_zero
     {p : TwoForm} (hp : p ≠ 0) :
     ∃ i j : Fin 10, ambientTwoCoeff p i j = 1 := by
@@ -128,14 +134,15 @@ theorem unpopulatedQuadraticSection_iff_not_populatedFiber
     rcases hpopulated with ⟨d, hd, hprojection⟩
     apply hunpopulated d hd
     apply (quadraticQuotientProjection_eq_zero_iff (d + z)).1
-    rw [map_add, hprojection, CharTwo.add_self_eq_zero]
+    rw [map_add, hprojection, quadraticQuotient_add_self]
   · intro hnotPopulated d hd htarget
     apply hnotPopulated
     refine ⟨d, hd, ?_⟩
     have hzero : quadraticQuotientProjection (d + z) = 0 :=
       (quadraticQuotientProjection_eq_zero_iff (d + z)).2 htarget
     rw [map_add] at hzero
-    exact CharTwo.add_eq_zero.mp hzero
+    exact add_right_cancel
+      (hzero.trans (quadraticQuotient_add_self _).symm)
 
 /-- A target annihilating a member of the affine missing coset translated by
 an unpopulated section must have Hankel rank at most two.  Above rank two the
