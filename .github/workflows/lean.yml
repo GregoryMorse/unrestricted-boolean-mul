@@ -1,7 +1,7 @@
 name: Lean verification
 
 on:
-  push:
+  workflow_dispatch:
   pull_request:
   schedule:
     - cron: "23 4 * * 1"

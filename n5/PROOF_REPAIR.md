@@ -72,6 +72,20 @@ The following distinctions are now explicit in Lean.
    sharp section-only statement: the rational alternatives cannot be
    removed from unpopulatedness alone.
 
+The exact counterexample has also been retested with its history restored.
+Keeping its already-born high representative and allowing every correction
+from the returned quadratic state, none of the 2,048 lower factors with
+quadratic part `r0` reaches the missing target coset.  This finite calculation
+is recorded by `quadratic_return_feedback_probe.py`.  It does not prove the
+parameterized return theorem, but confirms that the retained representative
+contains information discarded by the false section-only formulation.
+
+The broad normalized SAT encoding was run for 60 seconds on each of the 220
+possible twelve-gate defect chronologies.  Every branch returned `unknown`;
+there was neither a circuit witness nor an UNSAT certificate.  The global SAT
+route is therefore retired rather than being treated as evidence for the
+lower bound.
+
 These modules are checked only by the pinned Linux CI.  The focused replay
 bridge, including the four canonical rank-one return kernels and the generic
 rank-two defect budget, compiles with pinned Lean 4.32.1.  Windows Lean is not

@@ -133,10 +133,19 @@ for each of the four simultaneous rational factor-pair types `(0,1)`, `(1,1)`,
 `(1,2)`, and `(1,3)`.  Thus the four fixed sections, even after their six
 rational-place symmetry images, cannot exhaust the returns.  For every one
 of the 256 first-order target translates of every retained class, the target
-exterior kernel was nevertheless zero.  The printed result was
+exterior kernel happened to be zero.  The printed result was
 
   uniform_kernel_survives_bounded_sample
 
-This refutes the former fixed-section orbit interface and motivates the
-correct replacement: four factor-pair cases with a parameterized returned
-section.  The finite sample is not a proof of that replacement.
+This refutes the former fixed-section orbit interface.  The sample was biased
+and did not justify a uniform parameterized replacement: the later exact
+`quadratic_return_kernel_counterexample.py` exhibits an unpopulated returned
+section with nonzero rational annihilator.  The valid section-only conclusion
+is therefore the zero-or-rational classification proved in Lean.
+
+The counterexample's actual history was then restored with
+`quadratic_return_feedback_probe.py`.  Keeping its born high representative
+and allowing its full returned quadratic correction space, none of the 2,048
+affine-plus-`r0` feedback factors reaches the missing target coset.  This is
+exact for that witness but only motivates, rather than proves, the needed
+history-sensitive return theorem.
