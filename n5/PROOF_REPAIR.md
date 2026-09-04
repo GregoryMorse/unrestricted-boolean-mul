@@ -54,11 +54,22 @@ The following distinctions are now explicit in Lean.
    Consequently every remaining normalized rank-one escape is forced into
    one asymmetric case: the correction uses the returned section while the
    quadratic factor stays in the old first-order envelope.
+5. `QuadraticReturnOrbit.lean` closes that asymmetric case for the four
+   canonical rational-return representatives.  The proof is an exterior
+   kernel calculation with sparse quartic coordinates; the two rank-four
+   representatives are killed by nine triangular coordinates, and the two
+   remaining representatives use the missing-coset functional.
+6. `QuadraticReturnRankTwo.lean` proves the post-return rank-two budget
+   contradiction.  An unpopulated return contributes positive quadratic
+   defect, while two independent localized high colours and their product
+   contribute three high directions, contradicting total defect at most
+   three.
 
 These modules are checked only by the pinned Linux CI.  The focused replay
-bridge, including the rank-one asymmetric reduction, compiles with pinned
-Lean 4.32.1.  Windows Lean is not used for this repair.  A complete repository
-build and `leanchecker` replay are reserved for a stable closure checkpoint.
+bridge, including the four canonical rank-one return kernels and the generic
+rank-two defect budget, compiles with pinned Lean 4.32.1.  Windows Lean is not
+used for this repair.  A complete repository build and `leanchecker` replay
+are reserved for a stable closure checkpoint.
 
 ## Remaining closure obligations
 
@@ -67,10 +78,11 @@ connected to the exact-cost circuit suffix.
 
 - Split returned sections into populated and unpopulated quotient cases and
   account for the populated case without granting an uncharged target row.
-- In the unpopulated case, close the remaining asymmetric rank-one branch:
-  the old correction uses the returned section while the quadratic factor
-  stays in the first-order envelope.
-- Close the independent/rank-two high-colour branch after a return.
+- Prove that every unpopulated rational return is transported to one of the
+  four canonical return representatives, and connect that classification to
+  the normalized rank-one feedback theorem.
+- Connect the independent/rank-two high-colour normal form to the generic
+  positive-quadratic-defect contradiction.
 - Prove the corresponding one-defect return statement (both the rational and
   degree-two capacity types) and the remaining two-defect stable-envelope
   suffix theorem.
