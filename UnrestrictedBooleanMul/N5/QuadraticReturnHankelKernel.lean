@@ -23,6 +23,29 @@ private theorem ambientWedgeTwo_comm_hankelKernel (p q : TwoForm) :
   simp only [ambientWedgeTwo]
   ring
 
+@[simp] private theorem ambientTwoCoeff_targetTwo_reverse
+    (c : TargetCoeff) (i j : Fin 5) :
+    ambientTwoCoeff (targetTwo c) (bCoord j) (aCoord i) =
+      c (hankelIndex i j) := by
+  rw [ambientTwoCoeff_comm]
+  exact ambientTwoCoeff_targetTwo_cross c i j
+
+@[simp] private theorem ambientTwoCoeff_targetTwo_sameA_local
+    (c : TargetCoeff) (i j : Fin 5) :
+    ambientTwoCoeff (targetTwo c) (aCoord i) (aCoord j) = 0 := by
+  by_cases hij : i = j
+  · subst j
+    exact ambientTwoCoeff_same _ _
+  · simp [ambientTwoCoeff, hij]
+
+@[simp] private theorem ambientTwoCoeff_targetTwo_sameB_local
+    (c : TargetCoeff) (i j : Fin 5) :
+    ambientTwoCoeff (targetTwo c) (bCoord i) (bCoord j) = 0 := by
+  by_cases hij : i = j
+  · subst j
+    exact ambientTwoCoeff_same _ _
+  · simp [ambientTwoCoeff, hij]
+
 /-- A ten-bit word interpreted as a linear form on the ambient input
 coordinates. -/
 private def binaryLinearFormTen (mask : Nat) : LinearForm :=
@@ -39,6 +62,12 @@ private def rankFourResidualLeftMask : Fin 16 → Nat :=
 
 private def rankFourResidualRightMask : Fin 16 → Nat :=
   ![0, 0, 0, 32, 0, 512, 512, 32, 64, 320, 672, 256, 256, 704, 416, 704]
+
+private def rankFourResidualProbeLeft : Fin 16 → Fin 10 :=
+  ![0, 0, 0, 1, 0, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1]
+
+private def rankFourResidualProbeRight : Fin 16 → Fin 10 :=
+  ![0, 0, 0, 5, 0, 9, 9, 5, 6, 6, 5, 8, 8, 6, 5, 6]
 
 private abbrev RankFourHankelPivotCertificate (i : Fin 16) : Prop :=
   let p := targetTwo (rankTwoHankelWord i)
@@ -66,7 +95,36 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
     | exact Or.inr (Or.inl rfl)
     | exact Or.inr (Or.inr (Or.inl rfl))
     | exact Or.inr (Or.inr (Or.inr (Or.inl rfl)))
-    | right; right; right; right; exact of_decide_eq_true rfl
+    | right; right; right; right
+      dsimp [RankFourHankelPivotCertificate, rankFourPivotLeft,
+        rankFourPivotRight, rankFourResidualLeftMask,
+        rankFourResidualRightMask]
+      refine ⟨?_, ?_, ?_⟩
+      · simp [rankTwoHankelWord, rZeroCoeff, rOneCoeff,
+          rInfinityCoeff, jZeroCoeff, jOneCoeff, jInfinityCoeff,
+          dStarZeroCoeff, dStarOneCoeff, hankelIndex]
+      · apply ambientTwoCoeff_injective
+        intro k l
+        fin_cases k <;> fin_cases l <;>
+          simp [ambientPivotResidual, ambientPivotPlane,
+            ambientPivotRow, ambientTwoCoeff_add,
+            ambientTwoCoeff_squarefreeWedge, binaryLinearFormTen,
+            rankTwoHankelWord, rZeroCoeff, rOneCoeff,
+            rInfinityCoeff, jZeroCoeff, jOneCoeff, jInfinityCoeff,
+            dStarZeroCoeff, dStarOneCoeff, hankelIndex,
+            aCoord, bCoord]
+      · intro hzero
+        have hcoord := congrArg (fun form : TwoForm =>
+          ambientTwoCoeff form (rankFourResidualProbeLeft i)
+            (rankFourResidualProbeRight i)) hzero
+        simpa [ambientPivotResidual, ambientPivotPlane,
+          ambientPivotRow, ambientTwoCoeff_add,
+          ambientTwoCoeff_squarefreeWedge, binaryLinearFormTen,
+          rankFourResidualProbeLeft, rankFourResidualProbeRight,
+          rankTwoHankelWord, rZeroCoeff, rOneCoeff,
+          rInfinityCoeff, jZeroCoeff, jOneCoeff, jInfinityCoeff,
+          dStarZeroCoeff, dStarOneCoeff, hankelIndex,
+          aCoord, bCoord] using hcoord
 
 /-- Every target annihilator of the affine missing coset translated by an
 unpopulated section is zero or one of the three rational directions. -/
