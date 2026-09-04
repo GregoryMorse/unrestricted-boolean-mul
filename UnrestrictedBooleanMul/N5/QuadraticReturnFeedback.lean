@@ -904,6 +904,35 @@ theorem rankOne_rationalZeroOneReturn_escape_impossible
       U c v hUhigh hcquad hvquad fConst fLinear u hu hcSection hvSection
       hproduct habsorb
 
+/-- Every canonical rational-plane return orbit has sterile normalized
+rank-one feedback. -/
+theorem rankOne_rationalReturnOrbit_escape_impossible
+    (orbit : RationalReturnOrbit)
+    (hunpopulated :
+      UnpopulatedQuadraticSection (rationalReturnOrbitSection orbit))
+    (U c v : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (hvquad : v ∈ N4.quadraticANFSpace 10)
+    (fConst : F₂) (fLinear : LinearForm)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcSection : quadraticProjection 10 c ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂
+          ({rationalReturnOrbitSection orbit} : Set TwoForm))
+    (hvSection : quadraticProjection 10 v ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂
+          ({rationalReturnOrbitSection orbit} : Set TwoForm))
+    (hproduct :
+      U * c = quadraticCoordinateANF fConst fLinear
+        (targetTwo (firstOrderMissingCoeff + u)) + v)
+    (habsorb : (U * c) * c = U * c) : False :=
+  rankOne_unpopulatedSection_escape_impossible_of_kernel
+    (rationalReturnOrbitSection orbit) hunpopulated
+      (rationalReturnOrbit_wedge_firstOrder_injective orbit)
+      U c v hUhigh hcquad hvquad fConst fLinear u hu hcSection hvSection
+      hproduct habsorb
+
 end
 end N5
 end UnrestrictedBooleanMul

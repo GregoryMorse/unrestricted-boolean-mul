@@ -204,7 +204,7 @@ theorem rationalOneTwoReturn_wedge_target_injective
     aCoord_ne_bCoord, bCoord_ne_aCoord, hcrossReverse,
     hsameA] at h0 h1 h2 h3 h4 h5 h6 h7 h8
   funext i
-  fin_cases i <;> module
+  fin_cases i <;> simp_all
 
 /-- Quadratic shadow of the canonical `(1,3)` equal-high return.  Again the
 same-side part has alternating rank four. -/
@@ -253,7 +253,45 @@ theorem rationalOneThreeReturn_wedge_target_injective
     aCoord_ne_bCoord, bCoord_ne_aCoord, hcrossReverse,
     hsameA] at h0 h1 h2 h3 h4 h5 h6 h7 h8
   funext i
-  fin_cases i <;> module
+  fin_cases i <;> simp_all
+
+/-- The four simultaneous rational-plane orbit types for unpopulated
+equal-high quadratic returns. -/
+inductive RationalReturnOrbit where
+  | zeroOne
+  | oneOne
+  | oneTwo
+  | oneThree
+  deriving DecidableEq, Fintype
+
+/-- Canonical returned section attached to a rational-plane orbit type. -/
+def rationalReturnOrbitSection : RationalReturnOrbit → TwoForm
+  | .zeroOne => rationalZeroOneReturnSection
+  | .oneOne => rationalOneOneReturnSection
+  | .oneTwo => rationalOneTwoReturnSection
+  | .oneThree => rationalOneThreeReturnSection
+
+/-- Every canonical rational return orbit has trivial exterior kernel on the
+old Hankel target. -/
+theorem rationalReturnOrbit_wedge_firstOrder_injective
+    (orbit : RationalReturnOrbit) (u c : TargetCoeff)
+    (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hzero : ambientWedgeTwo
+      (targetTwo (firstOrderMissingCoeff + u) +
+        rationalReturnOrbitSection orbit)
+      (targetTwo c) = 0) :
+    c = 0 := by
+  cases orbit with
+  | zeroOne =>
+      exact rationalZeroOneReturn_wedge_firstOrder_injective u c hu hzero
+  | oneOne =>
+      exact rationalOneOneReturn_wedge_firstOrder_injective u c hu hzero
+  | oneTwo =>
+      exact rationalOneTwoReturn_wedge_target_injective
+        (firstOrderMissingCoeff + u) c hzero
+  | oneThree =>
+      exact rationalOneThreeReturn_wedge_target_injective
+        (firstOrderMissingCoeff + u) c hzero
 
 end
 end N5
