@@ -59,6 +59,7 @@ private theorem balancedFourVector_decomposable
         smul_eq_mul]
       ring_nf
       simp [N3Certificate.pow_two_f2, N3Certificate.two_eq_zero_f2]
+      ring
   · let delta : F₂ := d + b * c
     refine ⟨delta • f + u + b • v,
       e + c • f + delta • v, ?_⟩
@@ -68,6 +69,7 @@ private theorem balancedFourVector_decomposable
       smul_eq_mul, delta]
     ring_nf
     simp [N3Certificate.pow_two_f2, N3Certificate.two_eq_zero_f2]
+    ring
 
 /-- Rank-four pivot kernel lemma.  The returned form `dform` is decomposable
 and differs from the annihilator `q` by a scalar multiple of `p`. -/
@@ -120,20 +122,31 @@ theorem exists_decomposable_translate_of_pivotResidual
       p = ambientPivotPlane p i j + ambientPivotResidual p i j :=
         (ambientPivotPlane_add_residual p i j).symm
       _ = _ := by rw [hresidual]; rfl
+  have hdformCore : dform =
+      delta • p +
+        squarefreeWedge (ambientPivotRow p i) (a • u + b • v) +
+        squarefreeWedge (ambientPivotRow p j) (c • u + d • v) := by
+    dsimp only [dform]
+    rw [ambientPivot_decomposition_of_wedge_zero
+      p q i j hpivot hwedge, hX, hY]
+    simp only [alpha, delta]
+    funext s
+    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+    ring_nf
+    simp [N3Certificate.two_eq_zero_f2]
+  have hdeltaP : delta • p =
+      delta • squarefreeWedge (ambientPivotRow p i)
+          (ambientPivotRow p j) +
+        delta • squarefreeWedge u v := by
+    rw [hp, smul_add]
   have hdform : dform =
       delta • squarefreeWedge (ambientPivotRow p i)
           (ambientPivotRow p j) +
         squarefreeWedge (ambientPivotRow p i) (a • u + b • v) +
         squarefreeWedge (ambientPivotRow p j) (c • u + d • v) +
         delta • squarefreeWedge u v := by
-    dsimp only [dform]
-    rw [ambientPivot_decomposition_of_wedge_zero
-      p q i j hpivot hwedge, hX, hY, hp]
-    simp only [alpha, delta, smul_add]
-    funext s
-    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    ring_nf
-    simp [N3Certificate.two_eq_zero_f2]
+    rw [hdformCore, hdeltaP]
+    module
   refine ⟨dform, ?_, alpha + delta, ?_⟩
   · rw [hdform]
     exact balancedFourVector_decomposable
