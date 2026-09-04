@@ -53,8 +53,8 @@ theorem rationalZeroOneReturn_wedge_firstOrder_injective
   have hc8 := hcoord (aCoord 0) (aCoord 2) (aCoord 4) (bCoord 4)
   simp [ambientWedgeTwo, rationalZeroOneReturnSection,
     ambientTwoCoeff_add, ambientTwoCoeff_squarefreeWedge,
-    aLinear, bLinear, Pi.basisFun, hankelIndex, ambientTwoCoeff] at
-      hc1 hc2 hc3 hc4 hc5 hc6 hc7 hc8
+    aLinear, bLinear, Pi.basisFun, hankelIndex, ambientTwoCoeff] at hc1 hc2
+      hc3 hc4 hc5 hc6 hc7 hc8
   have hd2 := hcoord (aCoord 0) (bCoord 0) (aCoord 1) (bCoord 1)
   have hd3 := hcoord (aCoord 0) (bCoord 0) (aCoord 1) (bCoord 2)
   have hd5 := hcoord (aCoord 0) (bCoord 0) (aCoord 1) (bCoord 4)
