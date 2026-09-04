@@ -68,8 +68,8 @@ individually and also returned UNSAT:
 
 Consequently this one fixed block admits at most two target rows after the
 last defect birth.  The statement is exact for the displayed state, but the
-universal manuscript repair still requires an algebraic orbit/fixed-block
-classification; this transcript must not be cited as that proof.
+universal manuscript repair still requires a parameterized algebraic return
+theorem; this transcript must not be cited as that proof.
 
 Additional orbit representatives
 --------------------------------
@@ -119,5 +119,24 @@ rational witness reached its three-minute diagnostic limit; the exact
 one-step multiplication-map result is the useful observation here.
 
 These are fixed representatives only.  They motivate a saturated quadratic-
-section lemma and do not establish its required universal orbit
-classification.
+section lemma and do not establish its required universal classification.
+
+Bounded returned-class diagnostic
+---------------------------------
+
+Command:
+
+  python3 n5/verification/exploration/quadratic_return_class_sample.py
+
+The scan retained the first 64 distinct unpopulated returned quotient classes
+for each of the four simultaneous rational factor-pair types `(0,1)`, `(1,1)`,
+`(1,2)`, and `(1,3)`.  Thus the four fixed sections, even after their six
+rational-place symmetry images, cannot exhaust the returns.  For every one
+of the 256 first-order target translates of every retained class, the target
+exterior kernel was nevertheless zero.  The printed result was
+
+  uniform_kernel_survives_bounded_sample
+
+This refutes the former fixed-section orbit interface and motivates the
+correct replacement: four factor-pair cases with a parameterized returned
+section.  The finite sample is not a proof of that replacement.

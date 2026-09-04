@@ -78,9 +78,12 @@ private theorem returnSymmetryTwoBasis_eq_wedge
       have hcoordinate (r : Fin 10) :
           coordinateLinearTen r = returnSymmetryLinearBasis r := by
         funext i
-        simp only [coordinateLinearTen, returnSymmetryLinearBasis,
-          Pi.basisFun, Pi.single_apply]
-        exact if_congr (eq_comm) rfl rfl
+        by_cases h : i = r
+        · subst i
+          simp [coordinateLinearTen, returnSymmetryLinearBasis, Pi.basisFun]
+        · have h' : r ≠ i := fun hri => h hri.symm
+          simp [coordinateLinearTen, returnSymmetryLinearBasis, Pi.basisFun,
+            h, h']
       rw [hcoordinate, hcoordinate]
 
 set_option maxHeartbeats 3000000 in
@@ -102,6 +105,9 @@ private theorem rationalPlaceFourFormLinear_wedge_basis
   simp only [rationalPlaceFourFormLinear, ambientWedgeTwo,
     ambientTwoCoeff_squarefreeWedge, rationalPlaceLinear_basis,
     returnSymmetryLinearBasis, Pi.basisFun, Pi.single_apply]
+  simp only [mul_add, add_mul, Finset.sum_add_distrib]
+  simp [Pi.single_apply, eq_comm]
+  simp only [ambientWedgeTwo, ambientTwoCoeff_squarefreeWedge]
   simp only [mul_add, add_mul, Finset.sum_add_distrib]
   simp [Pi.single_apply, eq_comm]
   ring_nf
@@ -158,13 +164,8 @@ theorem rationalPlaceFourFormLinear_ambientWedgeTwo
             (rationalPlaceTwoFormLinear theta (returnSymmetryTwoBasis s))
             (rationalPlaceTwoFormLinear theta
               (returnSymmetryTwoBasis t)) := by
-      rw [map_sum]
-      apply Finset.sum_congr rfl
-      intro t _
-      rw [map_sum]
-      apply Finset.sum_congr rfl
-      intro s _
-      rw [map_smul, rationalPlaceFourFormLinear_wedge_basis]
+      simp_rw [map_sum, map_smul,
+        rationalPlaceFourFormLinear_wedge_basis]
     _ = ambientWedgeTwo
           (∑ s : QuadraticIndex 10,
             p s • rationalPlaceTwoFormLinear theta

@@ -54,11 +54,13 @@ The following distinctions are now explicit in Lean.
    Consequently every remaining normalized rank-one escape is forced into
    one asymmetric case: the correction uses the returned section while the
    quadratic factor stays in the old first-order envelope.
-5. `QuadraticReturnOrbit.lean` closes that asymmetric case for the four
-   canonical rational-return representatives.  The proof is an exterior
-   kernel calculation with sparse quartic coordinates; the two rank-four
+5. `QuadraticReturnOrbit.lean` closes that asymmetric case for four fixed
+   rational-return representatives.  The proof is an exterior-kernel
+   calculation with sparse quartic coordinates; the two rank-four
    representatives are killed by nine triangular coordinates, and the two
-   remaining representatives use the missing-coset functional.
+   remaining representatives use the missing-coset functional.  These are
+   witnesses and regression cases, not representatives of all returned
+   quadratic-section orbits.
 6. `QuadraticReturnRankTwo.lean` proves the post-return rank-two budget
    contradiction.  An unpopulated return contributes positive quadratic
    defect, while two independent localized high colours and their product
@@ -78,9 +80,13 @@ connected to the exact-cost circuit suffix.
 
 - Split returned sections into populated and unpopulated quotient cases and
   account for the populated case without granting an uncharged target row.
-- Prove that every unpopulated rational return is transported to one of the
-  four canonical return representatives, and connect that classification to
-  the normalized rank-one feedback theorem.
+- Classify the *factor pair* `(q,c)` of a rational return into the four
+  simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
+  For each type, keep the returned quadratic section parameterized and prove
+  its first-order exterior-kernel certificate from the cubic syzygy and
+  unpopulatedness.  Then transport those four parameterized theorems by the
+  rational-place symmetries and connect them to the normalized rank-one
+  feedback theorem.
 - Connect the independent/rank-two high-colour normal form to the generic
   positive-quadratic-defect contradiction.
 - Prove the corresponding one-defect return statement (both the rational and
@@ -90,6 +96,10 @@ connected to the exact-cost circuit suffix.
   `CostedFirstOrderQuadraticPrefixes`, then expose `no_twelve_gate_circuit`
   and `mc_mul_five` with no assumptions.
 
-The fixed-state multiplication-map and SAT probes in
-`n5/verification/exploration` are discovery checks only.  Their negative
-answers guide the algebraic normal forms but are not premises of the proof.
+The fixed-state multiplication-map, bounded return-class, and SAT probes in
+`n5/verification/exploration` are discovery checks only.  In particular,
+`quadratic_return_class_sample.py` finds at least 64 unpopulated returned
+classes in each tested factor-pair type, so the former four-fixed-section
+orbit plan is false.  The same bounded sample satisfies the proposed uniform
+exterior-kernel certificate, which guides the replacement theorem but is not
+a premise of the proof.
