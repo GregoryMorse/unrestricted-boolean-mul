@@ -96,6 +96,30 @@ rank-four return branch, stated without any finite classification. -/
 def UnpopulatedQuadraticSection (z : TwoForm) : Prop :=
   ∀ d : TwoForm, IsDecomposableTwo d → d + z ∉ targetTwoSpace
 
+/-- Every member of the first-order envelope enlarged by one section either
+stays in the old envelope or uses that section with coefficient one. -/
+theorem mem_firstOrderEnvelope_sup_section_cases
+    (z q : TwoForm)
+    (hq : q ∈ firstOrderEnvelopeTwoSpace ⊔
+      Submodule.span F₂ ({z} : Set TwoForm)) :
+    q ∈ firstOrderEnvelopeTwoSpace ∨
+      ∃ u : TargetCoeff, u ∈ firstOrderEnvelopeCoeffSpace ∧
+        q = targetTwo u + z := by
+  rcases Submodule.mem_sup.mp hq with ⟨w, hw, s, hs, hsum⟩
+  rcases Submodule.mem_span_singleton.mp hs with ⟨a, rfl⟩
+  rcases f2_eq_zero_or_one a with ha | ha
+  · left
+    rw [ha, zero_smul, add_zero] at hsum
+    rw [← hsum]
+    exact hw
+  · right
+    rw [ha, one_smul] at hsum
+    rcases hw with ⟨u, hu, huw⟩
+    refine ⟨u, hu, ?_⟩
+    calc
+      q = w + z := hsum.symm
+      _ = targetTwo u + z := by rw [huw]
+
 /-- The decomposable alternative remains excluded after adding an arbitrary
 old vector from an unpopulated first-order section. -/
 theorem unpopulatedSection_decomposable_add_ne_missingCoset
@@ -579,6 +603,80 @@ theorem rankOne_sectionCorrected_escape_impossible
   exact rankOne_section_envelopeCorrection_impossible
     W hintersection U hUhigh fConst cConst fLinear cLinear
       u hu C hC v hv hproduct habsorb
+
+/-- A normalized rank-one escape over an unpopulated return section reduces
+to one asymmetric residue: the old correction must use the return section,
+while the quadratic factor must remain in the old first-order envelope.
+
+The other two possibilities are the old-envelope correction theorem and the
+both-use-section cancellation theorem above. -/
+theorem rankOne_unpopulatedSection_escape_is_asymmetric
+    (z : TwoForm) (hunpopulated : UnpopulatedQuadraticSection z)
+    (U c v : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (hvquad : v ∈ N4.quadraticANFSpace 10)
+    (fConst : F₂) (fLinear : LinearForm)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcSection : quadraticProjection 10 c ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂ ({z} : Set TwoForm))
+    (hvSection : quadraticProjection 10 v ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂ ({z} : Set TwoForm))
+    (hproduct :
+      U * c = quadraticCoordinateANF fConst fLinear
+        (targetTwo (firstOrderMissingCoeff + u)) + v)
+    (habsorb : (U * c) * c = U * c) :
+    (∃ vCoeff : TargetCoeff,
+        vCoeff ∈ firstOrderEnvelopeCoeffSpace ∧
+        quadraticProjection 10 v = targetTwo vCoeff + z) ∧
+      quadraticProjection 10 c ∈ firstOrderEnvelopeTwoSpace := by
+  let W := firstOrderEnvelopeTwoSpace ⊔
+    Submodule.span F₂ ({z} : Set TwoForm)
+  have hintersection : targetTwoSpace ⊓ W =
+      firstOrderEnvelopeTwoSpace := by
+    dsimp only [W]
+    apply targetTwoSpace_inf_firstOrderEnvelope_sup_of_missingCoset_exclusion
+    intro coeff hcoeff hz
+    apply hunpopulated 0 decomposableTwo_zero
+    rw [zero_add, hz]
+    exact targetTwo_mem_targetTwoSpace _
+  rcases mem_firstOrderEnvelope_sup_section_cases z
+      (quadraticProjection 10 v) hvSection with hvOld | hvUses
+  · exfalso
+    have hvEnvelope : v ∈ firstOrderEnvelopeState :=
+      (E2.mem_quadraticEnvelopeState_iff
+        firstOrderEnvelopeTwoSpace v).2 ⟨hvquad, hvOld⟩
+    exact rankOne_sectionCorrected_escape_impossible
+      W hintersection U c hUhigh hcquad fConst fLinear u hu
+        hcSection v hvEnvelope hproduct habsorb
+  · refine ⟨hvUses, ?_⟩
+    rcases mem_firstOrderEnvelope_sup_section_cases z
+        (quadraticProjection 10 c) hcSection with hcOld | hcUses
+    · exact hcOld
+    · exfalso
+      rcases hvUses with ⟨vCoeff, hvCoeff, hVProjection⟩
+      rcases hcUses with ⟨cCoeff, hcCoeff, hCProjection⟩
+      rcases exists_quadraticCoordinates hcquad with
+        ⟨cConst, cLinear, C, hcCoordinates⟩
+      rcases exists_quadraticCoordinates hvquad with
+        ⟨vConst, vLinear, Vtwo, hvCoordinates⟩
+      have hC : C = targetTwo cCoeff + z := by
+        calc
+          C = quadraticProjection 10 c := by
+            rw [hcCoordinates, quadraticProjection_quadraticCoordinateANF]
+          _ = targetTwo cCoeff + z := hCProjection
+      have hV : Vtwo = targetTwo vCoeff + z := by
+        calc
+          Vtwo = quadraticProjection 10 v := by
+            rw [hvCoordinates, quadraticProjection_quadraticCoordinateANF]
+          _ = targetTwo vCoeff + z := hVProjection
+      rw [hcCoordinates] at hproduct habsorb
+      rw [hvCoordinates, quadraticCoordinateANF_add] at hproduct
+      exact rankOne_unpopulatedSection_bothUseSection_impossible
+        z hunpopulated U hUhigh (fConst + vConst) cConst
+          (fLinear + vLinear) cLinear u cCoeff vCoeff hu hcCoeff hvCoeff
+          C Vtwo hC hV hproduct habsorb
 
 end
 end N5
