@@ -40,7 +40,7 @@ private def rankFourResidualLeftMask : Fin 16 → Nat :=
 private def rankFourResidualRightMask : Fin 16 → Nat :=
   ![0, 0, 0, 32, 0, 512, 512, 32, 64, 320, 672, 256, 256, 704, 416, 704]
 
-private def RankFourHankelPivotCertificate (i : Fin 16) : Prop :=
+private abbrev RankFourHankelPivotCertificate (i : Fin 16) : Prop :=
   let p := targetTwo (rankTwoHankelWord i)
   let left := rankFourPivotLeft i
   let right := rankFourPivotRight i
@@ -58,10 +58,6 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
       i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 4 ∨
         RankFourHankelPivotCertificate i := by
   letI : DecidableEq TwoForm := Fintype.decidablePiFintype
-  letI : DecidablePred RankFourHankelPivotCertificate :=
-    fun _ => by
-      unfold RankFourHankelPivotCertificate
-      infer_instance
   exact @of_decide_eq_true _ Fintype.decidableForallFintype rfl
 
 /-- Every target annihilator of the affine missing coset translated by an
