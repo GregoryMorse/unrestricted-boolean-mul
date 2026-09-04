@@ -116,6 +116,7 @@ theorem unpopulatedSection_decomposable_add_ne_missingCoset
         _ = targetTwo (firstOrderMissingCoeff + u) + w := by rw [hmissing]
         _ = targetTwo (firstOrderMissingCoeff + u) + targetTwo c := by
           rw [← hsum, ← hcw₀]
+          rfl
         _ = targetTwo (firstOrderMissingCoeff + (u + c)) := by
           change targetTwoLinear (firstOrderMissingCoeff + u) +
               targetTwoLinear c =

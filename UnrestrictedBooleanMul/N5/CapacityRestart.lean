@@ -302,7 +302,7 @@ theorem CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
     ∃ k' ≤ k,
       CostedDefectLegalSuffix (intrinsicCapacityState p') k'
         (intrinsicCapacityState p' ⊔ V) ∧
-      Module.finrank F₂ (intrinsicCapacityState p' ⊔ V) =
+      Module.finrank F₂ ↥(intrinsicCapacityState p' ⊔ V) =
         Module.finrank F₂ (intrinsicCapacityState p') + k' := by
   let p' : Fin (j + 1) → TwoForm :=
     Fin.snoc p (quadraticProjection 10 (u * v))
