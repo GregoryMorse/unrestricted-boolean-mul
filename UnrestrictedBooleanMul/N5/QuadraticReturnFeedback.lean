@@ -578,8 +578,8 @@ theorem rankOne_unpopulatedSection_asymmetric_impossible
             targetTwoLinear vCoeff) + z =
           targetTwoLinear (firstOrderMissingCoeff + (u + vCoeff)) + z
         rw [← targetTwoLinear.map_add]
-        congr 1
-        ac_rfl
+        exact congrArg (fun d : TargetCoeff => targetTwoLinear d + z)
+          (by ac_rfl)
   have hFtwoAddZ : Ftwo + z =
       targetTwo (firstOrderMissingCoeff + (u + vCoeff)) := by
     rw [hFtwoNormal]
@@ -821,6 +821,88 @@ theorem rankOne_unpopulatedSection_escape_is_asymmetric
         z hunpopulated U hUhigh (fConst + vConst) cConst
           (fLinear + vLinear) cLinear u cCoeff vCoeff hu hcCoeff hvCoeff
           C Vtwo hC hV hproduct habsorb
+
+/-- A target-kernel certificate closes every normalized rank-one escape over
+an unpopulated return section.  This is the circuit-facing fixed-block form:
+the old-envelope and symmetric section branches are discharged by
+`rankOne_unpopulatedSection_escape_is_asymmetric`, and the remaining branch
+is exactly the asymmetric exterior-kernel theorem above. -/
+theorem rankOne_unpopulatedSection_escape_impossible_of_kernel
+    (z : TwoForm) (hunpopulated : UnpopulatedQuadraticSection z)
+    (hkernel : ∀ (u₀ c₀ : TargetCoeff),
+      u₀ ∈ firstOrderEnvelopeCoeffSpace →
+      ambientWedgeTwo
+          (targetTwo (firstOrderMissingCoeff + u₀) + z)
+          (targetTwo c₀) = 0 →
+      c₀ = 0)
+    (U c v : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (hvquad : v ∈ N4.quadraticANFSpace 10)
+    (fConst : F₂) (fLinear : LinearForm)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcSection : quadraticProjection 10 c ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂ ({z} : Set TwoForm))
+    (hvSection : quadraticProjection 10 v ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂ ({z} : Set TwoForm))
+    (hproduct :
+      U * c = quadraticCoordinateANF fConst fLinear
+        (targetTwo (firstOrderMissingCoeff + u)) + v)
+    (habsorb : (U * c) * c = U * c) : False := by
+  rcases rankOne_unpopulatedSection_escape_is_asymmetric
+      z hunpopulated U c v hUhigh hcquad hvquad fConst fLinear u hu
+        hcSection hvSection hproduct habsorb with
+    ⟨⟨vCoeff, hvCoeff, hVProjection⟩, hcOld⟩
+  rcases hcOld with ⟨cCoeff, hcCoeff, hCProjection⟩
+  rcases exists_quadraticCoordinates hcquad with
+    ⟨cConst, cLinear, C, hcCoordinates⟩
+  rcases exists_quadraticCoordinates hvquad with
+    ⟨vConst, vLinear, Vtwo, hvCoordinates⟩
+  have hC : C = targetTwo cCoeff := by
+    calc
+      C = quadraticProjection 10 c := by
+        rw [hcCoordinates, quadraticProjection_quadraticCoordinateANF]
+      _ = targetTwo cCoeff := hCProjection.symm
+  have hV : Vtwo = targetTwo vCoeff + z := by
+    calc
+      Vtwo = quadraticProjection 10 v := by
+        rw [hvCoordinates, quadraticProjection_quadraticCoordinateANF]
+      _ = targetTwo vCoeff + z := hVProjection
+  rw [hcCoordinates] at hproduct habsorb
+  rw [hvCoordinates, quadraticCoordinateANF_add] at hproduct
+  exact rankOne_unpopulatedSection_asymmetric_impossible
+    z hunpopulated hkernel U hUhigh (fConst + vConst) cConst
+      (fLinear + vLinear) cLinear u cCoeff vCoeff hu hcCoeff hvCoeff
+      C Vtwo hC hV hproduct habsorb
+
+/-- The canonical rational `(0,1)` quadratic-return orbit has no normalized
+rank-one target escape. -/
+theorem rankOne_rationalZeroOneReturn_escape_impossible
+    (hunpopulated :
+      UnpopulatedQuadraticSection rationalZeroOneReturnSection)
+    (U c v : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (hcquad : c ∈ N4.quadraticANFSpace 10)
+    (hvquad : v ∈ N4.quadraticANFSpace 10)
+    (fConst : F₂) (fLinear : LinearForm)
+    (u : TargetCoeff) (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcSection : quadraticProjection 10 c ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂
+          ({rationalZeroOneReturnSection} : Set TwoForm))
+    (hvSection : quadraticProjection 10 v ∈
+      firstOrderEnvelopeTwoSpace ⊔
+        Submodule.span F₂
+          ({rationalZeroOneReturnSection} : Set TwoForm))
+    (hproduct :
+      U * c = quadraticCoordinateANF fConst fLinear
+        (targetTwo (firstOrderMissingCoeff + u)) + v)
+    (habsorb : (U * c) * c = U * c) : False :=
+  rankOne_unpopulatedSection_escape_impossible_of_kernel
+    rationalZeroOneReturnSection hunpopulated
+      rationalZeroOneReturn_wedge_firstOrder_injective
+      U c v hUhigh hcquad hvquad fConst fLinear u hu hcSection hvSection
+      hproduct habsorb
 
 end
 end N5

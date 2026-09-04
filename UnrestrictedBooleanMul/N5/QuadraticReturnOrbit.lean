@@ -111,6 +111,50 @@ theorem rationalZeroOneReturn_wedge_firstOrder_injective
   funext i
   fin_cases i <;> assumption
 
+/-- Quadratic shadow of the canonical `(1,1)` equal-high return.  It differs
+from the `(0,1)` shadow only by the old rational target at zero. -/
+def rationalOneOneReturnSection : TwoForm :=
+  rationalZeroOneReturnSection + targetTwo rZeroCoeff
+
+/-- The `(1,1)` orbit inherits the `(0,1)` target-kernel certificate by
+absorbing its rational target translate into the first-order envelope. -/
+theorem rationalOneOneReturn_wedge_firstOrder_injective
+    (u c : TargetCoeff)
+    (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hzero : ambientWedgeTwo
+      (targetTwo (firstOrderMissingCoeff + u) +
+        rationalOneOneReturnSection)
+      (targetTwo c) = 0) :
+    c = 0 := by
+  have hrZero : rZeroCoeff ∈ firstOrderEnvelopeCoeffSpace := by
+    rw [mem_firstOrderEnvelopeCoeffSpace]
+    simp [firstOrderMissingFunctional, rZeroCoeff]
+  have hu' : u + rZeroCoeff ∈ firstOrderEnvelopeCoeffSpace :=
+    firstOrderEnvelopeCoeffSpace.add_mem hu hrZero
+  apply rationalZeroOneReturn_wedge_firstOrder_injective
+      (u + rZeroCoeff) c hu'
+  have hfirst :
+      targetTwo (firstOrderMissingCoeff + (u + rZeroCoeff)) +
+          rationalZeroOneReturnSection =
+        targetTwo (firstOrderMissingCoeff + u) +
+          rationalOneOneReturnSection := by
+    rw [rationalOneOneReturnSection]
+    change targetTwoLinear
+          (firstOrderMissingCoeff + (u + rZeroCoeff)) +
+          rationalZeroOneReturnSection =
+        targetTwoLinear (firstOrderMissingCoeff + u) +
+          (rationalZeroOneReturnSection + targetTwoLinear rZeroCoeff)
+    rw [show targetTwoLinear
+          (firstOrderMissingCoeff + (u + rZeroCoeff)) =
+        targetTwoLinear (firstOrderMissingCoeff + u) +
+          targetTwoLinear rZeroCoeff by
+      rw [← targetTwoLinear.map_add]
+      apply congrArg targetTwoLinear
+      ac_rfl]
+    abel
+  rw [hfirst]
+  exact hzero
+
 end
 end N5
 end UnrestrictedBooleanMul
