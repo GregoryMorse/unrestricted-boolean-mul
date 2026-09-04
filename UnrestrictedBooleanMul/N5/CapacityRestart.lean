@@ -29,8 +29,10 @@ theorem presentationDefect_snoc {j : Nat} (p : Fin j → TwoForm)
           Set QuadraticQuotient) := by
   have hfun :
       (fun i : Fin (j + 1) =>
-        quadraticQuotientProjection ((Fin.snoc p q) i)) =
-        Fin.snoc (fun i : Fin j => quadraticQuotientProjection (p i))
+        quadraticQuotientProjection
+          ((Fin.snoc (α := TwoForm) p q) i)) =
+        Fin.snoc (α := QuadraticQuotient)
+          (fun i : Fin j => quadraticQuotientProjection (p i))
           (quadraticQuotientProjection q) := by
     funext i
     refine Fin.lastCases ?_ (fun k => ?_) i <;> simp
@@ -129,7 +131,11 @@ theorem retainedQuadraticProduct_projection_not_mem
       let q : PopulatedPoint (presentationDefect p) :=
         ⟨⟨quadraticQuotientProjection g₂, hg₂Q⟩,
           hg₂zero, ⟨g₂, hg₂dec, rfl⟩⟩
-      exact ⟨q, by simpa [q, populatedQuotientPoint]⟩
+      refine ⟨q, ?_⟩
+      simpa [q, populatedQuotientPoint, decomposableFiber] using
+        (show IsDecomposableTwo g₂ ∧
+            quadraticQuotientProjection g₂ =
+              quadraticQuotientProjection g₂ from ⟨hg₂dec, rfl⟩)
   apply hretained
   exact (E2.mem_quadraticEnvelopeState_iff
     (defectCapacitySpan (presentationDefect p)) (u * v)).2
@@ -235,7 +241,8 @@ theorem quadraticDefectBirth_intrinsicCapacityRestart
     · simpa [p', g₂] using hg₂dec
     · simpa [p'] using hdec k
   have hQle : presentationDefect p ≤ presentationDefect p' := by
-    rw [p', presentationDefect_snoc]
+    change presentationDefect p ≤ presentationDefect (Fin.snoc p g₂)
+    rw [presentationDefect_snoc]
     exact le_sup_left
   have hbaseLe : intrinsicCapacityState p ≤ intrinsicCapacityState p' := by
     apply E2.quadraticEnvelopeState_mono
@@ -263,7 +270,9 @@ theorem quadraticDefectBirth_intrinsicCapacityRestart
       hquadratic hretained
   have hQrank : Module.finrank F₂ (presentationDefect p') =
       Module.finrank F₂ (presentationDefect p) + 1 := by
-    rw [p', presentationDefect_snoc,
+    change Module.finrank F₂ (presentationDefect (Fin.snoc p g₂)) =
+      Module.finrank F₂ (presentationDefect p) + 1
+    rw [presentationDefect_snoc,
       Submodule.finrank_sup_span_singleton hg₂notQ]
   have holdRank := intrinsicCapacityState_defectRank p hdec
   have hnewRank := intrinsicCapacityState_defectRank p' hp'dec
@@ -288,7 +297,8 @@ theorem CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
     {V : Submodule F₂ (ANF 10)}
     (hreach : CostedDefectLegalSuffix
       (andExtend (intrinsicCapacityState p) u v) k V) :
-    let p' := Fin.snoc p (quadraticProjection 10 (u * v))
+    let p' := Fin.snoc (α := TwoForm) p
+      (quadraticProjection 10 (u * v))
     ∃ k' ≤ k,
       CostedDefectLegalSuffix (intrinsicCapacityState p') k'
         (intrinsicCapacityState p' ⊔ V) ∧

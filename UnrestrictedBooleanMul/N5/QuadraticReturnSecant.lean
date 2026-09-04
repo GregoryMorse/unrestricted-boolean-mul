@@ -65,7 +65,8 @@ theorem targetTwoSpace_inf_firstOrderEnvelope_sup_of_missingCoset_exclusion
               rw [CharTwo.add_self_eq_zero]
             _ = firstOrderMissingCoeff i +
                 (c i + firstOrderMissingCoeff i) := by ac_rfl
-        have hcancel : (w + z) + z = w := by module
+        have hcancel : (w + z) + z = w := by
+          rw [add_assoc, CharTwo.add_self_eq_zero, add_zero]
         have hsumExcluded :
             w + z ≠ targetTwo (firstOrderMissingCoeff + c₀) := by
           apply missingCoset_exclusion_of_add_mem_firstOrderEnvelope
@@ -74,6 +75,7 @@ theorem targetTwoSpace_inf_firstOrderEnvelope_sup_of_missingCoset_exclusion
             exact hw
           · exact hz
           · exact hc₀
+        exfalso
         apply hsumExcluded
         calc
           w + z = targetTwo c := hws
@@ -154,6 +156,7 @@ theorem targetTwoSpace_inf_firstOrderEnvelope_sup_twoWedgeSection
               rw [CharTwo.add_self_eq_zero]
             _ = firstOrderMissingCoeff i +
                 (c i + firstOrderMissingCoeff i) := by ac_rfl
+        exfalso
         apply firstOrderEnvelope_add_two_decomposable_ne_missingCoset
           (w + r) (firstOrderEnvelopeTwoSpace.add_mem hw hr)
           u v x y c₀ hc₀
