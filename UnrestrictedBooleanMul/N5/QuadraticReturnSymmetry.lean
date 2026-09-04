@@ -138,7 +138,7 @@ private theorem rationalPlaceFourFormLinear_finset_sum
     rationalPlaceFourFormLinear theta (∑ i ∈ s, f i) =
       ∑ i ∈ s, rationalPlaceFourFormLinear theta (f i) := by
   induction s using Finset.induction_on with
-  | empty => simp
+  | empty => exact (rationalPlaceFourFormLinear theta).map_zero
   | @insert i s hi ih =>
       rw [Finset.sum_insert hi, Finset.sum_insert hi, map_add, ih]
 
