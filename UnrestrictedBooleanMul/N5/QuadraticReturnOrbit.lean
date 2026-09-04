@@ -262,7 +262,7 @@ inductive RationalReturnOrbit where
   | oneOne
   | oneTwo
   | oneThree
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 /-- Canonical returned section attached to a rational-plane orbit type. -/
 def rationalReturnOrbitSection : RationalReturnOrbit → TwoForm

@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
 
       - name: Build the active n5 replay bridge first
-        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn UnrestrictedBooleanMul.N5.QuadraticReturnSecant UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
+        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn UnrestrictedBooleanMul.N5.QuadraticReturnSecant UnrestrictedBooleanMul.N5.QuadraticReturnFeedback UnrestrictedBooleanMul.N5.QuadraticReturnRankTwo
 
       - name: Preserve focused build objects for repair iterations
         if: always()
