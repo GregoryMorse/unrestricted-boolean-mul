@@ -18,6 +18,10 @@ namespace N5
 
 noncomputable section
 
+private theorem twoForm_add_self (p : TwoForm) : p + p = 0 := by
+  funext s
+  exact CharTwo.add_self_eq_zero (p s)
+
 /-- A quadratic space whose target intersection is exactly the first-order
 envelope cannot contain a member of the missing target coset. -/
 theorem section_ne_missingCoset_of_targetIntersection
@@ -106,10 +110,12 @@ theorem unpopulatedSection_decomposable_add_ne_missingCoset
     have hdTarget : d =
         targetTwo (firstOrderMissingCoeff + (u + c)) := by
       calc
-        d = (d + w) + w := by module
+        d = (d + w) + w := by
+          symm
+          rw [add_assoc, twoForm_add_self, add_zero]
         _ = targetTwo (firstOrderMissingCoeff + u) + w := by rw [hmissing]
         _ = targetTwo (firstOrderMissingCoeff + u) + targetTwo c := by
-          rw [← hsum, hcw₀]
+          rw [← hsum, ← hcw₀]
         _ = targetTwo (firstOrderMissingCoeff + (u + c)) := by
           change targetTwoLinear (firstOrderMissingCoeff + u) +
               targetTwoLinear c =
@@ -129,7 +135,10 @@ theorem unpopulatedSection_decomposable_add_ne_missingCoset
       exact ⟨firstOrderMissingCoeff + u, rfl⟩
     have hdz : d + z = (d + w) + w₀ := by
       rw [← hsum]
-      module
+      calc
+        d + z = d + ((w₀ + w₀) + z) := by
+          rw [twoForm_add_self, zero_add]
+        _ = (d + (w₀ + z)) + w₀ := by abel
     rw [hdz]
     exact targetTwoSpace.add_mem hmissingTarget hw₀Target
 
@@ -180,8 +189,7 @@ theorem quadraticSection_correctedProduct_ne_missingTarget
   have hsumProjection : quadraticProjection 10 (X * Y) +
       quadraticProjection 10 V =
         targetTwo (firstOrderMissingCoeff + u) := by
-    rw [hprojection]
-    module
+    rw [hprojection, add_assoc, twoForm_add_self, add_zero]
   rcases quadratic_product_projection_alternative_ten
       (p := X) (q := Y) (g := X * Y) rfl
       hXData.1 hYData.1 hproductQuad with hinherited | hdecomposable

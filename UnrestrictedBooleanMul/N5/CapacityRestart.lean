@@ -297,9 +297,8 @@ theorem CostedDefectLegalSuffix.prune_after_quadraticDefectBirth
     {V : Submodule F₂ (ANF 10)}
     (hreach : CostedDefectLegalSuffix
       (andExtend (intrinsicCapacityState p) u v) k V) :
-    let p' := Fin.snoc
-      (α := fun _ : Fin (j + 1) => TwoForm) p
-      (quadraticProjection 10 (u * v))
+    let p' : Fin (j + 1) → TwoForm :=
+      Fin.snoc p (quadraticProjection 10 (u * v))
     ∃ k' ≤ k,
       CostedDefectLegalSuffix (intrinsicCapacityState p') k'
         (intrinsicCapacityState p' ⊔ V) ∧
