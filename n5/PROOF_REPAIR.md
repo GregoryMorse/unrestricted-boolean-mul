@@ -93,9 +93,14 @@ The following distinctions are now explicit in Lean.
    connected in `N5/QuadraticReturnHistory*Semantic.lean`: all 198 selected
    equations are discharged from the literal quadratic-history hypotheses,
    and each generated certificate now ends in a circuit-facing
-   first-order-missing-functional theorem.  The remaining history work is
-   the symmetry/aligned treatment of `(0,1)` and `(1,1)`, followed by the
-   factor-pair normalization that selects these leaves.
+   first-order-missing-functional theorem.  The normalized off-axis
+   `(1,1), R1` leaf is also kernel-connected: its 28 raw equations retain
+   the equal-factor difference chart `m = mDifference + ell`, and its
+   semantic bridge explicitly applies Boolean idempotence before exposing
+   the same circuit-facing theorem.  The remaining history work is the
+   formal symmetry transport among off-axis directions and the aligned
+   `(0,1)` and `(1,1)` treatment, followed by the factor-pair normalization
+   that selects these leaves.
 
 The exact counterexample has also been retested with its history restored.
 Keeping its already-born high representative and allowing every correction
@@ -127,8 +132,9 @@ connected to the exact-cost circuit suffix.
 - Formalize the *factor pair* `(q,c)` classification into the four
   simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
   The direct `(1,2)` and `(1,3)` history-sensitive certificates are now
-  kernel-connected for all three rational directions.  Finish the
-  symmetry/aligned `(0,1)` and `(1,1)` leaves and connect the resulting case
+  kernel-connected for all three rational directions, as is the normalized
+  off-axis `(1,1), R1` representative.  Finish the formal symmetry transport
+  and aligned `(0,1)` and `(1,1)` leaves, then connect the resulting case
   split to the factor-pair normalization.  These arguments retain the
   returned section and old high representative; the section-only injectivity
   theorem remains false and must not be restored.

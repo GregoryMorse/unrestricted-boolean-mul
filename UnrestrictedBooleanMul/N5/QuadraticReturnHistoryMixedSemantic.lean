@@ -16,6 +16,7 @@ noncomputable section
 
 /-- The two mixed simultaneous factor-pair types. -/
 inductive MixedReturnFactorPair where
+  | oneOneDifference
   | oneTwo
   | oneThree
   deriving DecidableEq
@@ -29,11 +30,20 @@ inductive RationalFeedbackDirection where
   deriving DecidableEq
 
 def MixedReturnFactorPair.leftTwo : MixedReturnFactorPair → TwoForm
-  | .oneTwo | .oneThree => targetTwo rZeroCoeff
+  | .oneOneDifference | .oneTwo | .oneThree => targetTwo rZeroCoeff
 
 def MixedReturnFactorPair.rightTwo : MixedReturnFactorPair → TwoForm
+  | .oneOneDifference => targetTwo rZeroCoeff
   | .oneTwo => targetTwo rOneCoeff
   | .oneThree => targetTwo (rZeroCoeff + rOneCoeff)
+
+/-- The `(1,1)` chart stores the difference of the two linear parts; this
+keeps its factor-pair normalization invertible without adding parameters. -/
+def MixedReturnFactorPair.rightLinear (kind : MixedReturnFactorPair)
+    (p : ZeroOneOffAxisHistoryParameters) : LinearForm :=
+  match kind with
+  | .oneOneDifference => p.m + p.ell
+  | .oneTwo | .oneThree => p.m
 
 def RationalFeedbackDirection.two : RationalFeedbackDirection → TwoForm
   | .zero => targetTwo rZeroCoeff
@@ -44,13 +54,14 @@ def RationalFeedbackDirection.two : RationalFeedbackDirection → TwoForm
 def mixedReturnFirstProduct (kind : MixedReturnFactorPair)
     (p : ZeroOneOffAxisHistoryParameters) : ANF 10 :=
   quadraticCoordinateANF 0 p.ell kind.leftTwo *
-    quadraticCoordinateANF 0 p.m kind.rightTwo
+    quadraticCoordinateANF 0 (kind.rightLinear p) kind.rightTwo
 
 /-- Equal-high comparison product after affine shifts of both factors. -/
 def mixedReturnShiftedProduct (kind : MixedReturnFactorPair)
     (p : ZeroOneOffAxisHistoryParameters) : ANF 10 :=
   quadraticCoordinateANF 0 (p.ell + p.leftShift) kind.leftTwo *
-    quadraticCoordinateANF 0 (p.m + p.rightShift) kind.rightTwo
+    quadraticCoordinateANF 0 (kind.rightLinear p + p.rightShift)
+      kind.rightTwo
 
 /-- Quadratic section returned by the equal-high comparison. -/
 def mixedReturnSection (kind : MixedReturnFactorPair)
@@ -84,6 +95,7 @@ macro "simp_mixed_return_history" : tactic =>
       mixedReturnCorrection, mixedReturnSection,
       mixedReturnFirstProduct, mixedReturnShiftedProduct,
       MixedReturnFactorPair.leftTwo, MixedReturnFactorPair.rightTwo,
+      MixedReturnFactorPair.rightLinear,
       RationalFeedbackDirection.two,
       quadraticCoordinateANF,
       ZeroOneOffAxisHistoryParameters.quadraticANFOfForm_correctionTwo_eq_targetANF,

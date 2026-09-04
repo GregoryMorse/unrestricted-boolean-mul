@@ -27,6 +27,7 @@ class Leaf:
     return_masks: tuple[int, ...]
     product_masks: tuple[int, ...]
     quotient_positions: tuple[int, ...]
+    ordered_entries: tuple[tuple[str, int], ...] = ()
 
 
 SHORT_RETURN = (0x023, 0x025, 0x026, 0x061, 0x062, 0x221, 0x222)
@@ -45,6 +46,16 @@ INF_PRODUCT = (
     0x290, 0x292, 0x294, 0x304, 0x308, 0x310, 0x314, 0x318,
 )
 INF_QUOTIENT = (6, 7, 13, 14, 16, 21, 22, 23, 26, 28)
+ONE_ONE_R1_ENTRIES = (
+    *(("return", mask) for mask in (0x023, 0x031, 0x061, 0x0A1)),
+    *(("product", mask) for mask in (
+        0x023, 0x031, 0x043, 0x051, 0x061, 0x062, 0x063, 0x070,
+        0x071, 0x083, 0x091, 0x0A1, 0x0A2, 0x0A3, 0x0B0, 0x0B1,
+    )),
+    *(("quotient", position) for position in (6, 7, 13, 14, 16, 23)),
+    ("product", 0x0E3),
+    ("product", 0x073),
+)
 
 LEAVES = (
     Leaf("OneTwoR0", "oneTwoR0", "oneTwo_R0_Raw_history_missing_eq_zero",
@@ -59,6 +70,8 @@ LEAVES = (
          "oneThree", "one", SHORT_RETURN, SHORT_PRODUCT, SHORT_QUOTIENT),
     Leaf("OneThreeRInf", "oneThreeRInf", "oneThree_RInf_Raw_history_missing_eq_zero",
          "oneThree", "infinity", INF_RETURN, INF_PRODUCT, INF_QUOTIENT),
+    Leaf("OneOneR1", "oneOneR1", "oneOne_R1_Raw_history_missing_eq_zero",
+         "oneOneDifference", "one", (), (), (), ONE_ONE_R1_ENTRIES),
 )
 
 # The quotient reducer rows are sums of two cross-plane coefficients on the
@@ -95,6 +108,13 @@ def powerset(mask: int) -> str:
     return "{" + ", ".join(terms) + "}"
 
 
+def boolean_idempotence_normalization(leaf: Leaf) -> str:
+    """Normalize squares introduced by the m = mDifference + ell chart."""
+    if leaf.kind != "oneOneDifference":
+        return ""
+    return "  simp only [N3Certificate.pow_two_f2]\n  ring_nf\n"
+
+
 def coefficient_bridge(leaf: Leaf, index: int, mask: int,
                        returned: bool) -> str:
     name = "returned" if returned else "feedback"
@@ -102,6 +122,7 @@ def coefficient_bridge(leaf: Leaf, index: int, mask: int,
                   f"mixedReturnFeedbackProduct .{leaf.kind} "
                   f".{leaf.direction} p")
     support = finset(mask)
+    boolean_normalization = boolean_idempotence_normalization(leaf)
     return f"""
 set_option maxRecDepth 8192 in
 set_option maxHeartbeats 1200000 in
@@ -117,6 +138,7 @@ private theorem {leaf.raw}_constraint_{index}_eq_{name}_coeff
   simp (config := {{ decide := true }}) [{leaf.raw}RawConstraint]
   simp_mixed_return_history
   ring_nf
+{boolean_normalization}\
   simp [CharTwo.ofNat_eq_mod]
 """
 
@@ -125,6 +147,7 @@ def quotient_bridge(leaf: Leaf, index: int, position: int) -> str:
     row, first, second = QUOTIENT_ROWS[position]
     first_support = finset(first)
     second_support = finset(second)
+    boolean_normalization = boolean_idempotence_normalization(leaf)
     return f"""
 set_option maxRecDepth 8192 in
 set_option maxHeartbeats 1200000 in
@@ -149,12 +172,14 @@ private theorem {leaf.raw}_constraint_{index}_eq_quotient_row
   simp (config := {{ decide := true }}) [{leaf.raw}RawConstraint]
   simp_mixed_return_history
   ring_nf
+{boolean_normalization}\
   ring_nf
   simp [CharTwo.ofNat_eq_mod]
 """
 
 
 def target_bridge(leaf: Leaf) -> str:
+    boolean_normalization = boolean_idempotence_normalization(leaf)
     return f"""
 set_option maxRecDepth 8192 in
 set_option maxHeartbeats 1200000 in
@@ -183,39 +208,37 @@ theorem {leaf.raw}RawTarget_eq_missingCoordinate
   simp (config := {{ decide := true }}) [{leaf.raw}RawTarget]
   simp_mixed_return_history
   ring_nf
+{boolean_normalization}\
   ring_nf
   simp [CharTwo.ofNat_eq_mod]
 """
 
 
 def aggregate(leaf: Leaf) -> str:
-    count = len(leaf.return_masks) + len(leaf.product_masks) + len(
-        leaf.quotient_positions)
+    entries = ordered_entries(leaf)
+    count = len(entries)
     lines = []
-    for index, mask in enumerate(leaf.return_masks):
-        lines.append(
-            f"  · change {leaf.raw}RawConstraint p.vector "
-            f"({index} : Fin {count}) = 0\n"
-            f"    rw [{leaf.raw}_constraint_{index}_eq_returned_coeff]\n"
-            f"    exact hreturned ⟨{finset(mask)}⟩ (by decide)")
-    product_start = len(leaf.return_masks)
-    for offset, mask in enumerate(leaf.product_masks):
-        index = product_start + offset
-        lines.append(
-            f"  · change {leaf.raw}RawConstraint p.vector "
-            f"({index} : Fin {count}) = 0\n"
-            f"    rw [{leaf.raw}_constraint_{index}_eq_feedback_coeff]\n"
-            f"    exact hfeedback ⟨{finset(mask)}⟩ (by decide)")
-    quotient_start = product_start + len(leaf.product_masks)
-    for offset, position in enumerate(leaf.quotient_positions):
-        index = quotient_start + offset
-        row = QUOTIENT_ROWS[position][0]
-        lines.append(
-            f"  · change {leaf.raw}RawConstraint p.vector "
-            f"({index} : Fin {count}) = 0\n"
-            f"    rw [{leaf.raw}_constraint_{index}_eq_quotient_row]\n"
-            f"    exact mixedReturnQuotientCoordinate_add_eq_zero_of_projection "
-            f"_ _ hprojection {row}")
+    for index, (kind, value) in enumerate(entries):
+        if kind == "return":
+            lines.append(
+                f"  · change {leaf.raw}RawConstraint p.vector "
+                f"({index} : Fin {count}) = 0\n"
+                f"    rw [{leaf.raw}_constraint_{index}_eq_returned_coeff]\n"
+                f"    exact hreturned ⟨{finset(value)}⟩ (by decide)")
+        elif kind == "product":
+            lines.append(
+                f"  · change {leaf.raw}RawConstraint p.vector "
+                f"({index} : Fin {count}) = 0\n"
+                f"    rw [{leaf.raw}_constraint_{index}_eq_feedback_coeff]\n"
+                f"    exact hfeedback ⟨{finset(value)}⟩ (by decide)")
+        else:
+            row = QUOTIENT_ROWS[value][0]
+            lines.append(
+                f"  · change {leaf.raw}RawConstraint p.vector "
+                f"({index} : Fin {count}) = 0\n"
+                f"    rw [{leaf.raw}_constraint_{index}_eq_quotient_row]\n"
+                f"    exact mixedReturnQuotientCoordinate_add_eq_zero_of_projection "
+                f"_ _ hprojection {row}")
     cases = "\n".join(lines)
     return f"""
 /-- The literal quadratic-history hypotheses discharge every equation in
@@ -304,19 +327,26 @@ namespace N5
 noncomputable section
 """
     parts = [header, target_bridge(leaf)]
-    index = 0
-    for mask in leaf.return_masks:
-        parts.append(coefficient_bridge(leaf, index, mask, True))
-        index += 1
-    for mask in leaf.product_masks:
-        parts.append(coefficient_bridge(leaf, index, mask, False))
-        index += 1
-    for position in leaf.quotient_positions:
-        parts.append(quotient_bridge(leaf, index, position))
-        index += 1
+    for index, (kind, value) in enumerate(ordered_entries(leaf)):
+        if kind == "return":
+            parts.append(coefficient_bridge(leaf, index, value, True))
+        elif kind == "product":
+            parts.append(coefficient_bridge(leaf, index, value, False))
+        else:
+            parts.append(quotient_bridge(leaf, index, value))
     parts.append(aggregate(leaf))
     parts.append("\nend\nend N5\nend UnrestrictedBooleanMul\n")
     return "".join(parts)
+
+
+def ordered_entries(leaf: Leaf) -> tuple[tuple[str, int], ...]:
+    if leaf.ordered_entries:
+        return leaf.ordered_entries
+    return (
+        *(("return", mask) for mask in leaf.return_masks),
+        *(("product", mask) for mask in leaf.product_masks),
+        *(("quotient", position) for position in leaf.quotient_positions),
+    )
 
 
 def main() -> None:
