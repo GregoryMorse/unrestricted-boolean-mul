@@ -66,6 +66,11 @@ The following distinctions are now explicit in Lean.
    defect, while two independent localized high colours and their product
    contribute three high directions, contradicting total defect at most
    three.
+7. `QuadraticReturnKernel.lean` and `QuadraticReturnHankelKernel.lean`
+   reduce a target exterior annihilator of an arbitrary unpopulated section
+   to zero or one of the three rational rank-one directions.  This is the
+   sharp section-only statement: the rational alternatives cannot be
+   removed from unpopulatedness alone.
 
 These modules are checked only by the pinned Linux CI.  The focused replay
 bridge, including the four canonical rank-one return kernels and the generic
@@ -82,11 +87,12 @@ connected to the exact-cost circuit suffix.
   account for the populated case without granting an uncharged target row.
 - Classify the *factor pair* `(q,c)` of a rational return into the four
   simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
-  For each type, keep the returned quadratic section parameterized and prove
-  its first-order exterior-kernel certificate from the cubic syzygy and
-  unpopulatedness.  Then transport those four parameterized theorems by the
-  rational-place symmetries and connect them to the normalized rank-one
-  feedback theorem.
+  Keep the returned quadratic section and its old high representative
+  parameterized.  The quartic equation reduces every target annihilator to
+  a rational direction, but the rational branch must then use the exact
+  cubic/quadratic idempotence equations together with that retained high
+  representative, or be charged as a bounded one-colour target gain.  A
+  section-only injectivity theorem is false.
 - Connect the independent/rank-two high-colour normal form to the generic
   positive-quadratic-defect contradiction.
 - Prove the corresponding one-defect return statement (both the rational and
@@ -100,6 +106,22 @@ The fixed-state multiplication-map, bounded return-class, and SAT probes in
 `n5/verification/exploration` are discovery checks only.  In particular,
 `quadratic_return_class_sample.py` finds at least 64 unpopulated returned
 classes in each tested factor-pair type, so the former four-fixed-section
-orbit plan is false.  The same bounded sample satisfies the proposed uniform
-exterior-kernel certificate, which guides the replacement theorem but is not
-a premise of the proof.
+orbit plan is false.  Its first 64 ordered samples missed a second exact
+obstruction now recorded by `quadratic_return_kernel_counterexample.py`.
+With
+
+```
+q = 0,  c = r0,
+ell = a0 + a1 + b0,
+x = a0 + b0,
+y = a0 + b1,
+m = a1 + a3 + a4 + b0 + b1 + b2 + b3,
+```
+
+the products with linear pairs `(ell,m)` and `(ell+x,m+y)` have the same
+nonzero high part.  Their quadratic difference `z` has minimum alternating
+rank four over every target translate, but
+`(targetTwo E2 + z) wedge targetTwo r0 = 0`.  Thus even the parameterized
+four-factor-pair exterior-kernel proposal is false.  Any valid closure must
+retain more of the Boolean idempotence equations and circuit history, or
+prove the weaker costed gain bound actually needed at the endpoint.

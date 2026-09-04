@@ -6,8 +6,10 @@ already used by ``quadratic_return_population_probe.py`` and checks at most
 64 distinct unpopulated quotient classes for each of the four rational
 factor-pair types.  Finding more than 24 classes in one type refutes the
 proposed classification by four fixed sections and six rational-place words.
-The additional exterior-kernel loop tests the parameterized replacement on
-the bounded sample; a successful run is regression evidence, not a proof.
+The additional exterior-kernel loop only reports what happens in the first
+64 classes encountered by this ordering.  It is not evidence for a uniform
+kernel theorem: ``quadratic_return_kernel_counterexample.py`` gives an exact
+counterexample outside that biased initial sample.
 """
 
 from quadratic_return_population_probe import (
@@ -124,7 +126,7 @@ def main() -> None:
         })
     print({
         "reports": reports,
-        "result": "uniform_kernel_survives_bounded_sample",
+        "result": "no_kernel_seen_in_first_64_ordered_samples",
     })
 
 
