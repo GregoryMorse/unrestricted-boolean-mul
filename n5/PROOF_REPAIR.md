@@ -97,9 +97,14 @@ The following distinctions are now explicit in Lean.
    `(1,1), R1` leaf is also kernel-connected: its 28 raw equations retain
    the equal-factor difference chart `m = mDifference + ell`, and its
    semantic bridge explicitly applies Boolean idempotence before exposing
-   the same circuit-facing theorem.  The remaining history work is the
-   formal symmetry transport among off-axis directions and the aligned
-   `(0,1)` and `(1,1)` treatment, followed by the factor-pair normalization
+   the same circuit-facing theorem.  The four compact aligned exceptional
+   unit identities (both returned-section correction bits for `(0,1)` and
+   `(1,1)`) are now also replayed by Lean in the generated
+   `N5/QuadraticReturnHistory*AlignedCorrection*Raw.lean` modules.  They use
+   16, 16, 13, and 13 reduced semantic generators, respectively.  The
+   remaining history work is the Lean normalization bridge from the literal
+   history equations to those four reduced identities, formal symmetry
+   transport among off-axis directions, and the factor-pair normalization
    that selects these leaves.
 
 The exact counterexample has also been retested with its history restored.
@@ -134,8 +139,9 @@ connected to the exact-cost circuit suffix.
   The direct `(1,2)` and `(1,3)` history-sensitive certificates are now
   kernel-connected for all three rational directions, as is the normalized
   off-axis `(1,1), R1` representative.  Finish the formal symmetry transport
-  and aligned `(0,1)` and `(1,1)` leaves, then connect the resulting case
-  split to the factor-pair normalization.  These arguments retain the
+  and the semantic normalization into the four kernel-checked aligned unit
+  certificates, then connect the resulting case split to the factor-pair
+  normalization.  These arguments retain the
   returned section and old high representative; the section-only injectivity
   theorem remains false and must not be restored.
 - Connect the independent/rank-two high-colour normal form to the generic
