@@ -62,13 +62,24 @@ private theorem returnSymmetryTwoBasis_eq_wedge
       squarefreeWedge
         (returnSymmetryLinearBasis (quadraticFirst s))
         (returnSymmetryLinearBasis (quadraticSecond s)) := by
-  rw [show s = quadraticPair (quadraticFirst s) (quadraticSecond s)
-    (quadraticFirst_ne_second s) from quadraticPair_chosen s]
-  rw [quadraticBasisPair_eq_wedge]
-  congr 1 <;> funext i <;>
-    simp [returnSymmetryLinearBasis, coordinateLinearTen,
-      Pi.basisFun, eq_comm]
+  calc
+    returnSymmetryTwoBasis s =
+        returnSymmetryTwoBasis
+          (quadraticPair (quadraticFirst s) (quadraticSecond s)
+            (quadraticFirst_ne_second s)) :=
+      congrArg returnSymmetryTwoBasis (quadraticPair_chosen s)
+    _ = squarefreeWedge
+        (coordinateLinearTen (quadraticFirst s))
+        (coordinateLinearTen (quadraticSecond s)) :=
+      quadraticBasisPair_eq_wedge _ _ _
+    _ = squarefreeWedge
+        (returnSymmetryLinearBasis (quadraticFirst s))
+        (returnSymmetryLinearBasis (quadraticSecond s)) := by
+      congr 1 <;> funext i <;>
+        simp [returnSymmetryLinearBasis, coordinateLinearTen,
+          Pi.basisFun]
 
+set_option maxHeartbeats 1000000 in
 private theorem rationalPlaceFourFormLinear_wedge_basis
     (theta : Fin 2) (s t : QuadraticIndex 10) :
     rationalPlaceFourFormLinear theta
@@ -141,8 +152,13 @@ theorem rationalPlaceFourFormLinear_ambientWedgeTwo
             (rationalPlaceTwoFormLinear theta (returnSymmetryTwoBasis s))
             (rationalPlaceTwoFormLinear theta
               (returnSymmetryTwoBasis t)) := by
-      simp_rw [map_sum, map_smul,
-        rationalPlaceFourFormLinear_wedge_basis]
+      rw [map_sum]
+      apply Finset.sum_congr rfl
+      intro t _
+      rw [map_sum]
+      apply Finset.sum_congr rfl
+      intro s _
+      rw [map_smul, rationalPlaceFourFormLinear_wedge_basis]
     _ = ambientWedgeTwo
           (∑ s : QuadraticIndex 10,
             p s • rationalPlaceTwoFormLinear theta
@@ -192,16 +208,26 @@ theorem FirstOrderReturnKernelCertificate.rationalPlace
     exact firstOrderEnvelopeCoeffSpace.add_mem
       (rationalMissingCorrection_mem theta)
       ((rationalTargetCoeffChange_mem_firstOrderEnvelope_iff theta u).2 hu)
-  have hmapped := congrArg (rationalPlaceFourFormLinear theta) hzero
-  rw [map_zero, rationalPlaceFourFormLinear_ambientWedgeTwo,
-    map_add, rationalPlaceTwoFormLinear_missingCoset,
+  have hmapped : ambientWedgeTwo
+      (rationalPlaceTwoFormLinear theta
+        (targetTwo (firstOrderMissingCoeff + u) +
+          rationalPlaceTwoFormLinear theta z))
+      (rationalPlaceTwoFormLinear theta (targetTwo c)) = 0 := by
+    rw [← rationalPlaceFourFormLinear_ambientWedgeTwo, hzero]
+    exact (rationalPlaceFourFormLinear theta).map_zero
+  rw [map_add, rationalPlaceTwoFormLinear_missingCoset,
     rationalPlaceTwoFormLinear_involutive,
     rationalPlaceTwoFormLinear_targetTwo] at hmapped
   have hcImage : rationalTargetCoeffChange theta c = 0 :=
     hkernel u' (rationalTargetCoeffChange theta c) hu' (by
       simpa only [u'] using hmapped)
   have hcBack := congrArg (rationalTargetCoeffChange theta) hcImage
-  simpa [rationalTargetCoeffChange_involutive theta c] using hcBack
+  have hzeroImage : rationalTargetCoeffChange theta (0 : TargetCoeff) = 0 := by
+    funext i
+    fin_cases theta <;> fin_cases i <;>
+      simp [rationalTargetCoeffChange]
+  simpa [rationalTargetCoeffChange_involutive theta c,
+    hzeroImage] using hcBack
 
 /-- Unpopulatedness of a returned quadratic quotient is also invariant under
 either rational-place generator. -/
@@ -214,13 +240,15 @@ theorem UnpopulatedQuadraticSection.rationalPlace
   apply hunpopulated (rationalPlaceTwoFormLinear theta d)
     (rationalPlaceTwoFormLinear_decomposable theta hd)
   rcases htarget with ⟨c, hc⟩
+  have hc' : targetTwo c =
+      d + rationalPlaceTwoFormLinear theta z := hc
   refine ⟨rationalTargetCoeffChange theta c, ?_⟩
   calc
     targetTwo (rationalTargetCoeffChange theta c) =
         rationalPlaceTwoFormLinear theta (targetTwo c) :=
       (rationalPlaceTwoFormLinear_targetTwo theta c).symm
     _ = rationalPlaceTwoFormLinear theta
-        (d + rationalPlaceTwoFormLinear theta z) := by rw [hc]
+        (d + rationalPlaceTwoFormLinear theta z) := by rw [hc']
     _ = rationalPlaceTwoFormLinear theta d + z := by
       rw [map_add, rationalPlaceTwoFormLinear_involutive]
 
