@@ -521,6 +521,148 @@ theorem rankOne_unpopulatedSection_bothUseSection_impossible
     rw [h]
     exact hFquad
 
+/-- The remaining asymmetric rank-one return branch is sterile whenever the
+returned section has trivial target exterior kernel.  Here the correction
+uses the returned section but the quadratic factor stays in the old Hankel
+envelope.  The quartic idempotence equation then kills that factor directly;
+the cubic and constant equations finish exactly as in the symmetric branch.
+-/
+theorem rankOne_unpopulatedSection_asymmetric_impossible
+    (z : TwoForm) (hunpopulated : UnpopulatedQuadraticSection z)
+    (hkernel : ∀ (u₀ c₀ : TargetCoeff),
+      u₀ ∈ firstOrderEnvelopeCoeffSpace →
+      ambientWedgeTwo
+          (targetTwo (firstOrderMissingCoeff + u₀) + z)
+          (targetTwo c₀) = 0 →
+      c₀ = 0)
+    (U : ANF 10) (hUhigh : U ∉ N4.quadraticANFSpace 10)
+    (fConst cConst : F₂) (fLinear cLinear : LinearForm)
+    (u cCoeff vCoeff : TargetCoeff)
+    (hu : u ∈ firstOrderEnvelopeCoeffSpace)
+    (hcCoeff : cCoeff ∈ firstOrderEnvelopeCoeffSpace)
+    (hvCoeff : vCoeff ∈ firstOrderEnvelopeCoeffSpace)
+    (C Vtwo : TwoForm)
+    (hC : C = targetTwo cCoeff)
+    (hV : Vtwo = targetTwo vCoeff + z)
+    (hproduct :
+      U * quadraticCoordinateANF cConst cLinear C =
+        quadraticCoordinateANF fConst fLinear
+          (targetTwo (firstOrderMissingCoeff + u) + Vtwo))
+    (habsorb :
+      (U * quadraticCoordinateANF cConst cLinear C) *
+          quadraticCoordinateANF cConst cLinear C =
+        U * quadraticCoordinateANF cConst cLinear C) : False := by
+  let Ftwo := targetTwo (firstOrderMissingCoeff + u) + Vtwo
+  let F := quadraticCoordinateANF fConst fLinear Ftwo
+  let c := quadraticCoordinateANF cConst cLinear C
+  change U * c = F at hproduct
+  change (U * c) * c = U * c at habsorb
+  have habsorbF : F * c = F := by
+    calc
+      F * c = (U * c) * c := by rw [hproduct]
+      _ = U * c := habsorb
+      _ = F := hproduct
+  have hFquad : F ∈ N4.quadraticANFSpace 10 :=
+    quadraticCoordinateANF_mem_quadraticANFSpace fConst fLinear Ftwo
+  have hFtwoNormal : Ftwo =
+      targetTwo (firstOrderMissingCoeff + (u + vCoeff)) + z := by
+    dsimp only [Ftwo]
+    rw [hV]
+    calc
+      targetTwo (firstOrderMissingCoeff + u) +
+          (targetTwo vCoeff + z) =
+          (targetTwo (firstOrderMissingCoeff + u) +
+            targetTwo vCoeff) + z := by abel
+      _ = targetTwo (firstOrderMissingCoeff + (u + vCoeff)) + z := by
+        change (targetTwoLinear (firstOrderMissingCoeff + u) +
+            targetTwoLinear vCoeff) + z =
+          targetTwoLinear (firstOrderMissingCoeff + (u + vCoeff)) + z
+        rw [← targetTwoLinear.map_add]
+        congr 1
+        ac_rfl
+  have hFtwoAddZ : Ftwo + z =
+      targetTwo (firstOrderMissingCoeff + (u + vCoeff)) := by
+    rw [hFtwoNormal]
+    calc
+      (targetTwo (firstOrderMissingCoeff + (u + vCoeff)) + z) + z =
+          targetTwo (firstOrderMissingCoeff + (u + vCoeff)) +
+            (z + z) := by abel
+      _ = targetTwo (firstOrderMissingCoeff + (u + vCoeff)) := by
+        rw [twoForm_add_self, add_zero]
+  have hFtwoNotDecomposable : ¬ IsDecomposableTwo Ftwo := by
+    intro hdec
+    apply hunpopulated Ftwo hdec
+    rw [hFtwoAddZ]
+    exact targetTwo_mem_targetTwoSpace _
+  have hfour : ambientWedgeTwo Ftwo C = 0 := by
+    calc
+      ambientWedgeTwo Ftwo C = anfFourProjectionTen (F * c) := by
+        symm
+        exact anfFourProjectionTen_quadraticCoordinateANF_mul
+          fConst cConst fLinear cLinear Ftwo C
+      _ = anfFourProjectionTen F := congrArg anfFourProjectionTen habsorbF
+      _ = 0 := anfFourProjectionTen_eq_zero_of_degreeLE_three
+        (hFquad.mono (by omega))
+  have hcombinedCoeff : u + vCoeff ∈ firstOrderEnvelopeCoeffSpace :=
+    firstOrderEnvelopeCoeffSpace.add_mem hu hvCoeff
+  have htargetWedge : ambientWedgeTwo
+      (targetTwo (firstOrderMissingCoeff + (u + vCoeff)) + z)
+      (targetTwo cCoeff) = 0 := by
+    rw [← hFtwoNormal, ← hC]
+    exact hfour
+  have hcCoeffZero : cCoeff = 0 :=
+    hkernel (u + vCoeff) cCoeff hcombinedCoeff htargetWedge
+  have hCzero : C = 0 := by
+    calc
+      C = targetTwo 0 := by simpa only [hcCoeffZero] using hC
+      _ = 0 := map_zero targetTwoLinear
+  have hthree : ambientVectorWedgeTwo cLinear Ftwo = 0 := by
+    calc
+      ambientVectorWedgeTwo cLinear Ftwo =
+          factorPlaneCubic fLinear cLinear Ftwo 0 := by
+            symm
+            exact factorPlaneCubic_zero_right fLinear cLinear Ftwo
+      _ = exactLowProductCubic fLinear cLinear Ftwo 0 := by
+        simp [exactLowProductCubic]
+      _ = anfThreeProjectionTen (F * c) := by
+        change exactLowProductCubic fLinear cLinear Ftwo 0 =
+          anfThreeProjectionTen
+            (quadraticCoordinateANF fConst fLinear Ftwo *
+              quadraticCoordinateANF cConst cLinear C)
+        rw [hCzero]
+        symm
+        exact anfThreeProjectionTen_quadraticCoordinateANF_mul
+          fConst cConst fLinear cLinear Ftwo 0
+      _ = anfThreeProjectionTen F := congrArg anfThreeProjectionTen habsorbF
+      _ = 0 := anfThreeProjectionTen_eq_zero_of_quadratic hFquad
+  have hcLinearZero : cLinear = 0 := by
+    by_contra hcLinearNe
+    rcases eq_squarefreeWedge_of_ambientVectorWedgeTwo_eq_zero
+        Ftwo cLinear hcLinearNe hthree with ⟨v, hv⟩
+    exact hFtwoNotDecomposable ⟨cLinear, v, hv⟩
+  have hcConstant : c = cConst • (1 : ANF 10) := by
+    simp [c, quadraticCoordinateANF, hCzero, hcLinearZero,
+      show quadraticANFOfForm (0 : TwoForm) = 0 by
+        exact map_zero quadraticANFOfFormLinear]
+  have hFtwoNeZero : Ftwo ≠ 0 := by
+    intro hzero
+    apply hFtwoNotDecomposable
+    rw [hzero]
+    exact decomposableTwo_zero
+  rcases f2_eq_zero_or_one cConst with hc0 | hc1
+  · have hFzero : F = 0 := by
+      have h := habsorbF
+      rw [hcConstant, hc0, zero_smul, mul_zero] at h
+      exact h.symm
+    apply hFtwoNeZero
+    have hprojection := congrArg (quadraticProjection 10) hFzero
+    simpa [F] using hprojection
+  · apply hUhigh
+    have h := hproduct
+    rw [hcConstant, hc1, one_smul, mul_one] at h
+    rw [h]
+    exact hFquad
+
 /-- Arbitrary old first-order corrections can be absorbed into the missing
 target coefficient exactly as in the decomposable-anchor proof. -/
 theorem rankOne_section_envelopeCorrection_impossible
