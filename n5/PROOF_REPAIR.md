@@ -48,11 +48,17 @@ The following distinctions are now explicit in Lean.
    zero-colour target escape even with a correction from the whole returned
    quadratic section.  It also generalizes the rank-one Boolean-absorption
    contradiction from a decomposable anchor to any quadratic section with
-   exact first-order target intersection.
+   exact first-order target intersection.  If both the quadratic factor and
+   the old correction use the returned section, their section coefficients
+   cancel and the missing-coset exterior kernel gives the same contradiction.
+   Consequently every remaining normalized rank-one escape is forced into
+   one asymmetric case: the correction uses the returned section while the
+   quadratic factor stays in the old first-order envelope.
 
-These modules are checked only by the pinned Linux CI; the newest feedback
-layer remains provisional until that run passes.  Windows Lean is not used
-for this repair.
+These modules are checked only by the pinned Linux CI.  The focused replay
+bridge, including the rank-one asymmetric reduction, compiles with pinned
+Lean 4.32.1.  Windows Lean is not used for this repair.  A complete repository
+build and `leanchecker` replay are reserved for a stable closure checkpoint.
 
 ## Remaining closure obligations
 
@@ -61,8 +67,9 @@ connected to the exact-cost circuit suffix.
 
 - Split returned sections into populated and unpopulated quotient cases and
   account for the populated case without granting an uncharged target row.
-- In the unpopulated case, close the rank-one branch when the old correction
-  itself uses the returned section, not only the first-order envelope.
+- In the unpopulated case, close the remaining asymmetric rank-one branch:
+  the old correction uses the returned section while the quadratic factor
+  stays in the first-order envelope.
 - Close the independent/rank-two high-colour branch after a return.
 - Prove the corresponding one-defect return statement (both the rational and
   degree-two capacity types) and the remaining two-defect stable-envelope
