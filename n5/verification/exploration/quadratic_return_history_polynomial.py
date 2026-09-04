@@ -216,6 +216,97 @@ def affine_eliminate_with_certificate(
     return current, current_target, all_substitutions
 
 
+def affine_eliminate_with_substitution_certificates(
+    constraints: list[tuple[str, Polynomial]], target: Polynomial,
+) -> tuple[
+    list[tuple[str, Polynomial, Certificate]], Polynomial,
+    dict[int, Polynomial], dict[int, Certificate],
+]:
+    """Also retain an original-generator certificate for every substitution.
+
+    For each returned ``index``, the accompanying certificate expands to the
+    Boolean polynomial ``x_index + substitutions[index]``.  This is the
+    auditable data needed by the Lean normalization bridge; the eliminator is
+    still only a discovery procedure and Lean checks the emitted identities.
+    """
+    current = [
+        (name, polynomial, {name: ONE}) for name, polynomial in constraints
+    ]
+    current_target = target
+    all_substitutions: dict[int, Polynomial] = {}
+    all_substitution_certificates: dict[int, Certificate] = {}
+    while True:
+        affine = [
+            (polynomial, certificate)
+            for _name, polynomial, certificate in current
+            if all(monomial.bit_count() <= 1 for monomial in polynomial)
+        ]
+        basis: dict[int, tuple[Polynomial, Certificate]] = {}
+        inconsistent: Certificate | None = None
+        for original, original_certificate in affine:
+            value = original
+            certificate = original_certificate
+            while True:
+                variables = [
+                    monomial.bit_length() - 1
+                    for monomial in value if monomial
+                ]
+                if not variables:
+                    if value == ONE:
+                        inconsistent = certificate
+                    break
+                pivot = max(variables)
+                if pivot not in basis:
+                    basis[pivot] = (value, certificate)
+                    break
+                row, row_certificate = basis[pivot]
+                value = padd(value, row)
+                certificate = certificate_add(certificate, row_certificate)
+        if inconsistent is not None:
+            return ([('affine-inconsistency', ONE, inconsistent)], ZERO,
+                    all_substitutions, all_substitution_certificates)
+        if not basis:
+            break
+        substitutions = {
+            pivot: padd(row, pvar(pivot))
+            for pivot, (row, _certificate) in basis.items()
+        }
+        substitution_certificates = {
+            pivot: certificate for pivot, (_row, certificate) in basis.items()
+        }
+        for pivot in sorted(substitutions, reverse=True):
+            equation = padd(pvar(pivot), substitutions[pivot])
+            certificate = substitution_certificates[pivot]
+            for lower in sorted(substitutions):
+                if lower < pivot:
+                    equation, certificate = substitute_variable_with_certificate(
+                        equation, certificate, lower, substitutions[lower],
+                        substitution_certificates[lower],
+                    )
+            substitutions[pivot] = padd(equation, pvar(pivot))
+            substitution_certificates[pivot] = certificate
+        reduced: list[tuple[str, Polynomial, Certificate]] = []
+        for name, polynomial, certificate in current:
+            value = polynomial
+            lifted = certificate
+            for pivot in sorted(substitutions, reverse=True):
+                value, lifted = substitute_variable_with_certificate(
+                    value, lifted, pivot, substitutions[pivot],
+                    substitution_certificates[pivot],
+                )
+            if value:
+                reduced.append((name, value, lifted))
+        for pivot in sorted(substitutions, reverse=True):
+            current_target = substitute_variable(
+                current_target, pivot, substitutions[pivot]
+            )
+        current = reduced
+        all_substitutions.update(substitutions)
+        all_substitution_certificates.update(substitution_certificates)
+    return (current, current_target, all_substitutions,
+            all_substitution_certificates)
+
+
 def affine_eliminate(
     constraints: list[tuple[str, Polynomial]], target: Polynomial
 ) -> tuple[list[tuple[str, Polynomial]], Polynomial, dict[int, Polynomial]]:

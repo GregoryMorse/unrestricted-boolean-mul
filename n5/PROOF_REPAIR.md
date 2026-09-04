@@ -101,11 +101,20 @@ The following distinctions are now explicit in Lean.
    unit identities (both returned-section correction bits for `(0,1)` and
    `(1,1)`) are now also replayed by Lean in the generated
    `N5/QuadraticReturnHistory*AlignedCorrection*Raw.lean` modules.  They use
-   16, 16, 13, and 13 reduced semantic generators, respectively.  The
-   remaining history work is the Lean normalization bridge from the literal
-   history equations to those four reduced identities, formal symmetry
-   transport among off-axis directions, and the factor-pair normalization
-   that selects these leaves.
+   16, 16, 13, and 13 reduced semantic generators, respectively.  Their
+   affine elimination is now also kernel-replayed: the generated
+   `N5/QuadraticReturnHistory*Normalization.lean` modules identify each
+   compact generator with an entry of a shared original-equation base, while
+   the four `N5/QuadraticReturnHistory*Semantic.lean` modules prove every one
+   of the 29 substitutions by explicit ideal-membership certificates.  The
+   shared bases identify all required return-high, feedback-high, and quotient
+   equations with literal ANF coefficients, including the two same-side
+   quotient rows omitted from the earlier mixed table.
+   `N5/QuadraticReturnHistoryAlignedSemantic.lean` splits the returned-section
+   correction bit and excludes both aligned normal forms with no preprocessing
+   assumption.  The remaining history work is formal symmetry transport among
+   off-axis directions and the factor-pair normalization that selects the
+   checked representatives.
 
 The exact counterexample has also been retested with its history restored.
 Keeping its already-born high representative and allowing every correction
@@ -138,10 +147,11 @@ connected to the exact-cost circuit suffix.
   simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
   The direct `(1,2)` and `(1,3)` history-sensitive certificates are now
   kernel-connected for all three rational directions, as is the normalized
-  off-axis `(1,1), R1` representative.  Finish the formal symmetry transport
-  and the semantic normalization into the four kernel-checked aligned unit
-  certificates, then connect the resulting case split to the factor-pair
-  normalization.  These arguments retain the
+  off-axis `(1,1), R1` representative.  The four aligned unit certificates are
+  now semantically normalized and kernel-connected through explicit
+  affine-substitution certificates.  Finish the formal symmetry transport,
+  then connect the resulting case split to factor-pair normalization.  These
+  arguments retain the
   returned section and old high representative; the section-only injectivity
   theorem remains false and must not be restored.
 - Connect the independent/rank-two high-colour normal form to the generic

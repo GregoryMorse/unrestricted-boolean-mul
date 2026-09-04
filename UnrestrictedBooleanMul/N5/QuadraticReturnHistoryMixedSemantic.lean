@@ -14,8 +14,10 @@ namespace N5
 
 noncomputable section
 
-/-- The two mixed simultaneous factor-pair types. -/
+/-- The four simultaneous rational factor-pair charts.  The equal-factor
+chart stores the difference of the two linear parts. -/
 inductive MixedReturnFactorPair where
+  | zeroOne
   | oneOneDifference
   | oneTwo
   | oneThree
@@ -30,10 +32,11 @@ inductive RationalFeedbackDirection where
   deriving DecidableEq
 
 def MixedReturnFactorPair.leftTwo : MixedReturnFactorPair → TwoForm
+  | .zeroOne => 0
   | .oneOneDifference | .oneTwo | .oneThree => targetTwo rZeroCoeff
 
 def MixedReturnFactorPair.rightTwo : MixedReturnFactorPair → TwoForm
-  | .oneOneDifference => targetTwo rZeroCoeff
+  | .zeroOne | .oneOneDifference => targetTwo rZeroCoeff
   | .oneTwo => targetTwo rOneCoeff
   | .oneThree => targetTwo (rZeroCoeff + rOneCoeff)
 
@@ -43,7 +46,7 @@ def MixedReturnFactorPair.rightLinear (kind : MixedReturnFactorPair)
     (p : ZeroOneOffAxisHistoryParameters) : LinearForm :=
   match kind with
   | .oneOneDifference => p.m + p.ell
-  | .oneTwo | .oneThree => p.m
+  | .zeroOne | .oneTwo | .oneThree => p.m
 
 def RationalFeedbackDirection.two : RationalFeedbackDirection → TwoForm
   | .zero => targetTwo rZeroCoeff
@@ -178,6 +181,48 @@ theorem mixedReturnQuotientCoordinate_add_eq_zero_of_projection
       apply congrArg (mixedReturnQuotientCoordinate i)
       exact hc.symm
     _ = 0 := mixedReturnQuotientCoordinate_targetTwo i c
+
+/-- The two same-side quadratic coordinates occurring in the aligned
+exceptional certificates.  They vanish on every Hankel target directly. -/
+def alignedReturnQuotientPair : Fin 2 → QuadraticIndex 10 :=
+  ![
+    quadraticPair (bCoord 0) (bCoord 2) (by decide),
+    quadraticPair (bCoord 1) (bCoord 2) (by decide)
+  ]
+
+def alignedReturnQuotientCoordinate (i : Fin 2) : TwoForm →ₗ[F₂] F₂ where
+  toFun q := q (alignedReturnQuotientPair i)
+  map_add' q r := by simp only [Pi.add_apply]
+  map_smul' a q := by simp [mul_comm]
+
+@[simp] theorem alignedReturnQuotientCoordinate_targetTwo
+    (i : Fin 2) (c : TargetCoeff) :
+    alignedReturnQuotientCoordinate i (targetTwo c) = 0 := by
+  fin_cases i <;>
+    simp [alignedReturnQuotientCoordinate, alignedReturnQuotientPair,
+      hankelIndex]
+
+/-- Equal target quotients also agree on the two aligned same-side rows. -/
+theorem alignedReturnQuotientCoordinate_add_eq_zero_of_projection
+    (q r : TwoForm)
+    (hprojection : quadraticQuotientProjection q =
+      quadraticQuotientProjection r)
+    (i : Fin 2) :
+    alignedReturnQuotientCoordinate i q +
+        alignedReturnQuotientCoordinate i r = 0 := by
+  have hquotientZero : quadraticQuotientProjection (q + r) = 0 := by
+    rw [map_add, hprojection]
+    rw [← two_smul F₂, show (2 : F₂) = 0 by decide, zero_smul]
+  have htarget : q + r ∈ targetTwoSpace :=
+    (quadraticQuotientProjection_eq_zero_iff _).1 hquotientZero
+  rcases htarget with ⟨c, hc⟩
+  calc
+    _ = alignedReturnQuotientCoordinate i (q + r) :=
+      ((alignedReturnQuotientCoordinate i).map_add q r).symm
+    _ = alignedReturnQuotientCoordinate i (targetTwo c) := by
+      apply congrArg (alignedReturnQuotientCoordinate i)
+      exact hc.symm
+    _ = 0 := alignedReturnQuotientCoordinate_targetTwo i c
 
 /-- Convert an exact target return into equality of the genuine quadratic
 quotient classes. -/
