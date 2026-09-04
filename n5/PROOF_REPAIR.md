@@ -84,8 +84,9 @@ The following distinctions are now explicit in Lean.
    nonzero-high premise is used in these identities.  The exact ledger is in
    `quadratic_return_history_results.txt`.  The raw, non-eliminated off-axis
    `(0,1)` leaf is now a kernel-checked explicit identity in
-   `N5/QuadraticReturnHistoryRaw.lean`.  The remaining factor-pair leaves and
-   the semantic circuit bridge still have to be translated and connected
+   `N5/QuadraticReturnHistoryRaw.lean`, with its 71 coordinates named by the
+   checked interface in `N5/QuadraticReturnHistoryModel.lean`.  The remaining
+   factor-pair leaves and the semantic circuit bridge still have to be connected
    before this closes the circuit-facing branch.
 
 The exact counterexample has also been retested with its history restored.

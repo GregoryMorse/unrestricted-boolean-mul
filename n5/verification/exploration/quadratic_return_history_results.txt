@@ -48,6 +48,19 @@ Boolean-polynomial engine.  Every report ends with
   combination_is_one_in_boolean_quotient: True
   combination_remainder: 1
 
+The additional command
+
+  python n5/verification/exploration/quadratic_return_history_polynomial.py \
+    --case zero_one --direction r0 --lift-exceptional-to-raw
+
+tracks the affine substitutions as ideal-membership identities and lifts the
+two `(0,1)` exceptional certificates back to the original equations.  Both
+lifted combinations replay exactly to `1` (38/41 original generators,
+3,697/13,130 multiplier monomials, maximum degree seven).  These expanded
+identities are retained as an independent audit, not emitted as Lean source;
+the smaller reduced identities plus a semantic normalization bridge are the
+intended formal interface.
+
 SAT cross-check
 ---------------
 The direct ANF SAT encoding returned UNSAT for ten of the twelve named

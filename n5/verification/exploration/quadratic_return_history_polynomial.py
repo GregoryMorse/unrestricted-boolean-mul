@@ -23,6 +23,7 @@ from w_pq_analysis import form_to_anf, iterbits, r0, r1, rinf
 
 Polynomial = frozenset[int]
 SymbolicANF = dict[int, Polynomial]
+Certificate = dict[str, Polynomial]
 
 
 ZERO: Polynomial = frozenset()
@@ -81,6 +82,137 @@ def substitute_variable(
         else:
             result = padd(result, frozenset({monomial}))
     return result
+
+
+def certificate_add(left: Certificate, right: Certificate) -> Certificate:
+    """Add sparse ideal-membership certificates over the Boolean ring."""
+    result = dict(left)
+    for name, multiplier in right.items():
+        value = padd(result.get(name, ZERO), multiplier)
+        if value:
+            result[name] = value
+        elif name in result:
+            del result[name]
+    return result
+
+
+def certificate_scale(multiplier: Polynomial, value: Certificate) -> Certificate:
+    """Multiply every coefficient in an ideal-membership certificate."""
+    if not multiplier:
+        return {}
+    return {
+        name: product
+        for name, coefficient in value.items()
+        if (product := pmul(multiplier, coefficient))
+    }
+
+
+def boolean_derivative(polynomial: Polynomial, index: int) -> Polynomial:
+    """Squarefree derivative used to certify one Boolean substitution."""
+    variable = 1 << index
+    return padd(*(
+        frozenset({monomial ^ variable})
+        for monomial in polynomial if monomial & variable
+    ))
+
+
+def substitute_variable_with_certificate(
+    polynomial: Polynomial, certificate: Certificate,
+    index: int, replacement: Polynomial,
+    substitution_certificate: Certificate,
+) -> tuple[Polynomial, Certificate]:
+    """Substitute `x := p` while lifting through the equation `x+p = 0`."""
+    derivative = boolean_derivative(polynomial, index)
+    return (
+        substitute_variable(polynomial, index, replacement),
+        certificate_add(
+            certificate,
+            certificate_scale(derivative, substitution_certificate),
+        ),
+    )
+
+
+def affine_eliminate_with_certificate(
+    constraints: list[tuple[str, Polynomial]], target: Polynomial,
+) -> tuple[
+    list[tuple[str, Polynomial, Certificate]], Polynomial,
+    dict[int, Polynomial],
+]:
+    """Run the affine eliminator while lifting every row to the input ideal."""
+    current = [
+        (name, polynomial, {name: ONE}) for name, polynomial in constraints
+    ]
+    current_target = target
+    all_substitutions: dict[int, Polynomial] = {}
+    while True:
+        affine = [
+            (polynomial, certificate)
+            for _name, polynomial, certificate in current
+            if all(monomial.bit_count() <= 1 for monomial in polynomial)
+        ]
+        basis: dict[int, tuple[Polynomial, Certificate]] = {}
+        inconsistent: Certificate | None = None
+        for original, original_certificate in affine:
+            value = original
+            certificate = original_certificate
+            while True:
+                variables = [
+                    monomial.bit_length() - 1
+                    for monomial in value if monomial
+                ]
+                if not variables:
+                    if value == ONE:
+                        inconsistent = certificate
+                    break
+                pivot = max(variables)
+                if pivot not in basis:
+                    basis[pivot] = (value, certificate)
+                    break
+                row, row_certificate = basis[pivot]
+                value = padd(value, row)
+                certificate = certificate_add(certificate, row_certificate)
+        if inconsistent is not None:
+            return [(
+                "affine-inconsistency", ONE, inconsistent
+            )], ZERO, all_substitutions
+        if not basis:
+            break
+        substitutions = {
+            pivot: padd(row, pvar(pivot))
+            for pivot, (row, _certificate) in basis.items()
+        }
+        substitution_certificates = {
+            pivot: certificate for pivot, (_row, certificate) in basis.items()
+        }
+        for pivot in sorted(substitutions, reverse=True):
+            equation = padd(pvar(pivot), substitutions[pivot])
+            certificate = substitution_certificates[pivot]
+            for lower in sorted(substitutions):
+                if lower < pivot:
+                    equation, certificate = substitute_variable_with_certificate(
+                        equation, certificate, lower, substitutions[lower],
+                        substitution_certificates[lower],
+                    )
+            substitutions[pivot] = padd(equation, pvar(pivot))
+            substitution_certificates[pivot] = certificate
+        reduced: list[tuple[str, Polynomial, Certificate]] = []
+        for name, polynomial, certificate in current:
+            value = polynomial
+            lifted = certificate
+            for pivot in sorted(substitutions, reverse=True):
+                value, lifted = substitute_variable_with_certificate(
+                    value, lifted, pivot, substitutions[pivot],
+                    substitution_certificates[pivot],
+                )
+            if value:
+                reduced.append((name, value, lifted))
+        for pivot in sorted(substitutions, reverse=True):
+            current_target = substitute_variable(
+                current_target, pivot, substitutions[pivot]
+            )
+        current = reduced
+        all_substitutions.update(substitutions)
+    return current, current_target, all_substitutions
 
 
 def affine_eliminate(
@@ -533,6 +665,70 @@ def verify_exceptional_lift_certificates() -> list[dict[str, object]]:
     return reports
 
 
+def lift_zero_one_exceptional_certificates_to_raw() -> list[dict[str, object]]:
+    """Lift the two reduced exceptional certificates to original equations."""
+    reports: list[dict[str, object]] = []
+    fixed_values = {
+        "ell1": 0, "ell2": 0, "ell4": 0, "ell6": 1, "ell7": 0,
+        "y1": 1, "y2": 0, "y4": 0, "y6": 0, "y7": 0,
+    }
+    for correction_return, multipliers in EXCEPTIONAL_LIFT_MULTIPLIERS.items():
+        constraints, target, names = equations(0, r0, r0)
+        assignments = {**fixed_values, "correctionReturn0": correction_return}
+        for name, value in assignments.items():
+            index = names.index(name)
+            constraints.append((
+                f"fix-{name}-{value}",
+                padd(pvar(index), ONE) if value else pvar(index),
+            ))
+        ordinary, ordinary_target, ordinary_eliminated = affine_eliminate(
+            constraints, target
+        )
+        lifted, lifted_target, lifted_eliminated = (
+            affine_eliminate_with_certificate(constraints, target)
+        )
+        assert ordinary_target == lifted_target
+        assert ordinary_eliminated == lifted_eliminated
+        assert [
+            (name, polynomial) for name, polynomial, _certificate in lifted
+        ] == ordinary
+        raw_certificate: Certificate = {}
+        reduced_combination = ZERO
+        for row, expression in multipliers.items():
+            _label, polynomial, certificate = lifted[row - 1]
+            multiplier = parse_singular_squarefree(expression, names)
+            reduced_combination = padd(
+                reduced_combination, pmul(multiplier, polynomial)
+            )
+            raw_certificate = certificate_add(
+                raw_certificate, certificate_scale(multiplier, certificate)
+            )
+        original = dict(constraints)
+        raw_combination = ZERO
+        for name, multiplier in raw_certificate.items():
+            raw_combination = padd(
+                raw_combination, pmul(multiplier, original[name])
+            )
+        reports.append({
+            "case": "zero_one",
+            "correction_return": correction_return,
+            "reduced_combination_is_one": reduced_combination == ONE,
+            "raw_combination_is_one": raw_combination == ONE,
+            "raw_remainder": singular_polynomial(raw_combination, names),
+            "raw_generator_count": len(raw_certificate),
+            "raw_multiplier_monomials": sum(
+                len(multiplier) for multiplier in raw_certificate.values()
+            ),
+            "raw_max_multiplier_degree": max(
+                (monomial.bit_count()
+                 for multiplier in raw_certificate.values()
+                 for monomial in multiplier),
+                default=0,
+            ),
+        })
+    return reports
+
+
 def equations(
     q: int, c: int, direction: int,
     equal_factor_difference_coordinates: bool = False,
@@ -689,6 +885,13 @@ def main() -> None:
         help="replay the two stored exceptional lift certificates in Python",
     )
     parser.add_argument(
+        "--lift-exceptional-to-raw", action="store_true",
+        help=(
+            "lift the two zero_one exceptional certificates through affine "
+            "elimination and replay them in the original constraint ideal"
+        ),
+    )
+    parser.add_argument(
         "--equal-factor-difference-coordinates", action="store_true",
         help="parameterize the second linear part by its difference from the first",
     )
@@ -699,6 +902,10 @@ def main() -> None:
     args = parser.parse_args()
     if args.verify_exceptional_certificate:
         for report in verify_exceptional_lift_certificates():
+            print(report)
+        return
+    if args.lift_exceptional_to_raw:
+        for report in lift_zero_one_exceptional_certificates_to_raw():
             print(report)
         return
     cases = {
