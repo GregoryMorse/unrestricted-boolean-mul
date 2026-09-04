@@ -58,7 +58,15 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
       i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 4 ∨
         RankFourHankelPivotCertificate i := by
   letI : DecidableEq TwoForm := Fintype.decidablePiFintype
-  exact @of_decide_eq_true _ Fintype.decidableForallFintype rfl
+  intro i
+  fin_cases i
+  all_goals
+    first
+    | exact Or.inl rfl
+    | exact Or.inr (Or.inl rfl)
+    | exact Or.inr (Or.inr (Or.inl rfl))
+    | exact Or.inr (Or.inr (Or.inr (Or.inl rfl)))
+    | right; right; right; right; exact of_decide_eq_true rfl
 
 /-- Every target annihilator of the affine missing coset translated by an
 unpopulated section is zero or one of the three rational directions. -/
