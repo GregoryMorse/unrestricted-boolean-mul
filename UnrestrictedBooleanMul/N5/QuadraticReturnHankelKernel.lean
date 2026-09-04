@@ -63,14 +63,8 @@ private def rankFourResidualLeftMask : Fin 16 → Nat :=
 private def rankFourResidualRightMask : Fin 16 → Nat :=
   ![0, 0, 0, 32, 0, 512, 512, 32, 64, 320, 672, 256, 256, 704, 416, 704]
 
-/-- One coefficient witnessing that each displayed residual wedge is
-nonzero.  The entries at the four exceptional Hankel words are unused. -/
-private def rankFourResidualWitnessLeft : Fin 16 → Fin 10 :=
-  ![0, 0, 0, 1, 0, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1]
-
-private def rankFourResidualWitnessRight : Fin 16 → Fin 10 :=
-  ![1, 1, 1, 5, 1, 9, 9, 5, 6, 6, 5, 8, 8, 6, 5, 6]
-
+/-- The pivot, its decomposable residual, and a nonzero residual certificate
+for one non-rational rank-at-most-two Hankel word. -/
 private abbrev RankFourHankelPivotCertificate (i : Fin 16) : Prop :=
   let p := targetTwo (rankTwoHankelWord i)
   let left := aCoord (rankFourPivotA i)
@@ -119,7 +113,7 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
               rankTwoHankelWord, rZeroCoeff, rOneCoeff,
               rInfinityCoeff, jZeroCoeff, jOneCoeff, jInfinityCoeff,
               dStarZeroCoeff, dStarOneCoeff,
-              aCoord, bCoord] at hrs ⊢
+              aCoord, bCoord] at hrs ⊢ <;> decide
         · intro r s hrs
           fin_cases r <;> fin_cases s <;>
             simp only [ambientPivotResidual, Pi.add_apply,
@@ -133,7 +127,7 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
               rankTwoHankelWord, rZeroCoeff, rOneCoeff,
               rInfinityCoeff, jZeroCoeff, jOneCoeff, jInfinityCoeff,
               dStarZeroCoeff, dStarOneCoeff,
-              aCoord, bCoord] at hrs ⊢
+              aCoord, bCoord] at hrs ⊢ <;> decide
         · intro r s
           fin_cases r <;> fin_cases s <;>
             simp only [ambientPivotResidual, Pi.add_apply,
@@ -147,15 +141,21 @@ private theorem rankTwoHankelWord_pivotResidual_cases :
               rankTwoHankelWord, rZeroCoeff, rOneCoeff,
               rInfinityCoeff, jZeroCoeff, jOneCoeff, jInfinityCoeff,
               dStarZeroCoeff, dStarOneCoeff,
-              aCoord, bCoord]
+              aCoord, bCoord] <;> decide
       · intro hzero
-        have hcoefficient := congrFun hzero
-          (quadraticPair
-            (rankFourResidualWitnessLeft i)
-            (rankFourResidualWitnessRight i) (by decide))
-        simp [squarefreeWedge_pair, binaryLinearFormTen,
-          rankFourResidualWitnessLeft,
-          rankFourResidualWitnessRight] at hcoefficient
+        first
+        | have hcoefficient := congrFun hzero
+            (quadraticPair 1 5 (by decide))
+          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+        | have hcoefficient := congrFun hzero
+            (quadraticPair 4 9 (by decide))
+          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+        | have hcoefficient := congrFun hzero
+            (quadraticPair 1 6 (by decide))
+          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
+        | have hcoefficient := congrFun hzero
+            (quadraticPair 4 8 (by decide))
+          simp [squarefreeWedge_pair, binaryLinearFormTen] at hcoefficient
 
 /-- Every target annihilator of the affine missing coset translated by an
 unpopulated section is zero or one of the three rational directions. -/
