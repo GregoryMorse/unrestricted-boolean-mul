@@ -435,8 +435,8 @@ private theorem ambientVectorWedgeTwo_add_right_for_cubic
     ambientTwoCoeff_add, Pi.add_apply]
   ring
 
-/-- Basis-free split for a non-rigid cubic plane.  A dependent syzygy makes
-one of the three projective plane directions admit a nonzero annihilating
+/-- Basis-free split for a non-rigid cubic plane.  A dependent syzygy gives
+one of the three projective plane directions a nonzero annihilating
 vector; the only remaining case has independent syzygy vectors. -/
 theorem nonCubicRigidPlane_syzygy_classification
     (q c : TwoForm) (hnonrigid : ¬ CubicRigidPlane q c) :

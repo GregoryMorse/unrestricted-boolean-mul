@@ -1,0 +1,13 @@
+import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryChart
+import UnrestrictedBooleanMul.N5.PopulatedReturnCapacity
+
+/- Focused dependency audit; this does not assert the global n=5 theorem. -/
+#print axioms UnrestrictedBooleanMul.anfSubstitution_mem_affine
+#print axioms UnrestrictedBooleanMul.N5.anfSubstitution_mem_quadratic
+#print axioms UnrestrictedBooleanMul.N5.ReturnFactorShear.returnWireState
+#print axioms UnrestrictedBooleanMul.N5.ReturnFactorShear.feedback
+#print axioms UnrestrictedBooleanMul.N5.oneTwoRInf_quadratic_history_impossible
+#print axioms UnrestrictedBooleanMul.N5.firstOrderMissingFunctional_eq_zero_of_zeroOneRInf_history
+#print axioms UnrestrictedBooleanMul.N5.firstOrderMissingFunctional_eq_zero_of_normalized_rational_history
+#print axioms UnrestrictedBooleanMul.N5.populatedReturn_charged_envelope
+#print axioms UnrestrictedBooleanMul.N5.populatedReturnCapacity_with_high_targetRank_le_seven

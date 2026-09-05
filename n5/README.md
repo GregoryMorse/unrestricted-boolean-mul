@@ -1,6 +1,6 @@
 # Five-term binary polynomial multiplication (`n = 5`)
 
-The associated manuscript proves
+The manuscript's target statement is
 
 ```text
 MC(Mul5) = 13
@@ -8,11 +8,14 @@ MC(Mul5) = 13
 
 for unrestricted XOR--AND circuits.  Nonlinear intermediate wires may be
 reused, so the theorem is stronger than the classical bilinear and quadratic
-rank statement for this instance.
+rank statement for this instance.  The thirteen-gate upper bound is checked;
+the lower-bound argument still has an unresolved repair to its withdrawn
+post-high restart step.  The paper is not ready for submission.  See
+[`PROOF_REPAIR.md`](PROOF_REPAIR.md) for the precise remaining obligations.
 
 ## Current formalization status
 
-The Lean formalization is in progress and is not a premise of the manuscript.
+The mathematical repair and Lean formalization are both in progress.
 The repository currently contains:
 
 - a separated canonical proposition `UnrestrictedBooleanMul.N5.MainStatement`;
@@ -108,19 +111,20 @@ final circuit bookkeeping is complete; the two predicates
 `CostedFirstOrderQuadraticPrefixes` remain the honest algebraic completion
 obligations.
 
-The nonlinear quadratic-return branch now has an intended normalized rational
-history-chart interface.  Eleven of its twelve leaves are kernel-connected;
-the large `(0,1),RInf` candidate remains blocked by a 576-monomial residual in
-the stored aggregate certificate and is explicitly not counted as proved.
-`N5/QuadraticReturnHistoryChart.lean` records the intended assembly but must
-not be cited until that raw aggregate and its semantic bridge compile.
+The normalized rational return-history chart is now checked in
+`N5/QuadraticReturnHistoryChart.lean`.  Boolean factor shears reduce four
+factor-pair types to two while preserving the actual intermediate wire
+states.  Projective symmetry proves `(0,1),RInf` from `(0,1),R1`, replacing
+the invalid 140-file aggregate.  A nonzero sextic term excludes the
+three-distinct-place `(1,2),RInf` case without a polynomial certificate.
 `N5/QuadraticReturnFactorPair.lean` separately proves the finite algebraic
 normalization into `(0,1)`, `(1,1)`, `(1,2)`, and the genuine incident
 rank-two `(1,3)` chart; it does not identify `rInfinity` with `r0 + r1`.
-After repairing the twelfth leaf, the remaining return obligation is
+The remaining return obligation is
 circuit-facing: extract those colours and the aligned normal-form hypotheses
-from the actual gate history, and charge the explicit target row exposed by a
-populated return.
+from the actual gate history, and connect the proved populated-return
+capacity-plus-one charge to the suffix invariant.  The local charged bound,
+including the retained high wire, is in `N5/PopulatedReturnCapacity.lean`.
 
 The first of the resulting circuit-wide regimes is now closed independently
 in `N5/OneHighDefectOneClosure.lean`.  The theorem

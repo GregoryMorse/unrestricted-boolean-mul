@@ -1,7 +1,35 @@
 # `n = 5` verification and discovery code
 
-This directory contains finite checks used during discovery or as regression
-tests.  They are not proof premises and must not be imported into Lean.
+This directory contains finite discovery/regression checks and a bounded
+Linux Lean-check helper.  The discovery calculations are not proof premises.
+
+## Focused Lean checks
+
+The standard build remains `lake build`, using the pinned `lean-toolchain`
+and `lakefile.toml`.  For repair iterations on Linux with existing project
+objects, check selected sources sequentially with explicit resource limits:
+
+```bash
+python3 n5/verification/check_lean_modules.py --memory-mb 8192 --timeout 240 \
+  UnrestrictedBooleanMul.N5.QuadraticReturnHistoryChart \
+  UnrestrictedBooleanMul.N5.PopulatedReturnCapacity
+lake env lean n5/ReturnRepairAudit.lean
+lake env leanchecker UnrestrictedBooleanMul.N5.QuadraticReturnHistoryChart \
+  UnrestrictedBooleanMul.N5.PopulatedReturnCapacity
+```
+
+Run these from the repository root.  `--plan` shows exactly which sources
+will be checked; `--lake /path/to/lake` selects the installed launcher.
+Requested sources are always checked, missing project dependencies are
+checked first, and existing dependency objects are reused.  This is not a
+fresh repository replay.  The helper refuses to launch Lean on Windows.
+
+The algebraic return repair uses factor shears, projective symmetry, and a
+sextic obstruction.  The former 140-file `(0,1),RInf` candidate and redundant
+`(1,2),RInf` raw certificate have been removed.  The discovery generator now
+refuses to emit an aggregate Lean certificate with a nonzero XOR residual.
+
+## Finite discovery and regression checks
 
 The two top-level programs are small, curated regression checks.  The
 independent-shadow check for the `W_*` envelope is:

@@ -1,9 +1,7 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryAlignedSemantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneOneR1Semantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneOneRInfSemantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneThreeR0Semantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneThreeR1Semantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneThreeRInfSemantic
+import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedCorrectionZeroSemantic
+import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedCorrectionOneSemantic
+import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneOneAlignedBase
+import UnrestrictedBooleanMul.N5.QuadraticReturnFactorShear
 import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneTwoR0Semantic
 import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneTwoR1Semantic
 import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneTwoRInfSemantic
@@ -12,11 +10,12 @@ import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneRInfSemantic
 /-!
 # Complete normalized rational return-history chart
 
-This module assembles the twelve algebraic leaves indexed by the four
-simultaneous rational factor-pair types and the three rational feedback
-directions.  The two aligned leaves carry exactly the normal-form hypotheses
-consumed by their explicit affine-normalization certificates.  Every other
-leaf is parameterized without a further coordinate restriction.
+Boolean factor shears reduce the four simultaneous factor-pair types to
+`(0,1)` and `(1,2)`.  A projective involution identifies the two off-axis
+`(0,1)` directions.  Three distinct rational places are excluded by a
+nonzero sextic coefficient.  The proof does not need separate `(1,1)`,
+`(1,3)`, `(0,1),RInf`, or `(1,2),RInf` certificates.
+The aligned leaf still carries its explicit normal-form hypothesis.
 
 The statement is intentionally about the normalized history model.  The
 circuit-facing factor-pair classification and the transport into these
@@ -48,59 +47,83 @@ def MixedReturnHistoryNormalForm
     (p : ZeroOneOffAxisHistoryParameters) :
     mixedReturnFeedbackProduct .zeroOne .one p = p.feedbackProduct := rfl
 
-/-- Every one of the twelve normalized rational history leaves excludes the
-missing first-order target coordinate. -/
-theorem firstOrderMissingFunctional_eq_zero_of_normalized_rational_history
-    (kind : MixedReturnFactorPair)
+private theorem zeroOne_history
     (direction : RationalFeedbackDirection)
     (p : ZeroOneOffAxisHistoryParameters)
-    (hnormal : MixedReturnHistoryNormalForm kind direction p)
-    (hreturned : mixedReturnSection kind p ∈ N4.quadraticANFSpace 10)
-    (hfeedback : mixedReturnFeedbackProduct kind direction p ∈
+    (hnormal : MixedReturnHistoryNormalForm .zeroOne direction p)
+    (hreturned : mixedReturnSection .zeroOne p ∈ N4.quadraticANFSpace 10)
+    (hfeedback : mixedReturnFeedbackProduct .zeroOne direction p ∈
       N4.quadraticANFSpace 10)
     (c : TargetCoeff)
-    (htarget :
-      quadraticProjection 10 (mixedReturnSection kind p) +
-          quadraticProjection 10
-            (mixedReturnFeedbackProduct kind direction p) =
-        targetTwo c) :
+    (htarget : quadraticProjection 10 (mixedReturnSection .zeroOne p) +
+      quadraticProjection 10 (mixedReturnFeedbackProduct .zeroOne direction p) = targetTwo c) :
     firstOrderMissingFunctional c = 0 := by
-  have hprojection :
-      quadraticQuotientProjection
-          (quadraticProjection 10 (mixedReturnSection kind p)) =
-        quadraticQuotientProjection
-          (quadraticProjection 10
-            (mixedReturnFeedbackProduct kind direction p)) :=
-    quadraticQuotientProjection_eq_of_add_eq_target _ _ c htarget
-  cases kind <;> cases direction
-  · exact False.elim (zeroOneAligned_inconsistent_of_quadratic_history p
-      (by simpa [MixedReturnHistoryNormalForm] using hnormal)
-      hreturned hfeedback hprojection)
+  cases direction
+  · have hprojection := quadraticQuotientProjection_eq_of_add_eq_target _ _ c htarget
+    rcases f2_eq_zero_or_one p.correctionReturn with hzero | hone
+    · exact False.elim (zeroOneAlignedCorrectionZero_inconsistent_of_quadratic_history
+        p hnormal hzero hreturned hfeedback hprojection)
+    · exact False.elim (zeroOneAlignedCorrectionOne_inconsistent_of_quadratic_history
+        p hnormal hone hreturned hfeedback hprojection)
   · simpa only [mixedReturnSection_zeroOne,
       mixedReturnFeedbackProduct_zeroOne_one] using
       p.firstOrderMissingFunctional_eq_zero_of_history hreturned hfeedback c
         htarget
   · exact firstOrderMissingFunctional_eq_zero_of_zeroOneRInf_history p
       hreturned hfeedback c htarget
-  · exact False.elim (oneOneAligned_inconsistent_of_quadratic_history p
-      (by simpa [MixedReturnHistoryNormalForm] using hnormal)
-      hreturned hfeedback hprojection)
-  · exact firstOrderMissingFunctional_eq_zero_of_oneOneR1_history p
-      hreturned hfeedback c htarget
-  · exact firstOrderMissingFunctional_eq_zero_of_oneOneRInf_history p
-      hreturned hfeedback c htarget
+
+private theorem oneTwo_history
+    (direction : RationalFeedbackDirection)
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hreturned : mixedReturnSection .oneTwo p ∈ N4.quadraticANFSpace 10)
+    (hfeedback : mixedReturnFeedbackProduct .oneTwo direction p ∈
+      N4.quadraticANFSpace 10)
+    (c : TargetCoeff)
+    (htarget : quadraticProjection 10 (mixedReturnSection .oneTwo p) +
+      quadraticProjection 10 (mixedReturnFeedbackProduct .oneTwo direction p) = targetTwo c) :
+    firstOrderMissingFunctional c = 0 := by
+  cases direction
   · exact firstOrderMissingFunctional_eq_zero_of_oneTwoR0_history p
       hreturned hfeedback c htarget
   · exact firstOrderMissingFunctional_eq_zero_of_oneTwoR1_history p
       hreturned hfeedback c htarget
   · exact firstOrderMissingFunctional_eq_zero_of_oneTwoRInf_history p
       hreturned hfeedback c htarget
-  · exact firstOrderMissingFunctional_eq_zero_of_oneThreeR0_history p
-      hreturned hfeedback c htarget
-  · exact firstOrderMissingFunctional_eq_zero_of_oneThreeR1_history p
-      hreturned hfeedback c htarget
-  · exact firstOrderMissingFunctional_eq_zero_of_oneThreeRInf_history p
-      hreturned hfeedback c htarget
+
+private theorem equalShear_normalForm (p : ZeroOneOffAxisHistoryParameters)
+    (h : OneOneAlignedNormalForm p) :
+    ZeroOneAlignedNormalForm (ReturnFactorShear.equal.parameters p) :=
+  ⟨h.m1, h.m2, h.m4, h.m6, h.m7, h.x1, h.x2, h.x4, h.x6, h.x7⟩
+
+/-- All twelve named histories follow from the two basic factor types.
+Factor shears preserve the feedback ANF exactly and the returned section
+modulo affine wires, so neither the target equation nor its cost is weakened. -/
+theorem firstOrderMissingFunctional_eq_zero_of_normalized_rational_history
+    (kind : MixedReturnFactorPair)
+    (direction : RationalFeedbackDirection)
+    (p : ZeroOneOffAxisHistoryParameters)
+    (hnormal : MixedReturnHistoryNormalForm kind direction p)
+    (hreturned : mixedReturnSection kind p ∈ N4.quadraticANFSpace 10)
+    (hfeedback : mixedReturnFeedbackProduct kind direction p ∈ N4.quadraticANFSpace 10)
+    (c : TargetCoeff)
+    (htarget : quadraticProjection 10 (mixedReturnSection kind p) +
+      quadraticProjection 10 (mixedReturnFeedbackProduct kind direction p) = targetTwo c) :
+    firstOrderMissingFunctional c = 0 := by
+  cases kind with
+  | zeroOne => exact zeroOne_history direction p hnormal hreturned hfeedback c htarget
+  | oneOneDifference =>
+    obtain ⟨hr, hf, hc⟩ := ReturnFactorShear.equal.quadratic_history
+      direction p hreturned hfeedback c htarget
+    apply zeroOne_history direction (ReturnFactorShear.equal.parameters p) ?_ hr hf c hc
+    cases direction
+    · exact equalShear_normalForm p hnormal
+    · trivial
+    · trivial
+  | oneTwo => exact oneTwo_history direction p hreturned hfeedback c htarget
+  | oneThree =>
+    obtain ⟨hr, hf, hc⟩ := ReturnFactorShear.incident.quadratic_history
+      direction p hreturned hfeedback c htarget
+    exact oneTwo_history direction (ReturnFactorShear.incident.parameters p) hr hf c hc
 
 end
 end N5

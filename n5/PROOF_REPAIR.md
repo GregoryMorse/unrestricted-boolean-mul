@@ -116,13 +116,12 @@ The following distinctions are now explicit in Lean.
    quotient rows omitted from the earlier mixed table.
    `N5/QuadraticReturnHistoryAlignedSemantic.lean` splits the returned-section
    correction bit and excludes both aligned normal forms with no preprocessing
-   assumption.  The direct off-axis `(1,1),RInf` certificate is also
-   kernel-checked.  The much larger `(0,1),RInf` candidate has been divided
-   into bounded product leaves and assemblies, but its aggregate is not yet a
-   theorem: an independent parser finds a 576-monomial residual between the
-   50 stored products and the stated target.  The unverified chart module is
-   retained as the intended twelve-leaf interface, but must not be cited until
-   that residual is repaired and the aggregate and semantic bridge compile.
+   assumption.  The direct off-axis `(1,1),RInf` certificate was also
+   kernel-checked.  The active proof now replaces redundant certificate
+   families by the algebraic reductions below.  The invalid `(0,1),RInf`
+   aggregate and its 140 generated files have been removed; their
+   576-monomial residual is no longer a proof obligation.  The twelve-chart
+   theorem compiles with its explicit aligned normal-form hypotheses.
    Finally,
    `N5/QuadraticReturnFactorPair.lean` gives the finite algebraic simultaneous
    normalization of every admissible rational factor-colour pair into
@@ -146,24 +145,73 @@ there was neither a circuit witness nor an UNSAT certificate.  The global SAT
 route is therefore retired rather than being treated as evidence for the
 lower bound.
 
-These modules are checked only by the pinned Linux CI.  The focused replay
+These modules are checked by pinned Linux CI and the authorized Linux server.  The focused replay
 bridge, including the four canonical rank-one return kernels and the generic
 rank-two defect budget, compiles with pinned Lean 4.32.1.  Windows Lean is not
 used for this repair.  A complete repository build and `leanchecker` replay
 are reserved for a stable closure checkpoint.
+
+## Algebraic repair checked on 2026-09-05
+
+`N5/ANFSubstitution.lean` generalizes the Boolean-idempotence substitution
+argument from `N4.PlaceSymmetry`.  It acts on the full ANF algebra and
+preserves affine and quadratic degree bounds.
+
+`N5/QuadraticReturnOffAxisSymmetry.lean` uses the projective involution
+`t -> t/(t+1)`, fixing zero and exchanging one and infinity.  It transports
+every history parameter, including the old high representative and the
+returned-section correction.  It preserves the missing-target functional.
+Thus `(0,1),RInf` follows directly from the checked `(0,1),R1` theorem.
+
+`N5/QuadraticReturnFactorShear.lean` uses `A(A+B) = AB+A` to reduce `(1,1)`
+to `(0,1)` and `(1,3)` to `(1,2)`.  The returned section changes only by the
+affine left shift.  The correction explicitly adds the old left factor and
+the corresponding multiple of that shift.  The corrected high ANF and the
+feedback product are unchanged, and `firstWireState`/`returnWireState` prove
+equality of the intermediate wire spaces.  This reduction does not enumerate
+factor-parameter assignments or discard a gate cost.
+
+`N5/QuadraticReturnThreePlaces.lean` excludes `(1,2),RInf` by degree alone.
+The product has top term `r0*r1*rInfinity`, whose coefficient on
+`{a0,a1,a4,b0,b1,b4}` is one.  Every correction has degree at most five.
+The former 1,073-line semantic certificate is replaced by this argument;
+its Lean check took about five seconds, compared with 162 seconds for the
+old module (which exceeded an 8 GB cap).
+
+`N5/QuadraticReturnHistoryChart.lean` now assembles all twelve named charts
+using these reductions.  Its aligned normal-form premise is still explicit;
+the theorem does not extract that premise from a general circuit.
+
+`N5/PopulatedReturnCapacity.lean` supplies the local populated-return charge.
+For `quadraticProjection z = d + targetTwo c`, the enlarged base is
+`intrinsicCapacityState (snoc p d) + <targetANF c>`, with the target row
+retained separately.  It contains the returned wire and has target rank at
+most the enlarged intrinsic capacity plus one.  Retaining a genuinely high
+wire adds no target rank to this quadratic base.  At quadratic defect at most
+two the resulting bound is seven.  Stability of its subsequent suffix is a
+separate remaining obligation.
+
+All these modules and the assembled chart compile on pinned Lean 4.32.1.
+`n5/ReturnRepairAudit.lean` reports only `propext`, `Classical.choice`, and
+`Quot.sound` for their headline theorems.  No project axioms, `sorry`, or
+native evaluation are used.  The old generated files are recoverable from
+commit `4db3ed2`; no large certificate regeneration is needed to resume.
+The bounded `leanchecker` invocation on the normalized chart and populated
+capacity module also completed successfully (exit 0).  A fresh whole-project
+replay was not run.
 
 ## Remaining closure obligations
 
 The paper cannot be unblocked until all of the following are proved and then
 connected to the exact-cost circuit suffix.
 
-- Charge the explicit target row in the now-formal populated-return
-  decomposition; the populated/unpopulated quotient split itself is complete.
+- Connect the now-proved populated-return charged envelope and capacity-plus-one
+  bound to the costed suffix invariant.  The local target-row charge and the
+  populated/unpopulated quotient split are complete.
 - Connect the now-formal four-type factor-pair normalization and twelve-leaf
-  normalized history chart to actual circuit factors.  First repair and
-  kernel-check the outstanding `(0,1),RInf` 576-monomial residual.  The direct
-  `(1,2)` and `(1,3)` certificates, the other off-axis directions, and the four
-  aligned unit certificates are kernel-connected to literal ANF semantics.
+  normalized history chart to actual circuit factors.  The chart itself is
+  checked, using factor shears, projective symmetry, and the sextic obstruction
+  in place of the redundant or failed certificates.
   The remaining transport must extract an admissible factor-colour pair from
   the circuit and prove the two aligned normal-form hypotheses.  These
   arguments retain the

@@ -1372,6 +1372,13 @@ def main() -> None:
                 for name, multiplier in aggregate.items() if multiplier
             }
         print(json.dumps(report, sort_keys=True))
+        if (args.print_aggregate_lean or args.emit_aggregate_lean_file) and report[
+            "aggregate_identity_remainder_monomials"
+        ]:
+            parser.error(
+                "refusing to emit Lean: the aggregate identity has "
+                f"{report['aggregate_identity_remainder_monomials']} residual monomials"
+            )
         if args.print_aggregate_lean:
             selected = [
                 (name, constraint_by_name[name], multiplier)
