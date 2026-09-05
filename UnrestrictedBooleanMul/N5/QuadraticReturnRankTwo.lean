@@ -151,6 +151,38 @@ theorem rankTwo_escape_impossible_of_positive_quadraticDefect_localColours
   exact rankTwo_escape_impossible_of_positive_quadraticDefect
     V X Y hX hY hdef hold hescape hquadPositive hsplit.1 hsplit.2
 
+/-- Circuit-facing composition of the return witness with the localized
+rank-two colour contradiction.  Keeping the actual quadratic representative
+`p` in the state is enough: unpopulatedness makes the quadratic defect
+positive, after which the independent colour triple exceeds the total
+defect budget. -/
+theorem rankTwo_escape_impossible_of_unpopulatedReturn_localColours
+    (z : TwoForm) (hunpopulated : UnpopulatedQuadraticSection z)
+    (V : Submodule F₂ (ANF 10)) (p X Y : ANF 10)
+    (hpV : p ∈ V) (hpquad : p ∈ N4.quadraticANFSpace 10)
+    (hpz : quadraticProjection 10 p = z)
+    (hX : X ∈ V) (hY : Y ∈ V)
+    (hdef : N4.flagDefectRank (andExtend V X Y) (mulTarget 5) ≤ 3)
+    (hold : V ⊓ N4.targetAmbient 10 (mulTarget 5) ≤
+      firstOrderEnvelopeState)
+    (hescape : ¬ (andExtend V X Y ⊓
+      N4.targetAmbient 10 (mulTarget 5) ≤ firstOrderEnvelopeState))
+    (alpha beta : Fin 4 → F₂)
+    (halpha : alpha ≠ 0) (hbeta : beta ≠ 0) (hab : alpha ≠ beta)
+    (hXcolour : Submodule.mkQ (N4.quadraticANFSpace 10) X =
+      colourHighCombination alpha)
+    (hYcolour : Submodule.mkQ (N4.quadraticANFSpace 10) Y =
+      colourHighCombination beta)
+    (hproductColour :
+      Submodule.mkQ (N4.quadraticANFSpace 10) (X * Y) =
+        Submodule.mkQ (N4.quadraticANFSpace 10)
+          (colourCombination alpha * colourCombination beta)) : False := by
+  exact rankTwo_escape_impossible_of_positive_quadraticDefect_localColours
+    V X Y hX hY hdef hold hescape
+      (one_le_stateQuadraticDefectRank_of_unpopulatedReturn
+        z hunpopulated V p hpV hpquad hpz)
+      alpha beta halpha hbeta hab hXcolour hYcolour hproductColour
+
 end
 end N5
 end UnrestrictedBooleanMul

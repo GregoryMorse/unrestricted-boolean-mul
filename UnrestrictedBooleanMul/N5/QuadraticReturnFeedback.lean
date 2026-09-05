@@ -144,6 +144,48 @@ theorem unpopulatedQuadraticSection_iff_not_populatedFiber
     exact add_right_cancel
       (hzero.trans (quadraticQuotient_add_self _).symm)
 
+/-- A populated returned section is a decomposable lift plus one *explicit*
+target row.  Keeping `c` in the conclusion is the cost-sensitive form of the
+populated branch: subsequent replay may charge or delete that target
+direction, but may not silently absorb it into a larger envelope. -/
+theorem populatedQuadraticSection_iff_exists_decomposable_add_target
+    (z : TwoForm) :
+    IsPopulatedFiber (quadraticQuotientProjection z) ↔
+      ∃ d : TwoForm, ∃ c : TargetCoeff,
+        IsDecomposableTwo d ∧ z = d + targetTwo c := by
+  constructor
+  · rintro ⟨d, hd, hprojection⟩
+    have hzero : quadraticQuotientProjection (d + z) = 0 := by
+      rw [map_add, hprojection, quadraticQuotient_add_self]
+    rcases (quadraticQuotientProjection_eq_zero_iff (d + z)).1 hzero with
+      ⟨c, hc⟩
+    refine ⟨d, c, hd, ?_⟩
+    calc
+      z = d + (d + z) := by
+        rw [← add_assoc, twoForm_add_self, zero_add]
+      _ = d + targetTwo c := by
+        simpa [targetTwo] using congrArg (fun q : TwoForm => d + q) hc.symm
+  · rintro ⟨d, c, hd, hz⟩
+    refine ⟨d, hd, ?_⟩
+    rw [hz, map_add, quadraticQuotientProjection_targetTwo,
+      add_zero]
+
+/-- Exhaustive populated/unpopulated split for an arbitrary returned
+quadratic section.  The populated alternative is immediately exposed in the
+charged decomposable-plus-target form above. -/
+theorem populated_decomposition_or_unpopulatedQuadraticSection
+    (z : TwoForm) :
+    (∃ d : TwoForm, ∃ c : TargetCoeff,
+      IsDecomposableTwo d ∧ z = d + targetTwo c) ∨
+      UnpopulatedQuadraticSection z := by
+  by_cases hpopulated :
+      IsPopulatedFiber (quadraticQuotientProjection z)
+  · exact Or.inl
+      ((populatedQuadraticSection_iff_exists_decomposable_add_target z).1
+        hpopulated)
+  · exact Or.inr
+      ((unpopulatedQuadraticSection_iff_not_populatedFiber z).2 hpopulated)
+
 /-- A target annihilating a member of the affine missing coset translated by
 an unpopulated section must have Hankel rank at most two.  Above rank two the
 target form is not a two-wedge secant, so the pivot kernel theorem makes its

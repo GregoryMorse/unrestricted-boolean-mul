@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit the six Lean semantic bridges for the mixed return certificates.
+"""Emit Lean semantic bridges for the mixed return certificates.
 
 The raw certificate modules are generated polynomial identities.  This
 generator emits only the auditable semantic glue: each selected raw equation
@@ -56,6 +56,56 @@ ONE_ONE_R1_ENTRIES = (
     ("product", 0x0E3),
     ("product", 0x073),
 )
+ONE_ONE_RINF_ENTRIES = (
+    *(('return', mask) for mask in (
+        0x023, 0x025, 0x029, 0x061, 0x0A1, 0x121,
+    )),
+    *(('product', mask) for mask in (
+        0x052, 0x054, 0x098, 0x118, 0x212, 0x214,
+        0x218, 0x242, 0x244, 0x250, 0x252, 0x254,
+        0x288, 0x290, 0x298, 0x308, 0x310, 0x318,
+    )),
+    *(('quotient', position) for position in (
+        6, 7, 13, 16, 20, 23, 27, 28,
+    )),
+    *(('product', mask) for mask in (
+        0x331, 0x2B1, 0x271, 0x239, 0x235, 0x233,
+    )),
+)
+ZERO_ONE_RINF_ENTRIES = (
+    *(('return', mask) for mask in (
+        0x025, 0x029, 0x0A1, 0x121,
+    )),
+    *(('product', mask) for mask in (
+        0x034, 0x038, 0x098, 0x118, 0x214, 0x218,
+        0x224, 0x228, 0x230, 0x234, 0x238, 0x288,
+        0x290, 0x298, 0x308, 0x310, 0x318,
+    )),
+    *(('quotient', position) for position in (6, 7, 16, 23, 27, 28)),
+    ('product', 0x054),
+    ('product', 0x244),
+    ('quotient', 20),
+    ('product', 0x250),
+    ('product', 0x254),
+    ('product', 0x271),
+    ('return', 0x061),
+    ('product', 0x331),
+    ('product', 0x2B1),
+    ('product', 0x130),
+    ('product', 0x320),
+    ('quotient', 37),
+    ('product', 0x330),
+    ('product', 0x0B0),
+    ('product', 0x2A0),
+    ('quotient', 36),
+    ('product', 0x2B0),
+    ('product', 0x235),
+    ('product', 0x258),
+    ('product', 0x294),
+    ('product', 0x21C),
+    ('product', 0x314),
+    ('product', 0x239),
+)
 
 LEAVES = (
     Leaf("OneTwoR0", "oneTwoR0", "oneTwo_R0_Raw_history_missing_eq_zero",
@@ -72,6 +122,10 @@ LEAVES = (
          "oneThree", "infinity", INF_RETURN, INF_PRODUCT, INF_QUOTIENT),
     Leaf("OneOneR1", "oneOneR1", "oneOne_R1_Raw_history_missing_eq_zero",
          "oneOneDifference", "one", (), (), (), ONE_ONE_R1_ENTRIES),
+    Leaf("OneOneRInf", "oneOneRInf", "oneOne_RInf_Raw_history_missing_eq_zero",
+         "oneOneDifference", "infinity", (), (), (), ONE_ONE_RINF_ENTRIES),
+    Leaf("ZeroOneRInf", "zeroOneRInf", "zeroOne_RInf_Raw_history_missing_eq_zero",
+         "zeroOne", "infinity", (), (), (), ZERO_ONE_RINF_ENTRIES),
 )
 
 # The quotient reducer rows are sums of two cross-plane coefficients on the
@@ -89,6 +143,15 @@ QUOTIENT_ROWS = {
     23: (8, 0x204, 0x090),
     26: (9, 0x048, 0x030),
     28: (10, 0x108, 0x090),
+    27: (11, 0x088, 0x050),
+}
+
+# Same-side rows are single coordinates, not two-term Hankel reductions.
+# The indices address `alignedReturnQuotientCoordinate` in Lean.
+SAME_SIDE_QUOTIENT_ROWS = {
+    36: (0, 0x0A0),
+    37: (2, 0x120),
+    39: (1, 0x0C0),
 }
 
 
@@ -144,6 +207,35 @@ private theorem {leaf.raw}_constraint_{index}_eq_{name}_coeff
 
 
 def quotient_bridge(leaf: Leaf, index: int, position: int) -> str:
+    if position in SAME_SIDE_QUOTIENT_ROWS:
+        row, first = SAME_SIDE_QUOTIENT_ROWS[position]
+        first_support = finset(first)
+        boolean_normalization = boolean_idempotence_normalization(leaf)
+        return f"""
+set_option maxRecDepth 8192 in
+set_option maxHeartbeats 1200000 in
+private theorem {leaf.raw}_constraint_{index}_eq_quotient_row
+    (p : ZeroOneOffAxisHistoryParameters) :
+    {leaf.raw}RawConstraint p.vector {index} =
+      alignedReturnQuotientCoordinate {row}
+          (quadraticProjection 10 (mixedReturnSection .{leaf.kind} p)) +
+        alignedReturnQuotientCoordinate {row}
+          (quadraticProjection 10
+            (mixedReturnFeedbackProduct .{leaf.kind} .{leaf.direction} p)) := by
+  apply (N4.f2_eq_iff_add_eq_zero _ _).2
+  simp [alignedReturnQuotientCoordinate, alignedReturnQuotientPair,
+    quadraticProjection, quadraticPair, aCoord, bCoord]
+  simp_rw [coeff_eq_cube_eval_sum]
+  have hpowersetFirst : ({first_support} : Finset (Fin 10)).powerset =
+      {powerset(first)} := by decide
+  rw [hpowersetFirst]
+  simp (config := {{ decide := true }}) [{leaf.raw}RawConstraint]
+  simp_mixed_return_history
+  ring_nf
+{boolean_normalization}\
+  ring_nf
+  simp [CharTwo.ofNat_eq_mod]
+"""
     row, first, second = QUOTIENT_ROWS[position]
     first_support = finset(first)
     second_support = finset(second)
@@ -232,12 +324,16 @@ def aggregate(leaf: Leaf) -> str:
                 f"    rw [{leaf.raw}_constraint_{index}_eq_feedback_coeff]\n"
                 f"    exact hfeedback ⟨{finset(value)}⟩ (by decide)")
         else:
-            row = QUOTIENT_ROWS[value][0]
+            same_side = value in SAME_SIDE_QUOTIENT_ROWS
+            row = (SAME_SIDE_QUOTIENT_ROWS[value][0] if same_side else
+                   QUOTIENT_ROWS[value][0])
+            coordinate = ("alignedReturnQuotientCoordinate" if same_side else
+                          "mixedReturnQuotientCoordinate")
             lines.append(
                 f"  · change {leaf.raw}RawConstraint p.vector "
                 f"({index} : Fin {count}) = 0\n"
                 f"    rw [{leaf.raw}_constraint_{index}_eq_quotient_row]\n"
-                f"    exact mixedReturnQuotientCoordinate_add_eq_zero_of_projection "
+                f"    exact {coordinate}_add_eq_zero_of_projection "
                 f"_ _ hprojection {row}")
     cases = "\n".join(lines)
     return f"""
@@ -349,8 +445,46 @@ def ordered_entries(leaf: Leaf) -> tuple[tuple[str, int], ...]:
     )
 
 
+def validate_raw_constraint_order(leaf: Leaf) -> None:
+    """Refuse to attach semantic hypotheses to misordered raw equations."""
+    path = LEAN_DIR / f"QuadraticReturnHistory{leaf.camel}Raw.lean"
+    source = path.read_text(encoding="utf-8")
+    if f"def {leaf.raw}RawConstraint" not in source:
+        base_path = path.with_name(path.stem + "Base.lean")
+        if not base_path.exists():
+            raise ValueError(
+                f"raw constraint definition missing from {path.name} and "
+                f"{base_path.name}"
+            )
+        path = base_path
+        source = path.read_text(encoding="utf-8")
+    start = source.index(f"def {leaf.raw}RawConstraint")
+    multiplier_marker = f"def {leaf.raw}RawMultiplier"
+    end = (
+        source.index(multiplier_marker, start)
+        if multiplier_marker in source[start:]
+        else source.index("\n  ]", start) + len("\n  ]")
+    )
+    actual = tuple(
+        line.strip()[3:]
+        for line in source[start:end].splitlines()
+        if line.strip().startswith("-- ")
+    )
+    expected = tuple(
+        (f"{kind}-high-0x{value:03x}" if kind != "quotient" else
+         f"quotient-{value}")
+        for kind, value in ordered_entries(leaf)
+    )
+    if actual != expected:
+        raise ValueError(
+            f"raw constraint order mismatch in {path.name}:\n"
+            f"expected {expected!r}\nactual   {actual!r}"
+        )
+
+
 def main() -> None:
     for leaf in LEAVES:
+        validate_raw_constraint_order(leaf)
         path = LEAN_DIR / f"QuadraticReturnHistory{leaf.camel}Semantic.lean"
         path.write_text(emit(leaf), encoding="utf-8", newline="\n")
         print(path.relative_to(ROOT))

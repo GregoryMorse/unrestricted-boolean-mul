@@ -51,6 +51,10 @@ The following distinctions are now explicit in Lean.
    exact first-order target intersection.  If both the quadratic factor and
    the old correction use the returned section, their section coefficients
    cancel and the missing-coset exterior kernel gives the same contradiction.
+   The populated/unpopulated split is now exhaustive in Lean.  In the
+   populated branch the returned form is exposed as a decomposable lift plus
+   an explicit target row, so later costed replay cannot absorb that row for
+   free.
    Consequently every remaining normalized rank-one escape is forced into
    one asymmetric case: the correction uses the returned section while the
    quadratic factor stays in the old first-order envelope.
@@ -112,9 +116,21 @@ The following distinctions are now explicit in Lean.
    quotient rows omitted from the earlier mixed table.
    `N5/QuadraticReturnHistoryAlignedSemantic.lean` splits the returned-section
    correction bit and excludes both aligned normal forms with no preprocessing
-   assumption.  The remaining history work is formal symmetry transport among
-   off-axis directions and the factor-pair normalization that selects the
-   checked representatives.
+   assumption.  The direct off-axis `(1,1),RInf` certificate is also
+   kernel-checked.  The much larger `(0,1),RInf` candidate has been divided
+   into bounded product leaves and assemblies, but its aggregate is not yet a
+   theorem: an independent parser finds a 576-monomial residual between the
+   50 stored products and the stated target.  The unverified chart module is
+   retained as the intended twelve-leaf interface, but must not be cited until
+   that residual is repaired and the aggregate and semantic bridge compile.
+   Finally,
+   `N5/QuadraticReturnFactorPair.lean` gives the finite algebraic simultaneous
+   normalization of every admissible rational factor-colour pair into
+   `(0,1)`, `(1,1)`, `(1,2)`, or `(1,3)`.  It explicitly distinguishes the
+   third rank-one point `rInfinity` from the incident rank-two colour
+   `r0 + r1`.  What remains is the circuit/ANF transport that extracts this
+   admissible pair and, in the two aligned cases, the checked normal-form
+   hypotheses.
 
 The exact counterexample has also been retested with its history restored.
 Keeping its already-born high representative and allowing every correction
@@ -141,21 +157,22 @@ are reserved for a stable closure checkpoint.
 The paper cannot be unblocked until all of the following are proved and then
 connected to the exact-cost circuit suffix.
 
-- Split returned sections into populated and unpopulated quotient cases and
-  account for the populated case without granting an uncharged target row.
-- Formalize the *factor pair* `(q,c)` classification into the four
-  simultaneous rational-place types `(0,1)`, `(1,1)`, `(1,2)`, and `(1,3)`.
-  The direct `(1,2)` and `(1,3)` history-sensitive certificates are now
-  kernel-connected for all three rational directions, as is the normalized
-  off-axis `(1,1), R1` representative.  The four aligned unit certificates are
-  now semantically normalized and kernel-connected through explicit
-  affine-substitution certificates.  Finish the formal symmetry transport,
-  then connect the resulting case split to factor-pair normalization.  These
+- Charge the explicit target row in the now-formal populated-return
+  decomposition; the populated/unpopulated quotient split itself is complete.
+- Connect the now-formal four-type factor-pair normalization and twelve-leaf
+  normalized history chart to actual circuit factors.  First repair and
+  kernel-check the outstanding `(0,1),RInf` 576-monomial residual.  The direct
+  `(1,2)` and `(1,3)` certificates, the other off-axis directions, and the four
+  aligned unit certificates are kernel-connected to literal ANF semantics.
+  The remaining transport must extract an admissible factor-colour pair from
+  the circuit and prove the two aligned normal-form hypotheses.  These
   arguments retain the
   returned section and old high representative; the section-only injectivity
   theorem remains false and must not be restored.
-- Connect the independent/rank-two high-colour normal form to the generic
-  positive-quadratic-defect contradiction.
+- Extract the two independent localized high colours from the circuit return.
+  Once supplied, the actual unpopulated representative is now connected to
+  the generic positive-quadratic-defect contradiction in
+  `QuadraticReturnRankTwo.lean`.
 - Prove the corresponding one-defect return statement (both the rational and
   degree-two capacity types) and the remaining two-defect stable-envelope
   suffix theorem.

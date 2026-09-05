@@ -12,9 +12,12 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Iterable
+import io
 import json
 from itertools import combinations, product
+from pathlib import Path
 import subprocess
+import sys
 
 from quadratic_return_class_sample import FIRST_ORDER_MASKS, target_from_mask
 from quadratic_return_history_sat import PAIR_MASKS
@@ -1108,6 +1111,13 @@ def main() -> None:
         help="emit a standalone Lean leaf for the compact aggregate certificate",
     )
     parser.add_argument(
+        "--aggregate-lean-output", type=Path,
+        help=(
+            "write the emitted aggregate Lean module to this path instead "
+            "of mixing it with the JSON report on standard output"
+        ),
+    )
+    parser.add_argument(
         "--singular", action="store_true",
         help="emit a Singular Gröbner-basis calculation instead of running the span search",
     )
@@ -1372,6 +1382,10 @@ def main() -> None:
                 print(f"GENERATOR[{index}]={name}=" + lean_polynomial(constraint))
                 print(f"MULTIPLIER[{index}]=" + lean_polynomial(multiplier))
         if args.emit_aggregate_lean_file:
+            lean_output = io.StringIO() if args.aggregate_lean_output else None
+            original_stdout = sys.stdout
+            if lean_output is not None:
+                sys.stdout = lean_output
             selected = [
                 (name, constraint_by_name[name], multiplier)
                 for name, multiplier in aggregate.items() if multiplier
@@ -1510,6 +1524,11 @@ def main() -> None:
             print()
             print("end")
             print("end UnrestrictedBooleanMul.N5")
+            if lean_output is not None:
+                sys.stdout = original_stdout
+                args.aggregate_lean_output.write_text(
+                    lean_output.getvalue(), encoding="utf-8", newline="\n"
+                )
         return
     if args.singular:
         if args.polybori:

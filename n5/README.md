@@ -108,6 +108,20 @@ final circuit bookkeeping is complete; the two predicates
 `CostedFirstOrderQuadraticPrefixes` remain the honest algebraic completion
 obligations.
 
+The nonlinear quadratic-return branch now has an intended normalized rational
+history-chart interface.  Eleven of its twelve leaves are kernel-connected;
+the large `(0,1),RInf` candidate remains blocked by a 576-monomial residual in
+the stored aggregate certificate and is explicitly not counted as proved.
+`N5/QuadraticReturnHistoryChart.lean` records the intended assembly but must
+not be cited until that raw aggregate and its semantic bridge compile.
+`N5/QuadraticReturnFactorPair.lean` separately proves the finite algebraic
+normalization into `(0,1)`, `(1,1)`, `(1,2)`, and the genuine incident
+rank-two `(1,3)` chart; it does not identify `rInfinity` with `r0 + r1`.
+After repairing the twelfth leaf, the remaining return obligation is
+circuit-facing: extract those colours and the aligned normal-form hypotheses
+from the actual gate history, and charge the explicit target row exposed by a
+populated return.
+
 The first of the resulting circuit-wide regimes is now closed independently
 in `N5/OneHighDefectOneClosure.lean`.  The theorem
 `N5.no_circuit_of_final_defect_le_one` uses the actual last quadratic prefix,

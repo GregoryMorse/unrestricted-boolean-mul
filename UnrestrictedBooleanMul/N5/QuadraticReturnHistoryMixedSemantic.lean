@@ -113,7 +113,7 @@ macro "simp_mixed_return_history" : tactic =>
 
 /-- First coordinate of each target-annihilating quadratic row used by the
 mixed history certificates. -/
-def mixedReturnQuotientFirstPair : Fin 11 → QuadraticIndex 10 :=
+def mixedReturnQuotientFirstPair : Fin 12 → QuadraticIndex 10 :=
   ![
     quadraticPair (aCoord 0) (bCoord 2) (aCoord_ne_bCoord 0 2),
     quadraticPair (aCoord 0) (bCoord 3) (aCoord_ne_bCoord 0 3),
@@ -125,11 +125,12 @@ def mixedReturnQuotientFirstPair : Fin 11 → QuadraticIndex 10 :=
     quadraticPair (aCoord 2) (bCoord 3) (aCoord_ne_bCoord 2 3),
     quadraticPair (aCoord 2) (bCoord 4) (aCoord_ne_bCoord 2 4),
     quadraticPair (aCoord 3) (bCoord 1) (aCoord_ne_bCoord 3 1),
-    quadraticPair (aCoord 3) (bCoord 3) (aCoord_ne_bCoord 3 3)
+    quadraticPair (aCoord 3) (bCoord 3) (aCoord_ne_bCoord 3 3),
+    quadraticPair (aCoord 3) (bCoord 2) (aCoord_ne_bCoord 3 2)
   ]
 
 /-- Second coordinate on the same Hankel anti-diagonal. -/
-def mixedReturnQuotientSecondPair : Fin 11 → QuadraticIndex 10 :=
+def mixedReturnQuotientSecondPair : Fin 12 → QuadraticIndex 10 :=
   ![
     quadraticPair (aCoord 2) (bCoord 0) (aCoord_ne_bCoord 2 0),
     quadraticPair (aCoord 3) (bCoord 0) (aCoord_ne_bCoord 3 0),
@@ -141,19 +142,20 @@ def mixedReturnQuotientSecondPair : Fin 11 → QuadraticIndex 10 :=
     quadraticPair (aCoord 4) (bCoord 1) (aCoord_ne_bCoord 4 1),
     quadraticPair (aCoord 4) (bCoord 2) (aCoord_ne_bCoord 4 2),
     quadraticPair (aCoord 4) (bCoord 0) (aCoord_ne_bCoord 4 0),
-    quadraticPair (aCoord 4) (bCoord 2) (aCoord_ne_bCoord 4 2)
+    quadraticPair (aCoord 4) (bCoord 2) (aCoord_ne_bCoord 4 2),
+    quadraticPair (aCoord 4) (bCoord 1) (aCoord_ne_bCoord 4 1)
   ]
 
-/-- Eleven sparse quotient rows covering the union needed by the `R0`,
+/-- Twelve sparse quotient rows covering the union needed by the `R0`,
 `R1`, and `RInf` mixed certificates. -/
-def mixedReturnQuotientCoordinate (i : Fin 11) : TwoForm →ₗ[F₂] F₂ where
+def mixedReturnQuotientCoordinate (i : Fin 12) : TwoForm →ₗ[F₂] F₂ where
   toFun q := q (mixedReturnQuotientFirstPair i) +
     q (mixedReturnQuotientSecondPair i)
   map_add' q r := by simp only [Pi.add_apply]; ac_rfl
   map_smul' a q := by simp [mul_add]
 
 @[simp] theorem mixedReturnQuotientCoordinate_targetTwo
-    (i : Fin 11) (c : TargetCoeff) :
+    (i : Fin 12) (c : TargetCoeff) :
     mixedReturnQuotientCoordinate i (targetTwo c) = 0 := by
   fin_cases i <;>
     simp [mixedReturnQuotientCoordinate, mixedReturnQuotientFirstPair,
@@ -165,7 +167,7 @@ theorem mixedReturnQuotientCoordinate_add_eq_zero_of_projection
     (q r : TwoForm)
     (hprojection : quadraticQuotientProjection q =
       quadraticQuotientProjection r)
-    (i : Fin 11) :
+    (i : Fin 12) :
     mixedReturnQuotientCoordinate i q +
         mixedReturnQuotientCoordinate i r = 0 := by
   have hquotientZero : quadraticQuotientProjection (q + r) = 0 := by
@@ -182,21 +184,22 @@ theorem mixedReturnQuotientCoordinate_add_eq_zero_of_projection
       exact hc.symm
     _ = 0 := mixedReturnQuotientCoordinate_targetTwo i c
 
-/-- The two same-side quadratic coordinates occurring in the aligned
-exceptional certificates.  They vanish on every Hankel target directly. -/
-def alignedReturnQuotientPair : Fin 2 → QuadraticIndex 10 :=
+/-- The three same-side quadratic coordinates occurring in the aligned and
+direct `RInf` certificates.  They vanish on every Hankel target directly. -/
+def alignedReturnQuotientPair : Fin 3 → QuadraticIndex 10 :=
   ![
     quadraticPair (bCoord 0) (bCoord 2) (by decide),
-    quadraticPair (bCoord 1) (bCoord 2) (by decide)
+    quadraticPair (bCoord 1) (bCoord 2) (by decide),
+    quadraticPair (bCoord 0) (bCoord 3) (by decide)
   ]
 
-def alignedReturnQuotientCoordinate (i : Fin 2) : TwoForm →ₗ[F₂] F₂ where
+def alignedReturnQuotientCoordinate (i : Fin 3) : TwoForm →ₗ[F₂] F₂ where
   toFun q := q (alignedReturnQuotientPair i)
   map_add' q r := by simp only [Pi.add_apply]
   map_smul' a q := by simp [mul_comm]
 
 @[simp] theorem alignedReturnQuotientCoordinate_targetTwo
-    (i : Fin 2) (c : TargetCoeff) :
+    (i : Fin 3) (c : TargetCoeff) :
     alignedReturnQuotientCoordinate i (targetTwo c) = 0 := by
   fin_cases i <;>
     simp [alignedReturnQuotientCoordinate, alignedReturnQuotientPair,
@@ -207,7 +210,7 @@ theorem alignedReturnQuotientCoordinate_add_eq_zero_of_projection
     (q r : TwoForm)
     (hprojection : quadraticQuotientProjection q =
       quadraticQuotientProjection r)
-    (i : Fin 2) :
+    (i : Fin 3) :
     alignedReturnQuotientCoordinate i q +
         alignedReturnQuotientCoordinate i r = 0 := by
   have hquotientZero : quadraticQuotientProjection (q + r) = 0 := by
