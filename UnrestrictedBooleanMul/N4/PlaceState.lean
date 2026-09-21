@@ -80,7 +80,7 @@ theorem anfPlaceNormalize_involutive
     (theta : Fin 3) (p : ANF 8) :
     anfPlaceNormalize theta (anfPlaceNormalize theta p) = p := by
   refine MonoidAlgebra.induction_on
-    (p := fun x => anfPlaceNormalize theta (anfPlaceNormalize theta x) = x)
+    (motive := fun x => anfPlaceNormalize theta (anfPlaceNormalize theta x) = x)
     p ?_ ?_ ?_
   · intro s
     have hs : s = (⟨s.vars⟩ : Monomial 8) := Monomial.ext rfl

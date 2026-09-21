@@ -1,0 +1,12 @@
+mask=10 populated=1796 fibers=1797 max_fiber=5 zero_weight=3 rho0=3 fiber_hist 1:1660 2:122 3:12 4:2 5:1
+effective=13 all_local_gain=5 local_gain_hist 0:1783 1:10 2:3
+effective_span_dim=0 count=1 local_hist 0:1 max=0
+effective_span_dim=1 count=13 local_hist 1:10 2:3 max=2
+effective_span_dim=2 count=70 local_hist 1:6 2:34 3:30 max=3
+effective_span_dim=3 count=202 local_hist 1:1 2:38 3:64 4:99 max=4
+effective_span_dim=4 count=339 local_hist 2:15 3:69 4:147 5:108 max=5
+pair_pair_visits=6406791 plane_q3=1815329 internal_hist 4:526991 5:1228206 6:10131 7:50001
+q3_progress=500000 q4_candidates=51258
+q3_progress=1000000 q4_candidates=69005
+q3_progress=1500000 q4_candidates=69921
+q4_candidates=69962 generated_q4=291530583 optimistic_pruned=90526573 exact_upper_pruned=200141111 all_extension_q3=0 effective_extension_q3=1977 exact_evaluated=69962 upper_hist 11:30802 12:18164 13:471 14:16839 15:2362 16:1324 rho_hist 3:16542 4:10234 5:27069 6:15040 7:1077 best=7 best_k=8 best_local_gain=4 best_relation_gain=0 best_basis=17587,77027,165032,262144,

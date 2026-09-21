@@ -1,0 +1,3 @@
+N6_CANONICALIZATION_CROSSCHECK_PASS
+concise_orbits=14 canonical_key=lexicographic_point_set
+endpoint_local=pass endpoint_zero_local=pass

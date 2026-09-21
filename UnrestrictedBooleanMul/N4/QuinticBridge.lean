@@ -116,6 +116,7 @@ theorem anfQuinticAnchorProbe_X_mul_monomialList
       rw [anfMonomialList, mul_add, map_add, ih]
       funext k
       simp [X, monomial_mul, monomialListProbeModel]
+      rfl
 
 theorem degreeLE_anfMonomialList {d : Nat}
     (sets : List (Finset (Fin 8)))

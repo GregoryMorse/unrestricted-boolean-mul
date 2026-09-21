@@ -26,7 +26,8 @@ def anfSexticProbe : ANF 8 →ₗ[F₂] F₂ where
 
 @[simp] theorem anfSexticProbe_monomial (s : Finset (Fin 8)) :
     anfSexticProbe (monomial s) = if s = sexticProbeSet then 1 else 0 := by
-  simp [anfSexticProbe, coeff_monomial]
+  change (monomial s : ANF 8).coeff ⟨sexticProbeSet⟩ = _
+  exact coeff_monomial s sexticProbeSet
 
 @[simp] theorem sexticProbeSet_card : sexticProbeSet.card = 6 := by
   decide

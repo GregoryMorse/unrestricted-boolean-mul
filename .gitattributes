@@ -1,0 +1,3 @@
+# The n6 handoff is an immutable byte-level snapshot with its own SHA256SUMS.
+# Never normalize its line endings during checkout or staging.
+n6/artifact/** -text

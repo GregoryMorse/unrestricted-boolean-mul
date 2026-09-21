@@ -8,7 +8,7 @@ namespace UnrestrictedBooleanMul.N3Certificate
 abbrev F2 := ZMod 2
 
 theorem mul_self_f2 (x : F2) : x * x = x := by
-  fin_cases x <;> decide
+  rcases f2_eq_zero_or_one x with rfl | rfl <;> simp
 
 theorem pow_two_f2 (x : F2) : x ^ 2 = x := by
   rw [pow_two, mul_self_f2]

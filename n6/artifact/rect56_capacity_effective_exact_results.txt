@@ -1,0 +1,56 @@
+exact pair_pair_visits=5021511 plane_q3=1367651
+exact plane_profile (k=4,d=0,rho=3):6108 (k=4,d=0,rho=4):221586 (k=4,d=1,rho=4):96 (k=4,d=1,rho=5):2256 (k=4,d=2,rho=5):90 (k=4,d=2,rho=6):297 (k=5,d=0,rho=3):824934 (k=5,d=0,rho=4):149868 (k=5,d=0,rho=5):933 (k=5,d=1,rho=4):64668 (k=5,d=1,rho=5):6930 (k=5,d=2,rho=5):35556 (k=5,d=2,rho=6):216 (k=5,d=3,rho=6):378 (k=6,d=0,rho=3):1176 (k=6,d=0,rho=4):1230 (k=6,d=0,rho=5):446 (k=6,d=0,rho=6):196 (k=6,d=1,rho=4):654 (k=6,d=1,rho=5):192 (k=6,d=2,rho=5):162 (k=7,d=0,rho=3):44010 (k=7,d=0,rho=4):6 (k=7,d=0,rho=5):318 (k=7,d=0,rho=6):14 (k=7,d=1,rho=4):3414 (k=7,d=1,rho=5):75 (k=7,d=2,rho=5):1842
+exact hidden_singleton_upper 7:45186 8:7308 9:1031 10:210 best=10
+exact q3_progress=50000 dense_q4=1143725
+exact q3_progress=100000 dense_q4=2658354
+exact q3_progress=150000 dense_q4=3729974
+exact q3_progress=200000 dense_q4=4966285
+exact q3_progress=250000 dense_q4=6001668
+exact q3_progress=300000 dense_q4=7074833
+exact q3_progress=350000 dense_q4=7981824
+exact q3_progress=400000 dense_q4=8826523
+exact q3_progress=450000 dense_q4=9626693
+exact q3_progress=500000 dense_q4=10438382
+exact q3_progress=550000 dense_q4=11197906
+exact q3_progress=600000 dense_q4=12016340
+exact q3_progress=650000 dense_q4=12730421
+exact q3_progress=700000 dense_q4=13494211
+exact q3_progress=750000 dense_q4=14165573
+exact q3_progress=800000 dense_q4=14829171
+exact q3_progress=850000 dense_q4=15620824
+exact q3_progress=900000 dense_q4=16226533
+exact q3_progress=950000 dense_q4=16827617
+exact q3_progress=1000000 dense_q4=17407305
+exact q3_progress=1050000 dense_q4=17963724
+exact q3_progress=1100000 dense_q4=18490136
+exact q3_progress=1150000 dense_q4=19082192
+exact q3_progress=1200000 dense_q4=19759131
+exact q3_progress=1250000 dense_q4=20394083
+exact q3_progress=1300000 dense_q4=21022229
+exact q3_progress=1350000 dense_q4=21721084
+exact dense_q4=22009456 q4_upper_pruned=0
+exact tight_hidden_h3=210 hidden_lines=3346190 hidden_candidates=3722
+exact q4_progress=1000000 dense_best=9
+exact q4_progress=2000000 dense_best=9
+exact q4_progress=3000000 dense_best=9
+exact q4_progress=4000000 dense_best=9
+exact q4_progress=5000000 dense_best=9
+exact q4_progress=6000000 dense_best=9
+exact q4_progress=7000000 dense_best=9
+exact q4_progress=8000000 dense_best=9
+exact q4_progress=9000000 dense_best=9
+exact q4_progress=10000000 dense_best=9
+exact q4_progress=11000000 dense_best=9
+exact q4_progress=12000000 dense_best=9
+exact q4_progress=13000000 dense_best=9
+exact q4_progress=14000000 dense_best=9
+exact q4_progress=15000000 dense_best=9
+exact q4_progress=16000000 dense_best=9
+exact q4_progress=17000000 dense_best=9
+exact q4_progress=18000000 dense_best=9
+exact q4_progress=19000000 dense_best=9
+exact q4_progress=20000000 dense_best=9
+exact q4_progress=21000000 dense_best=9
+exact q4_progress=22000000 dense_best=9
+exact dense_evaluated=1386179181 dense_upper_pruned=1527963150 dense_best=9
+exact generated_q5=133880246 upper_pruned=124629816 candidates=1301345 all_singleton_scans=470932 effective_singleton_scans=4736676 rho_hist 7:1245387 8:55490 9:468 best=9 best_basis=859389,197700,33859,29861,792,

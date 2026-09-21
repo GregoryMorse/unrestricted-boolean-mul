@@ -1,0 +1,23 @@
+name: Palomar n4 mechanical preflight (no submission)
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Exact public 40-character commit to verify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    uses: PalomarRegistry/PalomarSubmission/.github/workflows/submission.yml@3561d237dcc4b28482558ad28a64d767d7cc8615
+    with:
+      repository: GregoryMorse/unrestricted-boolean-mul
+      commit: ${{ inputs.commit }}
+      pipeline_commit: 3561d237dcc4b28482558ad28a64d767d7cc8615
+      request_id: n4-${{ github.run_id }}-${{ github.run_attempt }}
+      mode: full
+      options: '{"comparator_config_path":"comparator.json","formalization_metadata_path":"formalization.yaml"}'

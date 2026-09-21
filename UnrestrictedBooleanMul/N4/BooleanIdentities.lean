@@ -21,7 +21,7 @@ theorem monomial_mul_self {m : Nat} (s : Monomial m) : s * s = s := by
 
 /-- Frobenius is the identity on the Boolean ANF algebra. -/
 @[simp] theorem anf_mul_self {m : Nat} (p : ANF m) : p * p = p := by
-  refine MonoidAlgebra.induction_on (p := fun x => x * x = x) p ?_ ?_ ?_
+  refine MonoidAlgebra.induction_on (motive := fun x => x * x = x) p ?_ ?_ ?_
   · intro s
     rw [MonoidAlgebra.of_apply]
     simp only [MonoidAlgebra.single_mul_single, one_mul]

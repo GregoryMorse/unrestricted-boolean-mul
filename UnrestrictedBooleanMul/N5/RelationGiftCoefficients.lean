@@ -144,10 +144,9 @@ theorem targetCoeffQuotientEmbedding_injective
     (Q : Submodule F₂ QuadraticQuotient) :
     Function.Injective (targetCoeffQuotientEmbedding Q) := by
   rw [← LinearMap.ker_eq_bot]
-  rw [targetCoeffQuotientEmbedding, Submodule.ker_mapQ]
-  change (localDisplacementCoeffSpace Q).map
-      (Submodule.mkQ (localDisplacementCoeffSpace Q)) = ⊥
-  exact Submodule.mkQ_map_self _
+  exact (Submodule.ker_mapQ (localDisplacementCoeffSpace Q)
+    (localDisplacementSpace Q) targetTwoLinear (fun _ hc => hc)).trans
+      (Submodule.mkQ_map_self (localDisplacementCoeffSpace Q))
 
 /-- Relation gifts expressed directly in the coefficient quotient. -/
 def defectRelationCoeffMap

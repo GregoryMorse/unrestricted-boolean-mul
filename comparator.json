@@ -1,0 +1,13 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "UnrestrictedBooleanMul.mc_mul_zero",
+    "UnrestrictedBooleanMul.mc_mul_one",
+    "UnrestrictedBooleanMul.mc_mul_two",
+    "UnrestrictedBooleanMul.mc_mul_three",
+    "UnrestrictedBooleanMul.N4.no_eight_gate_circuit",
+    "UnrestrictedBooleanMul.N4.mc_mul_four"
+  ],
+  "permitted_axioms": ["propext", "Classical.choice", "Quot.sound"]
+}

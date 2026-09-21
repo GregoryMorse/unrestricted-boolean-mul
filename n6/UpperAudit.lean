@@ -1,0 +1,13 @@
+import UnrestrictedBooleanMul.N6.Upper
+
+#print axioms UnrestrictedBooleanMul.BilinearFormula.recombine
+#print axioms UnrestrictedBooleanMul.model_complexity_chain
+#print axioms UnrestrictedBooleanMul.N6.seventeen
+#print axioms UnrestrictedBooleanMul.N6.sixteen
+#print axioms UnrestrictedBooleanMul.N6.bilinearRank_six_le_seventeen
+#print axioms UnrestrictedBooleanMul.N6.bilinearRank_five_six_le_sixteen
+#print axioms UnrestrictedBooleanMul.N6.quadraticComplexity_six_le_seventeen
+#print axioms UnrestrictedBooleanMul.N6.quadraticComplexity_five_six_le_sixteen
+#print axioms UnrestrictedBooleanMul.N6.polynomialTensor_six_realize
+#print axioms UnrestrictedBooleanMul.N6.mul_six_upper
+#print axioms UnrestrictedBooleanMul.N6.mul_five_six_upper

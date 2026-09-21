@@ -42,13 +42,17 @@ output is a trusted premise of the theorem.
 Multiplication: Rational Places, Hasse Jets, and the Failure of Nonlinear
 Feedback*, Gregory Morse.
 
-The manuscript is distributed separately through arXiv. Its public identifier
-will be added here after announcement. No TeX or PDF copy is kept in this
-repository.
+The manuscript is [arXiv:2608.30238v1](https://arxiv.org/abs/2608.30238v1).
+No TeX or PDF copy is kept in this repository. The default Lean build and
+`lean.yml` now isolate this published result from n5/n6 research.
+See [Palomar audit](PALOMAR_AUDIT.md) and [submission preparation](SUBMISSION.md).
 
 ## Immutable snapshot
 
-Current Lean-complete release: [`n4-arxiv-v2`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v2).
+Published-paper snapshot: [`n4-arxiv-v2`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v2).
+The proposed `n4-arxiv-v3` update pins Lean 4.33.1 and the isolated n4 CI plus
+Palomar interface. Its release notes carry the exact public commit and
+verification evidence; do not infer a passing run merely from these files.
 
 Historical pre-Lean computational snapshot:
 [`n4-arxiv-v1`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v1).

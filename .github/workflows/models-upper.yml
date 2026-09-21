@@ -1,0 +1,53 @@
+name: Positive Lean models and upper witnesses
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'UnrestrictedBooleanMul/ANF.lean'
+      - 'UnrestrictedBooleanMul/Circuit.lean'
+      - 'UnrestrictedBooleanMul/Models.lean'
+      - 'UnrestrictedBooleanMul/N6/Upper.lean'
+      - 'n6/UpperAudit.lean'
+      - 'lake*'
+      - 'lean-toolchain'
+      - 'scripts/ci_verify.py'
+      - '.github/workflows/models-upper.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: models-upper-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+        with:
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          leanchecker: false
+          use-github-cache: false
+          use-mathlib-cache: false
+      - name: Restore pinned Mathlib cache
+        run: lake exe cache get
+      - name: Verify the selected proof closure, serially
+        run: python3 scripts/ci_verify.py --profile models-upper --build
+      - name: Preserve source hashes, command logs and enforced axiom audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: models-upper-verification-${{ github.sha }}
+          path: .lake/ci/models-upper.json
+          if-no-files-found: error
+      - name: Check original witness transcription
+        run: python3 -B -m unittest discover -s n6 -p test_lean_witness_source.py -v

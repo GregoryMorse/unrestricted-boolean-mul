@@ -1,0 +1,4 @@
+GF2_CANONICAL_KEY_PROPERTY_TEST_PASS
+exhaustive_ordered_triples=262144 distinct_subspaces=2110
+old_noncanonical_duplicate_spaces=2046
+random_width55_trials=20000

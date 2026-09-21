@@ -1,8 +1,11 @@
-name: Lean verification
+name: Published n4 Lean verification
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['n4-*']
   pull_request:
+  workflow_dispatch:
   schedule:
     - cron: "23 4 * * 1"
 
@@ -10,68 +13,38 @@ permissions:
   contents: read
 
 concurrency:
-  group: lean-${{ github.ref }}
+  group: n4-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
+    env:
+      LEAN_NUM_THREADS: "1"
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Install pinned Lean toolchain
-        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+      - uses: actions/checkout@v4
+      - name: Check complete n4 source manifest and CI isolation controls
+        run: |
+          python3 scripts/check_n4_manifest.py
+          python3 -m unittest discover -s scripts -p test_ci_verify.py -v
+      - uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
         with:
           auto-config: false
-          use-github-cache: true
+          build: false
+          test: false
+          lint: false
+          leanchecker: false
+          use-github-cache: false
           use-mathlib-cache: false
-
-      - name: Restore Mathlib binary cache
-        run: lake exe cache --cache-from=legacy get
-
-      - name: Restore project object cache
-        id: project-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: .lake/build
-          key: ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
-
-      - name: Build the active n5 replay bridge first
-        run: lake build UnrestrictedBooleanMul.N5.CapacityRestart UnrestrictedBooleanMul.N5.QuadraticReturn UnrestrictedBooleanMul.N5.QuadraticReturnSecant UnrestrictedBooleanMul.N5.QuadraticReturnFeedback UnrestrictedBooleanMul.N5.QuadraticReturnRankTwo UnrestrictedBooleanMul.N5.QuadraticReturnSymmetry UnrestrictedBooleanMul.N5.QuadraticReturnKernel UnrestrictedBooleanMul.N5.QuadraticReturnHankelKernel UnrestrictedBooleanMul.N5.QuadraticReturnHistorySemantic
-
-      - name: Preserve focused build objects for repair iterations
+      - name: Restore pinned Mathlib cache
+        run: lake exe cache get
+      - name: Verify the selected proof closure, serially
+        run: python3 scripts/ci_verify.py --profile n4 --build --replay
+      - name: Preserve source hashes, command logs and enforced axiom audit
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/upload-artifact@v4
         with:
-          path: .lake/build
-          key: ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}-focused
-
-      - name: Build all Lean modules
-        run: lake build
-
-      - name: Reject non-standard proof escape hatches
-        run: |
-          if rg -n '(^|[^A-Za-z_])(sorry|admit|native_decide)([^A-Za-z_]|$)|^[[:space:]]*axiom[[:space:]]' UnrestrictedBooleanMul/N5 UnrestrictedBooleanMul/Quadratic.lean UnrestrictedBooleanMul/QuadraticSupport.lean; then
-            exit 1
-          fi
-
-      - name: Print headline theorem axioms
-        run: lake env lean AxiomAudit.lean
-
-      - name: Replay declarations with leanchecker
-        run: lake env leanchecker UnrestrictedBooleanMul
-
-      - name: Save project object cache
-        if: success() && steps.project-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: .lake/build
-          key: ${{ runner.os }}-lean-project-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
-
-      - name: Replay from source on the weekly schedule
-        if: github.event_name == 'schedule'
-        run: lake env leanchecker --fresh UnrestrictedBooleanMul
+          name: n4-verification-${{ github.sha }}
+          path: .lake/ci/n4.json
+          if-no-files-found: error

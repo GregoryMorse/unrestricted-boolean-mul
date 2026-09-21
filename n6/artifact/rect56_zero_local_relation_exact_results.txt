@@ -1,0 +1,14 @@
+zero_local_points=1785 effective=12 pair_pair_visits=4778268 planes=1310312
+checked=100000 best=25 best_relation=4
+checked=200000 best=25 best_relation=4
+checked=300000 best=31 best_relation=4
+checked=400000 best=31 best_relation=4
+checked=500000 best=31 best_relation=4
+checked=600000 best=31 best_relation=4
+checked=700000 best=31 best_relation=4
+checked=800000 best=31 best_relation=4
+checked=900000 best=31 best_relation=4
+checked=1000000 best=31 best_relation=4
+checked=1100000 best=31 best_relation=4
+checked=1200000 best=31 best_relation=4
+completed=1250825 best=31 best_relation=4 dense_occurrences=1809558200 found_twelve=0
