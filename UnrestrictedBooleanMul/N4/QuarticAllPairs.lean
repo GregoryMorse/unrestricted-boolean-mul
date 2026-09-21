@@ -88,7 +88,7 @@ theorem quarticPairSeparator_target_check :
 /- Each finite check is kernel-reduced one rational-place pair at a time.
 The original all-three-pairs reduction exceeded a 4-GiB Lean heap on 4.33.1.
 Separate declarations bound the reduction cache without changing statements,
-using native evaluation, or raising the CI memory limit. -/
+using native evaluation, or introducing axioms. -/
 set_option maxHeartbeats 3000000 in
 set_option maxRecDepth 100000 in
 private theorem quarticPairSeparator_first_basis_check_0 :

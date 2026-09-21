@@ -1,7 +1,8 @@
 """Scoped serial CI: no aggregate research build and no assumed axiom pass.
 
-Linux builds use one CPU, one Lean thread, a 4-GiB Lean heap (Lakefile),
-and a 10-GiB virtual-address limit. No heavy build runs on Windows.
+Linux builds use one CPU, one Lean thread, an 8-GiB Lean heap (Lakefile),
+and a 12-GiB virtual-address limit, on runners with at least 14 GiB of RAM.
+No heavy build runs on Windows.
 Mathlib's pinned binary cache must be restored before --build.
 """
 from __future__ import annotations
@@ -129,9 +130,17 @@ def inspect(profile: str) -> dict:
             "source_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in files}}
 
 
+def validate_runner_memory(physical_bytes: int):
+    # Leave room for the runner and the small parent Lake process. The prior
+    # 4-GiB experiment failed in n4 QuarticIdempotence; the earlier 4.33.1
+    # recheck passed the entire n4 chain at 8 GiB. Never silently remove caps.
+    if physical_bytes < 14 * 1024**3:
+        raise RuntimeError('This bounded proof build requires at least 14 GiB of runner RAM.')
+
+
 def limits():
     import resource
-    resource.setrlimit(resource.RLIMIT_AS, (10 * 1024**3, 10 * 1024**3))
+    resource.setrlimit(resource.RLIMIT_AS, (12 * 1024**3, 12 * 1024**3))
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     os.sched_setaffinity(0, {min(os.sched_getaffinity(0))})
 
@@ -170,6 +179,10 @@ def main() -> int:
         return 0
     if sys.platform != "linux":
         raise SystemExit("Heavy proof builds are Linux-only; use the scoped GitHub workflow.")
+    physical_bytes = os.sysconf('SC_PHYS_PAGES') * os.sysconf('SC_PAGE_SIZE')
+    validate_runner_memory(physical_bytes)
+    report['resource_limits'] = {'lean_heap_mib': 8192, 'address_space_gib': 12,
+                                 'cpu_workers': 1, 'physical_memory_bytes': physical_bytes}
     report.update(complete=False, commands=[])
     output_path = ROOT / ".lake" / "ci" / f"{args.profile}.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -180,7 +193,7 @@ def main() -> int:
         for module in report["modules"]:
             print(f"Building {module}", flush=True)
             run(["lake", "build", module], report)
-        output = run(["lake", "env", "lean", "-j1", "-M4096", report["audit"]], report)
+        output = run(["lake", "env", "lean", "-j1", "-M8192", report["audit"]], report)
         report["axioms"] = validate_axioms(output, report["expected_axioms"])
         if args.profile == "n4":
             run(["lake", "build"], report)

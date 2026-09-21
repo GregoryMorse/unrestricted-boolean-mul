@@ -7,6 +7,12 @@ import ci_verify as ci
 
 
 class ScopedCITests(unittest.TestCase):
+    def test_small_runners_are_rejected(self):
+        for physical in (0, 7 * 1024**3, 14 * 1024**3 - 1):
+            with self.assertRaises(RuntimeError):
+                ci.validate_runner_memory(physical)
+        ci.validate_runner_memory(14 * 1024**3)
+
     def test_palomar_preflight_declares_confirmed_authority(self):
         workflow = (ci.ROOT / '.github/workflows/palomar.yml').read_text(encoding='utf-8')
         request_id = next(line.split('request_id:', 1)[1].strip()

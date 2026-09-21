@@ -59,8 +59,11 @@ python3 scripts/ci_verify.py --profile n4 --build --replay
 
 CI is the preferred place for fresh replay. Do not run memory-intensive
 parallel builds on Windows. The runner processes the local dependency
-closure one module at a time, uses one CPU/thread, a 4-GiB Lean heap and
-a 10-GiB virtual-address cap, and kills timed-out process groups.
+closure one module at a time, uses one CPU/thread, an 8-GiB Lean heap and
+a 12-GiB virtual-address cap, requires at least 14 GiB of runner RAM,
+and kills timed-out process groups. The 4-GiB trial was insufficient for
+the existing n4 quartic-idempotence module; the complete n4 chain had
+previously passed the Lean 4.33.1 recheck at 8 GiB.
 `lake build` without arguments imports no n5/n6 research.
 
 ## Separate research workflows

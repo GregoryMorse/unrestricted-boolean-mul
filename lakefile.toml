@@ -1,7 +1,7 @@
 name = "unrestricted_boolean_mul"
 version = "0.1.0"
 defaultTargets = ["UnrestrictedBooleanMul"]
-moreLeanArgs = ["-j1", "-M4096"]
+moreLeanArgs = ["-j1", "-M8192"]
 
 [leanOptions]
 autoImplicit = false
