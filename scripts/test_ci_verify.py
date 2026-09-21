@@ -1,4 +1,5 @@
 import tempfile
+import json
 from pathlib import Path
 import unittest
 
@@ -6,6 +7,16 @@ import ci_verify as ci
 
 
 class ScopedCITests(unittest.TestCase):
+    def test_palomar_preflight_declares_confirmed_authority(self):
+        workflow = (ci.ROOT / '.github/workflows/palomar.yml').read_text(encoding='utf-8')
+        options = next(line.split('options:', 1)[1].strip().strip("'")
+                       for line in workflow.splitlines() if line.strip().startswith('options:'))
+        self.assertEqual(json.loads(options), {
+            'comparator_config_path': 'comparator.json',
+            'formalization_metadata_path': 'formalization.yaml',
+            'authorization_relationship': 'maintainer',
+        })
+
     def test_profiles_have_distinct_audits(self):
         self.assertEqual(len({x[0] for x in ci.PROFILES.values()}), 4)
         for audit, roots in ci.PROFILES.values():
