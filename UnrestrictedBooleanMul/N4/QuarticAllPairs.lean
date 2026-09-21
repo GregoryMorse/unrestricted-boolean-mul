@@ -85,26 +85,93 @@ theorem quarticPairSeparator_target_check :
         (targetTwo (outsideRankTwoWord i)) = 1 := by
   decide
 
+/- Each finite check is kernel-reduced one rational-place pair at a time.
+The original all-three-pairs reduction exceeded a 4-GiB Lean heap on 4.33.1.
+Separate declarations bound the reduction cache without changing statements,
+using native evaluation, or raising the CI memory limit. -/
 set_option maxHeartbeats 3000000 in
 set_option maxRecDepth 100000 in
+private theorem quarticPairSeparator_first_basis_check_0 :
+    ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
+      quarticPairSeparatorLinear 0 a b c d i
+        (vectorWedge
+          (quarticSupportVector (quarticSupportPair 0).1 a b)
+          (coordinateLinear j)) = 0 := by
+  decide
+
+set_option maxHeartbeats 3000000 in
+set_option maxRecDepth 100000 in
+private theorem quarticPairSeparator_first_basis_check_1 :
+    ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
+      quarticPairSeparatorLinear 1 a b c d i
+        (vectorWedge
+          (quarticSupportVector (quarticSupportPair 1).1 a b)
+          (coordinateLinear j)) = 0 := by
+  decide
+
+set_option maxHeartbeats 3000000 in
+set_option maxRecDepth 100000 in
+private theorem quarticPairSeparator_first_basis_check_2 :
+    ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
+      quarticPairSeparatorLinear 2 a b c d i
+        (vectorWedge
+          (quarticSupportVector (quarticSupportPair 2).1 a b)
+          (coordinateLinear j)) = 0 := by
+  decide
+
 theorem quarticPairSeparator_first_basis_check :
     ∀ (pair : Fin 3) (a b c d : F₂) (i : Fin 9) (j : Fin 8),
       quarticPairSeparatorLinear pair a b c d i
         (vectorWedge
           (quarticSupportVector (quarticSupportPair pair).1 a b)
           (coordinateLinear j)) = 0 := by
+  intro pair
+  fin_cases pair
+  · exact quarticPairSeparator_first_basis_check_0
+  · exact quarticPairSeparator_first_basis_check_1
+  · exact quarticPairSeparator_first_basis_check_2
+
+set_option maxHeartbeats 3000000 in
+set_option maxRecDepth 100000 in
+private theorem quarticPairSeparator_second_basis_check_0 :
+    ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
+      quarticPairSeparatorLinear 0 a b c d i
+        (vectorWedge
+          (quarticSupportVector (quarticSupportPair 0).2 c d)
+          (coordinateLinear j)) = 0 := by
   decide
 
 set_option maxHeartbeats 3000000 in
 set_option maxRecDepth 100000 in
+private theorem quarticPairSeparator_second_basis_check_1 :
+    ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
+      quarticPairSeparatorLinear 1 a b c d i
+        (vectorWedge
+          (quarticSupportVector (quarticSupportPair 1).2 c d)
+          (coordinateLinear j)) = 0 := by
+  decide
+
+set_option maxHeartbeats 3000000 in
+set_option maxRecDepth 100000 in
+private theorem quarticPairSeparator_second_basis_check_2 :
+    ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
+      quarticPairSeparatorLinear 2 a b c d i
+        (vectorWedge
+          (quarticSupportVector (quarticSupportPair 2).2 c d)
+          (coordinateLinear j)) = 0 := by
+  decide
+
 theorem quarticPairSeparator_second_basis_check :
     ∀ (pair : Fin 3) (a b c d : F₂) (i : Fin 9) (j : Fin 8),
       quarticPairSeparatorLinear pair a b c d i
         (vectorWedge
           (quarticSupportVector (quarticSupportPair pair).2 c d)
           (coordinateLinear j)) = 0 := by
-  decide
-
+  intro pair
+  fin_cases pair
+  · exact quarticPairSeparator_second_basis_check_0
+  · exact quarticPairSeparator_second_basis_check_1
+  · exact quarticPairSeparator_second_basis_check_2
 theorem quarticPairSeparator_first (pair : Fin 3) (a b c d : F₂)
     (i : Fin 9) (z : LinearForm) :
     quarticPairSeparatorLinear pair a b c d i
