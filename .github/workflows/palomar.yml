@@ -23,4 +23,6 @@ jobs:
       # Runs are isolated by GitHub run ID/attempt in the upstream concurrency key.
       request_id: n4palomar001
       mode: full
-      options: '{"comparator_config_path":"comparator.json","formalization_metadata_path":"formalization.yaml","authorization_relationship":"maintainer"}'
+      # The workflow consumes the human-readable relationship; the HTTP intake
+      # API instead uses the short enum "maintainer". Do not interchange them.
+      options: '{"comparator_config_path":"comparator.json","formalization_metadata_path":"formalization.yaml","authorization_relationship":"I am a responsible author or maintainer"}'

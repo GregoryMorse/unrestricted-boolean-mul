@@ -17,7 +17,7 @@ class ScopedCITests(unittest.TestCase):
         self.assertEqual(json.loads(options), {
             'comparator_config_path': 'comparator.json',
             'formalization_metadata_path': 'formalization.yaml',
-            'authorization_relationship': 'maintainer',
+            'authorization_relationship': 'I am a responsible author or maintainer',
         })
 
     def test_profiles_have_distinct_audits(self):
