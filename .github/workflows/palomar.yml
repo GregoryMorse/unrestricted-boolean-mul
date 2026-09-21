@@ -18,6 +18,9 @@ jobs:
       repository: GregoryMorse/unrestricted-boolean-mul
       commit: ${{ inputs.commit }}
       pipeline_commit: 3561d237dcc4b28482558ad28a64d767d7cc8615
-      request_id: n4-${{ github.run_id }}-${{ github.run_attempt }}
+      # The reusable workflow describes a general identifier, but its pinned
+      # submission parser requires exactly twelve lowercase alphanumeric bytes.
+      # Runs are isolated by GitHub run ID/attempt in the upstream concurrency key.
+      request_id: n4palomar001
       mode: full
       options: '{"comparator_config_path":"comparator.json","formalization_metadata_path":"formalization.yaml","authorization_relationship":"maintainer"}'

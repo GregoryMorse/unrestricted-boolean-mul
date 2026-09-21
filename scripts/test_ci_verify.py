@@ -9,6 +9,9 @@ import ci_verify as ci
 class ScopedCITests(unittest.TestCase):
     def test_palomar_preflight_declares_confirmed_authority(self):
         workflow = (ci.ROOT / '.github/workflows/palomar.yml').read_text(encoding='utf-8')
+        request_id = next(line.split('request_id:', 1)[1].strip()
+                          for line in workflow.splitlines() if line.strip().startswith('request_id:'))
+        self.assertRegex(request_id, r'^[a-z0-9]{12}$')
         options = next(line.split('options:', 1)[1].strip().strip("'")
                        for line in workflow.splitlines() if line.strip().startswith('options:'))
         self.assertEqual(json.loads(options), {
