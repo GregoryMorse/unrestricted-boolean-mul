@@ -50,12 +50,14 @@ See [Palomar audit](PALOMAR_AUDIT.md) and [submission preparation](SUBMISSION.md
 ## Immutable snapshot
 
 Published-paper snapshot: [`n4-arxiv-v2`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v2).
-The proposed `n4-arxiv-v3` update pins Lean 4.33.1 and the isolated n4 CI plus
-Palomar interface. Its release notes carry the exact public commit and
-verification evidence; do not infer a passing run merely from these files.
+The [`n4-arxiv-v3` release](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v3)
+pins Lean 4.33.1 and the isolated n4 CI plus Palomar interface. The
+[completed audit](PALOMAR_AUDIT.md) records passing CI, leanchecker,
+Comparator and NanoDa checks. Release notes and attached reports identify
+the exact commit for each run, including documentation-only corrections.
 
 Historical pre-Lean computational snapshot:
 [`n4-arxiv-v1`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v1).
-That tag remains unchanged. The current tag resolves to the exact public
-commit recorded by the associated paper together with its clean-checkout
-verification date.
+That tag remains unchanged. The paper continues to identify v2; the v3
+release is a later toolchain/CI and documentation update, not a rewrite of
+the paper's historical snapshot.
