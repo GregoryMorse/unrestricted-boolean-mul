@@ -137,7 +137,11 @@ already verified proof snapshot, not this document.
 
 `n4/LEAN_SHA256SUMS.txt` hashes the source/configuration files, including this
 audit, but deliberately excludes itself. The release's separate
-`SHA256SUMS.txt` likewise excludes itself. The manifest checker is hashed as
+`SHA256SUMS.txt` likewise excludes itself. The paper-specific
+`n4/SHA256SUMS.txt` covers its README, the inner Lean manifest and regression
+artifacts; it also excludes itself. Thus the hash references run from source
+files through separate manifests, never back into the same manifest.
+The manifest checker is hashed as
 an ordinary file; it does not embed its own digest. These checks detect byte
 changes. They do not prove the theorem or certify the audit's truth:
 the completed CI, Comparator and independent kernel runs provide that evidence.
