@@ -7,6 +7,13 @@ import ci_verify as ci
 
 
 class ScopedCITests(unittest.TestCase):
+    def test_n4_msc_matches_published_arxiv_classification(self):
+        metadata = (ci.ROOT / 'formalization.yaml').read_text(encoding='utf-8')
+        rows = [line.strip() for line in metadata.splitlines()
+                if line.strip().startswith('msc2020:')]
+        self.assertEqual(rows, ['msc2020: [68Q06, 68Q17, 68W30, 15A75, 94D10]'])
+        self.assertIn('68Q06 is primary; the remaining codes are secondary', metadata)
+
     def test_small_runners_are_rejected(self):
         for physical in (0, 7 * 1024**3, 14 * 1024**3 - 1):
             with self.assertRaises(RuntimeError):

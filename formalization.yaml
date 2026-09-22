@@ -16,7 +16,9 @@ project:
   license: MIT
 classification:
   arxiv: [cs.CC, cs.DS]
-  msc2020: []
+  # arXiv:2608.30238v1: 68Q06 is primary; the remaining codes are secondary.
+  # Schema v0.4 represents MSC codes as a flat list, not primary/secondary fields.
+  msc2020: [68Q06, 68Q17, 68W30, 15A75, 94D10]
 sources:
   - title: >-
       Unrestricted Boolean Multiplicative Complexity of Four-Term Binary

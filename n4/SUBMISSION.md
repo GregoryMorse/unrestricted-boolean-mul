@@ -1,13 +1,14 @@
 # Palomar submission preparation (n4 only)
 
-No submission or registration has been performed. Gregory Morse confirmed
-responsible-author/maintainer status and authorized the official mechanical
-preflight, but not intake or permanent registration.
+Gregory Morse reports that n4 has been registered and requests a new tag to
+resubmit the MSC metadata correction. This document prepares that successor;
+no new intake or registration is performed by these repository changes.
+The author remains responsible for the submission and maintainer attestation.
 
 | Form field | Prepared value |
 | --- | --- |
 | Repository | `GregoryMorse/unrestricted-boolean-mul` |
-| Commit | Full public SHA in the final `n4-arxiv-v3` release notes; never a branch/tag string |
+| Commit | Full public SHA in the `n4-arxiv-v4` release notes; never a branch/tag string |
 | Comparator configuration | `comparator.json` |
 | Project directory | blank (repository root) |
 | Formalization metadata | `formalization.yaml` |
@@ -20,8 +21,22 @@ preflight, but not intake or permanent registration.
 The selected claims and source correspondence are in
 [PALOMAR_AUDIT.md](PALOMAR_AUDIT.md). Metadata previews the public name,
 description, author, AI roles, MIT license and source-based origin.
-Classifications `cs.CC` and `cs.DS` follow the paper's categories; no MSC
-classification is invented. No definition hole is compared.
+Classifications `cs.CC` and `cs.DS` follow the paper's categories. MSC2020
+codes match the [arXiv record](https://arxiv.org/abs/2608.30238): **68Q06
+(primary); 68Q17, 68W30, 15A75, 94D10 (secondary)**. Schema v0.4 stores a
+flat list, so the primary code is first and its role is also documented in
+the YAML comment. No definition hole is compared.
+
+## MSC metadata correction (2026-09-22)
+
+The v3 metadata inadvertently left `msc2020` empty. The optional schema
+field accepted that omission; it was not a theorem or kernel-verification
+failure. The v4 successor restores all five published classifications and
+adds a regression check. It does not change the Lean proofs, their stated
+hypotheses, the toolchain, Comparator, or workflow scope. Historical audit
+reports retain their original commit identifiers. Use v4's exact commit
+and its own verification results for the author's requested resubmission;
+do not relabel a v3 report as verification of v4.
 
 ## Completed evidence and exact-commit handoff
 
