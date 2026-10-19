@@ -22,7 +22,7 @@ namespace N5
 
 noncomputable section
 
-private abbrev representedTripleWitness
+abbrev representedTripleWitness
     (Q : Submodule F₂ QuadraticQuotient)
     (i j k : Fin 4)
     (hi : IsRepresentedPlace Q i)
