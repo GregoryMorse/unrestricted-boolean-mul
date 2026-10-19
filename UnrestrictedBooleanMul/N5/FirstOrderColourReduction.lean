@@ -1,8 +1,12 @@
-import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
-import UnrestrictedBooleanMul.N5.FirstOrderEscapeBudget
-import UnrestrictedBooleanMul.N5.ColourCases
-import UnrestrictedBooleanMul.N5.RankOneCircuitEscape
-import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+public import UnrestrictedBooleanMul.N5.FirstOrderEscapeBudget
+public import UnrestrictedBooleanMul.N5.ColourCases
+public import UnrestrictedBooleanMul.N5.RankOneCircuitEscape
+public import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
+
+@[expose] public section
 
 /-!
 # Reduction of first-order saturation to the three factor-colour branches

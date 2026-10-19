@@ -1,10 +1,14 @@
-import UnrestrictedBooleanMul.N5.CostedSuffix
-import UnrestrictedBooleanMul.N5.CompletionDeficit
-import UnrestrictedBooleanMul.N5.DefectOneCapacity
-import UnrestrictedBooleanMul.N5.DefectTwoCapacity
-import UnrestrictedBooleanMul.N5.LowDefectPrefix
-import UnrestrictedBooleanMul.N5.MainInterface
-import UnrestrictedBooleanMul.N5.RegimeClosure
+module
+
+public import UnrestrictedBooleanMul.N5.CostedSuffix
+public import UnrestrictedBooleanMul.N5.CompletionDeficit
+public import UnrestrictedBooleanMul.N5.DefectOneCapacity
+public import UnrestrictedBooleanMul.N5.DefectTwoCapacity
+public import UnrestrictedBooleanMul.N5.LowDefectPrefix
+public import UnrestrictedBooleanMul.N5.MainInterface
+public import UnrestrictedBooleanMul.N5.RegimeClosure
+
+@[expose] public section
 
 /-!
 # Cost-preserving final regime split

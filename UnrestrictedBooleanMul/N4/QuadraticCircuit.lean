@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N4.QuadraticProjection
-import UnrestrictedBooleanMul.N4.QuadraticLower
-import UnrestrictedBooleanMul.N4.SemanticQuadratic
+module
+
+public import UnrestrictedBooleanMul.N4.QuadraticProjection
+public import UnrestrictedBooleanMul.N4.QuadraticLower
+public import UnrestrictedBooleanMul.N4.SemanticQuadratic
+
+@[expose] public section
 
 /-!
 # Quadratic-circuit boundary

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.PrefixState
+module
+
+public import UnrestrictedBooleanMul.N5.PrefixState
+
+@[expose] public section
 
 /-!
 # A canonical squarefree-quadratic ANF section

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SecondFeedbackUsing
+module
+
+public import UnrestrictedBooleanMul.N4.SecondFeedbackUsing
+
+@[expose] public section
 
 /-!
 # Low--low products after the first feedback

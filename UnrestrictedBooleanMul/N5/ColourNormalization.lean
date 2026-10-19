@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ColourBirth
-import UnrestrictedBooleanMul.N4.BooleanIdentities
+module
+
+public import UnrestrictedBooleanMul.N5.ColourBirth
+public import UnrestrictedBooleanMul.N4.BooleanIdentities
+
+@[expose] public section
 
 /-!
 # Rank-one colour normalization

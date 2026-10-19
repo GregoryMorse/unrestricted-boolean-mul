@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ZeroColourEscapeReduction
-import UnrestrictedBooleanMul.N5.FirstOrderLowCollisionExact
+module
+
+public import UnrestrictedBooleanMul.N5.ZeroColourEscapeReduction
+public import UnrestrictedBooleanMul.N5.FirstOrderLowCollisionExact
+
+@[expose] public section
 
 /-!
 # Exact closure of the fixed first-order zero-colour branch

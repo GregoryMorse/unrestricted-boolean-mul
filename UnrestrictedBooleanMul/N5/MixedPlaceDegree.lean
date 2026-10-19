@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.MixedPlace
+module
+
+public import UnrestrictedBooleanMul.N5.MixedPlace
+
+@[expose] public section
 
 set_option maxRecDepth 10000
 set_option linter.unusedSimpArgs false

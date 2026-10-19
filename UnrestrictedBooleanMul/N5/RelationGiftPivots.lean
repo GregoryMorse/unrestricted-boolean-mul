@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RelationGiftCoefficients
+module
+
+public import UnrestrictedBooleanMul.N5.RelationGiftCoefficients
+
+@[expose] public section
 
 /-!
 # Displacement pivots in target coefficients

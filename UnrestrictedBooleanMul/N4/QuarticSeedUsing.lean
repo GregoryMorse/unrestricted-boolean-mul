@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticCircuit
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticCircuit
+
+@[expose] public section
 
 /-!
 # Normal form for a seed-using useful child

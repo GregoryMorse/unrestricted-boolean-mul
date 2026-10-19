@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticAnnihilator
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticAnnihilator
+
+@[expose] public section
 
 /-!
 # ANF bridge for the quartic idempotence equation

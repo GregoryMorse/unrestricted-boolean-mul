@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.Models
+module
+
+public import UnrestrictedBooleanMul.Models
+
+@[expose] public section
 
 /-! Output recombination and zero-coordinate padding preserve the intended
 bilinear formula semantics. These operations do not change either input block. -/

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.SuffixBudget
+module
+
+public import UnrestrictedBooleanMul.N5.SuffixBudget
+
+@[expose] public section
 
 /-!
 # Circuit tails as defect-legal suffixes

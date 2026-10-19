@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.LowProductShadow
+module
+
+public import UnrestrictedBooleanMul.N5.LowProductShadow
+
+@[expose] public section
 
 /-!
 # Rank-one low-product shadow rigidity

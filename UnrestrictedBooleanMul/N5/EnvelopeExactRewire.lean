@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeLocalDependentExact
-import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeLocalDependentExact
+public import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+
+@[expose] public section
 
 /-!
 # Exact Boolean cubic rewiring

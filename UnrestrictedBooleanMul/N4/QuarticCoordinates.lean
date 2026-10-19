@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SeedChild
+module
+
+public import UnrestrictedBooleanMul.N4.SeedChild
+
+@[expose] public section
 
 /-!
 # Quartic low--low coordinate separation

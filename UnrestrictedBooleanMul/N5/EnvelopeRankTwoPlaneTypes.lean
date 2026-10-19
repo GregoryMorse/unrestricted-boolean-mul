@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopePlaneNormalization
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopePlaneNormalization
+
+@[expose] public section
 
 /-!
 # Geometric types of the eight rank-two Hankel lines

@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.PolynomialSymmetry
-import UnrestrictedBooleanMul.PolynomialEndpoint
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Tactic.FinCases
+module
+
+public import UnrestrictedBooleanMul.PolynomialSymmetry
+public import UnrestrictedBooleanMul.PolynomialEndpoint
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Tactic.FinCases
+
+@[expose] public section
 
 /-! Complete fifteen-representative rank coverage for n=6. Finite witnesses
 select words in proved tensor symmetries; their coverage is kernel-checked.

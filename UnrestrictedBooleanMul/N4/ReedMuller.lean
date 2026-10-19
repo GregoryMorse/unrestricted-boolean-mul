@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.NormalizedConstruction
+module
+
+public import UnrestrictedBooleanMul.N4.NormalizedConstruction
+
+@[expose] public section
 
 /-!
 # The degree-two Reed--Muller minimum word

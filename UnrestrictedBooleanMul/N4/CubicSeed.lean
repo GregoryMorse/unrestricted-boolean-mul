@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.QuarticExclusion
-import UnrestrictedBooleanMul.N4.QuadraticCircuit
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticExclusion
+public import UnrestrictedBooleanMul.N4.QuadraticCircuit
+
+@[expose] public section
 
 /-!
 # The normalized seed is genuinely cubic

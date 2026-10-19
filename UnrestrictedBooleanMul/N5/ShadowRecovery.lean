@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeKernel
-import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeKernel
+public import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
+
+@[expose] public section
 
 /-!
 # Cubic recovery of an external quadratic shadow

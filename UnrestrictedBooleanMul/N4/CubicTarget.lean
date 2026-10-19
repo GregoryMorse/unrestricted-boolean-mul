@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SexticPlane
+module
+
+public import UnrestrictedBooleanMul.N4.SexticPlane
+
+@[expose] public section
 
 /-!
 # Cubic projection against an arbitrary Hankel target

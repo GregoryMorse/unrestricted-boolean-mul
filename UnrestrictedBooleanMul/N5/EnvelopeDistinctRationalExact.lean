@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeOneRotationExact
-import UnrestrictedBooleanMul.N5.EnvelopeDistinctRational
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeOneRotationExact
+public import UnrestrictedBooleanMul.N5.EnvelopeDistinctRational
+
+@[expose] public section
 
 /-!
 # Exact Boolean shadows for distinct rational local planes

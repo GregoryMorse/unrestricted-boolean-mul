@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticSeedNormalForm
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticSeedNormalForm
+
+@[expose] public section
 
 /-!
 # The degree-six seed-plane equation

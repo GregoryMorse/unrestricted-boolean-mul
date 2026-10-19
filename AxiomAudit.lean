@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul
+module
+
+public import UnrestrictedBooleanMul
+
+@[expose] public section
 
 /-! Published n=4 release audit. Research declarations have separate audits. -/
 

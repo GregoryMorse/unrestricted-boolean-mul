@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Rewiring
+module
+
+public import UnrestrictedBooleanMul.N4.Rewiring
+
+@[expose] public section
 
 /-!
 # Construction of the rational three-gate prefix

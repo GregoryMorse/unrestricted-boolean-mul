@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N3TruthTable
-import UnrestrictedBooleanMul.N4.Main
+module
+
+public import UnrestrictedBooleanMul.N3TruthTable
+public import UnrestrictedBooleanMul.N4.Main
+
+@[expose] public section
 
 /-!
 # Published n=4 verification entry point

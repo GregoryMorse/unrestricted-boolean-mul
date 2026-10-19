@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.FirstJetState
-import UnrestrictedBooleanMul.N4.Feedback
+module
+
+public import UnrestrictedBooleanMul.N4.FirstJetState
+public import UnrestrictedBooleanMul.N4.Feedback
+
+@[expose] public section
 
 /-!
 # Place normalization on the complete target state

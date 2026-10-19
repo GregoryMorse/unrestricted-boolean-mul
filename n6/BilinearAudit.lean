@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.PolynomialOrbits
-import UnrestrictedBooleanMul.PolynomialProfile
+module
+
+public import UnrestrictedBooleanMul.PolynomialOrbits
+public import UnrestrictedBooleanMul.PolynomialProfile
+
+@[expose] public section
 
 /-! Proven reductions only. The numerical lower-bound hypotheses are open. -/
 #print axioms UnrestrictedBooleanMul.n6_square_lower_bound_of_hyperplanes

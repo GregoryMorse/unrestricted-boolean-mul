@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.CircuitSuffix
-import UnrestrictedBooleanMul.N5.CostedReplay
-import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+module
+
+public import UnrestrictedBooleanMul.N5.CircuitSuffix
+public import UnrestrictedBooleanMul.N5.CostedReplay
+public import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+
+@[expose] public section
 
 /-!
 # Replay from an intrinsic quadratic capacity state

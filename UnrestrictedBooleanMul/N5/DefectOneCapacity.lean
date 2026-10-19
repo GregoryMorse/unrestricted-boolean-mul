@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.DefectTwoCapacity
-import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
-import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+module
+
+public import UnrestrictedBooleanMul.N5.DefectTwoCapacity
+public import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+public import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+
+@[expose] public section
 
 /-!
 # Sharp capacity bound in defect dimension at most one

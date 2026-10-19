@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RelationMap
+module
+
+public import UnrestrictedBooleanMul.N5.RelationMap
+
+@[expose] public section
 
 /-!
 # Closed-place target directions

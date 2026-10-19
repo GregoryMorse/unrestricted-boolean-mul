@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.Mul
-import Mathlib.Tactic.FinCases
+module
+
+public import UnrestrictedBooleanMul.Mul
+public import Mathlib.Tactic.FinCases
+
+@[expose] public section
 
 /-!
 # The five-term multiplication target

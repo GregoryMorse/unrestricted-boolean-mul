@@ -19,6 +19,15 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+COMPILER_VERSION = '4.35.0-rc3'
+COMPILER_COMMIT = '470d5ce1400764999581fd26d5d72b00d990b0f4'
+
+
+def validate_compiler_version(version: str) -> None:
+    if 'version '+COMPILER_VERSION+',' not in version or COMPILER_COMMIT not in version:
+        raise ValueError(f'unexpected compiler: {version}')
+
+
 PROFILES = {
     "n4": ("AxiomAudit.lean", ("UnrestrictedBooleanMul",)),
     "n5": ("n5/Paper2Audit.lean", (
@@ -188,8 +197,7 @@ def main() -> int:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         version = run(["lake", "env", "lean", "--version"], report)
-        if "version 4.33.1" not in version or "819816b2e0a3" not in version:
-            raise ValueError(f"unexpected compiler: {version}")
+        validate_compiler_version(version)
         for module in report["modules"]:
             print(f"Building {module}", flush=True)
             run(["lake", "build", module], report)

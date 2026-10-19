@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Geometry
+module
+
+public import UnrestrictedBooleanMul.N4.Geometry
+
+@[expose] public section
 
 /-!
 # First-entry replacement and the normalized eight-gate interface

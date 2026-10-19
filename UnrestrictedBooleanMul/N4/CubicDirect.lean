@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticCoordinates
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticCoordinates
+
+@[expose] public section
 
 /-!
 # Direct sum of the three rational-place cubic spaces

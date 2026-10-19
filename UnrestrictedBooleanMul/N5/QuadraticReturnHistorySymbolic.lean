@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryModel
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryModel
+
+@[expose] public section
 
 /-!
 # Support-restricted coefficient convolution

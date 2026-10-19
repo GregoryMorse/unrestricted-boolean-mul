@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.ThreeRationalProfile
+module
+
+public import UnrestrictedBooleanMul.N5.ThreeRationalProfile
+
+@[expose] public section
 
 /-!
 # Two distinct represented place types

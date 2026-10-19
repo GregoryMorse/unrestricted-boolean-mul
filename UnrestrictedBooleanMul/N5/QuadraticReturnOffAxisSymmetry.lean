@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ANFSubstitution
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
+module
+
+public import UnrestrictedBooleanMul.N5.ANFSubstitution
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
+
+@[expose] public section
 
 /-!
 # The off-axis rational return is one algebraic case

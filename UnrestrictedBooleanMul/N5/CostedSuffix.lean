@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.CircuitSuffix
+module
+
+public import UnrestrictedBooleanMul.N5.CircuitSuffix
+
+@[expose] public section
 
 /-!
 # Exact gate cost for defect-legal suffixes

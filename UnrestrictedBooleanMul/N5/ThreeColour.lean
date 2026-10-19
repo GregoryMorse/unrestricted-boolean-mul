@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.ColourNormalization
+module
+
+public import UnrestrictedBooleanMul.N5.ColourNormalization
+
+@[expose] public section
 
 /-!
 # Algebraic three-colour birth and budget

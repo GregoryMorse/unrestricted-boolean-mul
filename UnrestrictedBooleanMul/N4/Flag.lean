@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.Hankel
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import UnrestrictedBooleanMul.N4.Hankel
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+@[expose] public section
 
 /-!
 # Circuit flags and the defect ledger

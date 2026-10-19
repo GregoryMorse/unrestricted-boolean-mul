@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Exterior
+module
+
+public import UnrestrictedBooleanMul.N4.Exterior
+
+@[expose] public section
 
 /-!
 # Decomposable target geometry

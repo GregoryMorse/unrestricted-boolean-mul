@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N4.Prefix
-import UnrestrictedBooleanMul.N4.QuadraticProjection
-import UnrestrictedBooleanMul.N4.Degree
+module
+
+public import UnrestrictedBooleanMul.N4.Prefix
+public import UnrestrictedBooleanMul.N4.QuadraticProjection
+public import UnrestrictedBooleanMul.N4.Degree
+
+@[expose] public section
 
 /-!
 # Homogeneous ANF/exterior bridge

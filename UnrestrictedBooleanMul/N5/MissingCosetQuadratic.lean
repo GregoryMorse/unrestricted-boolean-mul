@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.MissingCoset
+module
+
+public import UnrestrictedBooleanMul.N5.MissingCoset
+
+@[expose] public section
 
 /-!
 # The degree-two missing-coset kernel
@@ -453,7 +457,7 @@ theorem ambientPivotRemainder_eq_smul_residual_of_wedge_zero
     ambientTwoCoeff_squarefreeWedge, ambientPivotX, ambientPivotY,
     ambientPivotRow, ambientPivotScalar, Pi.add_apply, Pi.smul_apply,
     smul_eq_mul]
-  ring_nf at hijkl ⊢
+  ring_nf (config := { ifUnchanged := .silent }) at hijkl ⊢
   have hA : ambientTwoCoeff p i k * ambientTwoCoeff q i j *
       ambientTwoCoeff p j l * 2 = 0 := by
     rw [N3Certificate.two_eq_zero_f2, mul_zero]

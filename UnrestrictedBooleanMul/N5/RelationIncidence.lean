@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.FanoRelations
+module
+
+public import UnrestrictedBooleanMul.N5.FanoRelations
+
+@[expose] public section
 
 /-!
 # Incidence of sparse defect relations

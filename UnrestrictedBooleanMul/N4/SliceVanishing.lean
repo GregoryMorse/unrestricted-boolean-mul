@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.FeedbackSlice
+module
+
+public import UnrestrictedBooleanMul.N4.FeedbackSlice
+
+@[expose] public section
 
 /-!
 # Vanishing slices of a zero-place tangent

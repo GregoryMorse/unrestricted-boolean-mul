@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ClosedPlaces
-import UnrestrictedBooleanMul.QuadraticSupport
+module
+
+public import UnrestrictedBooleanMul.N5.ClosedPlaces
+public import UnrestrictedBooleanMul.QuadraticSupport
+
+@[expose] public section
 
 /-!
 # Rank-two Hankel support

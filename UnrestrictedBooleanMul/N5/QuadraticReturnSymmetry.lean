@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
-import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
+public import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
+
+@[expose] public section
 
 /-!
 # Rational-place symmetry for quadratic returns

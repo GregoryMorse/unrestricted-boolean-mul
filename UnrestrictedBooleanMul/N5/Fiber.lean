@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.QuadraticSpace
-import UnrestrictedBooleanMul.N4.Exterior
-import UnrestrictedBooleanMul.N4.Flag
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticSpace
+public import UnrestrictedBooleanMul.N4.Exterior
+public import UnrestrictedBooleanMul.N4.Flag
+
+@[expose] public section
 
 /-!
 # Decomposable fibers and the target--defect ledger

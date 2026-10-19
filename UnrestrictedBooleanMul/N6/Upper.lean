@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.Models
-import UnrestrictedBooleanMul.Mul
+module
+
+public import UnrestrictedBooleanMul.Models
+public import UnrestrictedBooleanMul.Mul
+
+@[expose] public section
 
 /-!
 # Positive bilinear witnesses for six-term and five-by-six multiplication

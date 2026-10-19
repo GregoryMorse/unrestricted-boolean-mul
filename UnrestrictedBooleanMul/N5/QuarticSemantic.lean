@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.CubicSemantic
+module
+
+public import UnrestrictedBooleanMul.N5.CubicSemantic
+
+@[expose] public section
 
 /-!
 # Quartic ANF coordinates for ten-variable low products

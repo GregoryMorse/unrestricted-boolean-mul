@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuadraticCircuit
+module
+
+public import UnrestrictedBooleanMul.N4.QuadraticCircuit
+
+@[expose] public section
 
 /-!
 # Target witnesses for useful gates

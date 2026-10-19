@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.JetSeparation
-import UnrestrictedBooleanMul.N4.BooleanIdentities
+module
+
+public import UnrestrictedBooleanMul.N4.JetSeparation
+public import UnrestrictedBooleanMul.N4.BooleanIdentities
+
+@[expose] public section
 
 /-!
 # Algebraic feedback-state lemmas

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SevenGate
+module
+
+public import UnrestrictedBooleanMul.N4.SevenGate
+
+@[expose] public section
 
 /-!
 # Semantic circuit rewiring

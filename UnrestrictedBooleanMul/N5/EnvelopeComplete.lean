@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
-import UnrestrictedBooleanMul.N5.DegreeTwoTranslateShadow
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+public import UnrestrictedBooleanMul.N5.DegreeTwoTranslateShadow
+
+@[expose] public section
 
 /-!
 # Assembly of distinct independent first-order envelope planes

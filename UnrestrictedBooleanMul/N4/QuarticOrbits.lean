@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.CubicDirect
+module
+
+public import UnrestrictedBooleanMul.N4.CubicDirect
+
+@[expose] public section
 
 /-!
 # The three rational quartic-plane orbits

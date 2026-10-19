@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EffectiveClassification
+module
+
+public import UnrestrictedBooleanMul.N5.EffectiveClassification
+
+@[expose] public section
 
 /-!
 # Strong mixed-place exclusion

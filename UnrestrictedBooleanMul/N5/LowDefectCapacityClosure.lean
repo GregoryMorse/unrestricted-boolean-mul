@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.N5.CapacityReplay
-import UnrestrictedBooleanMul.N5.CapacityRegimeClosure
-import UnrestrictedBooleanMul.N5.DefectOneCapacity
-import UnrestrictedBooleanMul.N5.HighDefect
+module
+
+public import UnrestrictedBooleanMul.N5.CapacityReplay
+public import UnrestrictedBooleanMul.N5.CapacityRegimeClosure
+public import UnrestrictedBooleanMul.N5.DefectOneCapacity
+public import UnrestrictedBooleanMul.N5.HighDefect
+
+@[expose] public section
 
 /-!
 # Correct low-defect obligations after capacity replay

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeDistinctRational
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeDistinctRational
+
+@[expose] public section
 
 /-!
 # Algebraic shadow exclusion for two rational rotations

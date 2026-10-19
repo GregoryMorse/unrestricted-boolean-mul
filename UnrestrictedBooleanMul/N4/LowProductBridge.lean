@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.Homogeneous
-import UnrestrictedBooleanMul.N4.BooleanIdentities
+module
+
+public import UnrestrictedBooleanMul.N4.Homogeneous
+public import UnrestrictedBooleanMul.N4.BooleanIdentities
+
+@[expose] public section
 
 /-!
 # ANF low-product bridge

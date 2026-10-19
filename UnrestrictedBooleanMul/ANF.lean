@@ -1,11 +1,15 @@
-import Mathlib.Algebra.MonoidAlgebra.Basic
-import Mathlib.Algebra.CharP.Two
-import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Tactic.FinCases
+module
+
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Mathlib.Algebra.CharP.Two
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.Tactic.FinCases
+
+@[expose] public section
 
 /-!
 # Boolean algebraic normal forms

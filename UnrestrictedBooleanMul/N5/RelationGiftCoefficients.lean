@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RelationIncidence
+module
+
+public import UnrestrictedBooleanMul.N5.RelationIncidence
+
+@[expose] public section
 
 /-!
 # Coefficient representatives of relation gifts

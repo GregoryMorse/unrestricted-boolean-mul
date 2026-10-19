@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeAssembly
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeAssembly
+
+@[expose] public section
 
 /-!
 # Shadow rewiring for a one-rotation envelope

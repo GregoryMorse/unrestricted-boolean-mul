@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
-import UnrestrictedBooleanMul.N5.LineSecantGifts
+module
+
+public import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
+public import UnrestrictedBooleanMul.N5.LineSecantGifts
+
+@[expose] public section
 
 /-!
 # Rational local secant pivots at all three places
@@ -382,19 +386,19 @@ theorem strongRational_normalizedLocalSecant_mem
     · have h := congrFun hb 0
       simp [rationalZeroSecantConstraint, rationalTargetCoeffChange] at h
       change c 3 + c 5 = 0
-      ring_nf at h ⊢
+      ring_nf (config := { ifUnchanged := .silent }) at h ⊢
       simpa [N3Certificate.two_eq_zero_f2,
         N3Certificate.four_eq_zero_f2] using h
     · have h := congrFun hb 1
       simp [rationalZeroSecantConstraint, rationalTargetCoeffChange] at h
       change c 2 + c 4 = 0
-      ring_nf at h ⊢
+      ring_nf (config := { ifUnchanged := .silent }) at h ⊢
       simpa [N3Certificate.two_eq_zero_f2,
         N3Certificate.four_eq_zero_f2] using h
     · have h := congrFun hb 2
       simp [rationalZeroSecantConstraint, rationalTargetCoeffChange] at h
       change c 1 + c 2 + c 3 + c 4 = 0
-      ring_nf at h ⊢
+      ring_nf (config := { ifUnchanged := .silent }) at h ⊢
       simpa [N3Certificate.two_eq_zero_f2,
         N3Certificate.four_eq_zero_f2] using h
     · have h := congrFun he 2

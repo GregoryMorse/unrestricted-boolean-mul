@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeDistinctRationalExact
-import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeDistinctRationalExact
+public import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationShadow
+
+@[expose] public section
 
 /-!
 # Exact Boolean shadows for two rational rotations

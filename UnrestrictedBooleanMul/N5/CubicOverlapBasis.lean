@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.CubicSemantic
-import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
+module
+
+public import UnrestrictedBooleanMul.N5.CubicSemantic
+public import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
+
+@[expose] public section
 
 /-!
 # Cubic overlap under quadratic-plane basis changes

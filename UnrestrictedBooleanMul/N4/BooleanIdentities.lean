@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Degree
+module
+
+public import UnrestrictedBooleanMul.N4.Degree
+
+@[expose] public section
 
 /-!
 # Boolean-ring identities used by feedback gates

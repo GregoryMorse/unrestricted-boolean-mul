@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Target
+module
+
+public import UnrestrictedBooleanMul.N4.Target
+
+@[expose] public section
 
 /-!
 # Rational and degree-two places

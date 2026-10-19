@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
+module
+
+public import UnrestrictedBooleanMul.N5.ThreePlaceDegreeTwo
+
+@[expose] public section
 
 /-!
 # Explicit rational-place symmetries

@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.Capacity
-import UnrestrictedBooleanMul.N5.QuadraticFlattening
-import UnrestrictedBooleanMul.N5.Upper
+module
+
+public import UnrestrictedBooleanMul.N5.Capacity
+public import UnrestrictedBooleanMul.N5.QuadraticFlattening
+public import UnrestrictedBooleanMul.N5.Upper
+
+@[expose] public section
 
 /-! Focused Paper 2 audit. No root import and no n5 suffix/restart assumptions.
 The statements audited here do not assert unrestricted MC(Mul 5) = 13. -/

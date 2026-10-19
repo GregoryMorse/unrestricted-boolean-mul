@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N3
-import Batteries.Data.BitVec.Lemmas
+module
+
+public import UnrestrictedBooleanMul.N3
+public import Batteries.Data.BitVec.Lemmas
+
+@[expose] public section
 
 /-!
 # Independent truth-table cross-check for the `n = 3` lower bound

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeRankTwoLines
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeRankTwoLines
+
+@[expose] public section
 
 /-!
 # The rational secant triangle

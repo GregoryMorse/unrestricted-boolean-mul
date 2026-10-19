@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.ANF
-import Mathlib.LinearAlgebra.Dimension.Finite
-import Mathlib.LinearAlgebra.StdBasis
+module
+
+public import UnrestrictedBooleanMul.ANF
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.StdBasis
+
+@[expose] public section
 
 /-!
 # Unrestricted XOR--AND circuits

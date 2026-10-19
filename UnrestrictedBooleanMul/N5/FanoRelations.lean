@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.DisplacementRank
-import Mathlib.FieldTheory.Finiteness
+module
+
+public import UnrestrictedBooleanMul.N5.DisplacementRank
+public import Mathlib.FieldTheory.Finiteness
+
+@[expose] public section
 
 /-!
 # Sparse relations in defect spaces
@@ -291,8 +295,10 @@ theorem populatedRelationKernel_finrank_le_three_of_missing_span_point
   change Module.finrank F₂ ↑(relationKernel q) +
       Module.finrank F₂ S = Fintype.card (PopulatedPoint Q) at hkernel
   change Module.finrank F₂ ↑(relationKernel q) ≤ 3
-  interval_cases hS : Module.finrank F₂ S <;>
-    norm_num [hS] at hcard hkernel ⊢ <;> omega
+  interval_cases hS : Module.finrank F₂ S
+  all_goals norm_num [hS] at hcard
+  all_goals norm_num [hS] at hkernel
+  all_goals omega
 
 /-- A defect of dimension at most two has at most one additive relation among
 its populated nonzero points. -/
@@ -360,7 +366,7 @@ theorem populatedRelationKernel_finrank_eq_zero_of_missing_span_point
   change Module.finrank F₂ ↑(relationKernel q) = 0
   interval_cases hS : Module.finrank F₂ S
   · norm_num [hS] at hcard
-    omega
+    all_goals omega
   · norm_num [hS] at hcard hkernel
     omega
   · norm_num [hS] at hcard hkernel
@@ -390,8 +396,10 @@ theorem populatedRelationKernel_finrank_le_four
   change Module.finrank F₂ ↑(relationKernel q) +
       Module.finrank F₂ S = Fintype.card (PopulatedPoint Q) at hkernel
   change Module.finrank F₂ ↑(relationKernel q) ≤ 4
-  interval_cases hS : Module.finrank F₂ S <;>
-    norm_num [hS] at hcard hkernel ⊢ <;> omega
+  interval_cases hS : Module.finrank F₂ S
+  all_goals norm_num [hS] at hcard
+  all_goals norm_num [hS] at hkernel
+  all_goals omega
 
 /-- Profile-free half of the displacement estimate: before using any local
 place pivots, a three-dimensional defect has at most four relation gifts. -/

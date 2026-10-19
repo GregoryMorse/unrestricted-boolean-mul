@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.BilinearRestriction
-import UnrestrictedBooleanMul.BilinearOutput
+module
+
+public import UnrestrictedBooleanMul.BilinearRestriction
+public import UnrestrictedBooleanMul.BilinearOutput
+
+@[expose] public section
 
 /-! The a₀=0 restriction of the square six-term polynomial product is
 exactly the rectangular product with an extra zero output. -/

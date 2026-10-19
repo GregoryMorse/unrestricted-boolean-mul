@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SliceVanishing
+module
+
+public import UnrestrictedBooleanMul.N4.SliceVanishing
+
+@[expose] public section
 
 /-!
 # Algebraic exclusion of the two quartic slice types

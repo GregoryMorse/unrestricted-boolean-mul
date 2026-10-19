@@ -1,8 +1,12 @@
-import UnrestrictedBooleanMul.N5.FirstOrderEscape
-import UnrestrictedBooleanMul.N5.RankOneTargetClean
-import UnrestrictedBooleanMul.N5.QuarticSemantic
-import UnrestrictedBooleanMul.N5.RankOneShadow
-import UnrestrictedBooleanMul.N5.CubicOverlapBasis
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderEscape
+public import UnrestrictedBooleanMul.N5.RankOneTargetClean
+public import UnrestrictedBooleanMul.N5.QuarticSemantic
+public import UnrestrictedBooleanMul.N5.RankOneShadow
+public import UnrestrictedBooleanMul.N5.CubicOverlapBasis
+
+@[expose] public section
 
 /-!
 # Exclusion of a rank-one-colour target escape

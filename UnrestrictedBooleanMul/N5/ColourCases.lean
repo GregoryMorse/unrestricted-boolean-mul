@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ColourNormalization
-import UnrestrictedBooleanMul.N5.HighDefect
+module
+
+public import UnrestrictedBooleanMul.N5.ColourNormalization
+public import UnrestrictedBooleanMul.N5.HighDefect
+
+@[expose] public section
 
 /-!
 # Algebraic factor-colour trichotomy

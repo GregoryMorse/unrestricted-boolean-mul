@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnSecant
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnSecant
+
+@[expose] public section
 
 /-!
 # Sparse quartic pivots for quadratic-return orbits

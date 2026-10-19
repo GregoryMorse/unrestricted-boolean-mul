@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeRationalExact
-import UnrestrictedBooleanMul.N5.EnvelopeOneRotation
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeRationalExact
+public import UnrestrictedBooleanMul.N5.EnvelopeOneRotation
+
+@[expose] public section
 
 /-!
 # Exact Boolean closure of the one-rotation envelope branch

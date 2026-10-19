@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.PrefixState
+module
+
+public import UnrestrictedBooleanMul.N5.PrefixState
+
+@[expose] public section
 
 /-!
 # Defect-legal unrestricted suffixes

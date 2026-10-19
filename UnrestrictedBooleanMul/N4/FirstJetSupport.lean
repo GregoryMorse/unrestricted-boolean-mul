@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.FirstJet
+module
+
+public import UnrestrictedBooleanMul.N4.FirstJet
+
+@[expose] public section
 
 /-!
 # Rank-four support and the first Hasse jet

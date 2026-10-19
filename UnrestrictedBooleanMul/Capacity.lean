@@ -1,5 +1,9 @@
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Quotient.Basic
+module
+
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.LinearAlgebra.Quotient.Basic
+
+@[expose] public section
 
 /-! Capacity for any finite-dimensional target and any allowed generator set.
 No rank-one classification, finite catalogue, or computation is assumed. -/

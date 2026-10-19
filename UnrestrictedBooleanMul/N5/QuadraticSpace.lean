@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.Target
-import UnrestrictedBooleanMul.Quadratic
-import Lean.Elab.Tactic.Omega
+module
+
+public import UnrestrictedBooleanMul.N5.Target
+public import UnrestrictedBooleanMul.Quadratic
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 /-!
 # Five-term quadratic quotient

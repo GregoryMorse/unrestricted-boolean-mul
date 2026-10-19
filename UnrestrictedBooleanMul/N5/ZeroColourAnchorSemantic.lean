@@ -1,8 +1,12 @@
-import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
-import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
-import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
-import UnrestrictedBooleanMul.N5.Displacement
-import UnrestrictedBooleanMul.N5.DisplacementProfile
+module
+
+public import UnrestrictedBooleanMul.N5.ZeroColourAnchorNormalForm
+public import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
+public import UnrestrictedBooleanMul.N5.RationalEnvelopeSymmetry
+public import UnrestrictedBooleanMul.N5.Displacement
+public import UnrestrictedBooleanMul.N5.DisplacementProfile
+
+@[expose] public section
 
 /-!
 # Semantic core of a normalized anchored zero-colour escape

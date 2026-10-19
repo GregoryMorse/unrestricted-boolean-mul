@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.StableTarget
-import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
-import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+module
+
+public import UnrestrictedBooleanMul.N5.StableTarget
+public import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+public import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+
+@[expose] public section
 
 /-!
 # The codimension-one first-order envelope as an ANF state

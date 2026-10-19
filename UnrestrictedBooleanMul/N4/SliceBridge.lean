@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SliceProjection
+module
+
+public import UnrestrictedBooleanMul.N4.SliceProjection
+
+@[expose] public section
 
 /-!
 # Semantic bridge from active slices to the algebraic exclusions

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.LowProductBridge
+module
+
+public import UnrestrictedBooleanMul.N4.LowProductBridge
+
+@[expose] public section
 
 /-!
 # Algebraic exclusion of seven gates

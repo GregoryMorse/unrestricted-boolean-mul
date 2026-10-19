@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.SuffixBudget
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+module
+
+public import UnrestrictedBooleanMul.N5.SuffixBudget
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+
+@[expose] public section
 
 /-!
 # Splitting quadratic defect from genuinely high directions

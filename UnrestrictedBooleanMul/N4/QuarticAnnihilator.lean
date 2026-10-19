@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticSeedUsing
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticSeedUsing
+
+@[expose] public section
 
 /-!
 # Rational quartic annihilators in the Hankel target

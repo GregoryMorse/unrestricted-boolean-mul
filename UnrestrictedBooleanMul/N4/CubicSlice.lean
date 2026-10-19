@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.CubicFeedback
+module
+
+public import UnrestrictedBooleanMul.N4.CubicFeedback
+
+@[expose] public section
 
 /-!
 # Cubic first-feedback slice exclusion

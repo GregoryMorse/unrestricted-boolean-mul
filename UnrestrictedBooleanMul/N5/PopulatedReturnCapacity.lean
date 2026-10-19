@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.N5.CapacityRestart
-import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
-import UnrestrictedBooleanMul.N5.DefectTwoCapacity
-import UnrestrictedBooleanMul.N5.ANFSubstitution
+module
+
+public import UnrestrictedBooleanMul.N5.CapacityRestart
+public import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
+public import UnrestrictedBooleanMul.N5.DefectTwoCapacity
+public import UnrestrictedBooleanMul.N5.ANFSubstitution
+
+@[expose] public section
 
 /-!
 # Charge the target row of a populated quadratic return

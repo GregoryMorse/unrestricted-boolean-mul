@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.CapacityRelation
+module
+
+public import UnrestrictedBooleanMul.CapacityRelation
+
+@[expose] public section
 
 /-! Fiber decomposition of capacity. All fibers, including the zero fiber,
 are accounted for. The index family may repeat points; its coverage is an

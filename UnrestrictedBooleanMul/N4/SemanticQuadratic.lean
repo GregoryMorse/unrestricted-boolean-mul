@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.ReedMuller
-import UnrestrictedBooleanMul.N4.BooleanIdentities
+module
+
+public import UnrestrictedBooleanMul.N4.ReedMuller
+public import UnrestrictedBooleanMul.N4.BooleanIdentities
+
+@[expose] public section
 
 /-!
 # Semantic bridge for quadratic ANFs

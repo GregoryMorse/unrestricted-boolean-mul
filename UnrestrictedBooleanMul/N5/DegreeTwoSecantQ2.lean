@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.LocalSecantPivots
+module
+
+public import UnrestrictedBooleanMul.N5.LocalSecantPivots
+
+@[expose] public section
 
 /-!
 # Principal degree-two local secant pivot

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
+
+@[expose] public section
 
 /-!
 # Removing the old correction colour in the rank-one branch

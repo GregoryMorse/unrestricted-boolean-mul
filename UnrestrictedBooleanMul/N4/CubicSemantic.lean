@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SliceExclusion
+module
+
+public import UnrestrictedBooleanMul.N4.SliceExclusion
+
+@[expose] public section
 
 /-!
 # Semantic recovery of cubic ANF coefficients

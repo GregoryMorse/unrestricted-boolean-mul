@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.FeedbackHomogeneous
+module
+
+public import UnrestrictedBooleanMul.N4.FeedbackHomogeneous
+
+@[expose] public section
 
 /-!
 # The normalized hard annihilator and second jet

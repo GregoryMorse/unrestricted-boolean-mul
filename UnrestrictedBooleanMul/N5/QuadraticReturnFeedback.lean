@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnOrbit
-import UnrestrictedBooleanMul.N5.QuadraticFlattening
-import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnOrbit
+public import UnrestrictedBooleanMul.N5.QuadraticFlattening
+public import UnrestrictedBooleanMul.N5.RankOneEnvelopeCorrection
+
+@[expose] public section
 
 /-!
 # Rank-one feedback against a quadratic return section

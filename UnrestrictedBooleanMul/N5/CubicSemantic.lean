@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.LowProductSemantic
-import UnrestrictedBooleanMul.N5.SecantPfaffian
+module
+
+public import UnrestrictedBooleanMul.N5.LowProductSemantic
+public import UnrestrictedBooleanMul.N5.SecantPfaffian
+
+@[expose] public section
 
 /-!
 # Cubic ANF coordinates for ten-variable low products

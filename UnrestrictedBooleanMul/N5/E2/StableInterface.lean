@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.StableTarget
-import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
-import UnrestrictedBooleanMul.N5.E2.ExtremalState
+module
+
+public import UnrestrictedBooleanMul.N5.StableTarget
+public import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+public import UnrestrictedBooleanMul.N5.E2.ExtremalState
+
+@[expose] public section
 
 /-!
 # Stable-envelope interface to the completion contradiction

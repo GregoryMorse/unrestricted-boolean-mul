@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.DisplacementProfile
+module
+
+public import UnrestrictedBooleanMul.N5.DisplacementProfile
+
+@[expose] public section
 
 /-!
 # Numerical displacement rank

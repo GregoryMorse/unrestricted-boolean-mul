@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.CubicTarget
+module
+
+public import UnrestrictedBooleanMul.N4.CubicTarget
+
+@[expose] public section
 
 /-!
 # Classified quartic seed-using normal form

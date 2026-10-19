@@ -40,9 +40,10 @@ related_formalizations:
   - id: https://github.com/GregoryMorse/unrestricted-boolean-mul/tree/2ebc0cf42039e4b5de84cb7f9d97cad4791c669d
     relationship: builds-on
     note: >-
-      The same author's n4-arxiv-v2 development on Lean 4.32.1. This update
-      migrates to 4.33.1 and isolates the existing theorems for Comparator
-      and dedicated CI; it is not an independent formalization.
+      The same author's n4-arxiv-v2 development on Lean 4.32.1. The later
+      n4-arxiv-v3 release used Lean 4.33.1 and isolated the existing theorems
+      for Comparator and dedicated CI. Current development is pinned to
+      Lean 4.35.0-rc3; it is not an independent formalization.
 status:
   scope: >-
     Comparator selects six original declarations: the five exact complexities
@@ -84,7 +85,9 @@ fidelity:
     No statement divergence is intended for the six selected results after
     source-level comparison with the cited sections. The n3 proof method
     differs as noted above. The paper pins n4-arxiv-v2 on Lean 4.32.1; this
-    release uses Lean 4.33.1 without claiming to update that published snapshot.
+    historical n4-arxiv-v3 release used Lean 4.33.1. Current development uses
+    Lean 4.35.0-rc3 without claiming to update either published snapshot or
+    relabel their historical Palomar/kernel-replay reports as new checks.
     The remaining source-alignment and official verification gates are
     reported in n4/PALOMAR_AUDIT.md, not inferred from compilation alone.
 review:

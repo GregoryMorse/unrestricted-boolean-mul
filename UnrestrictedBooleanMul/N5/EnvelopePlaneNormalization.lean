@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeRationalTriangle
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeRationalTriangle
+
+@[expose] public section
 
 /-!
 # Normal forms for first-order envelope planes

@@ -4,9 +4,37 @@ from pathlib import Path
 import unittest
 
 import ci_verify as ci
+from check_lean_sources import check_source
 
 
 class ScopedCITests(unittest.TestCase):
+    def test_repository_wide_source_policy_controls(self):
+        for source in ('module\n', '-- copyright\n/- nested /- c -/ -/\nmodule\n',
+                       'module\n/-! docs -/\npublic import Mathlib\n'):
+            check_source('unused/N5.lean', source)
+        for source in ('', 'import Mathlib\n', 'moduleFake\n',
+                       '/-! docs -/\nmodule\n', '/-- docs -/\nmodule\n',
+                       '/- unterminated', 'module\n' + '\n' * 10_000):
+            with self.assertRaises(ValueError):
+                check_source('unused/N5.lean', source)
+        with self.assertRaises(ValueError):
+            check_source('unused/N5.lean', 'module\n', '120000')
+        check_source('lakefile.lean', 'import Lake\n')
+
+    def test_requested_compiler_is_strictly_pinned(self):
+        ci.validate_compiler_version('Lean (version 4.35.0-rc3, commit '+ci.COMPILER_COMMIT+', Release)')
+        for version in ('Lean (version 4.33.1, commit 819816b2e0a3, Release)',
+                        'Lean (version 4.35.0-rc2, commit '+ci.COMPILER_COMMIT+', Release)',
+                        'Lean (version 4.35.0-rc3, commit 00000000, Release)'):
+            with self.assertRaises(ValueError):
+                ci.validate_compiler_version(version)
+        self.assertEqual((ci.ROOT/'lean-toolchain').read_text().strip(),
+                         'leanprover/lean4:v'+ci.COMPILER_VERSION)
+        manifest=json.loads((ci.ROOT/'lake-manifest.json').read_text())
+        mathlib=next(p for p in manifest['packages'] if p['name']=='mathlib')
+        self.assertEqual(mathlib['inputRev'],'v4.35.0-rc3')
+        self.assertEqual(mathlib['rev'],'c55e6e786f49471c72fbddbec5415808896aec1e')
+
     def test_n4_msc_matches_published_arxiv_classification(self):
         metadata = (ci.ROOT / 'formalization.yaml').read_text(encoding='utf-8')
         rows = [line.strip() for line in metadata.splitlines()

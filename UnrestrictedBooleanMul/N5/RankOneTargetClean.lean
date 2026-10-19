@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
-import UnrestrictedBooleanMul.N5.TargetCleanMatrix
+module
+
+public import UnrestrictedBooleanMul.N5.MissingCosetQuadratic
+public import UnrestrictedBooleanMul.N5.TargetCleanMatrix
+
+@[expose] public section
 
 /-!
 # Target-clean reduction for the rank-one colour branch

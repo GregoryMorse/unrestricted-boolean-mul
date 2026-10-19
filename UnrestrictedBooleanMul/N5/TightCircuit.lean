@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.CircuitPruning
-import UnrestrictedBooleanMul.N5.CostedSuffix
-import UnrestrictedBooleanMul.N5.OneHighDefectOneClosure
-import UnrestrictedBooleanMul.N5.Upper
+module
+
+public import UnrestrictedBooleanMul.CircuitPruning
+public import UnrestrictedBooleanMul.N5.CostedSuffix
+public import UnrestrictedBooleanMul.N5.OneHighDefectOneClosure
+public import UnrestrictedBooleanMul.N5.Upper
+
+@[expose] public section
 
 /-!
 # Gate-minimal five-term circuits and tight defect accounting

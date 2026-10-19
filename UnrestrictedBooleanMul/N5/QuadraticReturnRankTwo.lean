@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
-import UnrestrictedBooleanMul.N5.RankOneZeroQuadraticDefect
-import UnrestrictedBooleanMul.N5.RankTwoEscapeBudget
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnFeedback
+public import UnrestrictedBooleanMul.N5.RankOneZeroQuadraticDefect
+public import UnrestrictedBooleanMul.N5.RankTwoEscapeBudget
+
+@[expose] public section
 
 /-!
 # Rank-two feedback after a quadratic return

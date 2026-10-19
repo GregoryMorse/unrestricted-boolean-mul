@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeComplete
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeComplete
+
+@[expose] public section
 
 /-!
 # Rank-two consequence of an independent cubic syzygy

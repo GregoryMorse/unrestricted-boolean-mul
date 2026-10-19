@@ -1,8 +1,12 @@
-import UnrestrictedBooleanMul.N5.ZeroColourExact
-import UnrestrictedBooleanMul.N5.RankOneZeroQuadraticDefect
-import UnrestrictedBooleanMul.N5.ColourCases
-import UnrestrictedBooleanMul.N5.LowDefectPrefix
-import UnrestrictedBooleanMul.N5.CircuitSuffix
+module
+
+public import UnrestrictedBooleanMul.N5.ZeroColourExact
+public import UnrestrictedBooleanMul.N5.RankOneZeroQuadraticDefect
+public import UnrestrictedBooleanMul.N5.ColourCases
+public import UnrestrictedBooleanMul.N5.LowDefectPrefix
+public import UnrestrictedBooleanMul.N5.CircuitSuffix
+
+@[expose] public section
 
 /-!
 # First-order closure after the unique high birth at total defect one

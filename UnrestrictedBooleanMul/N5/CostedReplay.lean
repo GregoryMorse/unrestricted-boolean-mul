@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.CostedSuffix
+module
+
+public import UnrestrictedBooleanMul.N5.CostedSuffix
+
+@[expose] public section
 
 /-!
 # Cost-preserving suffix replay

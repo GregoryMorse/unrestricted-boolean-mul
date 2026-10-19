@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.FanoLineIncidencePivots
+module
+
+public import UnrestrictedBooleanMul.N5.FanoLineIncidencePivots
+
+@[expose] public section
 
 /-!
 # Pointed Fano relations

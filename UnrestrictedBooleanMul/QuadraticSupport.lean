@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.Quadratic
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+module
+
+public import UnrestrictedBooleanMul.Quadratic
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+
+@[expose] public section
 
 /-!
 # Supports of squarefree two-forms

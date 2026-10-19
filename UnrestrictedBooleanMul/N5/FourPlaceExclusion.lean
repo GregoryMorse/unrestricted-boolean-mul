@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.FourPlaceRelation
+module
+
+public import UnrestrictedBooleanMul.N5.FourPlaceRelation
+
+@[expose] public section
 
 /-!
 # Algebraic exclusion of the four-place quadrilateral

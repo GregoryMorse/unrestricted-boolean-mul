@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.N5.LowDefectAnchor
-import UnrestrictedBooleanMul.N5.TargetCleanMatrix
-import UnrestrictedBooleanMul.N5.SuffixBudget
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import UnrestrictedBooleanMul.N5.LowDefectAnchor
+public import UnrestrictedBooleanMul.N5.TargetCleanMatrix
+public import UnrestrictedBooleanMul.N5.SuffixBudget
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+@[expose] public section
 
 /-!
 # Canonical first-order states with one decomposable anchor

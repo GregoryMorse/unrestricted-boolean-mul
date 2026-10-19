@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.LineSecantGifts
+module
+
+public import UnrestrictedBooleanMul.N5.LineSecantGifts
+
+@[expose] public section
 
 /-!
 # Fano-line incidence pivots

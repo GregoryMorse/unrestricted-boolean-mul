@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopePlaneClassification
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopePlaneClassification
+
+@[expose] public section
 
 /-!
 # Complete shadow exclusion for two independent first-order planes

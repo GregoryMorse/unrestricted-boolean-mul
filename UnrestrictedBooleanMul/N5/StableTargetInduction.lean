@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.StableTarget
+module
+
+public import UnrestrictedBooleanMul.N5.StableTarget
+
+@[expose] public section
 
 /-!
 # One-step induction for stable target envelopes

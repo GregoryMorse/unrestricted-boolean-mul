@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.MissingCoset
-import UnrestrictedBooleanMul.QuadraticSupport
+module
+
+public import UnrestrictedBooleanMul.N5.MissingCoset
+public import UnrestrictedBooleanMul.QuadraticSupport
+
+@[expose] public section
 
 /-!
 # The target-clean second jet

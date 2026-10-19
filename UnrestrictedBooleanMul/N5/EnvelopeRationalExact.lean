@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeExactRewire
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeExactRewire
+
+@[expose] public section
 
 /-!
 # Exact Boolean semantics at all rational value--jet planes

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.CapacityReplay
+module
+
+public import UnrestrictedBooleanMul.N5.CapacityReplay
+
+@[expose] public section
 
 /-!
 # Restarting intrinsic-capacity replay at a quadratic defect birth

@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.Circuit
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.Algebra.BigOperators.Fin
+module
+
+public import UnrestrictedBooleanMul.Circuit
+public import Mathlib.Logic.Equiv.Fin.Basic
+public import Mathlib.Algebra.BigOperators.Fin
+
+@[expose] public section
 
 /-!
 # Unrestricted, quadratic and bilinear models

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.HankelSupport
+module
+
+public import UnrestrictedBooleanMul.N5.HankelSupport
+
+@[expose] public section
 
 /-!
 # Local Klein-quadric calculations

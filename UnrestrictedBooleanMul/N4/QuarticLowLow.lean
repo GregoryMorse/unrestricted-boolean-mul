@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticAllPairs
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticAllPairs
+
+@[expose] public section
 
 /-!
 # Orbit-free low--low quartic exclusion

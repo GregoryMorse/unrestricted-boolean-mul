@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
-import UnrestrictedBooleanMul.N5.LowProductSemantic
-import UnrestrictedBooleanMul.N5.EnvelopeRotationShadow
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+public import UnrestrictedBooleanMul.N5.LowProductSemantic
+public import UnrestrictedBooleanMul.N5.EnvelopeRotationShadow
+
+@[expose] public section
 
 /-!
 # Algebra of a decomposable first-order anchor

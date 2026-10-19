@@ -1,9 +1,13 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryModel
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistorySymbolic
-import UnrestrictedBooleanMul.N5.CubicSemantic
-import UnrestrictedBooleanMul.N5.ClosedPlaces
-import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
-import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryModel
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistorySymbolic
+public import UnrestrictedBooleanMul.N5.CubicSemantic
+public import UnrestrictedBooleanMul.N5.ClosedPlaces
+public import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+public import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
+
+@[expose] public section
 
 /-!
 # Semantic bridge for the rational-return history certificate

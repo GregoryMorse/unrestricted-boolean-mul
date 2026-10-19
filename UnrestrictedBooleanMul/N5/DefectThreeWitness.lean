@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.DefectTwoCapacity
-import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
-import UnrestrictedBooleanMul.N5.DisplacementBound
+module
+
+public import UnrestrictedBooleanMul.N5.DefectTwoCapacity
+public import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
+public import UnrestrictedBooleanMul.N5.DisplacementBound
+
+@[expose] public section
 
 /-!
 # A sharp three-dimensional capacity witness

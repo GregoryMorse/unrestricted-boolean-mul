@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryChart
-import UnrestrictedBooleanMul.N5.PopulatedReturnCapacity
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryChart
+public import UnrestrictedBooleanMul.N5.PopulatedReturnCapacity
+
+@[expose] public section
 
 /- Focused dependency audit; this does not assert the global n=5 theorem. -/
 #print axioms UnrestrictedBooleanMul.anfSubstitution_mem_affine

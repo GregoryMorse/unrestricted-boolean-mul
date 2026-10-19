@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnOffAxisSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnOffAxisSymmetry
+
+@[expose] public section
 
 /-!
 # Infinity feedback from projective symmetry

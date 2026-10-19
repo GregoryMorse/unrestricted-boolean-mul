@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RankOneShadow
+module
+
+public import UnrestrictedBooleanMul.N5.RankOneShadow
+
+@[expose] public section
 
 /-!
 # Independent-plane low-product shadows

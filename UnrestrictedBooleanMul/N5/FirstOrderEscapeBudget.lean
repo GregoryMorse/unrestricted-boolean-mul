@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.FirstOrderEscape
-import UnrestrictedBooleanMul.N5.HighDefect
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderEscape
+public import UnrestrictedBooleanMul.N5.HighDefect
+
+@[expose] public section
 
 /-!
 # Defect and high-colour budget at a target escape

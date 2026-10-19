@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.TwoForm
+module
+
+public import UnrestrictedBooleanMul.N4.TwoForm
+
+@[expose] public section
 
 /-!
 # Cubic seed normal form

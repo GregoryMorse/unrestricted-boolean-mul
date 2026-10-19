@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Cubic
+module
+
+public import UnrestrictedBooleanMul.N4.Cubic
+
+@[expose] public section
 
 /-!
 # Three-term tail geometry at a rational anchor

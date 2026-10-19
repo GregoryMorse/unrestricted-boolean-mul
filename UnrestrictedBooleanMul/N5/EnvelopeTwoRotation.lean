@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeRotationShadow
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeRotationShadow
+
+@[expose] public section
 
 /-!
 # The two-rotation chain in the first-order envelope

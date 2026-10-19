@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturn
-import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
-import UnrestrictedBooleanMul.N5.RankOneShadow
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturn
+public import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
+public import UnrestrictedBooleanMul.N5.RankOneShadow
+
+@[expose] public section
 
 /-!
 # Target geometry of a quadratic return section

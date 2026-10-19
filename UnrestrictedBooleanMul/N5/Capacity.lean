@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.DefectThreeWitness
+module
+
+public import UnrestrictedBooleanMul.N5.DefectThreeWitness
+
+@[expose] public section
 
 /-!
 # The capacity obstruction

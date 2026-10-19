@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SecondFeedbackHigh
+module
+
+public import UnrestrictedBooleanMul.N4.SecondFeedbackHigh
+
+@[expose] public section
 
 /-!
 # Saturation after the first feedback

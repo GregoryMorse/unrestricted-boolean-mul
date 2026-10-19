@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.BilinearRestriction
-import UnrestrictedBooleanMul.BilinearCapacity
-import Mathlib.Tactic.FinCases
+module
+
+public import UnrestrictedBooleanMul.BilinearRestriction
+public import UnrestrictedBooleanMul.BilinearCapacity
+public import Mathlib.Tactic.FinCases
+
+@[expose] public section
 
 /-! The output profile of every nonzero n=6 hyperplane restriction.
 The algebraic minor argument follows N4.Hankel; it does not enumerate

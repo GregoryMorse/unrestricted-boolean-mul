@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.CompletionDeficit
+module
+
+public import UnrestrictedBooleanMul.N5.CompletionDeficit
+
+@[expose] public section
 
 /-!
 # Stable target-rank envelopes

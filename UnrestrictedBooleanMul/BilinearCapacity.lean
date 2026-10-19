@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.Models
-import UnrestrictedBooleanMul.Capacity
-import UnrestrictedBooleanMul.CapacityFiber
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+module
+
+public import UnrestrictedBooleanMul.Models
+public import UnrestrictedBooleanMul.Capacity
+public import UnrestrictedBooleanMul.CapacityFiber
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+
+@[expose] public section
 
 /-! The abstract capacity criterion in the repository's actual bilinear
 formula model. Rank-one generators include zero; it never changes a span. -/

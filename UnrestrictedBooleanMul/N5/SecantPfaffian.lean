@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RankTwoSecants
+module
+
+public import UnrestrictedBooleanMul.N5.RankTwoSecants
+
+@[expose] public section
 
 /-!
 # Pfaffian equations for a two-wedge secant

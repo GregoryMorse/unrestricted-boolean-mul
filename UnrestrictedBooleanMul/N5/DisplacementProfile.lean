@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.Displacement
+module
+
+public import UnrestrictedBooleanMul.N5.Displacement
+
+@[expose] public section
 
 /-!
 # Closed-place displacement profiles

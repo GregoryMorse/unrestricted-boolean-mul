@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.LocalShadow
+module
+
+public import UnrestrictedBooleanMul.N5.LocalShadow
+
+@[expose] public section
 
 /-!
 # Quadratic shadows of low products

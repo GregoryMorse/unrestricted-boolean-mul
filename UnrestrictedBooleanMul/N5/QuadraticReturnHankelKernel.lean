@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnKernel
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnKernel
+
+@[expose] public section
 
 /-!
 # Hankel classification of quadratic-return annihilators

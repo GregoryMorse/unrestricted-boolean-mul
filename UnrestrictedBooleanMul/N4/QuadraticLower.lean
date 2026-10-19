@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N4.Degree
-import UnrestrictedBooleanMul.N4.TwoForm
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+module
+
+public import UnrestrictedBooleanMul.N4.Degree
+public import UnrestrictedBooleanMul.N4.TwoForm
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+
+@[expose] public section
 
 /-!
 # Algebraic quadratic lower-bound core

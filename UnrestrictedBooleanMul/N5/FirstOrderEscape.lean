@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.N5.StableTargetInduction
-import UnrestrictedBooleanMul.N5.FirstOrderState
-import UnrestrictedBooleanMul.N5.QuadraticCoordinates
-import UnrestrictedBooleanMul.N5.LowProductSemantic
+module
+
+public import UnrestrictedBooleanMul.N5.StableTargetInduction
+public import UnrestrictedBooleanMul.N5.FirstOrderState
+public import UnrestrictedBooleanMul.N5.QuadraticCoordinates
+public import UnrestrictedBooleanMul.N5.LowProductSemantic
+
+@[expose] public section
 
 /-!
 # Normal form for a first escape from the first-order envelope

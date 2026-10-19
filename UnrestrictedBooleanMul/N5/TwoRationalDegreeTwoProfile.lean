@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
+
+@[expose] public section
 
 /-!
 # The two-rational plus degree-two capacity profile

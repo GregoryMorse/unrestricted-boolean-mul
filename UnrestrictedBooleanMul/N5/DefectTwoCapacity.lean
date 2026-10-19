@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.TwoPlaceProfile
+module
+
+public import UnrestrictedBooleanMul.N5.TwoPlaceProfile
+
+@[expose] public section
 
 /-!
 # Capacity of a defect line

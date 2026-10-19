@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.HighDefect
+module
+
+public import UnrestrictedBooleanMul.N5.HighDefect
+
+@[expose] public section
 
 /-!
 # Quadratic returns after a high birth

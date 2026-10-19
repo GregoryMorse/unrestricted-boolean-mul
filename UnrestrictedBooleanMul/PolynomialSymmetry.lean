@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.BilinearSymmetry
-import Mathlib.Data.Nat.Choose.Basic
+module
+
+public import UnrestrictedBooleanMul.BilinearSymmetry
+public import Mathlib.Data.Nat.Choose.Basic
+
+@[expose] public section
 
 /-! Translation and reversal as actual n=6 tensor symmetries. The finite
 identities concern small coefficient matrices, not circuits or capacity

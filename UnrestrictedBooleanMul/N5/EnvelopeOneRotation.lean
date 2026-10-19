@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeLocalSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeLocalSymmetry
+
+@[expose] public section
 
 /-!
 # Closing the one-rotation envelope branch

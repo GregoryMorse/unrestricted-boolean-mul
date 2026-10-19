@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.TargetClean
+module
+
+public import UnrestrictedBooleanMul.N5.TargetClean
+
+@[expose] public section
 
 /-!
 # The target-clean retained cross matrix

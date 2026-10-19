@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
-import UnrestrictedBooleanMul.N5.FirstOrderState
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticPrefixExact
+public import UnrestrictedBooleanMul.N5.FirstOrderState
+
+@[expose] public section
 
 /-!
 # Low-defect quadratic prefixes enter the first-order envelope

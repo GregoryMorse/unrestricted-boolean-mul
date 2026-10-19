@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.Upper
+module
+
+public import UnrestrictedBooleanMul.N5.Upper
+
+@[expose] public section
 
 /-!
 # Canonical statement for the five-term result

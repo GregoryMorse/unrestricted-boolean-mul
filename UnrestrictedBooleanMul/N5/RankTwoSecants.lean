@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EffectiveFibers
+module
+
+public import UnrestrictedBooleanMul.N5.EffectiveFibers
+
+@[expose] public section
 
 /-!
 # Rank of target secants

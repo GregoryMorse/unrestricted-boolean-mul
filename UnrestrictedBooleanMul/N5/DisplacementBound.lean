@@ -1,8 +1,12 @@
-import UnrestrictedBooleanMul.N5.ThreeRationalProfile
-import UnrestrictedBooleanMul.N5.PointedFanoRelations
-import UnrestrictedBooleanMul.N5.AllRationalPointedPivots
-import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
-import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
+module
+
+public import UnrestrictedBooleanMul.N5.ThreeRationalProfile
+public import UnrestrictedBooleanMul.N5.PointedFanoRelations
+public import UnrestrictedBooleanMul.N5.AllRationalPointedPivots
+public import UnrestrictedBooleanMul.N5.StrongDegreeTwoPointedPivots
+public import UnrestrictedBooleanMul.N5.TwoRationalDegreeTwoProfile
+
+@[expose] public section
 
 /-!
 # The five-term displacement bound

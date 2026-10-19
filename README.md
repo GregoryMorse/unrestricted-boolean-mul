@@ -39,9 +39,16 @@ No general solution of the Boyar–Find question is asserted.
 
 ## Reproduction
 
-Pinned Lean **4.33.1**, compiler commit
-`819816b2e0a3bf405af45ae5c7af2491d8f5bee6`; Mathlib and its dependencies
+Pinned Lean **4.35.0-rc3**, compiler commit
+`470d5ce1400764999581fd26d5d72b00d990b0f4`; Mathlib and its dependencies
 are locked in `lake-manifest.json`.
+
+All submitted Lean sources use the module system, including the separate
+n5/n6 sources. `scripts/check_lean_sources.py` enforces Palomar's
+repository-wide header and size requirements before the n4 build. Public
+imports and exposed public sections preserve the existing interface; no
+mathematical conclusion or permitted axiom is changed by this port.
+Historical verification reports retain their original compiler and commit.
 
 ```sh
 lake exe cache get

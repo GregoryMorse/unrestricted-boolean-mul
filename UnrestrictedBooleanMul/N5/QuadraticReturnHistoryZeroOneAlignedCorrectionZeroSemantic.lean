@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedBase
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedCorrectionZeroNormalization
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedBase
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedCorrectionZeroNormalization
+
+@[expose] public section
 
 /-!
 # Semantic closure of `ZeroOneAlignedCorrectionZero`

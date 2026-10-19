@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeLocalDependent
-import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeLocalDependent
+public import UnrestrictedBooleanMul.N5.RationalPlaceSymmetry
+
+@[expose] public section
 
 /-!
 # Rational-place transport for local/dependent envelope shadows

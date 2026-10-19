@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.DegreeTwoSecantPivots
-import UnrestrictedBooleanMul.N5.SparseAnchorGifts
+module
+
+public import UnrestrictedBooleanMul.N5.DegreeTwoSecantPivots
+public import UnrestrictedBooleanMul.N5.SparseAnchorGifts
+
+@[expose] public section
 
 /-!
 # Fano line gifts as rank-four secants

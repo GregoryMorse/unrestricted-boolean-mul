@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SliceGeometry
+module
+
+public import UnrestrictedBooleanMul.N4.SliceGeometry
+
+@[expose] public section
 
 /-!
 # The feedback factor at a zero-place tangent

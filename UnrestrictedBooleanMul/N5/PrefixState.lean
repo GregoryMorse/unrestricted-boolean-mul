@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticFlattening
-import Mathlib.Data.Nat.Find
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticFlattening
+public import Mathlib.Data.Nat.Find
+
+@[expose] public section
 
 /-!
 # The last quadratic prefix

@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
+public import UnrestrictedBooleanMul.N5.QuadraticReturnSymmetry
+
+@[expose] public section
 
 /-!
 # Simultaneous rational factor-pair classification

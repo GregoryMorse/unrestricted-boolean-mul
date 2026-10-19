@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeTwoRotation
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeTwoRotation
+
+@[expose] public section
 
 /-!
 # Local-versus-dependent shadows in the first-order envelope

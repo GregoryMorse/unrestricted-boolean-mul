@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ThreeColour
-import UnrestrictedBooleanMul.N5.HighDefect
+module
+
+public import UnrestrictedBooleanMul.N5.ThreeColour
+public import UnrestrictedBooleanMul.N5.HighDefect
+
+@[expose] public section
 
 /-!
 # Three-colour birth in the high quotient

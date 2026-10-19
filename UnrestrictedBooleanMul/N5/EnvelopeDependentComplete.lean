@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.EnvelopeDependentAlgebra
-import UnrestrictedBooleanMul.N5.EnvelopeComplete
-import UnrestrictedBooleanMul.N5.EnvelopeIndependentComplete
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeDependentAlgebra
+public import UnrestrictedBooleanMul.N5.EnvelopeComplete
+public import UnrestrictedBooleanMul.N5.EnvelopeIndependentComplete
+
+@[expose] public section
 
 /-!
 # Complete first-order envelope shadow exclusion

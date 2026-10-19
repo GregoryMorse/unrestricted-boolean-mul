@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.TightCircuit
+module
+
+public import UnrestrictedBooleanMul.N5.TightCircuit
+
+@[expose] public section
 
 /-!
 # Target-tight suffixes

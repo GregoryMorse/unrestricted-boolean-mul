@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Flag
+module
+
+public import UnrestrictedBooleanMul.N4.Flag
+
+@[expose] public section
 
 /-!
 # Padding unrestricted circuits with redundant gates

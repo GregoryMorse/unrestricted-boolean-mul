@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.LowDefectPrefix
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+module
+
+public import UnrestrictedBooleanMul.N5.LowDefectPrefix
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+
+@[expose] public section
 
 /-!
 # A decomposable anchor for a low-defect quadratic prefix

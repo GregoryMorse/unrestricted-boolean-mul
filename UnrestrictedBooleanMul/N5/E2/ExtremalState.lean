@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+@[expose] public section
 
 /-!
 # The normalized extremal two-defect envelope

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticSeedClassified
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticSeedClassified
+
+@[expose] public section
 
 /-!
 # Normalizing a quartic seed plane at the zero place

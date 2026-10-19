@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticLift
-import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticLift
+public import UnrestrictedBooleanMul.N5.E2.EnvelopeIntersections
+
+@[expose] public section
 
 /-!
 # Concrete quadratic envelopes as ANF wire states

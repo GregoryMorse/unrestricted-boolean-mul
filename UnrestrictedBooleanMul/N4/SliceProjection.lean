@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SliceModels
+module
+
+public import UnrestrictedBooleanMul.N4.SliceModels
+
+@[expose] public section
 
 /-!
 # Homogeneous projections of the slice models

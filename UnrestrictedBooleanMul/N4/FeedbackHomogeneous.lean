@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.PlaceState
+module
+
+public import UnrestrictedBooleanMul.N4.PlaceState
+
+@[expose] public section
 
 /-!
 # Fixed homogeneous bridges for the feedback state

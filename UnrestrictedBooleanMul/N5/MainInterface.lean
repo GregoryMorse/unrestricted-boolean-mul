@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.CircuitPadding
-import UnrestrictedBooleanMul.N5.Statement
+module
+
+public import UnrestrictedBooleanMul.CircuitPadding
+public import UnrestrictedBooleanMul.N5.Statement
+
+@[expose] public section
 
 /-!
 # Final interface for the five-term theorem

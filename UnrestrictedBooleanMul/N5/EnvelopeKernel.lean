@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.TargetCleanMatrix
+module
+
+public import UnrestrictedBooleanMul.N5.TargetCleanMatrix
+
+@[expose] public section
 
 /-!
 # Polarized kernel of the first-order envelope
@@ -613,8 +617,10 @@ theorem hankelMatrix_exactFirstOrderCombination (x : Fin 8 → F₂) :
     hankelMatrix (exactFirstOrderCombination x) =
       firstOrderCrossCombination x := by
   ext i j
-  simp [hankelMatrix, exactFirstOrderCombination,
-    firstOrderCrossCombination]
+  change (∑ k : Fin 8, x k • exactFirstOrderDirections k) (hankelIndex i j) =
+    (∑ k : Fin 8, x k • (fun a b : Fin 5 =>
+      exactFirstOrderDirections k (hankelIndex a b))) i j
+  simp only [Finset.sum_apply, Pi.smul_apply]
 
 /-- Target-coefficient form of the polarized bridge. -/
 theorem targetCrossWedge_exactFirstOrderCombination
@@ -785,7 +791,7 @@ theorem firstOrderPlaneCoeff_difference_classification
   have habRel :
       a * firstOrderPlaneCoeff x y 9 +
         b * firstOrderPlaneCoeff x y 2 + a * b = 0 := by
-    ring_nf at hab0 hab1 ⊢
+    ring_nf (config := { ifUnchanged := .silent }) at hab0 hab1 ⊢
     have h0 : firstOrderPlaneCoeff x y 2 *
         firstOrderPlaneCoeff x y 9 * 2 = 0 := by
       rw [N3Certificate.two_eq_zero_f2, mul_zero]
@@ -799,7 +805,7 @@ theorem firstOrderPlaneCoeff_difference_classification
   have hacRel :
       a * firstOrderPlaneCoeff x y 15 +
         c * firstOrderPlaneCoeff x y 2 + a * c = 0 := by
-    ring_nf at hac0 hac1 ⊢
+    ring_nf (config := { ifUnchanged := .silent }) at hac0 hac1 ⊢
     have h0 : firstOrderPlaneCoeff x y 2 *
         firstOrderPlaneCoeff x y 15 * 2 = 0 := by
       rw [N3Certificate.two_eq_zero_f2, mul_zero]
@@ -813,7 +819,7 @@ theorem firstOrderPlaneCoeff_difference_classification
   have hbcRel :
       b * firstOrderPlaneCoeff x y 15 +
         c * firstOrderPlaneCoeff x y 9 + b * c = 0 := by
-    ring_nf at hbc0 hbc1 ⊢
+    ring_nf (config := { ifUnchanged := .silent }) at hbc0 hbc1 ⊢
     have h0 : firstOrderPlaneCoeff x y 9 *
         firstOrderPlaneCoeff x y 15 * 2 = 0 := by
       rw [N3Certificate.two_eq_zero_f2, mul_zero]

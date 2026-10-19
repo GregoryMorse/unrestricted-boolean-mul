@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
-import UnrestrictedBooleanMul.N5.SecantPfaffian
-import UnrestrictedBooleanMul.N4.Exterior
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderEnvelope
+public import UnrestrictedBooleanMul.N5.SecantPfaffian
+public import UnrestrictedBooleanMul.N4.Exterior
+
+@[expose] public section
 
 /-!
 # Missing-coset rigidity

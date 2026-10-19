@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeKernel
-import UnrestrictedBooleanMul.N4.BooleanIdentities
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeKernel
+public import UnrestrictedBooleanMul.N4.BooleanIdentities
+
+@[expose] public section
 
 /-!
 # Independent cubic colours create a new high-degree direction

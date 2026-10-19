@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.SparseAnchorGifts
+module
+
+public import UnrestrictedBooleanMul.N5.SparseAnchorGifts
+
+@[expose] public section
 
 /-!
 # Three distinct represented place types

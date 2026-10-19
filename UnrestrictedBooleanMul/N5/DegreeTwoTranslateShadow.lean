@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.IndependentShadow
+module
+
+public import UnrestrictedBooleanMul.N5.IndependentShadow
+
+@[expose] public section
 
 /-!
 # The non-rational cubic kernel in the first-order envelope

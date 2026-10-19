@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistorySemantic
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistorySemantic
+
+@[expose] public section
 
 /-!
 # Semantic bridge for mixed rational factor pairs

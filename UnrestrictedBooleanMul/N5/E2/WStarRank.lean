@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.E2.FixedBlockRank
+module
+
+public import UnrestrictedBooleanMul.N5.E2.FixedBlockRank
+
+@[expose] public section
 
 /-!
 # Degree-two-place fixed-block certificate

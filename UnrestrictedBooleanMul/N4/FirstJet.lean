@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.CubicSlice
+module
+
+public import UnrestrictedBooleanMul.N4.CubicSlice
+
+@[expose] public section
 
 /-!
 # The first low--low collision

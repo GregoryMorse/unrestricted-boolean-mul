@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
+
+@[expose] public section
 
 /-!
 # Coordinate-free ANF wrapper for the first-order low-product collision

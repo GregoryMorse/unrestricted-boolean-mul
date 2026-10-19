@@ -1,9 +1,13 @@
-import UnrestrictedBooleanMul.N5.LowDefectPrefix
-import UnrestrictedBooleanMul.N5.StableTargetInduction
-import UnrestrictedBooleanMul.N5.CompletionDeficit
-import UnrestrictedBooleanMul.N5.MainInterface
-import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
-import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
+module
+
+public import UnrestrictedBooleanMul.N5.LowDefectPrefix
+public import UnrestrictedBooleanMul.N5.StableTargetInduction
+public import UnrestrictedBooleanMul.N5.CompletionDeficit
+public import UnrestrictedBooleanMul.N5.MainInterface
+public import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+public import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
+
+@[expose] public section
 
 /-!
 # Final circuit regime closure

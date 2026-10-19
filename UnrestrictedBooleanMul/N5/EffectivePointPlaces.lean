@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RelationGiftPivots
+module
+
+public import UnrestrictedBooleanMul.N5.RelationGiftPivots
+
+@[expose] public section
 
 /-!
 # Closed-place labels of effective populated points

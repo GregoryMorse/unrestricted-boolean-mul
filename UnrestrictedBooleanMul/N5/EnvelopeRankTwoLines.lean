@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeRankTwoSyzygy
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeRankTwoSyzygy
+
+@[expose] public section
 
 /-!
 # Rank-two Hankel plane lines

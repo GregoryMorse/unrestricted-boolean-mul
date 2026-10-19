@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.CircuitPadding
+module
+
+public import UnrestrictedBooleanMul.CircuitPadding
+
+@[expose] public section
 
 /-!
 # Removing redundant gates

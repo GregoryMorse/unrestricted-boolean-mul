@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeRankTwoPlaneTypes
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeRankTwoPlaneTypes
+
+@[expose] public section
 
 /-!
 # Intrinsic classification of independent first-order planes

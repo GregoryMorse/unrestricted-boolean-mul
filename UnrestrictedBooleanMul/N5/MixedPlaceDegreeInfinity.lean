@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.MixedPlaceDegreeOne
+module
+
+public import UnrestrictedBooleanMul.N5.MixedPlaceDegreeOne
+
+@[expose] public section
 
 set_option maxRecDepth 10000
 set_option linter.unusedSimpArgs false
@@ -157,7 +161,7 @@ theorem mixed23_AD_identity (q0 q1 q3 r0 r3 : F₂) (c : TargetCoeff) :
   ring_nf
   simp [degree_pow_three_f2, N3Certificate.two_eq_zero_f2,
     N3Certificate.four_eq_zero_f2]
-  ring_nf
+  ring_nf (config := { ifUnchanged := .silent })
   simp [N3Certificate.two_eq_zero_f2, N3Certificate.four_eq_zero_f2,
     N3Certificate.six_eq_zero_f2, N3Certificate.eight_eq_zero_f2,
     ten_eq_zero_f2, twelve_eq_zero_f2, fourteen_eq_zero_f2,
@@ -269,7 +273,7 @@ theorem mixed23_DD_identity (q0 q3 r0 r3 : F₂) (c : TargetCoeff) :
   ring_nf
   simp [degree_pow_three_f2, N3Certificate.two_eq_zero_f2,
     N3Certificate.four_eq_zero_f2]
-  ring_nf
+  ring_nf (config := { ifUnchanged := .silent })
   simp [N3Certificate.two_eq_zero_f2, N3Certificate.four_eq_zero_f2,
     N3Certificate.six_eq_zero_f2, N3Certificate.eight_eq_zero_f2,
     ten_eq_zero_f2, twelve_eq_zero_f2, fourteen_eq_zero_f2,

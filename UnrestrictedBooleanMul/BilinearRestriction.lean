@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.Models
+module
+
+public import UnrestrictedBooleanMul.Models
+
+@[expose] public section
 
 /-! Semantic input substitution and actual deletion of a vanished product.
 These are tensor-formula operations, not assumptions about the dimensions

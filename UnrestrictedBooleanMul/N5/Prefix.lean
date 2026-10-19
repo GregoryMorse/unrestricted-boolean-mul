@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.Capacity
-import UnrestrictedBooleanMul.N4.Degree
+module
+
+public import UnrestrictedBooleanMul.N5.Capacity
+public import UnrestrictedBooleanMul.N4.Degree
+
+@[expose] public section
 
 /-!
 # Unrestricted circuit prefixes

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.MixedPlaceDegreeInfinity
+module
+
+public import UnrestrictedBooleanMul.N5.MixedPlaceDegreeInfinity
+
+@[expose] public section
 
 /-!
 # Defect capacity and relation gifts

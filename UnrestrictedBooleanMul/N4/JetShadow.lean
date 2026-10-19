@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SecondFeedbackLow
+module
+
+public import UnrestrictedBooleanMul.N4.SecondFeedbackLow
+
+@[expose] public section
 
 /-!
 # Jet separation from a two-wedge shadow

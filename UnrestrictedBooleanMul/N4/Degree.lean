@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.Normalization
-import Mathlib.Algebra.MonoidAlgebra.Support
+module
+
+public import UnrestrictedBooleanMul.N4.Normalization
+public import Mathlib.Algebra.MonoidAlgebra.Support
+
+@[expose] public section
 
 /-!
 # Homogeneous degree and seed predicates

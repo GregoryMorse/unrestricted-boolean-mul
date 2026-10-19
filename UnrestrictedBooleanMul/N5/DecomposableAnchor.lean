@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.FourPlaceExclusion
+module
+
+public import UnrestrictedBooleanMul.N5.FourPlaceExclusion
+
+@[expose] public section
 
 /-!
 # Decomposable lifts as a graph over the quotient

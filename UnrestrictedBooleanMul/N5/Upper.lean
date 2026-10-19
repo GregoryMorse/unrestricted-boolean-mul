@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.Target
-import Mathlib.Tactic.Ring
+module
+
+public import UnrestrictedBooleanMul.N5.Target
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 /-!
 # Explicit thirteen-AND circuit for five-term multiplication

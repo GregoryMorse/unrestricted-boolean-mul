@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul
+module
+
+public import UnrestrictedBooleanMul
+
+@[expose] public section
 
 /-!
 The six Comparator declarations are the original theorems, imported from

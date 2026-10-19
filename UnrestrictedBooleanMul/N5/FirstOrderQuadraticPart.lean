@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
-import UnrestrictedBooleanMul.N5.HighDefect
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderAnchorState
+public import UnrestrictedBooleanMul.N5.HighDefect
+
+@[expose] public section
 
 /-!
 # Quadratic part of a suffix state with no new quadratic defect

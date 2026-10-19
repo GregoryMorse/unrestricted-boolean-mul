@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.FirstJetSupport
+module
+
+public import UnrestrictedBooleanMul.N4.FirstJetSupport
+
+@[expose] public section
 
 /-!
 # The post-first-feedback circuit state

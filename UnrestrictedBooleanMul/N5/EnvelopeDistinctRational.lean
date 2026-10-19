@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeOneRotation
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeOneRotation
+
+@[expose] public section
 
 /-!
 # Distinct rational local planes

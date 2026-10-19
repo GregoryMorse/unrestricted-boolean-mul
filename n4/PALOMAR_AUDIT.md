@@ -1,4 +1,12 @@
-# Palomar audit — completed n4 verification
+# Palomar audit — historical completed n4 verification
+
+This completed audit concerns the Lean 4.33.1 snapshot specified below.
+The 2026-10-19 source port pins Lean 4.35.0-rc3, ports every submitted Lean
+file to the module system, and pins the current official Palomar pipeline
+`d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44`. Its fresh results are recorded
+against the exact public commit by the [n4 CI](https://github.com/GregoryMorse/unrestricted-boolean-mul/actions/workflows/lean.yml)
+and [full official preflight](https://github.com/GregoryMorse/unrestricted-boolean-mul/actions/workflows/palomar.yml).
+No historical PASS below is relabelled as a check of the new source commit.
 
 Audit date: 2026-09-21. **READY WITH WARNINGS** for the verified proof snapshot
 identified below. All required checks for that snapshot passed; the warnings

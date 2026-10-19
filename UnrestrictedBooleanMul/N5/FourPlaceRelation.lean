@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EffectivePointPlaces
+module
+
+public import UnrestrictedBooleanMul.N5.EffectivePointPlaces
+
+@[expose] public section
 
 /-!
 # The exceptional four-place quadrilateral

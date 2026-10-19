@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.Circuit
-import Lean.Elab.Tactic.Omega
+module
+
+public import UnrestrictedBooleanMul.Circuit
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 /-!
 # Binary polynomial multiplication targets

@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedCorrectionOneRaw
-import UnrestrictedBooleanMul.N3Certificate
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedBase
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedCorrectionOneRaw
+public import UnrestrictedBooleanMul.N3Certificate
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryZeroOneAlignedBase
+
+@[expose] public section
 
 /-!
 # Affine normalization bridge: `ZeroOneAlignedCorrectionOne`

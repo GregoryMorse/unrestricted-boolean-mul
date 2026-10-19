@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ColourCases
-import UnrestrictedBooleanMul.N5.FirstOrderEscape
+module
+
+public import UnrestrictedBooleanMul.N5.ColourCases
+public import UnrestrictedBooleanMul.N5.FirstOrderEscape
+
+@[expose] public section
 
 /-!
 # Circuit-level normalization of a rank-one escape

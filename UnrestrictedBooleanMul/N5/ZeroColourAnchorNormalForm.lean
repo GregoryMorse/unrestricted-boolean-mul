@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.FirstOrderAnchorAlgebra
-import UnrestrictedBooleanMul.N5.ZeroColourEscapeReduction
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderAnchorAlgebra
+public import UnrestrictedBooleanMul.N5.ZeroColourEscapeReduction
+
+@[expose] public section
 
 /-!
 # Normal form for an anchored zero-colour escape

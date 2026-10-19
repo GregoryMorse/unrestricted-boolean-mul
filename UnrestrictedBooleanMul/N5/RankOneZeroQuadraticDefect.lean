@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
+module
+
+public import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
+
+@[expose] public section
 
 /-!
 # Rank-one closure at zero quadratic defect

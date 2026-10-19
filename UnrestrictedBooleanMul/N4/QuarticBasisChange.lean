@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticLowLow
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticLowLow
+
+@[expose] public section
 
 /-!
 # Algebraic alignment of two quartic factor bases

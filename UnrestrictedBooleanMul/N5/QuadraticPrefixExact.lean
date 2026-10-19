@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticFlattening
-import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticFlattening
+public import UnrestrictedBooleanMul.N5.E2.EnvelopeStates
+
+@[expose] public section
 
 /-!
 # Exact coordinate model of an all-quadratic prefix

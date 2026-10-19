@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.QuinticBridge
-import UnrestrictedBooleanMul.N4.CubicTarget
+module
+
+public import UnrestrictedBooleanMul.N4.QuinticBridge
+public import UnrestrictedBooleanMul.N4.CubicTarget
+
+@[expose] public section
 
 /-!
 # Cubic seed and first-feedback interfaces

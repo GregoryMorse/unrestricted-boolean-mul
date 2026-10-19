@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.UsefulWitness
-import UnrestrictedBooleanMul.N4.LowProductBridge
+module
+
+public import UnrestrictedBooleanMul.N4.UsefulWitness
+public import UnrestrictedBooleanMul.N4.LowProductBridge
+
+@[expose] public section
 
 /-!
 # Algebraic normal form for the first suffix gate

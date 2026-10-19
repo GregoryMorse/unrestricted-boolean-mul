@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticLift
-import UnrestrictedBooleanMul.N5.LowProductShadow
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticLift
+public import UnrestrictedBooleanMul.N5.LowProductShadow
+
+@[expose] public section
 
 /-!
 # Exact coordinates for ten-variable quadratic ANFs

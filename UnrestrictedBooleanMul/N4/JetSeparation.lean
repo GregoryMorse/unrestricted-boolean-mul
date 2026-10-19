@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.Tail
+module
+
+public import UnrestrictedBooleanMul.N4.Tail
+
+@[expose] public section
 
 /-!
 # First-jet separation

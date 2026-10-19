@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
-import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeSemanticExact
+public import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
+
+@[expose] public section
 
 /-!
 # Exact first-order collisions with an arbitrary old low product

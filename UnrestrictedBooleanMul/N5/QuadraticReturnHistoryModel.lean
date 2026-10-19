@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryRaw
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryRaw
+
+@[expose] public section
 
 /-!
 # Typed interface to the rational-return history certificate

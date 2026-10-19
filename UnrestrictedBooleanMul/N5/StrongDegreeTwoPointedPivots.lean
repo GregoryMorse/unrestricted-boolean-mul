@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.PointedFanoRelations
-import UnrestrictedBooleanMul.N5.RationalSecantSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.PointedFanoRelations
+public import UnrestrictedBooleanMul.N5.RationalSecantSymmetry
+
+@[expose] public section
 
 /-!
 # Symmetry-complete degree-two secant pivots

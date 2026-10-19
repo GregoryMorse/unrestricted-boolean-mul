@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ShadowRecovery
-import UnrestrictedBooleanMul.N5.EffectiveFibers
+module
+
+public import UnrestrictedBooleanMul.N5.ShadowRecovery
+public import UnrestrictedBooleanMul.N5.EffectiveFibers
+
+@[expose] public section
 
 /-!
 # Local evaluation frames for shadow recovery

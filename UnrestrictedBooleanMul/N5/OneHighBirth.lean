@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.FirstOrderQuadraticPart
-import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderQuadraticPart
+public import UnrestrictedBooleanMul.N5.RankOneCorrectionColour
+
+@[expose] public section
 
 /-!
 # Birth of the unique high direction

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.CubicSemantic
+module
+
+public import UnrestrictedBooleanMul.N4.CubicSemantic
+
+@[expose] public section
 
 /-!
 # Algebraic ANF models for zero-place slices

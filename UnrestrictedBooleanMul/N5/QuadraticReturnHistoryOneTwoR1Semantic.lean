@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneTwoR1Raw
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryOneTwoR1Raw
+
+@[expose] public section
 
 /-!
 # Semantic bridge for the `OneTwoR1` return-history certificate

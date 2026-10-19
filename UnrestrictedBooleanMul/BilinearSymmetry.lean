@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.BilinearRestriction
-import UnrestrictedBooleanMul.BilinearOutput
+module
+
+public import UnrestrictedBooleanMul.BilinearRestriction
+public import UnrestrictedBooleanMul.BilinearOutput
+
+@[expose] public section
 
 /-! Tensor symmetries transport hyperplane restrictions in the actual
 bilinear formula model. No orbit catalogue is part of this argument. -/

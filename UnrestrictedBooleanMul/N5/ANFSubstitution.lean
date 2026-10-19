@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.QuadraticCoordinates
-import UnrestrictedBooleanMul.N4.BooleanIdentities
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticCoordinates
+public import UnrestrictedBooleanMul.N4.BooleanIdentities
+
+@[expose] public section
 
 /-!
 # Algebraic substitution in Boolean ANFs
@@ -51,6 +55,7 @@ def anfSubstitution {m n : Nat} (f : Fin m → ANF n) : ANF m →ₐ[F₂] ANF n
     (f : Fin m → ANF n) (s : Finset (Fin m)) :
     anfSubstitution f (monomial s) = ∏ i ∈ s, f i := by
   simp [anfSubstitution, monomial, MonoidAlgebra.lift_apply]
+  rfl
 
 @[simp] theorem anfSubstitution_X {m n : Nat}
     (f : Fin m → ANF n) (i : Fin m) :

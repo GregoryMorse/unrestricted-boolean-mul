@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.Mul
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+module
+
+public import UnrestrictedBooleanMul.Mul
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 /-!
 # Exact small cases and explicit upper-bound circuits

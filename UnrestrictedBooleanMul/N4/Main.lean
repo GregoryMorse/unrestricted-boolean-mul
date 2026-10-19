@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.FeedbackSaturation
+module
+
+public import UnrestrictedBooleanMul.N4.FeedbackSaturation
+
+@[expose] public section
 
 /-!
 # Exact unrestricted Boolean multiplicative complexity for four-term products

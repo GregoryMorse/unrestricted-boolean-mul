@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
-import UnrestrictedBooleanMul.N5.RankOneEscape
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderLowCollision
+public import UnrestrictedBooleanMul.N5.RankOneEscape
+
+@[expose] public section
 
 /-!
 # Absorbing first-order corrections in the rank-one branch

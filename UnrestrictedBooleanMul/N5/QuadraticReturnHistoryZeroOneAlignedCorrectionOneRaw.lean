@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.ANF
+module
+
+public import UnrestrictedBooleanMul.ANF
+
+@[expose] public section
 
 /-!
 # Reduced aligned certificate: `ZeroOneAlignedCorrectionOne`

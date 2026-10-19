@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.EnvelopeLocalDependent
-import UnrestrictedBooleanMul.N5.CubicSemantic
-import UnrestrictedBooleanMul.N5.CubicOverlapBasis
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeLocalDependent
+public import UnrestrictedBooleanMul.N5.CubicSemantic
+public import UnrestrictedBooleanMul.N5.CubicOverlapBasis
+
+@[expose] public section
 
 /-!
 # Exact Boolean semantics for a rational local/dependent comparison

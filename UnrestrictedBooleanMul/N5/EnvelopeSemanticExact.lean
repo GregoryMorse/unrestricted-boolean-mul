@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.EnvelopeSemantic
-import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationExact
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeSemantic
+public import UnrestrictedBooleanMul.N5.EnvelopeTwoRotationExact
+
+@[expose] public section
 
 /-!
 # Literal Boolean first-order envelope semantics

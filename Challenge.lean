@@ -1,7 +1,11 @@
-import Mathlib.Algebra.MonoidAlgebra.Basic
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Span.Defs
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Span.Defs
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Unrestricted Boolean polynomial multiplication through four terms

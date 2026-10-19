@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.PlaceSymmetry
+module
+
+public import UnrestrictedBooleanMul.N4.PlaceSymmetry
+
+@[expose] public section
 
 /-!
 # Complete quartic exclusion

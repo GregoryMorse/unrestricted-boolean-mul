@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeBasisChange
+
+@[expose] public section
 
 /-!
 # Coordinate assembly for the first-order n=5 envelope

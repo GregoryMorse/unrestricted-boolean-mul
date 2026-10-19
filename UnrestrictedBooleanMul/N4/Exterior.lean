@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.Places
-import Mathlib.Tactic.LinearCombination
+module
+
+public import UnrestrictedBooleanMul.N4.Places
+public import Mathlib.Tactic.LinearCombination
+
+@[expose] public section
 
 /-!
 # Small exterior-coordinate layer

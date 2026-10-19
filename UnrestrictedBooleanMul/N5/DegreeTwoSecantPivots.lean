@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.DegreeTwoSecantQ2
+module
+
+public import UnrestrictedBooleanMul.N5.DegreeTwoSecantQ2
+
+@[expose] public section
 
 /-!
 # Remaining degree-two local secant pivots

@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.Prefix
-import UnrestrictedBooleanMul.N4.SemanticQuadratic
+module
+
+public import UnrestrictedBooleanMul.N5.Prefix
+public import UnrestrictedBooleanMul.N4.SemanticQuadratic
+
+@[expose] public section
 
 /-!
 # Algebraic flattening of quadratic prefixes

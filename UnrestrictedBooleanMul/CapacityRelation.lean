@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.Capacity
+module
+
+public import UnrestrictedBooleanMul.Capacity
+
+@[expose] public section
 
 /-! The exact relation-map calculation for an arbitrary target subspace.
 The proof generalizes N5.RelationMap without importing the n=5 geometry. -/

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
+module
+
+public import UnrestrictedBooleanMul.N5.E2.EnvelopeSpaces
+
+@[expose] public section
 
 /-!
 # Exact target intersections of the concrete two-defect envelopes

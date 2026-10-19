@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.ANF
-import Mathlib.Data.Set.PowersetCard
+module
+
+public import UnrestrictedBooleanMul.ANF
+public import Mathlib.Data.Set.PowersetCard
+
+@[expose] public section
 
 /-!
 # Squarefree quadratic coordinates

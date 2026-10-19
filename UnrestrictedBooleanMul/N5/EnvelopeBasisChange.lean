@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.EnvelopeShadow
+module
+
+public import UnrestrictedBooleanMul.N5.EnvelopeShadow
+
+@[expose] public section
 
 /-!
 # Algebraic basis changes for exceptional n=5 planes

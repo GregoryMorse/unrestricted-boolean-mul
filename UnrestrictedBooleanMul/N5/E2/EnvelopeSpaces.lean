@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
-import UnrestrictedBooleanMul.N5.Displacement
+module
+
+public import UnrestrictedBooleanMul.N5.E2.LowSetGeometry
+public import UnrestrictedBooleanMul.N5.Displacement
+
+@[expose] public section
 
 /-!
 # Concrete maximal two-defect envelope spaces

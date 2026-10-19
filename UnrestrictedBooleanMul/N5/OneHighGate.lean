@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.HighDefect
-import UnrestrictedBooleanMul.N5.ColourNormalization
+module
+
+public import UnrestrictedBooleanMul.N5.HighDefect
+public import UnrestrictedBooleanMul.N5.ColourNormalization
+
+@[expose] public section
 
 /-!
 # Gate normal form with one high direction

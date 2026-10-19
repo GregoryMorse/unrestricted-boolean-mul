@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N6.Upper
+module
+
+public import UnrestrictedBooleanMul.N6.Upper
+
+@[expose] public section
 
 #print axioms UnrestrictedBooleanMul.BilinearFormula.recombine
 #print axioms UnrestrictedBooleanMul.model_complexity_chain

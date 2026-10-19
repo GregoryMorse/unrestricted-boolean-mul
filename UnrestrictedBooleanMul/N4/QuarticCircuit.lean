@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.QuarticANF
-import UnrestrictedBooleanMul.N4.SeedChild
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticANF
+public import UnrestrictedBooleanMul.N4.SeedChild
+
+@[expose] public section
 
 /-!
 # Circuit-facing low--low quartic exclusion

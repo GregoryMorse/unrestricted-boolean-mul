@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticOrbits
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticOrbits
+
+@[expose] public section
 
 /-!
 # Quartic separation for every pair of rational-place supports

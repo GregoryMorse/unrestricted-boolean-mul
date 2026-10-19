@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticPlaneNormalization
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticPlaneNormalization
+
+@[expose] public section
 
 /-!
 # Exterior geometry for the zero-place slice argument
@@ -77,7 +81,7 @@ theorem sliceQuadraticB_annihilator {ell : LinearForm}
     sliceABar, sliceBBar, vectorWedgeTwo, vectorWedge,
     placeA, placeB]
     at h0 h1 h2 h3 h4 h5 h6 h7
-  ring_nf at h0 h1 h2 h3 h4 h5 h6 h7
+  ring_nf (config := { ifUnchanged := .silent }) at h0 h1 h2 h3 h4 h5 h6 h7
   simp [N3Certificate.two_eq_zero_f2] at h0 h1 h2 h3 h4 h5 h6 h7
   funext i
   fin_cases i

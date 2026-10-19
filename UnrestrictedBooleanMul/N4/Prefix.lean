@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.Cubic
-import UnrestrictedBooleanMul.N4.QuadraticLower
+module
+
+public import UnrestrictedBooleanMul.N4.Cubic
+public import UnrestrictedBooleanMul.N4.QuadraticLower
+
+@[expose] public section
 
 /-!
 # Rational-prefix rigidity

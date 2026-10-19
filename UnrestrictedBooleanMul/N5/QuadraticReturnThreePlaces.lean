@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnHistoryMixedSemantic
+
+@[expose] public section
 
 /-!
 # Three distinct rational places force a sextic term

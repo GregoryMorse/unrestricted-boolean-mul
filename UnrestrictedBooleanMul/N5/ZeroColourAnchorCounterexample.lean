@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.ZeroColourAnchorSemantic
-import UnrestrictedBooleanMul.N5.RegimeClosure
+module
+
+public import UnrestrictedBooleanMul.N5.ZeroColourAnchorSemantic
+public import UnrestrictedBooleanMul.N5.RegimeClosure
+
+@[expose] public section
 
 /-!
 # Counterexample to the history-free anchored zero-colour reduction

@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.QuarticBasisChange
-import UnrestrictedBooleanMul.N4.NormalizedConstruction
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticBasisChange
+public import UnrestrictedBooleanMul.N4.NormalizedConstruction
+
+@[expose] public section
 
 /-!
 # ANF form of the low--low quartic exclusion

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.JetShadow
+module
+
+public import UnrestrictedBooleanMul.N4.JetShadow
+
+@[expose] public section
 
 /-!
 # The cancelled-high low--low branch

@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.SecantPfaffian
-import UnrestrictedBooleanMul.N5.RelationGiftPivots
+module
+
+public import UnrestrictedBooleanMul.N5.SecantPfaffian
+public import UnrestrictedBooleanMul.N5.RelationGiftPivots
+
+@[expose] public section
 
 /-!
 # Local secant coefficient pivots

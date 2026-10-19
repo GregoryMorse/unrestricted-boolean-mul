@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
-import UnrestrictedBooleanMul.N5.ColourHighQuotient
-import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderColourReduction
+public import UnrestrictedBooleanMul.N5.ColourHighQuotient
+public import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
+
+@[expose] public section
 
 /-!
 # Rank-two escape and the third high direction

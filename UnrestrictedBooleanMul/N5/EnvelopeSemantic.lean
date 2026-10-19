@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.QuarticSemantic
-import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
-import UnrestrictedBooleanMul.N5.CubicOverlapBasis
+module
+
+public import UnrestrictedBooleanMul.N5.QuarticSemantic
+public import UnrestrictedBooleanMul.N5.EnvelopeDependentComplete
+public import UnrestrictedBooleanMul.N5.CubicOverlapBasis
+
+@[expose] public section
 
 /-!
 # Circuit-facing first-order envelope semantics

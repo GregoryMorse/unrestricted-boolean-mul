@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.LocalKlein
+module
+
+public import UnrestrictedBooleanMul.N5.LocalKlein
+
+@[expose] public section
 
 /-!
 # The closed-place quotient atlas

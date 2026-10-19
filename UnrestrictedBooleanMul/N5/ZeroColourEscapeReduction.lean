@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.OneHighBirth
-import UnrestrictedBooleanMul.N5.FirstOrderEscape
+module
+
+public import UnrestrictedBooleanMul.N5.OneHighBirth
+public import UnrestrictedBooleanMul.N5.FirstOrderEscape
+
+@[expose] public section
 
 /-!
 # Zero-colour escape as a two-product base equation

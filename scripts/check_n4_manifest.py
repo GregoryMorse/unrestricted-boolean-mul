@@ -12,6 +12,7 @@ EXTRA = {
     'n4/PALOMAR_AUDIT.md', 'n4/SUBMISSION.md',
     '.github/workflows/lean.yml', '.github/workflows/palomar.yml',
     'scripts/ci_verify.py', 'scripts/test_ci_verify.py', 'scripts/check_n4_manifest.py',
+    'scripts/check_lean_sources.py',
 }
 
 

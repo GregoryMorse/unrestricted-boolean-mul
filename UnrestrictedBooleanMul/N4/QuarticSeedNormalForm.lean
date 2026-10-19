@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticIdempotenceConsequences
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticIdempotenceConsequences
+
+@[expose] public section
 
 /-!
 # Circuit-level quartic seed-using normal form

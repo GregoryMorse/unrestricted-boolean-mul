@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.Fiber
+module
+
+public import UnrestrictedBooleanMul.N5.Fiber
+
+@[expose] public section
 
 /-!
 # The exact relation map

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.RankTwoSecants
+module
+
+public import UnrestrictedBooleanMul.N5.RankTwoSecants
+
+@[expose] public section
 
 /-!
 # Exact classification of effective five-term quadratic fibers

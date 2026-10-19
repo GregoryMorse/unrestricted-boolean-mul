@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.CubicSeed
+module
+
+public import UnrestrictedBooleanMul.N4.CubicSeed
+
+@[expose] public section
 
 /-!
 # Quintic anchor certificate

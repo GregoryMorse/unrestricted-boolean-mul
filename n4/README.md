@@ -49,6 +49,16 @@ See [Palomar audit](PALOMAR_AUDIT.md) and [submission preparation](SUBMISSION.md
 
 ## Immutable snapshot
 
+Current development is pinned to Lean **4.35.0-rc3** and matching Mathlib.
+Every submitted Lean source now uses `module`, public imports and exposed
+public declarations. The n3 coefficient calculations are split into small
+modules without changing the named theorem statements. The default workflow
+checks the entire submitted source set for Palomar's module/size policy,
+then builds and replays only the n4 proof closure. The separate n5/n6
+workflows remain separate and do not assert their open lower bounds.
+Use the exact commit recorded in the new GitHub CI/preflight report;
+the historical reports below are not checks of this toolchain port.
+
 Published-paper snapshot: [`n4-arxiv-v2`](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v2).
 The [`n4-arxiv-v3` release](https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v3)
 pins Lean 4.33.1 and the isolated n4 CI plus Palomar interface. The

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnThreePlaces
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnThreePlaces
+
+@[expose] public section
 
 /-!
 # Three-place feedback: compatibility interface

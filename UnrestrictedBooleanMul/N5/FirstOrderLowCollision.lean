@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N5.FirstOrderEscape
-import UnrestrictedBooleanMul.N5.EnvelopeSemantic
+module
+
+public import UnrestrictedBooleanMul.N5.FirstOrderEscape
+public import UnrestrictedBooleanMul.N5.EnvelopeSemantic
+
+@[expose] public section
 
 /-!
 # Closing a first-order escape against an old low product

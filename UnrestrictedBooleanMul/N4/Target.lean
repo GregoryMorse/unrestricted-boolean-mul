@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N4.Flag
-import Mathlib.Tactic.FinCases
+module
+
+public import UnrestrictedBooleanMul.N4.Flag
+public import Mathlib.Tactic.FinCases
+
+@[expose] public section
 
 /-!
 # The four-term target and its ambient dimension

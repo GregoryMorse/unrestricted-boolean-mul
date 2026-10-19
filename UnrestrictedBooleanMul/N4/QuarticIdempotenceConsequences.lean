@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.QuarticIdempotence
+module
+
+public import UnrestrictedBooleanMul.N4.QuarticIdempotence
+
+@[expose] public section
 
 /-!
 # Consequences of the quartic idempotence equation

@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.DecomposableAnchor
+module
+
+public import UnrestrictedBooleanMul.N5.DecomposableAnchor
+
+@[expose] public section
 
 /-!
 # Sparse anchor generators of the relation-gift image

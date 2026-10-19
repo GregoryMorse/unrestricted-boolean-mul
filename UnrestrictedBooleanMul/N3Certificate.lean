@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.SmallCases
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+module
+
+public import UnrestrictedBooleanMul.SmallCases
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Ring
+
+@[expose] public section
 
 namespace UnrestrictedBooleanMul.N3Certificate
 

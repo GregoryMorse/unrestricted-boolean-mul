@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.QuadraticReturnSymmetry
+module
+
+public import UnrestrictedBooleanMul.N5.QuadraticReturnSymmetry
+
+@[expose] public section
 
 /-!
 # Algebraic exterior kernels for quadratic returns

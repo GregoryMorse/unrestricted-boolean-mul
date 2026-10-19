@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SecondJet
+module
+
+public import UnrestrictedBooleanMul.N4.SecondJet
+
+@[expose] public section
 
 /-!
 # Excluding a seed-using second feedback

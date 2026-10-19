@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N5.LocalKlein
+module
+
+public import UnrestrictedBooleanMul.N5.LocalKlein
+
+@[expose] public section
 
 /-!
 # Fixed-block rank certificates for the two-defect envelopes

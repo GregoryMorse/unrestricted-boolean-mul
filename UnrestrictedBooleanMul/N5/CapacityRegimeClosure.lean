@@ -1,7 +1,11 @@
-import UnrestrictedBooleanMul.N5.CapacityReplay
-import UnrestrictedBooleanMul.N5.MainInterface
-import UnrestrictedBooleanMul.N5.PrefixState
-import UnrestrictedBooleanMul.N5.StableTarget
+module
+
+public import UnrestrictedBooleanMul.N5.CapacityReplay
+public import UnrestrictedBooleanMul.N5.MainInterface
+public import UnrestrictedBooleanMul.N5.PrefixState
+public import UnrestrictedBooleanMul.N5.StableTarget
+
+@[expose] public section
 
 /-!
 # Final circuit split through intrinsic capacity states

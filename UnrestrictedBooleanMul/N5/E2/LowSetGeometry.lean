@@ -1,6 +1,10 @@
-import UnrestrictedBooleanMul.N5.E2.WStarRank
-import UnrestrictedBooleanMul.N5.E2.WPQRank
-import UnrestrictedBooleanMul.N5.E2.WThreePRank
+module
+
+public import UnrestrictedBooleanMul.N5.E2.WStarRank
+public import UnrestrictedBooleanMul.N5.E2.WPQRank
+public import UnrestrictedBooleanMul.N5.E2.WThreePRank
+
+@[expose] public section
 
 /-!
 # Geometry of the two-defect low-rank class sets

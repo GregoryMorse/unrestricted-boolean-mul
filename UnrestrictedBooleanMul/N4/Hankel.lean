@@ -1,5 +1,9 @@
-import UnrestrictedBooleanMul.N3
-import Lean.Elab.Tactic.Omega
+module
+
+public import UnrestrictedBooleanMul.N3
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 /-!
 # Four-term Hankel target geometry

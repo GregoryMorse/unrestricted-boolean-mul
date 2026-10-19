@@ -1,4 +1,8 @@
-import UnrestrictedBooleanMul.N4.SliceBridge
+module
+
+public import UnrestrictedBooleanMul.N4.SliceBridge
+
+@[expose] public section
 
 /-!
 # Algebraic normalization of a rational place
