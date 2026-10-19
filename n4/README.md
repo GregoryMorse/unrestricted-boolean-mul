@@ -54,7 +54,9 @@ Every submitted Lean source now uses `module`, public imports and exposed
 public declarations. The n3 coefficient calculations are split into small
 modules without changing the named theorem statements. The default workflow
 checks the entire submitted source set for Palomar's module/size policy,
-then builds and replays only the n4 proof closure. The separate n5/n6
+then compares the independent statement models, builds and replays only the
+n4 proof closure, and runs `lake comparator` on the actual six-declaration
+configuration. The separate n5/n6
 workflows remain separate and do not assert their open lower bounds.
 Use the exact commit recorded in the new GitHub CI/preflight report;
 the historical reports below are not checks of this toolchain port.

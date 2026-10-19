@@ -15,11 +15,11 @@ noncomputable section
 
 /-- The variable `a_i` among the `2n` multiplication inputs. -/
 def aVar (n : Nat) (i : Fin n) : ANF (2 * n) :=
-  X ⟨i.val, by omega⟩
+  X (Fin.cast (Nat.two_mul n).symm (Fin.castAdd n i))
 
 /-- The variable `b_j` among the `2n` multiplication inputs. -/
 def bVar (n : Nat) (j : Fin n) : ANF (2 * n) :=
-  X ⟨n + j.val, by omega⟩
+  X (Fin.cast (Nat.two_mul n).symm (Fin.natAdd n j))
 
 @[simp]
 theorem aVar_mem_affine (n : Nat) (i : Fin n) : aVar n i ∈ affine (2 * n) :=

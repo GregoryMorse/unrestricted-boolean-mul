@@ -64,7 +64,12 @@ lake env leanchecker UnrestrictedBooleanMul
 ```
 
 On Linux, the CI-equivalent serial check also builds Challenge and Solution,
-enforces the named axiom allowlist, and records source hashes and command logs:
+enforces the named axiom allowlist, and records source hashes and command logs.
+It runs the sandboxed `lake comparator` first on the independently elaborated
+statement models, then on all six submitted declarations. Building Challenge
+and Solution separately is not a substitute for these comparisons. The n4
+workflow installs pinned bubblewrap 0.12.0 through Palomar's official installer;
+neither comparison disables its sandbox:
 
 ```sh
 python3 scripts/ci_verify.py --profile n4 --build --replay
@@ -83,7 +88,7 @@ previously passed the Lean 4.33.1 recheck at 8 GiB.
 
 | Workflow | What a green run establishes | What it does not establish |
 | --- | --- | --- |
-| `lean.yml` | Published n=0 through n=4 proof, axiom audit and leanchecker | n5/n6 lower bounds |
+| `lean.yml` | Published n=0 through n=4 proof, axiom audit, leanchecker and actual Challenge/Solution comparison | n5/n6 lower bounds |
 | `models-upper.yml` | Semantic model conversions and n6/5x6 upper witnesses | Exact n6 ranks |
 | `n5.yml` | The thirteen-declaration quadratic-capacity, flattening and upper-bound audit | Unrestricted `MC(Mul 5)=13` |
 | `n6-bilinear.yml` | Conditional reductions, orbit/output-profile lemmas, artifact integrity and positive witnesses | Discharge of the lower-bound hypotheses or fresh exhaustive enumeration |

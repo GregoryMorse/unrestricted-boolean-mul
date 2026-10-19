@@ -1,0 +1,6 @@
+{
+  "challenge_module": "Challenge.ModelProbe",
+  "solution_module": "Solution.ModelProbe",
+  "theorem_names": ["UnrestrictedBooleanMul.comparator_model_probe"],
+  "permitted_axioms": ["propext", "Classical.choice", "Quot.sound"]
+}

@@ -15,6 +15,8 @@ EXTRA = {
     'scripts/ci_verify.py', 'scripts/test_ci_verify.py', 'scripts/check_n4_manifest.py',
     'scripts/check_lean_sources.py',
     'scripts/install_ci_lean.sh',
+    'Challenge/ModelProbe.lean', 'Solution/ModelProbe.lean',
+    'scripts/comparator-model.json',
 }
 
 

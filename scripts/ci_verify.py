@@ -134,6 +134,12 @@ def inspect(profile: str) -> dict:
         raise ValueError("empty axiom audit")
     if set(imports(ROOT / audit)) != set(roots):
         raise ValueError("audit imports differ from the declared build roots")
+    if profile == "n4":
+        # Statement-side holes are intentional and were not included in the
+        # proved-source scan above. Still authenticate every Comparator input.
+        files += ["Challenge.lean", "Solution.lean", "comparator.json",
+                  "Challenge/ModelProbe.lean", "Solution/ModelProbe.lean",
+                  "scripts/comparator-model.json"]
     return {"profile": profile, "roots": roots, "modules": modules, "audit": audit,
             "expected_axioms": expected,
             "source_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in files}}
@@ -198,6 +204,11 @@ def main() -> int:
     try:
         version = run(["lake", "env", "lean", "--version"], report)
         validate_compiler_version(version)
+        if args.profile == "n4":
+            # Compilation alone does not compare independently elaborated
+            # definition/proof auxiliaries in Challenge and Solution.
+            run(["lake", "comparator", "--config", "scripts/comparator-model.json"],
+                report, timeout=1200)
         for module in report["modules"]:
             print(f"Building {module}", flush=True)
             run(["lake", "build", module], report)
@@ -210,6 +221,8 @@ def main() -> int:
         if args.replay:
             for module in report["roots"]:
                 run(["lake", "env", "leanchecker", module], report, timeout=2400)
+        if args.profile == "n4":
+            run(["lake", "comparator", "--config", "comparator.json"], report, timeout=2400)
         report["complete"] = True
         return 0
     finally:

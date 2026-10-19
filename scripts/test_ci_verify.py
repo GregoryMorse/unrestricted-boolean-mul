@@ -8,6 +8,25 @@ from check_lean_sources import check_source
 
 
 class ScopedCITests(unittest.TestCase):
+    def test_comparator_checks_models_and_all_six_statements(self):
+        source = (ci.ROOT / 'scripts/ci_verify.py').read_text(encoding='utf-8')
+        self.assertIn('["lake", "comparator", "--config", "scripts/comparator-model.json"]', source)
+        self.assertIn('["lake", "comparator", "--config", "comparator.json"]', source)
+        self.assertNotIn('inadvisably', source)
+        probe = json.loads((ci.ROOT / 'scripts/comparator-model.json').read_text())
+        self.assertEqual(probe['challenge_module'], 'Challenge.ModelProbe')
+        self.assertEqual(probe['solution_module'], 'Solution.ModelProbe')
+        self.assertEqual(probe['theorem_names'], ['UnrestrictedBooleanMul.comparator_model_probe'])
+        self.assertEqual(set(probe['permitted_axioms']), ci.ALLOWED)
+        for path in ('Challenge.lean', 'UnrestrictedBooleanMul/Mul.lean'):
+            text = (ci.ROOT / path).read_text(encoding='utf-8')
+            for name, argument, body in (
+                ('aVar', 'i', 'Fin.castAdd n i'), ('bVar', 'j', 'Fin.natAdd n j')
+            ):
+                expected = (f'def {name} (n : Nat) ({argument} : Fin n) : ANF (2 * n) :=\n'
+                            f'  X (Fin.cast (Nat.two_mul n).symm ({body}))')
+                self.assertIn(expected, text)
+
     def test_ci_installer_preserves_the_exact_official_compiler(self):
         installer = (ci.ROOT / 'scripts/install_ci_lean.sh').read_text(encoding='utf-8')
         self.assertIn('leanprover/lean4:v' + ci.COMPILER_VERSION, installer)

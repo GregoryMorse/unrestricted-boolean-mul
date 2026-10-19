@@ -98,10 +98,12 @@ def multiplicativeComplexity {m o : Nat} (target : Fin o → ANF m) : Nat :=
 notation "MC(" target ")" => multiplicativeComplexity target
 
 /-- Coefficient a_i in the first input polynomial. -/
-def aVar (n : Nat) (i : Fin n) : ANF (2 * n) := X ⟨i.val, by omega⟩
+def aVar (n : Nat) (i : Fin n) : ANF (2 * n) :=
+  X (Fin.cast (Nat.two_mul n).symm (Fin.castAdd n i))
 
 /-- Coefficient b_j in the second input polynomial. -/
-def bVar (n : Nat) (j : Fin n) : ANF (2 * n) := X ⟨n + j.val, by omega⟩
+def bVar (n : Nat) (j : Fin n) : ANF (2 * n) :=
+  X (Fin.cast (Nat.two_mul n).symm (Fin.natAdd n j))
 
 /-- Coefficient s of the ordinary polynomial product, not integer multiplication. -/
 def mulCoefficient (n : Nat) (s : Nat) : ANF (2 * n) :=

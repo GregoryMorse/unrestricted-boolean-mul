@@ -4,9 +4,17 @@
 
 Use the exact public commit checked by the fresh Lean **4.35.0-rc3** CI
 and official source-preparation report. Do not reuse the `n4-arxiv-v4`
-source commit: it pins historical Lean 4.33.1. All 324 submitted Lean files
+source commit: it pins historical Lean 4.33.1. All submitted Lean files
 have been ported to the module system. The headline results, permitted
 axioms and mathematical model are unchanged.
+
+The first rc3 submission exposed a Comparator mismatch in the generated
+`bVar._proof_2` auxiliary. Input embeddings now use explicit standard `Fin`
+maps on both sides instead of separately generated `omega` proof auxiliaries.
+Use a fresh CI report that includes both actual sandboxed Comparator commands;
+the earlier compile/leanchecker-only rc3 report did not test that comparison.
+No declaration or auxiliary has been added to the permitted-axiom list or
+exempted as an extra Comparator hole.
 
 The GitHub `palomar.yml` workflow performs current official preliminary
 checks. The full upstream workflow now requires a provisioned Namespace
