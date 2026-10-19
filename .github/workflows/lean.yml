@@ -29,15 +29,8 @@ jobs:
           python3 scripts/check_lean_sources.py
           python3 scripts/check_n4_manifest.py
           python3 -m unittest discover -s scripts -p test_ci_verify.py -v
-      - uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
-        with:
-          auto-config: false
-          build: false
-          test: false
-          lint: false
-          leanchecker: false
-          use-github-cache: false
-          use-mathlib-cache: false
+      - name: Install the exact checksum-verified official Lean release
+        run: bash scripts/install_ci_lean.sh
       - name: Restore pinned Mathlib cache
         run: lake exe cache get
       - name: Verify the selected proof closure, serially

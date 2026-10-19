@@ -61,6 +61,16 @@ jobs:
             --work-dir "$RUNNER_TEMP/palomar-source" \
             --output "$RUNNER_TEMP/source-report.json" \
             --licensee "$(command -v bundle)"
+          python - <<'PY'
+          import json, os, pathlib
+          report = json.loads(pathlib.Path(os.environ['RUNNER_TEMP'], 'source-report.json').read_text())
+          if (report.get('status'), report.get('stage')) != ('pending', 'prepared') or report.get('errors'):
+              raise SystemExit(json.dumps(report, indent=2))
+          if report['source']['commit'] != os.environ['SOURCE_COMMIT']:
+              raise SystemExit('Official report source does not match the requested commit')
+          print('PALOMAR_SOURCE_PREPARATION_PASS', report['source_requirements'])
+          print('Proof/kernel verification is still a separate step.')
+          PY
       - name: Preserve the official preliminary report (not a proof verification)
         if: always()
         uses: actions/upload-artifact@v4

@@ -26,15 +26,8 @@ jobs:
       LEAN_NUM_THREADS: "1"
     steps:
       - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
-        with:
-          auto-config: false
-          build: false
-          test: false
-          lint: false
-          leanchecker: false
-          use-github-cache: false
-          use-mathlib-cache: false
+      - name: Install the exact checksum-verified official Lean release
+        run: bash scripts/install_ci_lean.sh
       - name: Restore pinned Mathlib cache
         run: lake exe cache get
       - name: Verify the selected proof closure, serially

@@ -8,6 +8,14 @@ from check_lean_sources import check_source
 
 
 class ScopedCITests(unittest.TestCase):
+    def test_ci_installer_preserves_the_exact_official_compiler(self):
+        installer = (ci.ROOT / 'scripts/install_ci_lean.sh').read_text(encoding='utf-8')
+        self.assertIn('leanprover/lean4:v' + ci.COMPILER_VERSION, installer)
+        self.assertIn('https://github.com/leanprover/lean4/releases/download/v' + ci.COMPILER_VERSION, installer)
+        self.assertIn('1526de16c0496f16b46a168f26c990af4e3796505273c3342fec17d72d763997', installer)
+        self.assertIn('sha256sum --check --strict', installer)
+        self.assertNotIn('--insecure', installer)
+
     def test_repository_wide_source_policy_controls(self):
         for source in ('module\n', '-- copyright\n/- nested /- c -/ -/\nmodule\n',
                        'module\n/-! docs -/\npublic import Mathlib\n'):
