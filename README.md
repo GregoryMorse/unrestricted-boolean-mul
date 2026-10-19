@@ -51,8 +51,10 @@ mathematical conclusion or permitted axiom is changed by this port.
 Historical verification reports retain their original compiler and commit.
 `palomar-source.yml` runs the pinned official source preparation on a standard
 GitHub runner; it is a preliminary check, not kernel verification.
-The full official `palomar.yml` uses Palomar's current Namespace execution
-profile and requires that runner to be provisioned for the calling repository.
+`palomar.yml` runs those preliminary checks by default. Its optional full
+official job requires a provisioned Namespace runner and explicit repository
+variable `PALOMAR_NAMESPACE_ENABLED=true`; otherwise full verification is
+requested through Palomar itself, not claimed by a skipped GitHub job.
 
 ```sh
 lake exe cache get

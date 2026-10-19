@@ -21,15 +21,15 @@ namespace N5
 
 noncomputable section
 
-private abbrev HighQuotient :=
+abbrev RankTwoEscapeHighQuotient :=
   (ANF 10) ⧸ N4.quadraticANFSpace 10
 
 /-- Append a proposed third direction to the two factor directions. -/
-def highTripleDirections (x y z : HighQuotient) : Fin 3 → HighQuotient :=
+def highTripleDirections (x y z : RankTwoEscapeHighQuotient) : Fin 3 → RankTwoEscapeHighQuotient :=
   Fin.snoc (pairDirections x y) z
 
 theorem highTripleDirections_linearIndependent
-    (x y z : HighQuotient)
+    (x y z : RankTwoEscapeHighQuotient)
     (hxy : LinearIndependent F₂ (pairDirections x y))
     (hz : z ∉ Submodule.span F₂
       (Set.range (pairDirections x y))) :
@@ -40,7 +40,7 @@ theorem highTripleDirections_linearIndependent
 least three. -/
 theorem three_le_stateHighRank_of_independent_high_triple
     (V : Submodule F₂ (ANF 10))
-    (x y z : HighQuotient)
+    (x y z : RankTwoEscapeHighQuotient)
     (hx : x ∈ stateHighImage V)
     (hy : y ∈ stateHighImage V)
     (hz : z ∈ stateHighImage V)

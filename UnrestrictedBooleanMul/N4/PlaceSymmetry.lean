@@ -146,7 +146,6 @@ def anfPlaceNormalize (theta : Fin 3) : ANF 8 →ₐ[F₂] ANF 8 :=
       ∏ i ∈ s, linearANF (inputPlaceChange theta i) := by
   simp [anfPlaceNormalize, monomial, placeSubstitutionMonoid,
     MonoidAlgebra.lift_apply]
-  rfl
 
 @[simp] theorem anfPlaceNormalize_X (theta : Fin 3) (i : Fin 8) :
     anfPlaceNormalize theta (X i) =

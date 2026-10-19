@@ -1,6 +1,11 @@
 name: Palomar current source preliminary checks
 
 on:
+  workflow_call:
+    inputs:
+      commit:
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       commit:

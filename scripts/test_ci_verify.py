@@ -58,6 +58,9 @@ class ScopedCITests(unittest.TestCase):
 
     def test_palomar_preflight_declares_confirmed_authority(self):
         workflow = (ci.ROOT / '.github/workflows/palomar.yml').read_text(encoding='utf-8')
+        self.assertIn('uses: ./.github/workflows/palomar-source.yml', workflow)
+        self.assertIn("if: vars.PALOMAR_NAMESPACE_ENABLED == 'true'", workflow)
+        self.assertIn('needs: source', workflow)
         request_id = next(line.split('request_id:', 1)[1].strip()
                           for line in workflow.splitlines() if line.strip().startswith('request_id:'))
         self.assertRegex(request_id, r'^[a-z0-9]{12}$')

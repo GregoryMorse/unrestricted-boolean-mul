@@ -65,10 +65,10 @@ theorem quadraticPair_chosen (s : QuadraticIndex 10) :
     (Classical.choose_spec
       (Classical.choose_spec (QuadraticIndex.exists_pair s)))
 
-private abbrev linearFormBasis : Module.Basis (Fin 10) F₂ LinearForm :=
+abbrev linearFormBasis : Module.Basis (Fin 10) F₂ LinearForm :=
   Pi.basisFun F₂ (Fin 10)
 
-private abbrev twoFormBasis :
+abbrev twoFormBasis :
     Module.Basis (QuadraticIndex 10) F₂ TwoForm :=
   Pi.basisFun F₂ (QuadraticIndex 10)
 

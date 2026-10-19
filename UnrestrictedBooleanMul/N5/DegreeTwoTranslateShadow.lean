@@ -36,28 +36,28 @@ def degreeTwoTranslateLeftTwo : TwoForm :=
 def degreeTwoTranslateRightTwo : TwoForm :=
   targetTwo degreeTwoTranslateRightCoeff
 
-private def translateXA₀ : LinearForm :=
+def translateXA₀ : LinearForm :=
   ![1, 1, 0, 1, 1, 0, 0, 0, 0, 0]
 
-private def translateXA₁ : LinearForm :=
+def translateXA₁ : LinearForm :=
   ![1, 0, 1, 1, 0, 0, 0, 0, 0, 0]
 
-private def translateYA₀ : LinearForm :=
+def translateYA₀ : LinearForm :=
   ![1, 0, 1, 1, 0, 0, 0, 0, 0, 0]
 
-private def translateYA₁ : LinearForm :=
+def translateYA₁ : LinearForm :=
   ![0, 1, 1, 0, 1, 0, 0, 0, 0, 0]
 
-private def translateXB₀ : LinearForm :=
+def translateXB₀ : LinearForm :=
   ![0, 0, 0, 0, 0, 1, 1, 0, 1, 1]
 
-private def translateXB₁ : LinearForm :=
+def translateXB₁ : LinearForm :=
   ![0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
 
-private def translateYB₀ : LinearForm :=
+def translateYB₀ : LinearForm :=
   ![0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
 
-private def translateYB₁ : LinearForm :=
+def translateYB₁ : LinearForm :=
   ![0, 0, 0, 0, 0, 0, 1, 1, 0, 1]
 
 /-- Sparse solution of the four-dimensional cubic kernel on the adjusted

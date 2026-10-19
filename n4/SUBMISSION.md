@@ -1,5 +1,23 @@
 # Palomar submission preparation (n4 only)
 
+## Current toolchain successor (2026-10-19)
+
+Use the exact public commit checked by the fresh Lean **4.35.0-rc3** CI
+and official source-preparation report. Do not reuse the `n4-arxiv-v4`
+source commit: it pins historical Lean 4.33.1. All 324 submitted Lean files
+have been ported to the module system. The headline results, permitted
+axioms and mathematical model are unchanged.
+
+The GitHub `palomar.yml` workflow performs current official preliminary
+checks. The full upstream workflow now requires a provisioned Namespace
+runner, so full verification is to be requested through Palomar itself.
+A preliminary PASS or a skipped optional full job is not kernel acceptance.
+The current official pipeline pin is
+`d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44`.
+Use the existing n4 Palomar registration identity when updating its record;
+do not create a duplicate registration. The September preparation below is
+retained as historical context, not as this successor's verification report.
+
 Gregory Morse reports that n4 has been registered and requests a new tag to
 resubmit the MSC metadata correction. This document prepares that successor;
 no new intake or registration is performed by these repository changes.
@@ -8,11 +26,11 @@ The author remains responsible for the submission and maintainer attestation.
 | Form field | Prepared value |
 | --- | --- |
 | Repository | `GregoryMorse/unrestricted-boolean-mul` |
-| Commit | Full public SHA in the `n4-arxiv-v4` release notes; never a branch/tag string |
+| Commit | Exact public 40-character SHA from the current 4.35.0-rc3 CI report; never an old release/tag string |
 | Comparator configuration | `comparator.json` |
 | Project directory | blank (repository root) |
 | Formalization metadata | `formalization.yaml` |
-| Existing Palomar ID | blank unless the final registration-identity lookup finds an existing entry |
+| Existing Palomar ID | the existing registered n4 identity, confirmed from the public record |
 | Relationship | `maintainer` — responsible author/maintainer |
 | Approval evidence | not needed for the responsible maintainer's own attestation |
 | Notes | Published n4 source-based formalization; toolchain/CI and Comparator update, no n5/n6 lower-bound claim. |
