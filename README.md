@@ -49,6 +49,10 @@ repository-wide header and size requirements before the n4 build. Public
 imports and exposed public sections preserve the existing interface; no
 mathematical conclusion or permitted axiom is changed by this port.
 Historical verification reports retain their original compiler and commit.
+`palomar-source.yml` runs the pinned official source preparation on a standard
+GitHub runner; it is a preliminary check, not kernel verification.
+The full official `palomar.yml` uses Palomar's current Namespace execution
+profile and requires that runner to be provisioned for the calling repository.
 
 ```sh
 lake exe cache get
