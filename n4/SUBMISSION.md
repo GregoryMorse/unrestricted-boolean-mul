@@ -11,6 +11,8 @@ axioms and mathematical model are unchanged.
 The first rc3 submission exposed a Comparator mismatch in the generated
 `bVar._proof_2` auxiliary. Input embeddings now use explicit standard `Fin`
 maps on both sides instead of separately generated `omega` proof auxiliaries.
+The monoid laws likewise use identical explicit congruence proofs, avoiding
+separately generated extensionality auxiliaries in the model dependency graph.
 Use a fresh CI report that includes both actual sandboxed Comparator commands;
 the earlier compile/leanchecker-only rc3 report did not test that comparison.
 No declaration or auxiliary has been added to the permitted-axiom list or

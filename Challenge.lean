@@ -41,10 +41,10 @@ deriving DecidableEq
 instance {m : Nat} : CommMonoid (Monomial m) where
   one := ⟨∅⟩
   mul s t := ⟨s.vars ∪ t.vars⟩
-  one_mul s := by apply Monomial.ext; exact Finset.empty_union s.vars
-  mul_one s := by apply Monomial.ext; exact Finset.union_empty s.vars
-  mul_assoc r s t := by apply Monomial.ext; exact Finset.union_assoc r.vars s.vars t.vars
-  mul_comm s t := by apply Monomial.ext; exact Finset.union_comm s.vars t.vars
+  one_mul s := congrArg Monomial.mk (Finset.empty_union s.vars)
+  mul_one s := congrArg Monomial.mk (Finset.union_empty s.vars)
+  mul_assoc r s t := congrArg Monomial.mk (Finset.union_assoc r.vars s.vars t.vars)
+  mul_comm s t := congrArg Monomial.mk (Finset.union_comm s.vars t.vars)
 
 /-- Boolean algebraic normal forms, with monomials multiplied by union. -/
 abbrev ANF (m : Nat) := MonoidAlgebra F₂ (Monomial m)
