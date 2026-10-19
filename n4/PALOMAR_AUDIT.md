@@ -11,7 +11,7 @@ No historical PASS below is relabelled as a check of the new source commit.
 The first rc3 submission was rejected by Comparator at `bVar._proof_2`.
 Its compile/leanchecker CI did not run the actual statement comparison.
 The successor replaces inline arithmetic proof generation in `aVar`/`bVar`
-with explicit standard `Fin` embeddings on both sides and adds actual
+with explicit coordinate-bound proof terms on both sides and adds actual
 sandboxed model and six-theorem comparisons to CI. A repair is established
 only by a fresh passing Comparator transcript, not by those earlier reports.
 

@@ -9,8 +9,10 @@ have been ported to the module system. The headline results, permitted
 axioms and mathematical model are unchanged.
 
 The first rc3 submission exposed a Comparator mismatch in the generated
-`bVar._proof_2` auxiliary. Input embeddings now use explicit standard `Fin`
-maps on both sides instead of separately generated `omega` proof auxiliaries.
+`bVar._proof_2` auxiliary. Input embeddings keep the original constructor
+coordinates exactly and use explicit standard bound proofs on both sides
+instead of separately generated `omega` proof auxiliaries. Only the proof
+fields have changed.
 The monoid laws likewise use identical explicit congruence proofs, avoiding
 separately generated extensionality auxiliaries in the model dependency graph.
 Use a fresh CI report that includes both actual sandboxed Comparator commands;

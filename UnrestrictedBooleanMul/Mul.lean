@@ -15,11 +15,13 @@ noncomputable section
 
 /-- The variable `a_i` among the `2n` multiplication inputs. -/
 def aVar (n : Nat) (i : Fin n) : ANF (2 * n) :=
-  X (Fin.cast (Nat.two_mul n).symm (Fin.castAdd n i))
+  X ⟨i.val, Eq.mpr (congrArg (fun k : Nat => i.val < k) (Nat.two_mul n))
+    (Nat.lt_of_lt_of_le i.isLt (Nat.le_add_right n n))⟩
 
 /-- The variable `b_j` among the `2n` multiplication inputs. -/
 def bVar (n : Nat) (j : Fin n) : ANF (2 * n) :=
-  X (Fin.cast (Nat.two_mul n).symm (Fin.natAdd n j))
+  X ⟨n + j.val, Eq.mpr (congrArg (fun k : Nat => n + j.val < k) (Nat.two_mul n))
+    (Nat.add_lt_add_left j.isLt n)⟩
 
 @[simp]
 theorem aVar_mem_affine (n : Nat) (i : Fin n) : aVar n i ∈ affine (2 * n) :=

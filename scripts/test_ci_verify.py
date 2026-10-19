@@ -20,11 +20,13 @@ class ScopedCITests(unittest.TestCase):
         self.assertEqual(set(probe['permitted_axioms']), ci.ALLOWED)
         for path in ('Challenge.lean', 'UnrestrictedBooleanMul/Mul.lean'):
             text = (ci.ROOT / path).read_text(encoding='utf-8')
-            for name, argument, body in (
-                ('aVar', 'i', 'Fin.castAdd n i'), ('bVar', 'j', 'Fin.natAdd n j')
+            for name, argument, coordinate, bound in (
+                ('aVar', 'i', 'i.val', 'Nat.lt_of_lt_of_le i.isLt (Nat.le_add_right n n)'),
+                ('bVar', 'j', 'n + j.val', 'Nat.add_lt_add_left j.isLt n')
             ):
                 expected = (f'def {name} (n : Nat) ({argument} : Fin n) : ANF (2 * n) :=\n'
-                            f'  X (Fin.cast (Nat.two_mul n).symm ({body}))')
+                            f'  X ⟨{coordinate}, Eq.mpr (congrArg (fun k : Nat => {coordinate} < k) '
+                            f'(Nat.two_mul n))\n    ({bound})⟩')
                 self.assertIn(expected, text)
 
     def test_ci_installer_preserves_the_exact_official_compiler(self):
