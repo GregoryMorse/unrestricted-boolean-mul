@@ -14,3 +14,10 @@ __pycache__/
 
 # Local manuscript finalization and arXiv staging area.
 /paper/
+
+# Private server retrievals and provenance; never stage complete archives.
+/.server-migration/
+
+# Failed research-check snapshots are retained locally, not release sources.
+/n5/lean_drafts/rejected_checks/
+/n6/v2/lean_drafts/rejected_checks/
